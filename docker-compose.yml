@@ -15,6 +15,7 @@ services:
       PORT: "8084"
       PRISMA_ENDPOINT: http://prisma:4488
       PRISMA_SECRET: development
+      CSRF_KEY: 00000000000000000000000000000000
     depends_on:
       - prisma
       - postgres
