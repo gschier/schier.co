@@ -1,0 +1,12 @@
+type User {
+    id: ID! @id
+    email: String! @unique
+    name: String!
+    passwordHash: String!
+}
+
+type Session {
+    id: ID! @id
+    user: User!
+    lastUsed: DateTime!
+}

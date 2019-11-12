@@ -1,0 +1,19 @@
+{% extends '../layouts/index.html' %}
+
+{% block content %}
+<form action="/forms/login" method="post">
+    {{ csrfField | safe }}
+    <div>
+        <label>Email
+            <input type="email" name="email"/>
+        </label>
+    </div>
+    <div>
+        <label>password
+            <input type="password" name="password"/>
+        </label>
+    </div>
+    <button>Login</button>
+</form>
+
+{% endblock %}

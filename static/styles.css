@@ -1,0 +1,25 @@
+body {
+    background-color: #223;
+    color: #fff;
+    font-family: "Roboto Light", sans-serif;
+    padding: 2rem;
+}
+
+main {
+    max-width: 40rem;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+h1 {
+    font-weight: 200;
+}
+
+a {
+    color: aquamarine;
+}
+
+hr {
+    border: 0;
+    border-bottom: 1px solid #34344d;
+}

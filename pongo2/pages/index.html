@@ -1,0 +1,11 @@
+{% extends '../layouts/index.html' %}
+
+{% block content %}
+<h1>Hello {{ name }}!</h1>
+<p>How are you doing today?</p>
+<p><a href="/about">About Me</a></p>
+
+<hr>
+
+{% include '../partials/counter.html' %}
+{% endblock %}

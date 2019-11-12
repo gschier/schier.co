@@ -1,0 +1,45 @@
+version: '3'
+services:
+  web:
+    image: go:1.12
+    entrypoint: 'reflex -s -r \.(go|html)$$ -d none go run github.com/gschier/schier.dev/cmd/web'
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    volumes:
+      - .:/app
+    ports:
+      - "8084:8084"
+    environment:
+      PORT: "8084"
+      PRISMA_ENDPOINT: http://prisma:4488
+      PRISMA_SECRET: development
+    depends_on:
+      - prisma
+      - postgres
+  prisma:
+    image: prismagraphql/prisma:1.34
+    restart: always
+    ports:
+      - '4488:4488'
+    environment:
+      PRISMA_CONFIG: |
+        port: 4488
+        databases:
+          default:
+            connector: postgres
+            host: postgres
+            port: 5432
+            user: prisma
+            password: prisma
+  postgres:
+    image: postgres:10.3
+    restart: always
+    environment:
+      POSTGRES_USER: prisma
+      POSTGRES_PASSWORD: prisma
+    volumes:
+      - postgres:/var/lib/postgresql/data
+volumes:
+  postgres: ~
