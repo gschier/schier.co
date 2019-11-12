@@ -1,19 +1,4 @@
-<button id="counter-button" v-on:click="increment">
+<button id="counter-app" class="btn" v-on:click="increment">
     Count [[ count ]]
 </button>
 
-<script>
-  new Vue({
-    delimiters: ['[[', ']]'],
-    el: '#counter-button',
-    data: {
-      count: parseInt(localStorage.count) || 0,
-    },
-    methods: {
-      increment: function () {
-        this.count++;
-        localStorage.count = this.count;
-      }
-    }
-  });
-</script>

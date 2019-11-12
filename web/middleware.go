@@ -6,7 +6,6 @@ import (
 	"github.com/gorilla/csrf"
 	"github.com/gorilla/handlers"
 	"github.com/gschier/schier.dev/generated/prisma-client"
-	"log"
 	"net/http"
 	"os"
 	"strings"
@@ -43,7 +42,6 @@ func StaticMiddleware(next http.Handler) http.Handler {
 // template data
 func PageMiddleware(next http.Handler, templates map[string]*pongo2.Template) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		log.Println("HELLO")
 		client := r.Context().Value("prisma_client").(*prisma.Client)
 		name := ""
 

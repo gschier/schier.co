@@ -1,0 +1,16 @@
+{
+  "private": true,
+  "name": "schier.dev",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "parcel watch -d static/dist ./static/index.js"
+  },
+  "devDependencies": {
+    "autoprefixer": "^9.7.1",
+    "parcel-bundler": "^1.12.4",
+    "tailwindcss": "^1.1.3"
+  },
+  "dependencies": {
+    "vue": "^2.6.10"
+  }
+}
