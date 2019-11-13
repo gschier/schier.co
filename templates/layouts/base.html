@@ -14,7 +14,21 @@
     <link href="/static/dist/index.css" rel="stylesheet">
 </head>
 <body>
-<main>
+<nav class="max-w-2xl mx-auto mb-8">
+    <ul class="flex">
+        <li class="mr-6">
+            <a href="/">Home</a>
+        </li>
+        <li class="mr-6">
+            {% if logged_in %}
+                <a href="/logout">Logout</a>
+            {% else %}
+                <a href="/login">Login</a>
+            {% endif %}
+        </li>
+    </ul>
+</nav>
+<main class="max-w-2xl mx-auto">
     {% block content %}
     {% endblock %}
 </main>

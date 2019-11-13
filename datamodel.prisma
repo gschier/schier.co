@@ -1,5 +1,13 @@
+enum UserType {
+    ADMIN
+    GUEST
+}
+
 type User {
     id: ID! @id
+    type: UserType! @default(value: ADMIN)
+    createdAt: DateTime! @createdAt
+    updatedAt: DateTime! @updatedAt
     email: String! @unique
     name: String!
     passwordHash: String!
@@ -7,6 +15,15 @@ type User {
 
 type Session {
     id: ID! @id
-    user: User!
+    createdAt: DateTime! @createdAt
     lastUsed: DateTime!
+    user: User!
+}
+
+type BlogPost {
+    id: ID! @id
+    createdAt: DateTime! @createdAt
+    updatedAt: DateTime! @updatedAt
+    slug: String! @unique
+    content: String!
 }

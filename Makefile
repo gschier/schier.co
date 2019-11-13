@@ -3,3 +3,6 @@ start/backend:
 
 start/frontend:
 	npm start
+
+deploy:
+	prisma deploy --force

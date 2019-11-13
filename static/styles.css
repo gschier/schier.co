@@ -17,7 +17,6 @@ body {
 }
 
 main {
-    max-width: 40rem;
     margin-left: auto;
     margin-right: auto;
 }
@@ -49,4 +48,24 @@ p {
 
 .btn:hover {
     @apply bg-blue-700;
+}
+
+/*********/
+/* FORMS */
+/*********/
+
+.form-row {
+    @apply mb-6;
+}
+
+.form-label {
+    @apply block text-gray-400 text-sm font-bold mb-2;
+}
+
+.form-input {
+    @apply shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight;
+}
+
+.form-input:focus {
+    @apply outline-none shadow-outline;
 }

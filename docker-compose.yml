@@ -35,6 +35,8 @@ services:
             user: prisma
             password: prisma
   postgres:
+    ports:
+      - "5438:5432"
     image: postgres:10.3
     restart: always
     environment:
