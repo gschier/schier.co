@@ -1,0 +1,16 @@
+{% extends '../layouts/base.html' %}
+
+{% block content %}
+    <form class="mx-auto max-w-sm" action="/forms/login" method="post">
+        {{ csrfField | safe }}
+        <div class="form-row">
+            {% include '../partials/form-input.html' with label='Email' type='email' name='email' %}
+        </div>
+        <div class="form-row">
+            {% include '../partials/form-input.html' with label='Password' type='password' name='password' %}
+        </div>
+        <button class="btn">
+            Login
+        </button>
+    </form>
+{% endblock %}

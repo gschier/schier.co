@@ -30,8 +30,8 @@ func applyMiddleware(r *mux.Router, pc *prisma.Client) http.Handler {
 	handler = web.GenericPageMiddleware(handler, pageRoot)
 	handler = web.UserMiddleware(handler)
 	handler = web.StaticMiddleware(handler)
-	handler = web.ContextMiddleware(handler, pc, r)
-	//handler = web.CSRFMiddleware(handler)
+	handler = web.ContextMiddleware(handler, pc)
+	handler = web.CSRFMiddleware(handler)
 	handler = web.LoggerMiddleware(handler)
 
 	return handler
@@ -42,6 +42,7 @@ func setupRouter() *mux.Router {
 
 	// Apply routes
 	web.AuthRoutes(router)
+	web.BlogRoutes(router)
 
 	return router
 }

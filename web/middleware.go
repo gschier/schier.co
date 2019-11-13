@@ -1,11 +1,9 @@
 package web
 
 import (
-	"context"
 	"github.com/flosch/pongo2"
 	"github.com/gorilla/csrf"
 	"github.com/gorilla/handlers"
-	"github.com/gorilla/mux"
 	"github.com/gschier/schier.dev/generated/prisma-client"
 	"io/ioutil"
 	"log"
@@ -21,16 +19,14 @@ func LoggerMiddleware(next http.Handler) http.Handler {
 }
 
 // prismaClientMiddleware adds the prisma client to the request context
-func ContextMiddleware(next http.Handler, client *prisma.Client, router *mux.Router) http.Handler {
+func ContextMiddleware(next http.Handler, client *prisma.Client) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		var emptyUser *prisma.User = nil
 
-		ctx := r.Context()
-		ctx = context.WithValue(ctx, "user", emptyUser)
-		ctx = context.WithValue(ctx, "router", router)
-		ctx = context.WithValue(ctx, "logged_in", false)
-		ctx = context.WithValue(ctx, "prisma_client", client)
-		next.ServeHTTP(w, r.WithContext(ctx))
+		r = ctxSetClient(r, client)
+		r = ctxSetUserAndLoggedIn(r, emptyUser)
+
+		next.ServeHTTP(w, r)
 	})
 }
 
@@ -60,7 +56,7 @@ func CSRFMiddleware(next http.Handler) http.Handler {
 // UserMiddleware adds the User object to the context if available
 func UserMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		client := r.Context().Value("prisma_client").(*prisma.Client)
+		client := ctxGetClient(r)
 
 		c, err := r.Cookie("session")
 
@@ -93,10 +89,10 @@ func UserMiddleware(next http.Handler) http.Handler {
 			return
 		}
 
-		ctx := r.Context()
-		ctx = context.WithValue(ctx, "user", user)
+		// Add user to request context
+		r = ctxSetUserAndLoggedIn(r, user)
 
-		next.ServeHTTP(w, r.WithContext(ctx))
+		next.ServeHTTP(w, r)
 	})
 }
 
@@ -126,12 +122,13 @@ func GenericPageMiddleware(next http.Handler, dir string) http.Handler {
 	}
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		user := r.Context().Value("user").(*prisma.User)
+		user := ctxGetUser(r)
+		loggedIn := ctxGetLoggedIn(r)
 
 		if template, ok := templates[r.URL.Path]; ok {
 			err := template.ExecuteWriter(pongo2.Context{
 				"user":           user,
-				"logged_in":      user != nil,
+				"logged_in":      loggedIn,
 				csrf.TemplateTag: csrf.TemplateField(r),
 			}, w)
 			if err != nil {

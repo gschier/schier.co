@@ -1,0 +1,19 @@
+{% extends '../layouts/base.html' %}
+
+{% block content %}
+    <h1>Hello {{ user.Name | default:"there" }}!</h1>
+    <p>
+
+        How are you doing today? Did you know that you {% if logged_in %}are{% else %}aren't{% endif %} logged in?
+    </p>
+
+    <p>
+        <a href="/about">About Me</a>
+    </p>
+
+    <hr>
+
+    <p>
+        {% include '../partials/counter.html' %}
+    </p>
+{% endblock %}

@@ -22,7 +22,7 @@ func routeLogout(w http.ResponseWriter, r *http.Request) {
 }
 
 func routeLogin(w http.ResponseWriter, r *http.Request) {
-	client := r.Context().Value("prisma_client").(*prisma.Client)
+	client := ctxGetClient(r)
 
 	_ = r.ParseForm()
 	password := r.Form.Get("password")
@@ -50,7 +50,7 @@ func routeLogin(w http.ResponseWriter, r *http.Request) {
 }
 
 func routeRegister(w http.ResponseWriter, r *http.Request) {
-	client := r.Context().Value("prisma_client").(*prisma.Client)
+	client := ctxGetClient(r)
 
 	_ = r.ParseForm()
 	password := r.Form.Get("password")

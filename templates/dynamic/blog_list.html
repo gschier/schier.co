@@ -1,0 +1,13 @@
+{% extends '../layouts/base.html' %}
+
+{% block content %}
+    <ul>
+        {% for post in blog_posts %}
+            <li>
+                <a href="/blog/{{ post.Slug }}">
+                    {{ post.Slug }} ({{ post.CreatedAt }})
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}
