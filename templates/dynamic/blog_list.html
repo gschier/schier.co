@@ -2,11 +2,10 @@
 
 {% block content %}
     <ul>
-        {% for post in blog_posts %}
-            <li>
-                <a href="/blog/{{ post.Slug }}">
-                    {{ post.Slug }} ({{ post.CreatedAt }})
-                </a>
+        {% for post in blogPosts %}
+            <li class="mt-8">
+                <h2 class="text-xl"><a href="/blog/{{ post.Slug }}">{{ post.Title }}</a></h2>
+                <div>{{ post.RenderedContent | safe }}</div>
             </li>
         {% endfor %}
     </ul>

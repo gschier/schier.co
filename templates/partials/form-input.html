@@ -1,2 +1,15 @@
-<label class="form-label" for="i-{{ name }}">{{ label }}</label>
-<input class="form-input" type="{{ type | default:'text' }}" name="{{ name }}" id="i-{{ name }}"/>
+<div class="form-row">
+    {% if label %}
+        <label class="form-label" for="i-{{ name }}">{{ label }}</label>
+    {% endif %}
+
+    {% if type == 'textarea' %}
+        <textarea class="form-input" name="{{ name }}" id="i-{{ name }}" rows="20">{{ value }}</textarea>
+    {% else %}
+        <input class="form-input"
+               type="{{ type | default:'text' }}"
+               name="{{ name }}"
+               id="i-{{ name }}"
+               value="{{ value }}"/>
+    {% endif %}
+</div>

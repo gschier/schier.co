@@ -16,7 +16,6 @@ type User {
 type Session {
     id: ID! @id
     createdAt: DateTime! @createdAt
-    lastUsed: DateTime!
     user: User!
 }
 
@@ -25,5 +24,9 @@ type BlogPost {
     createdAt: DateTime! @createdAt
     updatedAt: DateTime! @updatedAt
     slug: String! @unique
+    title: String!
+    date: DateTime!
+    author: User!
     content: String!
+    renderedContent: String!
 }

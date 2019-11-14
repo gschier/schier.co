@@ -1,6 +1,6 @@
 @tailwind base;
+
 @tailwind components;
-@tailwind utilities;
 
 html {
     font-size: 16px;
@@ -11,7 +11,7 @@ html {
 }
 
 body {
-    background-color: #223;
+    @apply bg-primary-900;
     color: #fff;
     padding: 2rem;
 }
@@ -43,11 +43,11 @@ p {
 }
 
 .btn {
-    @apply bg-blue-500 text-white font-bold py-2 px-4 rounded;
+    @apply bg-secondary-500 text-gray-100 font-bold py-2 px-4 rounded;
 }
 
 .btn:hover {
-    @apply bg-blue-700;
+    @apply bg-secondary-700;
 }
 
 /*********/
@@ -58,14 +58,41 @@ p {
     @apply mb-6;
 }
 
-.form-label {
+form label {
     @apply block text-gray-400 text-sm font-bold mb-2;
 }
 
-.form-input {
+form input,
+form textarea {
     @apply shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight;
 }
 
-.form-input:focus {
+form input:focus {
     @apply outline-none shadow-outline;
 }
+
+/*****************/
+/* MARKDOWN POST */
+/*****************/
+
+.blog-post h1 {
+    @apply text-4xl;
+}
+
+.blog-post h2 {
+    @apply text-2xl mt-8;
+}
+
+.blog-post li {
+    @apply list-disc ml-6;
+}
+
+.blog-post > * {
+    @apply my-4;
+}
+
+/************************/
+/* MUST BE APPLIED LAST */
+/************************/
+
+@tailwind utilities;

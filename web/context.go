@@ -10,7 +10,7 @@ type contextKey string
 
 var (
 	ctxKeyClient   = contextKey("prisma_client")
-	ctxKeyLoggedIn = contextKey("logged_in")
+	ctxKeyLoggedIn = contextKey("loggedIn")
 	ctxKeyUser     = contextKey("user")
 )
 

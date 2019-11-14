@@ -1,0 +1,16 @@
+{% extends '../layouts/base.html' %}
+
+{% block content %}
+    <div class="mx-auto mt-12 max-w-lg">
+        <h1 class="mb-6">Edit Post</h1>
+        <form action="/forms/blog" method="post">
+            {{ csrfField | safe }}
+            {% include '../partials/form-input.html' with label='Slug' type='text' name='slug' value=blogPost.Slug %}
+            {% include '../partials/form-input.html' with label='Title' type='text' name='title' value=blogPost.Title %}
+            {% include '../partials/form-input.html' with label='Content' type='textarea' name='content' value=blogPost.Content %}
+            <button class="btn">
+                Update
+            </button>
+        </form>
+    </div>
+{% endblock %}

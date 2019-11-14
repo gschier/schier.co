@@ -10,6 +10,9 @@ require (
 	github.com/mitchellh/mapstructure v1.1.2 // indirect
 	github.com/pkg/errors v0.8.1 // indirect
 	github.com/prisma/prisma-client-lib-go v0.0.0-20181017161110-68a1f9908416
+	github.com/russross/blackfriday v2.0.0+incompatible // indirect
+	github.com/russross/blackfriday/v2 v2.0.1
 	github.com/satori/go.uuid v1.2.0 // indirect
+	github.com/shurcooL/sanitized_anchor_name v1.0.0 // indirect
 	golang.org/x/crypto v0.0.0-20191111213947-16651526fdb4
 )

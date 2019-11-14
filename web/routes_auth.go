@@ -6,7 +6,6 @@ import (
 	"golang.org/x/crypto/bcrypt"
 	"log"
 	"net/http"
-	"time"
 )
 
 func AuthRoutes(router *mux.Router) {
@@ -22,11 +21,12 @@ func routeLogout(w http.ResponseWriter, r *http.Request) {
 }
 
 func routeLogin(w http.ResponseWriter, r *http.Request) {
-	client := ctxGetClient(r)
-
 	_ = r.ParseForm()
+
 	password := r.Form.Get("password")
 	email := r.Form.Get("email")
+
+	client := ctxGetClient(r)
 
 	user, err := client.User(prisma.UserWhereUniqueInput{
 		Email: &email,
@@ -83,7 +83,6 @@ func login(w http.ResponseWriter, r *http.Request, user *prisma.User, client *pr
 		User: prisma.UserCreateOneInput{
 			Connect: &prisma.UserWhereUniqueInput{ID: &user.ID},
 		},
-		LastUsed: time.Now().Format(time.RFC3339),
 	}).Exec(r.Context())
 
 	if err != nil {
@@ -91,26 +90,28 @@ func login(w http.ResponseWriter, r *http.Request, user *prisma.User, client *pr
 		http.Error(w, "Failed to login", http.StatusInternalServerError)
 		return
 	}
-	log.Println("CREATED SESSION!", session.ID)
-	http.SetCookie(w, &http.Cookie{
-		Name:     "session",
-		Path:     "/",
-		Value:    session.ID,
-		Secure:   false,
-		HttpOnly: true,
-		SameSite: http.SameSiteDefaultMode,
-	})
 
-	http.Redirect(w, r, to, http.StatusTemporaryRedirect)
+	http.SetCookie(w, makeCookie(session.ID))
+	http.Redirect(w, r, to, http.StatusSeeOther)
 }
 
 func logout(w http.ResponseWriter, r *http.Request, to string) {
 	http.SetCookie(w, &http.Cookie{
-		Name:     "session",
-		Value:    "",
+		Name:     sessionCookieName,
 		Path:     "/",
-		Expires:  time.Unix(0, 0),
-		HttpOnly: true,
+		MaxAge:  -1,
 	})
-	http.Redirect(w, r, to, http.StatusTemporaryRedirect)
+	http.Redirect(w, r, to, http.StatusSeeOther)
+}
+
+func makeCookie(sessionID string) *http.Cookie {
+	return &http.Cookie{
+		Name:     sessionCookieName,
+		Path:     "/",
+		Value:    sessionID,
+		MaxAge:   60 * 60 * 24 * 7,
+		Secure:   false,
+		HttpOnly: true,
+		SameSite: http.SameSiteDefaultMode,
+	}
 }

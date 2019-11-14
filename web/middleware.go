@@ -10,7 +10,6 @@ import (
 	"net/http"
 	"os"
 	"strings"
-	"time"
 )
 
 // logMiddleware logs each request
@@ -53,12 +52,14 @@ func CSRFMiddleware(next http.Handler) http.Handler {
 	)(next)
 }
 
+const sessionCookieName = "sid"
+
 // UserMiddleware adds the User object to the context if available
 func UserMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		client := ctxGetClient(r)
 
-		c, err := r.Cookie("session")
+		c, err := r.Cookie(sessionCookieName)
 
 		// No session header, not logged in I guess!
 		if err != nil || c.Value == "" {
@@ -66,22 +67,11 @@ func UserMiddleware(next http.Handler) http.Handler {
 			return
 		}
 
-		// Update session last used
-		session, err := client.UpdateSession(prisma.SessionUpdateParams{
-			Where: prisma.SessionWhereUniqueInput{ID: &c.Value},
-			Data: prisma.SessionUpdateInput{
-				LastUsed: prisma.Str(time.Now().Format(time.RFC3339)),
-			},
-		}).Exec(r.Context())
-		if err != nil {
-			log.Println("Failed to update session by ID", c.Value, err.Error())
-			next.ServeHTTP(w, r)
-			return
-		}
+		http.SetCookie(w, makeCookie(c.Value))
 
 		// Find the user on the session
 		user, err := client.Session(prisma.SessionWhereUniqueInput{
-			ID: &session.ID,
+			ID: &c.Value,
 		}).User().Exec(r.Context())
 		if err != nil {
 			log.Println("No user found for session. Logging out", err.Error())
@@ -128,7 +118,7 @@ func GenericPageMiddleware(next http.Handler, dir string) http.Handler {
 		if template, ok := templates[r.URL.Path]; ok {
 			err := template.ExecuteWriter(pongo2.Context{
 				"user":           user,
-				"logged_in":      loggedIn,
+				"loggedIn":      loggedIn,
 				csrf.TemplateTag: csrf.TemplateField(r),
 			}, w)
 			if err != nil {

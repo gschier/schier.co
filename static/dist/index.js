@@ -117,7 +117,7 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"../node_modules/vue/dist/vue.common.dev.js":[function(require,module,exports) {
+})({"node_modules/vue/dist/vue.common.dev.js":[function(require,module,exports) {
 var global = arguments[3];
 /*!
  * Vue.js v2.6.10
@@ -12058,7 +12058,7 @@ Vue.compile = compileToFunctions;
 
 module.exports = Vue;
 
-},{}],"counter.js":[function(require,module,exports) {
+},{}],"static/counter.js":[function(require,module,exports) {
 "use strict";
 
 var _vueCommon = _interopRequireDefault(require("vue/dist/vue.common.dev"));
@@ -12078,7 +12078,7 @@ new _vueCommon.default({
     }
   }
 });
-},{"vue/dist/vue.common.dev":"../node_modules/vue/dist/vue.common.dev.js"}],"../node_modules/parcel-bundler/src/builtins/bundle-url.js":[function(require,module,exports) {
+},{"vue/dist/vue.common.dev":"node_modules/vue/dist/vue.common.dev.js"}],"node_modules/parcel-bundler/src/builtins/bundle-url.js":[function(require,module,exports) {
 var bundleURL = null;
 
 function getBundleURLCached() {
@@ -12110,7 +12110,7 @@ function getBaseURL(url) {
 
 exports.getBundleURL = getBundleURLCached;
 exports.getBaseURL = getBaseURL;
-},{}],"../node_modules/parcel-bundler/src/builtins/css-loader.js":[function(require,module,exports) {
+},{}],"node_modules/parcel-bundler/src/builtins/css-loader.js":[function(require,module,exports) {
 var bundle = require('./bundle-url');
 
 function updateLink(link) {
@@ -12145,18 +12145,18 @@ function reloadCSS() {
 }
 
 module.exports = reloadCSS;
-},{"./bundle-url":"../node_modules/parcel-bundler/src/builtins/bundle-url.js"}],"styles.css":[function(require,module,exports) {
+},{"./bundle-url":"node_modules/parcel-bundler/src/builtins/bundle-url.js"}],"styles.css":[function(require,module,exports) {
 var reloadCSS = require('_css_loader');
 
 module.hot.dispose(reloadCSS);
 module.hot.accept(reloadCSS);
-},{"_css_loader":"../node_modules/parcel-bundler/src/builtins/css-loader.js"}],"index.js":[function(require,module,exports) {
+},{"_css_loader":"node_modules/parcel-bundler/src/builtins/css-loader.js"}],"static/index.js":[function(require,module,exports) {
 "use strict";
 
 require("./counter");
 
 require("./styles.css");
-},{"./counter":"counter.js","./styles.css":"styles.css"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"./counter":"static/counter.js","./styles.css":"styles.css"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -12184,7 +12184,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "63948" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51225" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
@@ -12360,5 +12360,5 @@ function hmrAcceptRun(bundle, id) {
     return true;
   }
 }
-},{}]},{},["../node_modules/parcel-bundler/src/builtins/hmr-runtime.js","index.js"], null)
+},{}]},{},["../node_modules/parcel-bundler/src/builtins/hmr-runtime.js","static/index.js"], null)
 //# sourceMappingURL=/index.js.map
