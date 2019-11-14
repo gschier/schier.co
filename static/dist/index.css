@@ -637,6 +637,7 @@ html {
 
 body {
   background-color: #3c366b;
+  margin-bottom: 3rem;
   color: #fff;
   padding: 2rem;
 }
@@ -647,12 +648,17 @@ main {
 }
 
 a {
-  color: aquamarine;
+  color: #a3bffa;
+}
+
+a:hover {
+  text-decoration: underline;
 }
 
 hr {
+  color: #97266d;
   border: 0;
-  border-bottom: 1px solid #34344d;
+  border-bottom: 1px solid;
 }
 
 h1 {
@@ -669,7 +675,7 @@ p {
 }
 
 .btn {
-  background-color: #ed64a6;
+  background-color: #5a67d8;
   color: #f7fafc;
   font-weight: 700;
   padding-top: 0.5rem;

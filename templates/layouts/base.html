@@ -13,16 +13,16 @@
 
     <link href="/static/dist/index.css" rel="stylesheet">
 </head>
-<body>
-<nav class="max-w-2xl mx-auto mb-8">
-    <ul class="flex">
+<body class="p-0">
+<nav class="mb-8 bg-secondary-900 p-4">
+    <ul class="flex mx-auto max-w-2xl">
         <li class="mr-6">
             <a href="/">Home</a>
         </li>
         <li class="mr-6">
             <a href="/blog">Blog</a>
         </li>
-        <li class="mr-6">
+        <li class="mr-6 ml-auto">
             {% if loggedIn %}
                 <a href="/logout">Logout</a>
             {% else %}

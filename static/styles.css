@@ -11,7 +11,7 @@ html {
 }
 
 body {
-    @apply bg-primary-900;
+    @apply bg-primary-900 mb-12;
     color: #fff;
     padding: 2rem;
 }
@@ -22,12 +22,17 @@ main {
 }
 
 a {
-    color: aquamarine;
+    @apply text-primary-300;
+}
+
+a:hover {
+    text-decoration: underline;
 }
 
 hr {
+    @apply text-secondary-800;
     border: 0;
-    border-bottom: 1px solid #34344d;
+    border-bottom: 1px solid;
 }
 
 h1 {
@@ -43,7 +48,7 @@ p {
 }
 
 .btn {
-    @apply bg-secondary-500 text-gray-100 font-bold py-2 px-4 rounded;
+    @apply bg-primary-600 text-gray-100 font-bold py-2 px-4 rounded;
 }
 
 .btn:hover {
