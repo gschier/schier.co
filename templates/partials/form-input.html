@@ -1,4 +1,7 @@
+{% if type != 'hidden' %}
 <div class="form-row">
+{% endif %}
+
     {% if label %}
         <label class="form-label" for="i-{{ name }}">{{ label }}</label>
     {% endif %}
@@ -9,9 +12,7 @@
                   id="i-{{ name }}"
                   rows="20"
                   {% if autofocus %}autofocus="autofocus"{% endif %}
-                  placeholder="{{ placeholder }}">
-            {{ value }}
-        </textarea>
+                  placeholder="{{ placeholder }}">{{ value }}</textarea>
     {% else %}
         <input class="form-input"
                type="{{ type | default:'text' }}"
@@ -21,4 +22,8 @@
                {% if autofocus %}autofocus="autofocus"{% endif %}
                value="{{ value }}" />
     {% endif %}
+
+{% if type != 'hidden' %}
 </div>
+{% endif %}
+

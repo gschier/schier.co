@@ -23,6 +23,7 @@ type BlogPost {
     id: ID! @id
     createdAt: DateTime! @createdAt
     updatedAt: DateTime! @updatedAt
+    published: Boolean!
     slug: String! @unique
     title: String!
     date: DateTime!

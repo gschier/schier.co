@@ -1,5 +1,4 @@
 @tailwind base;
-
 @tailwind components;
 
 html {
@@ -21,11 +20,15 @@ main {
     margin-right: auto;
 }
 
-a {
+.link {
+    -webkit-appearance: initial;
+}
+
+a, .link {
     @apply text-primary-300;
 }
 
-a:hover {
+a:hover, .link:hover {
     text-decoration: underline;
 }
 

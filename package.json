@@ -3,7 +3,8 @@
   "name": "schier.dev",
   "version": "1.0.0",
   "scripts": {
-    "start": "parcel watch -d static/dist ./static/index.js"
+    "start": "parcel watch --out-dir ./static/dist --public-url /static/dist/ ./static/index.js",
+    "build": "parcel build --no-source-maps --out-dir ./static/dist --public-url /static/dist/ ./static/index.js"
   },
   "devDependencies": {
     "autoprefixer": "^9.7.1",

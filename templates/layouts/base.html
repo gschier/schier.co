@@ -22,6 +22,11 @@
         <li class="mr-6">
             <a href="/blog">Blog</a>
         </li>
+        {% if loggedIn %}
+            <li class="mr-6">
+                <a href="/blog/new">New</a>
+            </li>
+        {% endif %}
         <li class="mr-6 ml-auto">
             {% if loggedIn %}
                 <a href="/logout">Logout</a>

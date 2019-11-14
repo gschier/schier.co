@@ -2,10 +2,16 @@
 
 {% block content %}
     <div class="blog-post">
-        <h1>{{ blogPost.Title }}</h1>
+        <h1>{{ blogPost.Title }} {{ blogPost.Published | yesno:",(Draft)" }}</h1>
+        {% if loggedIn %}
+            <form action="/forms/blog/publish" method="post">
+                <a href="/blog/{{ blogPost.Slug }}/edit">Edit</a> |
+                {{ csrfField | safe }}
+                {% include '../partials/form-input.html' with type='hidden' name='id' value=blogPost.ID %}
+                {% include '../partials/form-input.html' with type='hidden' name='published' value=blogPost.Published | yesno:"false,true" %}
+                <button class="link" type="submit">{{ blogPost.Published | yesno:"Unpublish,Publish" }}</button>
+            </form>
+        {% endif %}
         {{ blogPost.RenderedContent | safe }}
     </div>
-    <p>
-        <a href="/blog/{{ blogPost.Slug }}/edit">Edit</a>
-    </p>
 {% endblock %}

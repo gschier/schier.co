@@ -12184,7 +12184,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51403" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "62822" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
@@ -12361,4 +12361,4 @@ function hmrAcceptRun(bundle, id) {
   }
 }
 },{}]},{},["../node_modules/parcel-bundler/src/builtins/hmr-runtime.js","index.js"], null)
-//# sourceMappingURL=/index.js.map
+//# sourceMappingURL=/static/dist/index.js.map

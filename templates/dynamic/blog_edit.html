@@ -3,13 +3,14 @@
 {% block content %}
     <div class="mx-auto mt-12 max-w-lg">
         <h1 class="mb-6">Edit Post</h1>
-        <form action="/forms/blog" method="post">
+        <form action="/forms/blog/upsert" method="post">
             {{ csrfField | safe }}
-            {% include '../partials/form-input.html' with label='Slug' type='text' name='slug' value=blogPost.Slug %}
-            {% include '../partials/form-input.html' with label='Title' type='text' name='title' value=blogPost.Title %}
-            {% include '../partials/form-input.html' with label='Content' type='textarea' name='content' value=blogPost.Content %}
+            {% include '../partials/form-input.html' with type='hidden' name='id' value=blogPost.ID %}
+            {% include '../partials/form-input.html' with label='Slug' type='text' name='slug' value=blogPost.Slug placeholder='my-blog-post' autofocus=true %}
+            {% include '../partials/form-input.html' with label='Title' type='text' name='title' value=blogPost.Title placeholder='My Blog Post' %}
+            {% include '../partials/form-input.html' with label='Content' type='textarea' name='content' value=blogPost.Content placeholder='This is my content.' %}
             <button class="btn">
-                Update
+                {% if blogPost %}Update{% else %}Create{% endif %}
             </button>
         </form>
     </div>

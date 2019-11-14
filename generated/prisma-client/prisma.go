@@ -68,7 +68,7 @@ func (client *Client) BlogPost(params BlogPostWhereUniqueInput) *BlogPostExec {
 		params,
 		[2]string{"BlogPostWhereUniqueInput!", "BlogPost"},
 		"blogPost",
-		[]string{"id", "createdAt", "updatedAt", "slug", "title", "date", "content", "renderedContent"})
+		[]string{"id", "createdAt", "updatedAt", "published", "slug", "title", "date", "content", "renderedContent"})
 
 	return &BlogPostExec{ret}
 }
@@ -102,7 +102,7 @@ func (client *Client) BlogPosts(params *BlogPostsParams) *BlogPostExecArray {
 		wparams,
 		[3]string{"BlogPostWhereInput", "BlogPostOrderByInput", "BlogPost"},
 		"blogPosts",
-		[]string{"id", "createdAt", "updatedAt", "slug", "title", "date", "content", "renderedContent"})
+		[]string{"id", "createdAt", "updatedAt", "published", "slug", "title", "date", "content", "renderedContent"})
 
 	return &BlogPostExecArray{ret}
 }
@@ -117,47 +117,8 @@ type BlogPostsConnectionParams struct {
 	Last    *int32                `json:"last,omitempty"`
 }
 
-// Nodes return just nodes without cursors. It uses the already fetched edges.
-func (s *BlogPostConnection) Nodes() []BlogPost {
-	var nodes []BlogPost
-	for _, edge := range s.Edges {
-		nodes = append(nodes, edge.Node)
-	}
-	return nodes
-}
-
-// Nodes return just nodes without cursors, but as a slice of pointers. It uses the already fetched edges.
-func (s *BlogPostConnection) NodesPtr() []*BlogPost {
-	var nodes []*BlogPost
-	for _, edge := range s.Edges {
-		item := edge
-		nodes = append(nodes, &item.Node)
-	}
-	return nodes
-}
-
-func (client *Client) BlogPostsConnection(params *BlogPostsConnectionParams) *BlogPostConnectionExec {
-	var wparams *prisma.WhereParams
-	if params != nil {
-		wparams = &prisma.WhereParams{
-			Where:   params.Where,
-			OrderBy: (*string)(params.OrderBy),
-			Skip:    params.Skip,
-			After:   params.After,
-			Before:  params.Before,
-			First:   params.First,
-			Last:    params.Last,
-		}
-	}
-
-	ret := client.Client.GetMany(
-		nil,
-		wparams,
-		[3]string{"BlogPostWhereInput", "BlogPostOrderByInput", "BlogPost"},
-		"blogPostsConnection",
-		[]string{"edges", "pageInfo"})
-
-	return &BlogPostConnectionExec{ret}
+func (client *Client) BlogPostsConnection(params *BlogPostsConnectionParams) BlogPostConnectionExec {
+	panic("not implemented")
 }
 
 func (client *Client) Session(params SessionWhereUniqueInput) *SessionExec {
@@ -215,47 +176,8 @@ type SessionsConnectionParams struct {
 	Last    *int32               `json:"last,omitempty"`
 }
 
-// Nodes return just nodes without cursors. It uses the already fetched edges.
-func (s *SessionConnection) Nodes() []Session {
-	var nodes []Session
-	for _, edge := range s.Edges {
-		nodes = append(nodes, edge.Node)
-	}
-	return nodes
-}
-
-// Nodes return just nodes without cursors, but as a slice of pointers. It uses the already fetched edges.
-func (s *SessionConnection) NodesPtr() []*Session {
-	var nodes []*Session
-	for _, edge := range s.Edges {
-		item := edge
-		nodes = append(nodes, &item.Node)
-	}
-	return nodes
-}
-
-func (client *Client) SessionsConnection(params *SessionsConnectionParams) *SessionConnectionExec {
-	var wparams *prisma.WhereParams
-	if params != nil {
-		wparams = &prisma.WhereParams{
-			Where:   params.Where,
-			OrderBy: (*string)(params.OrderBy),
-			Skip:    params.Skip,
-			After:   params.After,
-			Before:  params.Before,
-			First:   params.First,
-			Last:    params.Last,
-		}
-	}
-
-	ret := client.Client.GetMany(
-		nil,
-		wparams,
-		[3]string{"SessionWhereInput", "SessionOrderByInput", "Session"},
-		"sessionsConnection",
-		[]string{"edges", "pageInfo"})
-
-	return &SessionConnectionExec{ret}
+func (client *Client) SessionsConnection(params *SessionsConnectionParams) SessionConnectionExec {
+	panic("not implemented")
 }
 
 func (client *Client) User(params UserWhereUniqueInput) *UserExec {
@@ -313,47 +235,8 @@ type UsersConnectionParams struct {
 	Last    *int32            `json:"last,omitempty"`
 }
 
-// Nodes return just nodes without cursors. It uses the already fetched edges.
-func (s *UserConnection) Nodes() []User {
-	var nodes []User
-	for _, edge := range s.Edges {
-		nodes = append(nodes, edge.Node)
-	}
-	return nodes
-}
-
-// Nodes return just nodes without cursors, but as a slice of pointers. It uses the already fetched edges.
-func (s *UserConnection) NodesPtr() []*User {
-	var nodes []*User
-	for _, edge := range s.Edges {
-		item := edge
-		nodes = append(nodes, &item.Node)
-	}
-	return nodes
-}
-
-func (client *Client) UsersConnection(params *UsersConnectionParams) *UserConnectionExec {
-	var wparams *prisma.WhereParams
-	if params != nil {
-		wparams = &prisma.WhereParams{
-			Where:   params.Where,
-			OrderBy: (*string)(params.OrderBy),
-			Skip:    params.Skip,
-			After:   params.After,
-			Before:  params.Before,
-			First:   params.First,
-			Last:    params.Last,
-		}
-	}
-
-	ret := client.Client.GetMany(
-		nil,
-		wparams,
-		[3]string{"UserWhereInput", "UserOrderByInput", "User"},
-		"usersConnection",
-		[]string{"edges", "pageInfo"})
-
-	return &UserConnectionExec{ret}
+func (client *Client) UsersConnection(params *UsersConnectionParams) UserConnectionExec {
+	panic("not implemented")
 }
 
 func (client *Client) CreateBlogPost(params BlogPostCreateInput) *BlogPostExec {
@@ -361,7 +244,7 @@ func (client *Client) CreateBlogPost(params BlogPostCreateInput) *BlogPostExec {
 		params,
 		[2]string{"BlogPostCreateInput!", "BlogPost"},
 		"createBlogPost",
-		[]string{"id", "createdAt", "updatedAt", "slug", "title", "date", "content", "renderedContent"})
+		[]string{"id", "createdAt", "updatedAt", "published", "slug", "title", "date", "content", "renderedContent"})
 
 	return &BlogPostExec{ret}
 }
@@ -379,7 +262,7 @@ func (client *Client) UpdateBlogPost(params BlogPostUpdateParams) *BlogPostExec 
 		},
 		[3]string{"BlogPostUpdateInput!", "BlogPostWhereUniqueInput!", "BlogPost"},
 		"updateBlogPost",
-		[]string{"id", "createdAt", "updatedAt", "slug", "title", "date", "content", "renderedContent"})
+		[]string{"id", "createdAt", "updatedAt", "published", "slug", "title", "date", "content", "renderedContent"})
 
 	return &BlogPostExec{ret}
 }
@@ -416,7 +299,7 @@ func (client *Client) UpsertBlogPost(params BlogPostUpsertParams) *BlogPostExec 
 		uparams,
 		[4]string{"BlogPostWhereUniqueInput!", "BlogPostCreateInput!", "BlogPostUpdateInput!", "BlogPost"},
 		"upsertBlogPost",
-		[]string{"id", "createdAt", "updatedAt", "slug", "title", "date", "content", "renderedContent"})
+		[]string{"id", "createdAt", "updatedAt", "published", "slug", "title", "date", "content", "renderedContent"})
 
 	return &BlogPostExec{ret}
 }
@@ -426,7 +309,7 @@ func (client *Client) DeleteBlogPost(params BlogPostWhereUniqueInput) *BlogPostE
 		params,
 		[2]string{"BlogPostWhereUniqueInput!", "BlogPost"},
 		"deleteBlogPost",
-		[]string{"id", "createdAt", "updatedAt", "slug", "title", "date", "content", "renderedContent"})
+		[]string{"id", "createdAt", "updatedAt", "published", "slug", "title", "date", "content", "renderedContent"})
 
 	return &BlogPostExec{ret}
 }
@@ -596,6 +479,8 @@ const (
 	BlogPostOrderByInputCreatedAtDesc       BlogPostOrderByInput = "createdAt_DESC"
 	BlogPostOrderByInputUpdatedAtAsc        BlogPostOrderByInput = "updatedAt_ASC"
 	BlogPostOrderByInputUpdatedAtDesc       BlogPostOrderByInput = "updatedAt_DESC"
+	BlogPostOrderByInputPublishedAsc        BlogPostOrderByInput = "published_ASC"
+	BlogPostOrderByInputPublishedDesc       BlogPostOrderByInput = "published_DESC"
 	BlogPostOrderByInputSlugAsc             BlogPostOrderByInput = "slug_ASC"
 	BlogPostOrderByInputSlugDesc            BlogPostOrderByInput = "slug_DESC"
 	BlogPostOrderByInputTitleAsc            BlogPostOrderByInput = "title_ASC"
@@ -617,6 +502,14 @@ const (
 	SessionOrderByInputCreatedAtDesc SessionOrderByInput = "createdAt_DESC"
 )
 
+type MutationType string
+
+const (
+	MutationTypeCreated MutationType = "CREATED"
+	MutationTypeUpdated MutationType = "UPDATED"
+	MutationTypeDeleted MutationType = "DELETED"
+)
+
 type UserOrderByInput string
 
 const (
@@ -636,17 +529,47 @@ const (
 	UserOrderByInputPasswordHashDesc UserOrderByInput = "passwordHash_DESC"
 )
 
-type MutationType string
-
-const (
-	MutationTypeCreated MutationType = "CREATED"
-	MutationTypeUpdated MutationType = "UPDATED"
-	MutationTypeDeleted MutationType = "DELETED"
-)
+type BlogPostUpdateManyMutationInput struct {
+	Published       *bool   `json:"published,omitempty"`
+	Slug            *string `json:"slug,omitempty"`
+	Title           *string `json:"title,omitempty"`
+	Date            *string `json:"date,omitempty"`
+	Content         *string `json:"content,omitempty"`
+	RenderedContent *string `json:"renderedContent,omitempty"`
+}
 
 type BlogPostWhereUniqueInput struct {
 	ID   *string `json:"id,omitempty"`
 	Slug *string `json:"slug,omitempty"`
+}
+
+type SessionWhereInput struct {
+	ID              *string             `json:"id,omitempty"`
+	IDNot           *string             `json:"id_not,omitempty"`
+	IDIn            []string            `json:"id_in,omitempty"`
+	IDNotIn         []string            `json:"id_not_in,omitempty"`
+	IDLt            *string             `json:"id_lt,omitempty"`
+	IDLte           *string             `json:"id_lte,omitempty"`
+	IDGt            *string             `json:"id_gt,omitempty"`
+	IDGte           *string             `json:"id_gte,omitempty"`
+	IDContains      *string             `json:"id_contains,omitempty"`
+	IDNotContains   *string             `json:"id_not_contains,omitempty"`
+	IDStartsWith    *string             `json:"id_starts_with,omitempty"`
+	IDNotStartsWith *string             `json:"id_not_starts_with,omitempty"`
+	IDEndsWith      *string             `json:"id_ends_with,omitempty"`
+	IDNotEndsWith   *string             `json:"id_not_ends_with,omitempty"`
+	CreatedAt       *string             `json:"createdAt,omitempty"`
+	CreatedAtNot    *string             `json:"createdAt_not,omitempty"`
+	CreatedAtIn     []string            `json:"createdAt_in,omitempty"`
+	CreatedAtNotIn  []string            `json:"createdAt_not_in,omitempty"`
+	CreatedAtLt     *string             `json:"createdAt_lt,omitempty"`
+	CreatedAtLte    *string             `json:"createdAt_lte,omitempty"`
+	CreatedAtGt     *string             `json:"createdAt_gt,omitempty"`
+	CreatedAtGte    *string             `json:"createdAt_gte,omitempty"`
+	User            *UserWhereInput     `json:"user,omitempty"`
+	And             []SessionWhereInput `json:"AND,omitempty"`
+	Or              []SessionWhereInput `json:"OR,omitempty"`
+	Not             []SessionWhereInput `json:"NOT,omitempty"`
 }
 
 type BlogPostWhereInput struct {
@@ -680,6 +603,8 @@ type BlogPostWhereInput struct {
 	UpdatedAtLte                 *string              `json:"updatedAt_lte,omitempty"`
 	UpdatedAtGt                  *string              `json:"updatedAt_gt,omitempty"`
 	UpdatedAtGte                 *string              `json:"updatedAt_gte,omitempty"`
+	Published                    *bool                `json:"published,omitempty"`
+	PublishedNot                 *bool                `json:"published_not,omitempty"`
 	Slug                         *string              `json:"slug,omitempty"`
 	SlugNot                      *string              `json:"slug_not,omitempty"`
 	SlugIn                       []string             `json:"slug_in,omitempty"`
@@ -748,6 +673,124 @@ type BlogPostWhereInput struct {
 	And                          []BlogPostWhereInput `json:"AND,omitempty"`
 	Or                           []BlogPostWhereInput `json:"OR,omitempty"`
 	Not                          []BlogPostWhereInput `json:"NOT,omitempty"`
+}
+
+type BlogPostSubscriptionWhereInput struct {
+	MutationIn                 []MutationType                   `json:"mutation_in,omitempty"`
+	UpdatedFieldsContains      *string                          `json:"updatedFields_contains,omitempty"`
+	UpdatedFieldsContainsEvery []string                         `json:"updatedFields_contains_every,omitempty"`
+	UpdatedFieldsContainsSome  []string                         `json:"updatedFields_contains_some,omitempty"`
+	Node                       *BlogPostWhereInput              `json:"node,omitempty"`
+	And                        []BlogPostSubscriptionWhereInput `json:"AND,omitempty"`
+	Or                         []BlogPostSubscriptionWhereInput `json:"OR,omitempty"`
+	Not                        []BlogPostSubscriptionWhereInput `json:"NOT,omitempty"`
+}
+
+type UserUpdateManyMutationInput struct {
+	Type         *UserType `json:"type,omitempty"`
+	Email        *string   `json:"email,omitempty"`
+	Name         *string   `json:"name,omitempty"`
+	PasswordHash *string   `json:"passwordHash,omitempty"`
+}
+
+type UserUpdateOneRequiredInput struct {
+	Create  *UserCreateInput       `json:"create,omitempty"`
+	Update  *UserUpdateDataInput   `json:"update,omitempty"`
+	Upsert  *UserUpsertNestedInput `json:"upsert,omitempty"`
+	Connect *UserWhereUniqueInput  `json:"connect,omitempty"`
+}
+
+type SessionUpdateInput struct {
+	User *UserUpdateOneRequiredInput `json:"user,omitempty"`
+}
+
+type BlogPostUpdateInput struct {
+	Published       *bool                       `json:"published,omitempty"`
+	Slug            *string                     `json:"slug,omitempty"`
+	Title           *string                     `json:"title,omitempty"`
+	Date            *string                     `json:"date,omitempty"`
+	Author          *UserUpdateOneRequiredInput `json:"author,omitempty"`
+	Content         *string                     `json:"content,omitempty"`
+	RenderedContent *string                     `json:"renderedContent,omitempty"`
+}
+
+type UserSubscriptionWhereInput struct {
+	MutationIn                 []MutationType               `json:"mutation_in,omitempty"`
+	UpdatedFieldsContains      *string                      `json:"updatedFields_contains,omitempty"`
+	UpdatedFieldsContainsEvery []string                     `json:"updatedFields_contains_every,omitempty"`
+	UpdatedFieldsContainsSome  []string                     `json:"updatedFields_contains_some,omitempty"`
+	Node                       *UserWhereInput              `json:"node,omitempty"`
+	And                        []UserSubscriptionWhereInput `json:"AND,omitempty"`
+	Or                         []UserSubscriptionWhereInput `json:"OR,omitempty"`
+	Not                        []UserSubscriptionWhereInput `json:"NOT,omitempty"`
+}
+
+type UserCreateInput struct {
+	ID           *string   `json:"id,omitempty"`
+	Type         *UserType `json:"type,omitempty"`
+	Email        string    `json:"email"`
+	Name         string    `json:"name"`
+	PasswordHash string    `json:"passwordHash"`
+}
+
+type SessionWhereUniqueInput struct {
+	ID *string `json:"id,omitempty"`
+}
+
+type BlogPostCreateInput struct {
+	ID              *string            `json:"id,omitempty"`
+	Published       bool               `json:"published"`
+	Slug            string             `json:"slug"`
+	Title           string             `json:"title"`
+	Date            string             `json:"date"`
+	Author          UserCreateOneInput `json:"author"`
+	Content         string             `json:"content"`
+	RenderedContent string             `json:"renderedContent"`
+}
+
+type UserCreateOneInput struct {
+	Create  *UserCreateInput      `json:"create,omitempty"`
+	Connect *UserWhereUniqueInput `json:"connect,omitempty"`
+}
+
+type SessionSubscriptionWhereInput struct {
+	MutationIn                 []MutationType                  `json:"mutation_in,omitempty"`
+	UpdatedFieldsContains      *string                         `json:"updatedFields_contains,omitempty"`
+	UpdatedFieldsContainsEvery []string                        `json:"updatedFields_contains_every,omitempty"`
+	UpdatedFieldsContainsSome  []string                        `json:"updatedFields_contains_some,omitempty"`
+	Node                       *SessionWhereInput              `json:"node,omitempty"`
+	And                        []SessionSubscriptionWhereInput `json:"AND,omitempty"`
+	Or                         []SessionSubscriptionWhereInput `json:"OR,omitempty"`
+	Not                        []SessionSubscriptionWhereInput `json:"NOT,omitempty"`
+}
+
+type UserWhereUniqueInput struct {
+	ID    *string `json:"id,omitempty"`
+	Email *string `json:"email,omitempty"`
+}
+
+type UserUpdateDataInput struct {
+	Type         *UserType `json:"type,omitempty"`
+	Email        *string   `json:"email,omitempty"`
+	Name         *string   `json:"name,omitempty"`
+	PasswordHash *string   `json:"passwordHash,omitempty"`
+}
+
+type UserUpsertNestedInput struct {
+	Update UserUpdateDataInput `json:"update"`
+	Create UserCreateInput     `json:"create"`
+}
+
+type SessionCreateInput struct {
+	ID   *string            `json:"id,omitempty"`
+	User UserCreateOneInput `json:"user"`
+}
+
+type UserUpdateInput struct {
+	Type         *UserType `json:"type,omitempty"`
+	Email        *string   `json:"email,omitempty"`
+	Name         *string   `json:"name,omitempty"`
+	PasswordHash *string   `json:"passwordHash,omitempty"`
 }
 
 type UserWhereInput struct {
@@ -832,176 +875,23 @@ type UserWhereInput struct {
 	Not                       []UserWhereInput `json:"NOT,omitempty"`
 }
 
-type SessionWhereUniqueInput struct {
-	ID *string `json:"id,omitempty"`
-}
-
-type SessionWhereInput struct {
-	ID              *string             `json:"id,omitempty"`
-	IDNot           *string             `json:"id_not,omitempty"`
-	IDIn            []string            `json:"id_in,omitempty"`
-	IDNotIn         []string            `json:"id_not_in,omitempty"`
-	IDLt            *string             `json:"id_lt,omitempty"`
-	IDLte           *string             `json:"id_lte,omitempty"`
-	IDGt            *string             `json:"id_gt,omitempty"`
-	IDGte           *string             `json:"id_gte,omitempty"`
-	IDContains      *string             `json:"id_contains,omitempty"`
-	IDNotContains   *string             `json:"id_not_contains,omitempty"`
-	IDStartsWith    *string             `json:"id_starts_with,omitempty"`
-	IDNotStartsWith *string             `json:"id_not_starts_with,omitempty"`
-	IDEndsWith      *string             `json:"id_ends_with,omitempty"`
-	IDNotEndsWith   *string             `json:"id_not_ends_with,omitempty"`
-	CreatedAt       *string             `json:"createdAt,omitempty"`
-	CreatedAtNot    *string             `json:"createdAt_not,omitempty"`
-	CreatedAtIn     []string            `json:"createdAt_in,omitempty"`
-	CreatedAtNotIn  []string            `json:"createdAt_not_in,omitempty"`
-	CreatedAtLt     *string             `json:"createdAt_lt,omitempty"`
-	CreatedAtLte    *string             `json:"createdAt_lte,omitempty"`
-	CreatedAtGt     *string             `json:"createdAt_gt,omitempty"`
-	CreatedAtGte    *string             `json:"createdAt_gte,omitempty"`
-	User            *UserWhereInput     `json:"user,omitempty"`
-	And             []SessionWhereInput `json:"AND,omitempty"`
-	Or              []SessionWhereInput `json:"OR,omitempty"`
-	Not             []SessionWhereInput `json:"NOT,omitempty"`
-}
-
-type UserWhereUniqueInput struct {
-	ID    *string `json:"id,omitempty"`
-	Email *string `json:"email,omitempty"`
-}
-
-type BlogPostCreateInput struct {
-	ID              *string            `json:"id,omitempty"`
-	Slug            string             `json:"slug"`
-	Title           string             `json:"title"`
-	Date            string             `json:"date"`
-	Author          UserCreateOneInput `json:"author"`
-	Content         string             `json:"content"`
-	RenderedContent string             `json:"renderedContent"`
-}
-
-type UserCreateOneInput struct {
-	Create  *UserCreateInput      `json:"create,omitempty"`
-	Connect *UserWhereUniqueInput `json:"connect,omitempty"`
-}
-
-type UserCreateInput struct {
-	ID           *string   `json:"id,omitempty"`
-	Type         *UserType `json:"type,omitempty"`
-	Email        string    `json:"email"`
-	Name         string    `json:"name"`
-	PasswordHash string    `json:"passwordHash"`
-}
-
-type BlogPostUpdateInput struct {
-	Slug            *string                     `json:"slug,omitempty"`
-	Title           *string                     `json:"title,omitempty"`
-	Date            *string                     `json:"date,omitempty"`
-	Author          *UserUpdateOneRequiredInput `json:"author,omitempty"`
-	Content         *string                     `json:"content,omitempty"`
-	RenderedContent *string                     `json:"renderedContent,omitempty"`
-}
-
-type UserUpdateOneRequiredInput struct {
-	Create  *UserCreateInput       `json:"create,omitempty"`
-	Update  *UserUpdateDataInput   `json:"update,omitempty"`
-	Upsert  *UserUpsertNestedInput `json:"upsert,omitempty"`
-	Connect *UserWhereUniqueInput  `json:"connect,omitempty"`
-}
-
-type UserUpdateDataInput struct {
-	Type         *UserType `json:"type,omitempty"`
-	Email        *string   `json:"email,omitempty"`
-	Name         *string   `json:"name,omitempty"`
-	PasswordHash *string   `json:"passwordHash,omitempty"`
-}
-
-type UserUpsertNestedInput struct {
-	Update UserUpdateDataInput `json:"update"`
-	Create UserCreateInput     `json:"create"`
-}
-
-type BlogPostUpdateManyMutationInput struct {
-	Slug            *string `json:"slug,omitempty"`
-	Title           *string `json:"title,omitempty"`
-	Date            *string `json:"date,omitempty"`
-	Content         *string `json:"content,omitempty"`
-	RenderedContent *string `json:"renderedContent,omitempty"`
-}
-
-type SessionCreateInput struct {
-	ID   *string            `json:"id,omitempty"`
-	User UserCreateOneInput `json:"user"`
-}
-
-type SessionUpdateInput struct {
-	User *UserUpdateOneRequiredInput `json:"user,omitempty"`
-}
-
-type UserUpdateInput struct {
-	Type         *UserType `json:"type,omitempty"`
-	Email        *string   `json:"email,omitempty"`
-	Name         *string   `json:"name,omitempty"`
-	PasswordHash *string   `json:"passwordHash,omitempty"`
-}
-
-type UserUpdateManyMutationInput struct {
-	Type         *UserType `json:"type,omitempty"`
-	Email        *string   `json:"email,omitempty"`
-	Name         *string   `json:"name,omitempty"`
-	PasswordHash *string   `json:"passwordHash,omitempty"`
-}
-
-type BlogPostSubscriptionWhereInput struct {
-	MutationIn                 []MutationType                   `json:"mutation_in,omitempty"`
-	UpdatedFieldsContains      *string                          `json:"updatedFields_contains,omitempty"`
-	UpdatedFieldsContainsEvery []string                         `json:"updatedFields_contains_every,omitempty"`
-	UpdatedFieldsContainsSome  []string                         `json:"updatedFields_contains_some,omitempty"`
-	Node                       *BlogPostWhereInput              `json:"node,omitempty"`
-	And                        []BlogPostSubscriptionWhereInput `json:"AND,omitempty"`
-	Or                         []BlogPostSubscriptionWhereInput `json:"OR,omitempty"`
-	Not                        []BlogPostSubscriptionWhereInput `json:"NOT,omitempty"`
-}
-
-type SessionSubscriptionWhereInput struct {
-	MutationIn                 []MutationType                  `json:"mutation_in,omitempty"`
-	UpdatedFieldsContains      *string                         `json:"updatedFields_contains,omitempty"`
-	UpdatedFieldsContainsEvery []string                        `json:"updatedFields_contains_every,omitempty"`
-	UpdatedFieldsContainsSome  []string                        `json:"updatedFields_contains_some,omitempty"`
-	Node                       *SessionWhereInput              `json:"node,omitempty"`
-	And                        []SessionSubscriptionWhereInput `json:"AND,omitempty"`
-	Or                         []SessionSubscriptionWhereInput `json:"OR,omitempty"`
-	Not                        []SessionSubscriptionWhereInput `json:"NOT,omitempty"`
-}
-
-type UserSubscriptionWhereInput struct {
-	MutationIn                 []MutationType               `json:"mutation_in,omitempty"`
-	UpdatedFieldsContains      *string                      `json:"updatedFields_contains,omitempty"`
-	UpdatedFieldsContainsEvery []string                     `json:"updatedFields_contains_every,omitempty"`
-	UpdatedFieldsContainsSome  []string                     `json:"updatedFields_contains_some,omitempty"`
-	Node                       *UserWhereInput              `json:"node,omitempty"`
-	And                        []UserSubscriptionWhereInput `json:"AND,omitempty"`
-	Or                         []UserSubscriptionWhereInput `json:"OR,omitempty"`
-	Not                        []UserSubscriptionWhereInput `json:"NOT,omitempty"`
-}
-
-type BlogPostExec struct {
+type UserEdgeExec struct {
 	exec *prisma.Exec
 }
 
-func (instance *BlogPostExec) Author() *UserExec {
+func (instance *UserEdgeExec) Node() *UserExec {
 	ret := instance.exec.Client.GetOne(
 		instance.exec,
 		nil,
 		[2]string{"", "User"},
-		"author",
+		"node",
 		[]string{"id", "type", "createdAt", "updatedAt", "email", "name", "passwordHash"})
 
 	return &UserExec{ret}
 }
 
-func (instance BlogPostExec) Exec(ctx context.Context) (*BlogPost, error) {
-	var v BlogPost
+func (instance UserEdgeExec) Exec(ctx context.Context) (*UserEdge, error) {
+	var v UserEdge
 	ok, err := instance.exec.Exec(ctx, &v)
 	if err != nil {
 		return nil, err
@@ -1012,31 +902,198 @@ func (instance BlogPostExec) Exec(ctx context.Context) (*BlogPost, error) {
 	return &v, nil
 }
 
-func (instance BlogPostExec) Exists(ctx context.Context) (bool, error) {
+func (instance UserEdgeExec) Exists(ctx context.Context) (bool, error) {
 	return instance.exec.Exists(ctx)
 }
 
-type BlogPostExecArray struct {
+type UserEdgeExecArray struct {
 	exec *prisma.Exec
 }
 
-func (instance BlogPostExecArray) Exec(ctx context.Context) ([]BlogPost, error) {
-	var v []BlogPost
+func (instance UserEdgeExecArray) Exec(ctx context.Context) ([]UserEdge, error) {
+	var v []UserEdge
 	err := instance.exec.ExecArray(ctx, &v)
 	return v, err
 }
 
-var BlogPostFields = []string{"id", "createdAt", "updatedAt", "slug", "title", "date", "content", "renderedContent"}
+type UserEdge struct {
+	Cursor string `json:"cursor"`
+}
 
-type BlogPost struct {
-	ID              string `json:"id"`
-	CreatedAt       string `json:"createdAt"`
-	UpdatedAt       string `json:"updatedAt"`
-	Slug            string `json:"slug"`
-	Title           string `json:"title"`
-	Date            string `json:"date"`
-	Content         string `json:"content"`
-	RenderedContent string `json:"renderedContent"`
+type BlogPostConnectionExec struct {
+	exec *prisma.Exec
+}
+
+func (instance *BlogPostConnectionExec) PageInfo() *PageInfoExec {
+	ret := instance.exec.Client.GetOne(
+		instance.exec,
+		nil,
+		[2]string{"", "PageInfo"},
+		"pageInfo",
+		[]string{"hasNextPage", "hasPreviousPage", "startCursor", "endCursor"})
+
+	return &PageInfoExec{ret}
+}
+
+func (instance *BlogPostConnectionExec) Edges() *BlogPostEdgeExec {
+	ret := instance.exec.Client.GetOne(
+		instance.exec,
+		nil,
+		[2]string{"", "BlogPostEdge"},
+		"edges",
+		[]string{"cursor"})
+
+	return &BlogPostEdgeExec{ret}
+}
+
+func (instance *BlogPostConnectionExec) Aggregate(ctx context.Context) (Aggregate, error) {
+	ret := instance.exec.Client.GetOne(
+		instance.exec,
+		nil,
+		[2]string{"", "AggregateBlogPost"},
+		"aggregate",
+		[]string{"count"})
+
+	var v Aggregate
+	_, err := ret.Exec(ctx, &v)
+	return v, err
+}
+
+func (instance BlogPostConnectionExec) Exec(ctx context.Context) (*BlogPostConnection, error) {
+	var v BlogPostConnection
+	ok, err := instance.exec.Exec(ctx, &v)
+	if err != nil {
+		return nil, err
+	}
+	if !ok {
+		return nil, ErrNoResult
+	}
+	return &v, nil
+}
+
+func (instance BlogPostConnectionExec) Exists(ctx context.Context) (bool, error) {
+	return instance.exec.Exists(ctx)
+}
+
+type BlogPostConnectionExecArray struct {
+	exec *prisma.Exec
+}
+
+func (instance BlogPostConnectionExecArray) Exec(ctx context.Context) ([]BlogPostConnection, error) {
+	var v []BlogPostConnection
+	err := instance.exec.ExecArray(ctx, &v)
+	return v, err
+}
+
+type BlogPostConnection struct {
+}
+
+type UserPreviousValuesExec struct {
+	exec *prisma.Exec
+}
+
+func (instance UserPreviousValuesExec) Exec(ctx context.Context) (*UserPreviousValues, error) {
+	var v UserPreviousValues
+	ok, err := instance.exec.Exec(ctx, &v)
+	if err != nil {
+		return nil, err
+	}
+	if !ok {
+		return nil, ErrNoResult
+	}
+	return &v, nil
+}
+
+func (instance UserPreviousValuesExec) Exists(ctx context.Context) (bool, error) {
+	return instance.exec.Exists(ctx)
+}
+
+type UserPreviousValuesExecArray struct {
+	exec *prisma.Exec
+}
+
+func (instance UserPreviousValuesExecArray) Exec(ctx context.Context) ([]UserPreviousValues, error) {
+	var v []UserPreviousValues
+	err := instance.exec.ExecArray(ctx, &v)
+	return v, err
+}
+
+type UserPreviousValues struct {
+	ID           string   `json:"id"`
+	Type         UserType `json:"type"`
+	CreatedAt    string   `json:"createdAt"`
+	UpdatedAt    string   `json:"updatedAt"`
+	Email        string   `json:"email"`
+	Name         string   `json:"name"`
+	PasswordHash string   `json:"passwordHash"`
+}
+
+type UserConnectionExec struct {
+	exec *prisma.Exec
+}
+
+func (instance *UserConnectionExec) PageInfo() *PageInfoExec {
+	ret := instance.exec.Client.GetOne(
+		instance.exec,
+		nil,
+		[2]string{"", "PageInfo"},
+		"pageInfo",
+		[]string{"hasNextPage", "hasPreviousPage", "startCursor", "endCursor"})
+
+	return &PageInfoExec{ret}
+}
+
+func (instance *UserConnectionExec) Edges() *UserEdgeExec {
+	ret := instance.exec.Client.GetOne(
+		instance.exec,
+		nil,
+		[2]string{"", "UserEdge"},
+		"edges",
+		[]string{"cursor"})
+
+	return &UserEdgeExec{ret}
+}
+
+func (instance *UserConnectionExec) Aggregate(ctx context.Context) (Aggregate, error) {
+	ret := instance.exec.Client.GetOne(
+		instance.exec,
+		nil,
+		[2]string{"", "AggregateUser"},
+		"aggregate",
+		[]string{"count"})
+
+	var v Aggregate
+	_, err := ret.Exec(ctx, &v)
+	return v, err
+}
+
+func (instance UserConnectionExec) Exec(ctx context.Context) (*UserConnection, error) {
+	var v UserConnection
+	ok, err := instance.exec.Exec(ctx, &v)
+	if err != nil {
+		return nil, err
+	}
+	if !ok {
+		return nil, ErrNoResult
+	}
+	return &v, nil
+}
+
+func (instance UserConnectionExec) Exists(ctx context.Context) (bool, error) {
+	return instance.exec.Exists(ctx)
+}
+
+type UserConnectionExecArray struct {
+	exec *prisma.Exec
+}
+
+func (instance UserConnectionExecArray) Exec(ctx context.Context) ([]UserConnection, error) {
+	var v []UserConnection
+	err := instance.exec.ExecArray(ctx, &v)
+	return v, err
+}
+
+type UserConnection struct {
 }
 
 type UserExec struct {
@@ -1069,8 +1126,6 @@ func (instance UserExecArray) Exec(ctx context.Context) ([]User, error) {
 	return v, err
 }
 
-var UserFields = []string{"id", "type", "createdAt", "updatedAt", "email", "name", "passwordHash"}
-
 type User struct {
 	ID           string   `json:"id"`
 	Type         UserType `json:"type"`
@@ -1079,309 +1134,6 @@ type User struct {
 	Email        string   `json:"email"`
 	Name         string   `json:"name"`
 	PasswordHash string   `json:"passwordHash"`
-}
-
-type BlogPostConnectionExec struct {
-	exec *prisma.Exec
-}
-
-func (instance *BlogPostConnectionExec) PageInfo() *PageInfoExec {
-	ret := instance.exec.Client.GetOne(
-		instance.exec,
-		nil,
-		[2]string{"", "PageInfo"},
-		"pageInfo",
-		[]string{"hasNextPage", "hasPreviousPage", "startCursor", "endCursor"})
-
-	return &PageInfoExec{ret}
-}
-
-func (instance *BlogPostConnectionExec) Edges() *BlogPostEdgeExecArray {
-	edges := instance.exec.Client.GetMany(
-		instance.exec,
-		nil,
-		[3]string{"BlogPostWhereInput", "BlogPostOrderByInput", "BlogPostEdge"},
-		"edges",
-		[]string{"cursor"})
-
-	nodes := edges.Client.GetOne(
-		edges,
-		nil,
-		[2]string{"", "BlogPost"},
-		"node",
-		BlogPostFields)
-
-	return &BlogPostEdgeExecArray{nodes}
-}
-
-func (instance *BlogPostConnectionExec) Aggregate(ctx context.Context) (*Aggregate, error) {
-	ret := instance.exec.Client.GetOne(
-		instance.exec,
-		nil,
-		[2]string{"", "AggregateBlogPost"},
-		"aggregate",
-		[]string{"count"})
-
-	var v Aggregate
-	_, err := ret.Exec(ctx, &v)
-	return &v, err
-}
-
-func (instance BlogPostConnectionExec) Exec(ctx context.Context) (*BlogPostConnection, error) {
-	edges, err := instance.Edges().Exec(ctx)
-	if err != nil {
-		return nil, err
-	}
-
-	pageInfo, err := instance.PageInfo().Exec(ctx)
-	if err != nil {
-		return nil, err
-	}
-
-	return &BlogPostConnection{
-		Edges:    edges,
-		PageInfo: *pageInfo,
-	}, nil
-}
-
-func (instance BlogPostConnectionExec) Exists(ctx context.Context) (bool, error) {
-	return instance.exec.Exists(ctx)
-}
-
-type BlogPostConnectionExecArray struct {
-	exec *prisma.Exec
-}
-
-func (instance BlogPostConnectionExecArray) Exec(ctx context.Context) ([]BlogPostConnection, error) {
-	var v []BlogPostConnection
-	err := instance.exec.ExecArray(ctx, &v)
-	return v, err
-}
-
-var BlogPostConnectionFields = []string{}
-
-type BlogPostConnection struct {
-	PageInfo PageInfo       `json:"pageInfo"`
-	Edges    []BlogPostEdge `json:"edges"`
-}
-
-type PageInfoExec struct {
-	exec *prisma.Exec
-}
-
-func (instance PageInfoExec) Exec(ctx context.Context) (*PageInfo, error) {
-	var v PageInfo
-	ok, err := instance.exec.Exec(ctx, &v)
-	if err != nil {
-		return nil, err
-	}
-	if !ok {
-		return nil, ErrNoResult
-	}
-	return &v, nil
-}
-
-func (instance PageInfoExec) Exists(ctx context.Context) (bool, error) {
-	return instance.exec.Exists(ctx)
-}
-
-type PageInfoExecArray struct {
-	exec *prisma.Exec
-}
-
-func (instance PageInfoExecArray) Exec(ctx context.Context) ([]PageInfo, error) {
-	var v []PageInfo
-	err := instance.exec.ExecArray(ctx, &v)
-	return v, err
-}
-
-var PageInfoFields = []string{"hasNextPage", "hasPreviousPage", "startCursor", "endCursor"}
-
-type PageInfo struct {
-	HasNextPage     bool    `json:"hasNextPage"`
-	HasPreviousPage bool    `json:"hasPreviousPage"`
-	StartCursor     *string `json:"startCursor,omitempty"`
-	EndCursor       *string `json:"endCursor,omitempty"`
-}
-
-type BlogPostEdgeExec struct {
-	exec *prisma.Exec
-}
-
-func (instance *BlogPostEdgeExec) Node() *BlogPostExec {
-	ret := instance.exec.Client.GetOne(
-		instance.exec,
-		nil,
-		[2]string{"", "BlogPost"},
-		"node",
-		[]string{"id", "createdAt", "updatedAt", "slug", "title", "date", "content", "renderedContent"})
-
-	return &BlogPostExec{ret}
-}
-
-func (instance BlogPostEdgeExec) Exec(ctx context.Context) (*BlogPostEdge, error) {
-	var v BlogPostEdge
-	ok, err := instance.exec.Exec(ctx, &v)
-	if err != nil {
-		return nil, err
-	}
-	if !ok {
-		return nil, ErrNoResult
-	}
-	return &v, nil
-}
-
-func (instance BlogPostEdgeExec) Exists(ctx context.Context) (bool, error) {
-	return instance.exec.Exists(ctx)
-}
-
-type BlogPostEdgeExecArray struct {
-	exec *prisma.Exec
-}
-
-func (instance BlogPostEdgeExecArray) Exec(ctx context.Context) ([]BlogPostEdge, error) {
-	var v []BlogPostEdge
-	err := instance.exec.ExecArray(ctx, &v)
-	return v, err
-}
-
-var BlogPostEdgeFields = []string{"cursor"}
-
-type BlogPostEdge struct {
-	Node   BlogPost `json:"node"`
-	Cursor string   `json:"cursor"`
-}
-
-type SessionExec struct {
-	exec *prisma.Exec
-}
-
-func (instance *SessionExec) User() *UserExec {
-	ret := instance.exec.Client.GetOne(
-		instance.exec,
-		nil,
-		[2]string{"", "User"},
-		"user",
-		[]string{"id", "type", "createdAt", "updatedAt", "email", "name", "passwordHash"})
-
-	return &UserExec{ret}
-}
-
-func (instance SessionExec) Exec(ctx context.Context) (*Session, error) {
-	var v Session
-	ok, err := instance.exec.Exec(ctx, &v)
-	if err != nil {
-		return nil, err
-	}
-	if !ok {
-		return nil, ErrNoResult
-	}
-	return &v, nil
-}
-
-func (instance SessionExec) Exists(ctx context.Context) (bool, error) {
-	return instance.exec.Exists(ctx)
-}
-
-type SessionExecArray struct {
-	exec *prisma.Exec
-}
-
-func (instance SessionExecArray) Exec(ctx context.Context) ([]Session, error) {
-	var v []Session
-	err := instance.exec.ExecArray(ctx, &v)
-	return v, err
-}
-
-var SessionFields = []string{"id", "createdAt"}
-
-type Session struct {
-	ID        string `json:"id"`
-	CreatedAt string `json:"createdAt"`
-}
-
-type SessionConnectionExec struct {
-	exec *prisma.Exec
-}
-
-func (instance *SessionConnectionExec) PageInfo() *PageInfoExec {
-	ret := instance.exec.Client.GetOne(
-		instance.exec,
-		nil,
-		[2]string{"", "PageInfo"},
-		"pageInfo",
-		[]string{"hasNextPage", "hasPreviousPage", "startCursor", "endCursor"})
-
-	return &PageInfoExec{ret}
-}
-
-func (instance *SessionConnectionExec) Edges() *SessionEdgeExecArray {
-	edges := instance.exec.Client.GetMany(
-		instance.exec,
-		nil,
-		[3]string{"SessionWhereInput", "SessionOrderByInput", "SessionEdge"},
-		"edges",
-		[]string{"cursor"})
-
-	nodes := edges.Client.GetOne(
-		edges,
-		nil,
-		[2]string{"", "Session"},
-		"node",
-		SessionFields)
-
-	return &SessionEdgeExecArray{nodes}
-}
-
-func (instance *SessionConnectionExec) Aggregate(ctx context.Context) (*Aggregate, error) {
-	ret := instance.exec.Client.GetOne(
-		instance.exec,
-		nil,
-		[2]string{"", "AggregateSession"},
-		"aggregate",
-		[]string{"count"})
-
-	var v Aggregate
-	_, err := ret.Exec(ctx, &v)
-	return &v, err
-}
-
-func (instance SessionConnectionExec) Exec(ctx context.Context) (*SessionConnection, error) {
-	edges, err := instance.Edges().Exec(ctx)
-	if err != nil {
-		return nil, err
-	}
-
-	pageInfo, err := instance.PageInfo().Exec(ctx)
-	if err != nil {
-		return nil, err
-	}
-
-	return &SessionConnection{
-		Edges:    edges,
-		PageInfo: *pageInfo,
-	}, nil
-}
-
-func (instance SessionConnectionExec) Exists(ctx context.Context) (bool, error) {
-	return instance.exec.Exists(ctx)
-}
-
-type SessionConnectionExecArray struct {
-	exec *prisma.Exec
-}
-
-func (instance SessionConnectionExecArray) Exec(ctx context.Context) ([]SessionConnection, error) {
-	var v []SessionConnection
-	err := instance.exec.ExecArray(ctx, &v)
-	return v, err
-}
-
-var SessionConnectionFields = []string{}
-
-type SessionConnection struct {
-	PageInfo PageInfo      `json:"pageInfo"`
-	Edges    []SessionEdge `json:"edges"`
 }
 
 type SessionEdgeExec struct {
@@ -1425,18 +1177,68 @@ func (instance SessionEdgeExecArray) Exec(ctx context.Context) ([]SessionEdge, e
 	return v, err
 }
 
-var SessionEdgeFields = []string{"cursor"}
-
 type SessionEdge struct {
-	Node   Session `json:"node"`
-	Cursor string  `json:"cursor"`
+	Cursor string `json:"cursor"`
 }
 
-type UserConnectionExec struct {
+type BlogPostExec struct {
 	exec *prisma.Exec
 }
 
-func (instance *UserConnectionExec) PageInfo() *PageInfoExec {
+func (instance *BlogPostExec) Author() *UserExec {
+	ret := instance.exec.Client.GetOne(
+		instance.exec,
+		nil,
+		[2]string{"", "User"},
+		"author",
+		[]string{"id", "type", "createdAt", "updatedAt", "email", "name", "passwordHash"})
+
+	return &UserExec{ret}
+}
+
+func (instance BlogPostExec) Exec(ctx context.Context) (*BlogPost, error) {
+	var v BlogPost
+	ok, err := instance.exec.Exec(ctx, &v)
+	if err != nil {
+		return nil, err
+	}
+	if !ok {
+		return nil, ErrNoResult
+	}
+	return &v, nil
+}
+
+func (instance BlogPostExec) Exists(ctx context.Context) (bool, error) {
+	return instance.exec.Exists(ctx)
+}
+
+type BlogPostExecArray struct {
+	exec *prisma.Exec
+}
+
+func (instance BlogPostExecArray) Exec(ctx context.Context) ([]BlogPost, error) {
+	var v []BlogPost
+	err := instance.exec.ExecArray(ctx, &v)
+	return v, err
+}
+
+type BlogPost struct {
+	ID              string `json:"id"`
+	CreatedAt       string `json:"createdAt"`
+	UpdatedAt       string `json:"updatedAt"`
+	Published       bool   `json:"published"`
+	Slug            string `json:"slug"`
+	Title           string `json:"title"`
+	Date            string `json:"date"`
+	Content         string `json:"content"`
+	RenderedContent string `json:"renderedContent"`
+}
+
+type SessionConnectionExec struct {
+	exec *prisma.Exec
+}
+
+func (instance *SessionConnectionExec) PageInfo() *PageInfoExec {
 	ret := instance.exec.Client.GetOne(
 		instance.exec,
 		nil,
@@ -1447,92 +1249,76 @@ func (instance *UserConnectionExec) PageInfo() *PageInfoExec {
 	return &PageInfoExec{ret}
 }
 
-func (instance *UserConnectionExec) Edges() *UserEdgeExecArray {
-	edges := instance.exec.Client.GetMany(
-		instance.exec,
-		nil,
-		[3]string{"UserWhereInput", "UserOrderByInput", "UserEdge"},
-		"edges",
-		[]string{"cursor"})
-
-	nodes := edges.Client.GetOne(
-		edges,
-		nil,
-		[2]string{"", "User"},
-		"node",
-		UserFields)
-
-	return &UserEdgeExecArray{nodes}
-}
-
-func (instance *UserConnectionExec) Aggregate(ctx context.Context) (*Aggregate, error) {
+func (instance *SessionConnectionExec) Edges() *SessionEdgeExec {
 	ret := instance.exec.Client.GetOne(
 		instance.exec,
 		nil,
-		[2]string{"", "AggregateUser"},
+		[2]string{"", "SessionEdge"},
+		"edges",
+		[]string{"cursor"})
+
+	return &SessionEdgeExec{ret}
+}
+
+func (instance *SessionConnectionExec) Aggregate(ctx context.Context) (Aggregate, error) {
+	ret := instance.exec.Client.GetOne(
+		instance.exec,
+		nil,
+		[2]string{"", "AggregateSession"},
 		"aggregate",
 		[]string{"count"})
 
 	var v Aggregate
 	_, err := ret.Exec(ctx, &v)
-	return &v, err
+	return v, err
 }
 
-func (instance UserConnectionExec) Exec(ctx context.Context) (*UserConnection, error) {
-	edges, err := instance.Edges().Exec(ctx)
+func (instance SessionConnectionExec) Exec(ctx context.Context) (*SessionConnection, error) {
+	var v SessionConnection
+	ok, err := instance.exec.Exec(ctx, &v)
 	if err != nil {
 		return nil, err
 	}
-
-	pageInfo, err := instance.PageInfo().Exec(ctx)
-	if err != nil {
-		return nil, err
+	if !ok {
+		return nil, ErrNoResult
 	}
-
-	return &UserConnection{
-		Edges:    edges,
-		PageInfo: *pageInfo,
-	}, nil
+	return &v, nil
 }
 
-func (instance UserConnectionExec) Exists(ctx context.Context) (bool, error) {
+func (instance SessionConnectionExec) Exists(ctx context.Context) (bool, error) {
 	return instance.exec.Exists(ctx)
 }
 
-type UserConnectionExecArray struct {
+type SessionConnectionExecArray struct {
 	exec *prisma.Exec
 }
 
-func (instance UserConnectionExecArray) Exec(ctx context.Context) ([]UserConnection, error) {
-	var v []UserConnection
+func (instance SessionConnectionExecArray) Exec(ctx context.Context) ([]SessionConnection, error) {
+	var v []SessionConnection
 	err := instance.exec.ExecArray(ctx, &v)
 	return v, err
 }
 
-var UserConnectionFields = []string{}
-
-type UserConnection struct {
-	PageInfo PageInfo   `json:"pageInfo"`
-	Edges    []UserEdge `json:"edges"`
+type SessionConnection struct {
 }
 
-type UserEdgeExec struct {
+type SessionExec struct {
 	exec *prisma.Exec
 }
 
-func (instance *UserEdgeExec) Node() *UserExec {
+func (instance *SessionExec) User() *UserExec {
 	ret := instance.exec.Client.GetOne(
 		instance.exec,
 		nil,
 		[2]string{"", "User"},
-		"node",
+		"user",
 		[]string{"id", "type", "createdAt", "updatedAt", "email", "name", "passwordHash"})
 
 	return &UserExec{ret}
 }
 
-func (instance UserEdgeExec) Exec(ctx context.Context) (*UserEdge, error) {
-	var v UserEdge
+func (instance SessionExec) Exec(ctx context.Context) (*Session, error) {
+	var v Session
 	ok, err := instance.exec.Exec(ctx, &v)
 	if err != nil {
 		return nil, err
@@ -1543,85 +1329,23 @@ func (instance UserEdgeExec) Exec(ctx context.Context) (*UserEdge, error) {
 	return &v, nil
 }
 
-func (instance UserEdgeExec) Exists(ctx context.Context) (bool, error) {
+func (instance SessionExec) Exists(ctx context.Context) (bool, error) {
 	return instance.exec.Exists(ctx)
 }
 
-type UserEdgeExecArray struct {
+type SessionExecArray struct {
 	exec *prisma.Exec
 }
 
-func (instance UserEdgeExecArray) Exec(ctx context.Context) ([]UserEdge, error) {
-	var v []UserEdge
+func (instance SessionExecArray) Exec(ctx context.Context) ([]Session, error) {
+	var v []Session
 	err := instance.exec.ExecArray(ctx, &v)
 	return v, err
 }
 
-var UserEdgeFields = []string{"cursor"}
-
-type UserEdge struct {
-	Node   User   `json:"node"`
-	Cursor string `json:"cursor"`
-}
-
-type BlogPostSubscriptionPayloadExec struct {
-	exec *prisma.Exec
-}
-
-func (instance *BlogPostSubscriptionPayloadExec) Node() *BlogPostExec {
-	ret := instance.exec.Client.GetOne(
-		instance.exec,
-		nil,
-		[2]string{"", "BlogPost"},
-		"node",
-		[]string{"id", "createdAt", "updatedAt", "slug", "title", "date", "content", "renderedContent"})
-
-	return &BlogPostExec{ret}
-}
-
-func (instance *BlogPostSubscriptionPayloadExec) PreviousValues() *BlogPostPreviousValuesExec {
-	ret := instance.exec.Client.GetOne(
-		instance.exec,
-		nil,
-		[2]string{"", "BlogPostPreviousValues"},
-		"previousValues",
-		[]string{"id", "createdAt", "updatedAt", "slug", "title", "date", "content", "renderedContent"})
-
-	return &BlogPostPreviousValuesExec{ret}
-}
-
-func (instance BlogPostSubscriptionPayloadExec) Exec(ctx context.Context) (*BlogPostSubscriptionPayload, error) {
-	var v BlogPostSubscriptionPayload
-	ok, err := instance.exec.Exec(ctx, &v)
-	if err != nil {
-		return nil, err
-	}
-	if !ok {
-		return nil, ErrNoResult
-	}
-	return &v, nil
-}
-
-func (instance BlogPostSubscriptionPayloadExec) Exists(ctx context.Context) (bool, error) {
-	return instance.exec.Exists(ctx)
-}
-
-type BlogPostSubscriptionPayloadExecArray struct {
-	exec *prisma.Exec
-}
-
-func (instance BlogPostSubscriptionPayloadExecArray) Exec(ctx context.Context) ([]BlogPostSubscriptionPayload, error) {
-	var v []BlogPostSubscriptionPayload
-	err := instance.exec.ExecArray(ctx, &v)
-	return v, err
-}
-
-var BlogPostSubscriptionPayloadFields = []string{"mutation", "updatedFields"}
-
-type BlogPostSubscriptionPayload struct {
-	Mutation      MutationType `json:"mutation"`
-	Node          *BlogPost    `json:"node,omitempty"`
-	UpdatedFields []string     `json:"updatedFields,omitempty"`
+type Session struct {
+	ID        string `json:"id"`
+	CreatedAt string `json:"createdAt"`
 }
 
 type BlogPostPreviousValuesExec struct {
@@ -1654,17 +1378,73 @@ func (instance BlogPostPreviousValuesExecArray) Exec(ctx context.Context) ([]Blo
 	return v, err
 }
 
-var BlogPostPreviousValuesFields = []string{"id", "createdAt", "updatedAt", "slug", "title", "date", "content", "renderedContent"}
-
 type BlogPostPreviousValues struct {
 	ID              string `json:"id"`
 	CreatedAt       string `json:"createdAt"`
 	UpdatedAt       string `json:"updatedAt"`
+	Published       bool   `json:"published"`
 	Slug            string `json:"slug"`
 	Title           string `json:"title"`
 	Date            string `json:"date"`
 	Content         string `json:"content"`
 	RenderedContent string `json:"renderedContent"`
+}
+
+type BlogPostSubscriptionPayloadExec struct {
+	exec *prisma.Exec
+}
+
+func (instance *BlogPostSubscriptionPayloadExec) Node() *BlogPostExec {
+	ret := instance.exec.Client.GetOne(
+		instance.exec,
+		nil,
+		[2]string{"", "BlogPost"},
+		"node",
+		[]string{"id", "createdAt", "updatedAt", "published", "slug", "title", "date", "content", "renderedContent"})
+
+	return &BlogPostExec{ret}
+}
+
+func (instance *BlogPostSubscriptionPayloadExec) PreviousValues() *BlogPostPreviousValuesExec {
+	ret := instance.exec.Client.GetOne(
+		instance.exec,
+		nil,
+		[2]string{"", "BlogPostPreviousValues"},
+		"previousValues",
+		[]string{"id", "createdAt", "updatedAt", "published", "slug", "title", "date", "content", "renderedContent"})
+
+	return &BlogPostPreviousValuesExec{ret}
+}
+
+func (instance BlogPostSubscriptionPayloadExec) Exec(ctx context.Context) (*BlogPostSubscriptionPayload, error) {
+	var v BlogPostSubscriptionPayload
+	ok, err := instance.exec.Exec(ctx, &v)
+	if err != nil {
+		return nil, err
+	}
+	if !ok {
+		return nil, ErrNoResult
+	}
+	return &v, nil
+}
+
+func (instance BlogPostSubscriptionPayloadExec) Exists(ctx context.Context) (bool, error) {
+	return instance.exec.Exists(ctx)
+}
+
+type BlogPostSubscriptionPayloadExecArray struct {
+	exec *prisma.Exec
+}
+
+func (instance BlogPostSubscriptionPayloadExecArray) Exec(ctx context.Context) ([]BlogPostSubscriptionPayload, error) {
+	var v []BlogPostSubscriptionPayload
+	err := instance.exec.ExecArray(ctx, &v)
+	return v, err
+}
+
+type BlogPostSubscriptionPayload struct {
+	Mutation      MutationType `json:"mutation"`
+	UpdatedFields []string     `json:"updatedFields,omitempty"`
 }
 
 type SessionSubscriptionPayloadExec struct {
@@ -1719,49 +1499,9 @@ func (instance SessionSubscriptionPayloadExecArray) Exec(ctx context.Context) ([
 	return v, err
 }
 
-var SessionSubscriptionPayloadFields = []string{"mutation", "updatedFields"}
-
 type SessionSubscriptionPayload struct {
 	Mutation      MutationType `json:"mutation"`
-	Node          *Session     `json:"node,omitempty"`
 	UpdatedFields []string     `json:"updatedFields,omitempty"`
-}
-
-type SessionPreviousValuesExec struct {
-	exec *prisma.Exec
-}
-
-func (instance SessionPreviousValuesExec) Exec(ctx context.Context) (*SessionPreviousValues, error) {
-	var v SessionPreviousValues
-	ok, err := instance.exec.Exec(ctx, &v)
-	if err != nil {
-		return nil, err
-	}
-	if !ok {
-		return nil, ErrNoResult
-	}
-	return &v, nil
-}
-
-func (instance SessionPreviousValuesExec) Exists(ctx context.Context) (bool, error) {
-	return instance.exec.Exists(ctx)
-}
-
-type SessionPreviousValuesExecArray struct {
-	exec *prisma.Exec
-}
-
-func (instance SessionPreviousValuesExecArray) Exec(ctx context.Context) ([]SessionPreviousValues, error) {
-	var v []SessionPreviousValues
-	err := instance.exec.ExecArray(ctx, &v)
-	return v, err
-}
-
-var SessionPreviousValuesFields = []string{"id", "createdAt"}
-
-type SessionPreviousValues struct {
-	ID        string `json:"id"`
-	CreatedAt string `json:"createdAt"`
 }
 
 type UserSubscriptionPayloadExec struct {
@@ -1816,20 +1556,28 @@ func (instance UserSubscriptionPayloadExecArray) Exec(ctx context.Context) ([]Us
 	return v, err
 }
 
-var UserSubscriptionPayloadFields = []string{"mutation", "updatedFields"}
-
 type UserSubscriptionPayload struct {
 	Mutation      MutationType `json:"mutation"`
-	Node          *User        `json:"node,omitempty"`
 	UpdatedFields []string     `json:"updatedFields,omitempty"`
 }
 
-type UserPreviousValuesExec struct {
+type BlogPostEdgeExec struct {
 	exec *prisma.Exec
 }
 
-func (instance UserPreviousValuesExec) Exec(ctx context.Context) (*UserPreviousValues, error) {
-	var v UserPreviousValues
+func (instance *BlogPostEdgeExec) Node() *BlogPostExec {
+	ret := instance.exec.Client.GetOne(
+		instance.exec,
+		nil,
+		[2]string{"", "BlogPost"},
+		"node",
+		[]string{"id", "createdAt", "updatedAt", "published", "slug", "title", "date", "content", "renderedContent"})
+
+	return &BlogPostExec{ret}
+}
+
+func (instance BlogPostEdgeExec) Exec(ctx context.Context) (*BlogPostEdge, error) {
+	var v BlogPostEdge
 	ok, err := instance.exec.Exec(ctx, &v)
 	if err != nil {
 		return nil, err
@@ -1840,28 +1588,92 @@ func (instance UserPreviousValuesExec) Exec(ctx context.Context) (*UserPreviousV
 	return &v, nil
 }
 
-func (instance UserPreviousValuesExec) Exists(ctx context.Context) (bool, error) {
+func (instance BlogPostEdgeExec) Exists(ctx context.Context) (bool, error) {
 	return instance.exec.Exists(ctx)
 }
 
-type UserPreviousValuesExecArray struct {
+type BlogPostEdgeExecArray struct {
 	exec *prisma.Exec
 }
 
-func (instance UserPreviousValuesExecArray) Exec(ctx context.Context) ([]UserPreviousValues, error) {
-	var v []UserPreviousValues
+func (instance BlogPostEdgeExecArray) Exec(ctx context.Context) ([]BlogPostEdge, error) {
+	var v []BlogPostEdge
 	err := instance.exec.ExecArray(ctx, &v)
 	return v, err
 }
 
-var UserPreviousValuesFields = []string{"id", "type", "createdAt", "updatedAt", "email", "name", "passwordHash"}
+type BlogPostEdge struct {
+	Cursor string `json:"cursor"`
+}
 
-type UserPreviousValues struct {
-	ID           string   `json:"id"`
-	Type         UserType `json:"type"`
-	CreatedAt    string   `json:"createdAt"`
-	UpdatedAt    string   `json:"updatedAt"`
-	Email        string   `json:"email"`
-	Name         string   `json:"name"`
-	PasswordHash string   `json:"passwordHash"`
+type SessionPreviousValuesExec struct {
+	exec *prisma.Exec
+}
+
+func (instance SessionPreviousValuesExec) Exec(ctx context.Context) (*SessionPreviousValues, error) {
+	var v SessionPreviousValues
+	ok, err := instance.exec.Exec(ctx, &v)
+	if err != nil {
+		return nil, err
+	}
+	if !ok {
+		return nil, ErrNoResult
+	}
+	return &v, nil
+}
+
+func (instance SessionPreviousValuesExec) Exists(ctx context.Context) (bool, error) {
+	return instance.exec.Exists(ctx)
+}
+
+type SessionPreviousValuesExecArray struct {
+	exec *prisma.Exec
+}
+
+func (instance SessionPreviousValuesExecArray) Exec(ctx context.Context) ([]SessionPreviousValues, error) {
+	var v []SessionPreviousValues
+	err := instance.exec.ExecArray(ctx, &v)
+	return v, err
+}
+
+type SessionPreviousValues struct {
+	ID        string `json:"id"`
+	CreatedAt string `json:"createdAt"`
+}
+
+type PageInfoExec struct {
+	exec *prisma.Exec
+}
+
+func (instance PageInfoExec) Exec(ctx context.Context) (*PageInfo, error) {
+	var v PageInfo
+	ok, err := instance.exec.Exec(ctx, &v)
+	if err != nil {
+		return nil, err
+	}
+	if !ok {
+		return nil, ErrNoResult
+	}
+	return &v, nil
+}
+
+func (instance PageInfoExec) Exists(ctx context.Context) (bool, error) {
+	return instance.exec.Exists(ctx)
+}
+
+type PageInfoExecArray struct {
+	exec *prisma.Exec
+}
+
+func (instance PageInfoExecArray) Exec(ctx context.Context) ([]PageInfo, error) {
+	var v []PageInfo
+	err := instance.exec.ExecArray(ctx, &v)
+	return v, err
+}
+
+type PageInfo struct {
+	HasNextPage     bool    `json:"hasNextPage"`
+	HasPreviousPage bool    `json:"hasPreviousPage"`
+	StartCursor     *string `json:"startCursor,omitempty"`
+	EndCursor       *string `json:"endCursor,omitempty"`
 }

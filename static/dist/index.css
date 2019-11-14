@@ -647,11 +647,15 @@ main {
   margin-right: auto;
 }
 
-a {
+.link {
+  -webkit-appearance: initial;
+}
+
+a, .link {
   color: #a3bffa;
 }
 
-a:hover {
+a:hover, .link:hover {
   text-decoration: underline;
 }
 
@@ -29559,4 +29563,4 @@ form input:focus {
 }
 
 
-/*# sourceMappingURL=/index.css.map */
+/*# sourceMappingURL=/static/dist/index.css.map */
