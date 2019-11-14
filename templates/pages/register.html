@@ -1,17 +1,25 @@
 {% extends '../layouts/base.html' %}
 
 {% block content %}
-    <form class="mx-auto max-w-sm" action="/forms/register" method="post">
-        {{ csrfField | safe }}
-        <div class="form-row">
-            {% include '../partials/form-input.html' with label='Email' type='email' name='email' %}
-        </div>
-        <div class="form-row">
-            {% include '../partials/form-input.html' with label='Name' name='name' %}
-        </div>
-        <div class="form-row">
-            {% include '../partials/form-input.html' with label='Password' type='password' name='password' %}
-        </div>
-        <button class="btn">Register</button>
-    </form>
+    <div class="mx-auto max-w-sm">
+        <h1>Create an Account</h1>
+        <form class="my-6" action="/forms/register" method="post">
+            {{ csrfField | safe }}
+            <div class="form-row">
+                {% include '../partials/form-input.html' with label='Email' type='email' name='email' placeholder='me@example.com' autofocus=true %}
+            </div>
+            <div class="form-row">
+                {% include '../partials/form-input.html' with label='Name' name='name' placeholder='Tim Burton' %}
+            </div>
+            <div class="form-row">
+                {% include '../partials/form-input.html' with label='Password' type='password' name='password' placeholder='•••••••••••••••••' %}
+            </div>
+            <div class="form-row flex">
+                <a href="/login">or login</a>
+                <button class="btn ml-auto">
+                    Register
+                </button>
+            </div>
+        </form>
+    </div>
 {% endblock %}
