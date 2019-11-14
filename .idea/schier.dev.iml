@@ -6,6 +6,7 @@
     <content url="file://$MODULE_DIR$">
       <excludeFolder url="file://$MODULE_DIR$/.cache" />
       <excludeFolder url="file://$MODULE_DIR$/.idea" />
+      <excludeFolder url="file://$MODULE_DIR$/static/dev" />
       <excludeFolder url="file://$MODULE_DIR$/static/dist" />
     </content>
     <orderEntry type="inheritedJdk" />

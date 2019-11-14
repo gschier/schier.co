@@ -13,7 +13,7 @@ import (
 
 func BlogRoutes(router *mux.Router) {
 	router.HandleFunc("/blog", routeBlogList).Methods(http.MethodGet)
-	router.HandleFunc("/blog/new", routeBlogPostNew).Methods(http.MethodGet)
+	router.HandleFunc("/blog/new", renderHandler("blog/edit.html", nil)).Methods(http.MethodGet)
 	router.HandleFunc("/blog/{slug}", routeBlogPost).Methods(http.MethodGet)
 	router.HandleFunc("/blog/{slug}/edit", routeBlogPostEdit).Methods(http.MethodGet)
 
@@ -22,9 +22,9 @@ func BlogRoutes(router *mux.Router) {
 	router.HandleFunc("/forms/blog/publish", routeBlogPostPublish).Methods(http.MethodPost)
 }
 
-var blogListTemplate = pongo2.Must(pongo2.FromFile("templates/dynamic/blog_list.html"))
-var blogPostTemplate = pongo2.Must(pongo2.FromFile("templates/dynamic/blog_post.html"))
-var blogPostEditTemplate = pongo2.Must(pongo2.FromFile("templates/dynamic/blog_edit.html"))
+var blogEditTemplate = pageTemplate("blog/edit.html")
+var blogListTemplate = pageTemplate("blog/list.html")
+var blogPostTemplate = pageTemplate("blog/post.html")
 
 func routeBlogPostPublish(w http.ResponseWriter, r *http.Request) {
 	_ = r.ParseForm()
@@ -46,10 +46,6 @@ func routeBlogPostPublish(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/blog/"+blogPost.Slug, http.StatusSeeOther)
 }
 
-func routeBlogPostNew(w http.ResponseWriter, r *http.Request) {
-	renderTemplate(w, r, blogPostEditTemplate, nil)
-}
-
 func routeBlogPostEdit(w http.ResponseWriter, r *http.Request) {
 	slug := mux.Vars(r)["slug"]
 
@@ -61,7 +57,7 @@ func routeBlogPostEdit(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	renderTemplate(w, r, blogPostEditTemplate, &pongo2.Context{
+	renderTemplate(w, r, blogEditTemplate, &pongo2.Context{
 		"blogPost": blogPost,
 	})
 }

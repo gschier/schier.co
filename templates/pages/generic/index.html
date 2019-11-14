@@ -1,4 +1,4 @@
-{% extends '../layouts/base.html' %}
+{% extends '../../layouts/base.html' %}
 
 {% block content %}
     <h1>Hello {{ user.Name | default:"there" }}!</h1>
@@ -14,6 +14,6 @@
     <hr>
 
     <p>
-        {% include '../partials/counter.html' %}
+        {% include '../../partials/counter.html' %}
     </p>
 {% endblock %}

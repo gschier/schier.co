@@ -8,6 +8,18 @@ import (
 	"os"
 )
 
+func pageTemplate(pagePath string) *pongo2.Template {
+	return pongo2.Must(pongo2.FromFile("templates/pages/" + pagePath))
+}
+
+func renderHandler(pagePath string, context *pongo2.Context) http.HandlerFunc {
+	t := pageTemplate(pagePath)
+
+	return func(w http.ResponseWriter, r *http.Request) {
+		renderTemplate(w, r, t, context)
+	}
+}
+
 func renderTemplate(w http.ResponseWriter, r *http.Request, template *pongo2.Template, context *pongo2.Context) {
 	user := ctxGetUser(r)
 	loggedIn := ctxGetLoggedIn(r)

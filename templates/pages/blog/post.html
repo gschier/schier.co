@@ -1,4 +1,4 @@
-{% extends '../layouts/base.html' %}
+{% extends '../../layouts/base.html' %}
 
 {% block content %}
     <div class="blog-post">
@@ -7,8 +7,8 @@
             <form action="/forms/blog/publish" method="post">
                 <a href="/blog/{{ blogPost.Slug }}/edit">Edit</a> |
                 {{ csrfField | safe }}
-                {% include '../partials/form-input.html' with type='hidden' name='id' value=blogPost.ID %}
-                {% include '../partials/form-input.html' with type='hidden' name='published' value=blogPost.Published | yesno:"false,true" %}
+                {% include '../../partials/form-input.html' with type='hidden' name='id' value=blogPost.ID %}
+                {% include '../../partials/form-input.html' with type='hidden' name='published' value=blogPost.Published | yesno:"false,true" %}
                 <button class="link" type="submit">{{ blogPost.Published | yesno:"Unpublish,Publish" }}</button>
             </form>
         {% endif %}

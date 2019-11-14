@@ -9,7 +9,7 @@ import (
 	"os"
 )
 
-const pageRoot = "templates/pages"
+const pageRoot = "templates/pages/generic"
 
 func main() {
 	router := setupRouter()
