@@ -55,7 +55,7 @@ p {
 }
 
 .btn:hover {
-    @apply bg-secondary-700;
+    @apply bg-primary-500;
 }
 
 /*********/
