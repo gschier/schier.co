@@ -26,7 +26,7 @@ func routeLogin(w http.ResponseWriter, r *http.Request) {
 	password := r.Form.Get("password")
 	email := r.Form.Get("email")
 
-	client := ctxGetClient(r)
+	client := ctxDB(r)
 
 	user, err := client.User(prisma.UserWhereUniqueInput{
 		Email: &email,
@@ -50,7 +50,7 @@ func routeLogin(w http.ResponseWriter, r *http.Request) {
 }
 
 func routeRegister(w http.ResponseWriter, r *http.Request) {
-	client := ctxGetClient(r)
+	client := ctxDB(r)
 
 	_ = r.ParseForm()
 	password := r.Form.Get("password")

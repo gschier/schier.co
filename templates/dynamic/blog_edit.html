@@ -9,9 +9,11 @@
             {% include '../partials/form-input.html' with label='Slug' type='text' name='slug' value=blogPost.Slug placeholder='my-blog-post' autofocus=true %}
             {% include '../partials/form-input.html' with label='Title' type='text' name='title' value=blogPost.Title placeholder='My Blog Post' %}
             {% include '../partials/form-input.html' with label='Content' type='textarea' name='content' value=blogPost.Content placeholder='This is my content.' %}
-            <button class="btn">
-                {% if blogPost %}Update{% else %}Create{% endif %}
-            </button>
+            <div class="flex">
+                <button class="ml-auto btn">
+                    {% if blogPost %}Update{% else %}Create{% endif %}
+                </button>
+            </div>
         </form>
     </div>
 {% endblock %}

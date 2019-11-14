@@ -57,7 +57,7 @@ const sessionCookieName = "sid"
 // UserMiddleware adds the User object to the context if available
 func UserMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		client := ctxGetClient(r)
+		client := ctxDB(r)
 
 		c, err := r.Cookie(sessionCookieName)
 
@@ -112,18 +112,8 @@ func GenericPageMiddleware(next http.Handler, dir string) http.Handler {
 	}
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		user := ctxGetUser(r)
-		loggedIn := ctxGetLoggedIn(r)
-
 		if template, ok := templates[r.URL.Path]; ok {
-			err := template.ExecuteWriter(pongo2.Context{
-				"user":           user,
-				"loggedIn":      loggedIn,
-				csrf.TemplateTag: csrf.TemplateField(r),
-			}, w)
-			if err != nil {
-				http.Error(w, err.Error(), http.StatusInternalServerError)
-			}
+			renderTemplate(w, r, template, nil)
 			return
 		}
 

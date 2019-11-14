@@ -14,7 +14,7 @@ var (
 	ctxKeyUser     = contextKey("user")
 )
 
-func ctxGetClient(r *http.Request) *prisma.Client {
+func ctxDB(r *http.Request) *prisma.Client {
 	return r.Context().Value(ctxKeyClient).(*prisma.Client)
 }
 

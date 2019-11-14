@@ -2,6 +2,7 @@
 @tailwind components;
 
 html {
+    @apply bg-background;
     font-size: 16px;
 }
 
@@ -10,8 +11,7 @@ html {
 }
 
 body {
-    @apply bg-primary-900 mb-12;
-    color: #fff;
+    @apply mb-12 text-foreground;
     padding: 2rem;
 }
 
@@ -25,7 +25,7 @@ main {
 }
 
 a, .link {
-    @apply text-primary-300;
+    @apply text-primary-700;
 }
 
 a:hover, .link:hover {
@@ -33,7 +33,7 @@ a:hover, .link:hover {
 }
 
 hr {
-    @apply text-secondary-800;
+    @apply text-primary-100;
     border: 0;
     border-bottom: 1px solid;
 }
@@ -67,7 +67,7 @@ p {
 }
 
 form label {
-    @apply block text-gray-400 text-sm font-bold mb-2;
+    @apply block text-gray-600 text-sm font-bold mb-2;
 }
 
 form input,

@@ -2,7 +2,6 @@ package web
 
 import (
 	"github.com/flosch/pongo2"
-	"github.com/gorilla/csrf"
 	"github.com/gorilla/mux"
 	"github.com/gschier/schier.dev/generated/prisma-client"
 	"github.com/russross/blackfriday/v2"
@@ -33,7 +32,7 @@ func routeBlogPostPublish(w http.ResponseWriter, r *http.Request) {
 	published := r.Form.Get("published") == "true"
 	id := r.Form.Get("id")
 
-	client := ctxGetClient(r)
+	client := ctxDB(r)
 	blogPost, err := client.UpdateBlogPost(prisma.BlogPostUpdateParams{
 		Data:  prisma.BlogPostUpdateInput{Published: &published},
 		Where: prisma.BlogPostWhereUniqueInput{ID: &id},
@@ -44,54 +43,27 @@ func routeBlogPostPublish(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	log.Println("HELLO", published, id, blogPost.Published)
 	http.Redirect(w, r, "/blog/"+blogPost.Slug, http.StatusSeeOther)
 }
 
 func routeBlogPostNew(w http.ResponseWriter, r *http.Request) {
-	user := ctxGetUser(r)
-	loggedIn := ctxGetLoggedIn(r)
-
-	// Render template
-	err := blogPostEditTemplate.ExecuteWriter(pongo2.Context{
-		"user":           user,
-		"loggedIn":       loggedIn,
-		csrf.TemplateTag: csrf.TemplateField(r),
-	}, w)
-	if err != nil {
-		log.Println("Failed to render blog posts", err)
-		http.Error(w, "Failed to load blog posts", http.StatusInternalServerError)
-		return
-	}
+	renderTemplate(w, r, blogPostEditTemplate, nil)
 }
 
 func routeBlogPostEdit(w http.ResponseWriter, r *http.Request) {
 	slug := mux.Vars(r)["slug"]
 
-	client := ctxGetClient(r)
-	user := ctxGetUser(r)
-	loggedIn := ctxGetLoggedIn(r)
-
 	// Fetch blog posts
-	blogPost, err := client.BlogPost(prisma.BlogPostWhereUniqueInput{Slug: &slug}).Exec(r.Context())
+	blogPost, err := ctxDB(r).BlogPost(prisma.BlogPostWhereUniqueInput{Slug: &slug}).Exec(r.Context())
 	if err != nil {
 		log.Println("Failed to fetch blog post", err)
 		http.Error(w, "Failed to get blog post", http.StatusInternalServerError)
 		return
 	}
 
-	// Render template
-	err = blogPostEditTemplate.ExecuteWriter(pongo2.Context{
-		"user":           user,
-		"loggedIn":       loggedIn,
-		"blogPost":       blogPost,
-		csrf.TemplateTag: csrf.TemplateField(r),
-	}, w)
-	if err != nil {
-		log.Println("Failed to render blog posts", err)
-		http.Error(w, "Failed to load blog posts", http.StatusInternalServerError)
-		return
-	}
+	renderTemplate(w, r, blogPostEditTemplate, &pongo2.Context{
+		"blogPost": blogPost,
+	})
 }
 
 func routeBlogPostCreateOrUpdate(w http.ResponseWriter, r *http.Request) {
@@ -103,7 +75,7 @@ func routeBlogPostCreateOrUpdate(w http.ResponseWriter, r *http.Request) {
 	title := r.Form.Get("title")
 	published := r.Form.Get("published") == "true"
 
-	client := ctxGetClient(r)
+	client := ctxDB(r)
 	loggedIn := ctxGetLoggedIn(r)
 	user := ctxGetUser(r)
 
@@ -155,42 +127,24 @@ func routeBlogPostCreateOrUpdate(w http.ResponseWriter, r *http.Request) {
 func routeBlogPost(w http.ResponseWriter, r *http.Request) {
 	slug := mux.Vars(r)["slug"]
 
-	client := ctxGetClient(r)
-	user := ctxGetUser(r)
-	loggedIn := ctxGetLoggedIn(r)
-
 	// Fetch blog posts
-	blogPost, err := client.BlogPost(prisma.BlogPostWhereUniqueInput{Slug: &slug}).Exec(r.Context())
+	blogPost, err := ctxDB(r).BlogPost(prisma.BlogPostWhereUniqueInput{Slug: &slug}).Exec(r.Context())
 	if err != nil {
 		log.Println("Failed to fetch blog post", err)
 		http.Error(w, "Failed to get blog post", http.StatusInternalServerError)
 		return
 	}
 
-	blogPost.RenderedContent = string(blackfriday.Run([]byte(blogPost.Content)))
-
 	// Render template
-	err = blogPostTemplate.ExecuteWriter(pongo2.Context{
-		"user":           user,
-		"loggedIn":       loggedIn,
-		"blogPost":       blogPost,
-		csrf.TemplateTag: csrf.TemplateField(r),
-	}, w)
-	if err != nil {
-		log.Println("Failed to render blog posts", err)
-		http.Error(w, "Failed to load blog posts", http.StatusInternalServerError)
-		return
-	}
+	renderTemplate(w, r, blogPostTemplate, &pongo2.Context{
+		"blogPost": blogPost,
+	})
 }
 
 func routeBlogList(w http.ResponseWriter, r *http.Request) {
-	client := ctxGetClient(r)
-	user := ctxGetUser(r)
-	loggedIn := ctxGetLoggedIn(r)
-
 	// Fetch blog posts
 	orderBy := prisma.BlogPostOrderByInputCreatedAtDesc
-	blogPosts, err := client.BlogPosts(&prisma.BlogPostsParams{OrderBy: &orderBy}).Exec(r.Context())
+	blogPosts, err := ctxDB(r).BlogPosts(&prisma.BlogPostsParams{OrderBy: &orderBy}).Exec(r.Context())
 	if err != nil {
 		log.Println("Failed to load blog posts", err)
 		http.Error(w, "Failed to load blog posts", http.StatusInternalServerError)
@@ -198,19 +152,14 @@ func routeBlogList(w http.ResponseWriter, r *http.Request) {
 	}
 
 	for i := 0; i < len(blogPosts); i++ {
-		blogPosts[i].RenderedContent = strings.Split(blogPosts[i].RenderedContent, "<!--more-->")[0]
+		blogPosts[i].RenderedContent = strings.Split(
+			blogPosts[i].RenderedContent,
+			"<!--more-->",
+		)[0]
 	}
 
 	// Render template
-	err = blogListTemplate.ExecuteWriter(pongo2.Context{
-		"user":           user,
-		"loggedIn":       loggedIn,
-		"blogPosts":      blogPosts,
-		csrf.TemplateTag: csrf.TemplateField(r),
-	}, w)
-	if err != nil {
-		log.Println("Failed to render blog posts", err)
-		http.Error(w, "Failed to load blog posts", http.StatusInternalServerError)
-		return
-	}
+	renderTemplate(w, r, blogListTemplate, &pongo2.Context{
+		"blogPosts": blogPosts,
+	})
 }
