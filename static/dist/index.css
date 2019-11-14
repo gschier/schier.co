@@ -660,7 +660,7 @@ a:hover, .link:hover {
 }
 
 hr {
-  color: #97266d;
+  color: #434190;
   border: 0;
   border-bottom: 1px solid;
 }
@@ -690,7 +690,7 @@ p {
 }
 
 .btn:hover {
-  background-color: #b83280;
+  background-color: #667eea;
 }
 
 /*********/
@@ -29563,4 +29563,4 @@ form input:focus {
 }
 
 
-/*# sourceMappingURL=/static/dist/index.css.map */
+/*# sourceMappingURL=/index.css.map */

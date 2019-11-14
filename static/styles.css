@@ -33,7 +33,7 @@ a:hover, .link:hover {
 }
 
 hr {
-    @apply text-secondary-800;
+    @apply text-primary-800;
     border: 0;
     border-bottom: 1px solid;
 }
@@ -55,7 +55,7 @@ p {
 }
 
 .btn:hover {
-    @apply bg-secondary-700;
+    @apply bg-primary-500;
 }
 
 /*********/
