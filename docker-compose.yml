@@ -16,7 +16,7 @@ services:
       PRISMA_ENDPOINT: http://prisma:4488
       PRISMA_SECRET: development
       CSRF_KEY: 00000000000000000000000000000000
-      STATIC_URL: http://localhost:8084/static/dev
+      STATIC_URL: http://localhost:8084/static
     depends_on:
       - prisma
       - postgres

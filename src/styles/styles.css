@@ -1,0 +1,152 @@
+@tailwind base;
+@tailwind components;
+
+html {
+  @apply bg-background text-foreground;
+  font-size: 16px;
+}
+
+* {
+  @apply text-foreground;
+  font-family: "Open Sans", sans-serif;
+  transition: all 200ms;
+}
+
+body {
+  @apply p-0 text-foreground;
+}
+
+main {
+  margin-left: auto;
+  margin-right: auto;
+  min-height: 60vh;
+}
+
+.container {
+  @apply max-w-xl mx-auto;
+}
+
+.link {
+  -webkit-appearance: initial;
+}
+
+a,
+.link {
+  @apply text-primary-700;
+}
+
+a:hover,
+.link:hover {
+  text-decoration: underline;
+}
+
+hr {
+  @apply text-primary-100;
+  border: 0;
+  border-bottom: 1px solid;
+}
+
+h1 {
+  font-size: 1.9rem;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 600;
+}
+
+p {
+  @apply my-4;
+}
+
+.btn {
+  @apply bg-primary-600 text-gray-100 font-bold py-2 px-4 rounded;
+}
+
+.btn:hover {
+  @apply bg-primary-500;
+}
+
+/*********/
+/* FORMS */
+/*********/
+
+.form-row {
+  @apply mb-6;
+}
+
+form label {
+  @apply block text-gray-600 text-sm font-bold mb-2;
+}
+
+form input,
+form textarea {
+  @apply shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight;
+}
+
+form input:focus {
+  @apply outline-none shadow-outline;
+}
+
+/*****************/
+/* MARKDOWN POST */
+/*****************/
+
+.blog-post h1 {
+  @apply text-4xl;
+}
+
+.blog-post h2 {
+  @apply text-2xl mt-8;
+}
+
+.blog-post li {
+  @apply list-disc ml-6;
+}
+
+.blog-post > * {
+  @apply my-4;
+}
+
+/******************/
+/* TOP NAVIGATION */
+/******************/
+
+.top-nav {
+  @apply flex flex-row items-center py-4 mb-10;
+}
+
+.top-nav a {
+  @apply text-gray-600 font-light;
+}
+
+.top-nav img {
+  @apply rounded-full h-10;
+}
+
+/*****************/
+/* BOTTOM FOOTER */
+/*****************/
+
+.bottom-footer {
+  @apply bg-gray-100 py-20;
+}
+
+.bottom-footer img {
+  @apply rounded-full mx-auto;
+  width: 7rem;
+}
+
+.bottom-footer a i {
+  @apply text-primary-400 no-underline;
+}
+
+/************************/
+/* MUST BE APPLIED LAST */
+/************************/
+
+@tailwind utilities;

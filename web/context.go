@@ -9,8 +9,8 @@ import (
 type contextKey string
 
 var (
-	ctxKeyClient   = contextKey("prisma_client")
 	ctxKeyLoggedIn = contextKey("loggedIn")
+	ctxKeyClient   = contextKey("prisma_client")
 	ctxKeyUser     = contextKey("user")
 )
 

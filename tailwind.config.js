@@ -4,10 +4,10 @@ module.exports = {
   important: true,
   theme: {
     colors: {
-      primary: colors.indigo,
+      primary: colors.blue,
       secondary: colors.pink,
       background: colors.white,
-      foreground: colors.black,
+      foreground: colors.gray['900'],
       gray: colors.gray,
     },
   },

@@ -3,10 +3,14 @@ package web
 import (
 	"github.com/flosch/pongo2"
 	"github.com/gorilla/csrf"
+	"github.com/satori/go.uuid"
 	"log"
 	"net/http"
 	"os"
+	"strings"
 )
+
+var staticCacheKey = strings.Replace(uuid.NewV4().String(), "-", "", -1)
 
 func pageTemplate(pagePath string) *pongo2.Template {
 	return pongo2.Must(pongo2.FromFile("templates/pages/" + pagePath))
@@ -28,6 +32,7 @@ func renderTemplate(w http.ResponseWriter, r *http.Request, template *pongo2.Tem
 		"user":           user,
 		"loggedIn":       loggedIn,
 		"staticUrl":      os.Getenv("STATIC_URL"),
+		"staticCacheKey": staticCacheKey,
 		csrf.TemplateTag: csrf.TemplateField(r),
 	}
 

@@ -1,17 +1,22 @@
 {% extends '../../layouts/base.html' %}
 
 {% block content %}
-    <div class="blog-post">
-        <h1>{{ blogPost.Title }} {{ blogPost.Published | yesno:",(Draft)" }}</h1>
-        {% if loggedIn %}
-            <form action="/forms/blog/publish" method="post">
-                <a href="/blog/{{ blogPost.Slug }}/edit">Edit</a> |
-                {{ csrfField | safe }}
-                {% include '../../partials/form-input.html' with type='hidden' name='id' value=blogPost.ID %}
-                {% include '../../partials/form-input.html' with type='hidden' name='published' value=blogPost.Published | yesno:"false,true" %}
-                <button class="link" type="submit">{{ blogPost.Published | yesno:"Unpublish,Publish" }}</button>
-            </form>
-        {% endif %}
-        {{ blogPost.RenderedContent | safe }}
-    </div>
+  <div class="blog-post">
+    <h1 class="flex items-center">
+      {{ blogPost.Title }}
+      {% if not blogPost.Published %}
+        <span class="ml-auto text-base">Draft</span>
+      {% endif %}
+    </h1>
+    {% if loggedIn %}
+      <form action="/forms/blog/publish" method="post">
+        <a href="/blog/{{ blogPost.Slug }}/edit">Edit</a> |
+        {{ csrfField | safe }}
+        {% include '../../partials/form-input.html' with type='hidden' name='id' value=blogPost.ID %}
+        {% include '../../partials/form-input.html' with type='hidden' name='published' value=blogPost.Published | yesno:"false,true" %}
+        <button class="link" type="submit">{{ blogPost.Published | yesno:"Unpublish,Publish" }}</button>
+      </form>
+    {% endif %}
+    {{ blogPost.RenderedContent | safe }}
+  </div>
 {% endblock %}

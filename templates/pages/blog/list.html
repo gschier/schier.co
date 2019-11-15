@@ -1,9 +1,12 @@
 {% extends '../../layouts/base.html' %}
 
 {% block content %}
-    <h1>Blog Posts</h1>
-    <ul>
-        {% for post in blogPosts %}
+    <h1 class="flex items-center mb-12">
+      Blog Posts
+      {% if loggedIn %}<a href="/blog/new" class="text-base ml-auto">New</a>{% endif %}
+    </h1>
+  <ul>
+    {% for post in blogPosts %}
             {% if loggedIn or post.Published %}
                 <li class="mt-6 pb-6 border-b border-primary-100">
                     <h2 class="text-xl">

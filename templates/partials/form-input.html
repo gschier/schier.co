@@ -1,29 +1,33 @@
 {% if type != 'hidden' %}
-<div class="form-row">
+  <div class="form-row">
 {% endif %}
 
-    {% if label %}
-        <label class="form-label" for="i-{{ name }}">{{ label }}</label>
-    {% endif %}
+{% if label %}
+  <label class="form-label" for="i-{{ name }}">{{ label }}</label>
+{% endif %}
 
-    {% if type == 'textarea' %}
-        <textarea class="form-input"
-                  name="{{ name }}"
-                  id="i-{{ name }}"
-                  rows="20"
-                  {% if autofocus %}autofocus="autofocus"{% endif %}
-                  placeholder="{{ placeholder }}">{{ value }}</textarea>
-    {% else %}
-        <input class="form-input"
-               type="{{ type | default:'text' }}"
-               name="{{ name }}"
-               id="i-{{ name }}"
-               placeholder="{{ placeholder }}"
-               {% if autofocus %}autofocus="autofocus"{% endif %}
-               value="{{ value }}" />
-    {% endif %}
+{% if type == 'textarea' %}
+  <textarea
+          class="form-input"
+          name="{{ name }}"
+          id="i-{{ name }}"
+          rows="20"
+          {% if autofocus %}autofocus="autofocus"{% endif %}
+          placeholder="{{ placeholder }}"
+  >{{ value }}</textarea>
+{% else %}
+  <input
+          class="form-input"
+          type="{{ type | default:'text' }}"
+          name="{{ name }}"
+          id="i-{{ name }}"
+          placeholder="{{ placeholder }}"
+          {% if autofocus %}autofocus="autofocus"{% endif %}
+          value="{{ value }}"
+  />
+{% endif %}
 
 {% if type != 'hidden' %}
-</div>
+  </div>
 {% endif %}
 

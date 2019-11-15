@@ -43,6 +43,7 @@ func setupRouter() *mux.Router {
 	// Apply routes
 	web.AuthRoutes(router)
 	web.BlogRoutes(router)
+	web.NotFoundRoutes(router)
 
 	return router
 }

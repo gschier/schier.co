@@ -1,45 +1,59 @@
-<!DOCTYPE html>
-<html lang="en-US">
-<head>
-    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>{{ name }}</title>
-    <meta name="author" content="Gregory Schier">
-    <meta name="description" content="Thoughts on software and technology, by an independent software developer">
-    <meta name="generator" content="Hugo 0.37"/>
-    <meta name="HandheldFriendly" content="True">
-    <meta name="MobileOptimized" content="320">
-    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+{% extends './wrapper.html' %}
 
-    <link href="/static/dev/index.css" rel="stylesheet">
-</head>
-<body class="p-0">
-<nav class="mb-8 bg-gray-100 p-4">
-    <ul class="flex mx-auto max-w-2xl">
+{% block body %}
+  <nav>
+    <ul class="container top-nav">
+      <li class="mr-auto">
+        <a href="/">
+          <img
+                  src="{{ staticUrl }}/build/images/greg.svg"
+                  alt="Gregory Schier Headshot Art"
+          />
+        </a>
+      </li>
+      <li class="mr-6">
+        <a href="/blog">Blog</a>
+      </li>
+      <li class="mr-6">
+        <a href="/books">Books</a>
+      </li>
+      {% if loggedIn %}
         <li class="mr-6">
-            <a href="/">Home</a>
+          <a href="/logout">Logout</a>
         </li>
-        <li class="mr-6">
-            <a href="/blog">Blog</a>
-        </li>
-        {% if loggedIn %}
-            <li class="mr-6">
-                <a href="/blog/new">New</a>
-            </li>
-        {% endif %}
-        <li class="mr-6 ml-auto">
-            {% if loggedIn %}
-                <a href="/logout">Logout</a>
-            {% else %}
-                <a href="/login">Login</a>
-            {% endif %}
-        </li>
+      {% endif %}
     </ul>
-</nav>
-<main class="max-w-2xl mx-auto">
+  </nav>
+  <main class="container">
     {% block content %}
     {% endblock %}
-</main>
-<script src="/static/dev/index.js"></script>
-</body>
-</html>
+  </main>
+  <footer class="bottom-footer mt-20">
+    <div class="container">
+      <img
+              src="{{ staticUrl }}/build/images/greg.svg"
+              alt="Gregory Schier Headshot Art"
+      />
+
+      <div class="text-center pt-8">
+        <a href="//twitter.com/GregorySchier" target="_blank" title="Twitter">
+          <i class="fa fa-twitter text-2xl w-10" aria-hidden="true"></i>
+        </a>
+        <a href="//github.com/gschier" target="_blank" title="GitHub">
+          <i class="fa fa-github text-2xl w-10" aria-hidden="true"></i>
+        </a>
+        <a
+                href="/index.xml"
+                type="application/rss+xml"
+                target="_blank"
+                title="RSS"
+        >
+          <i class="fa fa-rss text-2xl w-10" aria-hidden="true"></i>
+        </a>
+        <div class="mt-2 text-sm text-gray-500">
+          Thanks for visiting!
+        </div>
+      </div>
+    </div>
+  </footer>
+{% endblock %}
