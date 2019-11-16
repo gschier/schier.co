@@ -1,6 +1,8 @@
 import CodeMirror from 'codemirror';
 import 'codemirror/mode/markdown/markdown';
 import 'codemirror/lib/codemirror.css';
+import 'codemirror/theme/idea.css';
+import 'codemirror/theme/neat.css';
 
 import 'codemirror/addon/dialog/dialog';
 import 'codemirror/addon/dialog/dialog.css';
@@ -32,6 +34,7 @@ export function setupEditor(textareaEl, containerEl) {
     containerEl.parentNode.replaceChild(elt, containerEl);
   }, {
     value: textareaEl.value,
+    theme: 'neat',
     mode: 'markdown',
     placeholder: 'Start Typing...',
     height: 'auto',

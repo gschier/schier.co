@@ -197,7 +197,8 @@ form input:invalid {
 .CodeMirror {
   height: 300px;
   font-family: Monaco, monospace !important;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
+  line-height: 1.2rem;
 }
 
 /************************/
