@@ -31,3 +31,14 @@ type BlogPost {
     content: String!
     renderedContent: String!
 }
+
+enum BookState {
+    FINISHED
+    NEXT
+}
+
+type Book {
+    id: ID! @id
+    State: BookState!
+    Rating: Int!
+}

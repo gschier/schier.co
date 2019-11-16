@@ -16,6 +16,10 @@ func pageTemplate(pagePath string) *pongo2.Template {
 	return pongo2.Must(pongo2.FromFile("templates/pages/" + pagePath))
 }
 
+func partialTemplate(partialPath string) *pongo2.Template {
+	return pongo2.Must(pongo2.FromFile("templates/partials/" + partialPath))
+}
+
 func renderHandler(pagePath string, context *pongo2.Context) http.HandlerFunc {
 	t := pageTemplate(pagePath)
 
@@ -28,12 +32,18 @@ func renderTemplate(w http.ResponseWriter, r *http.Request, template *pongo2.Tem
 	user := ctxGetUser(r)
 	loggedIn := ctxGetLoggedIn(r)
 
+	if os.Getenv("DEV_ENVIRONMENT") == "development" {
+		staticCacheKey = strings.Replace(uuid.NewV4().String(), "-", "", -1)
+	}
+
 	newContext := pongo2.Context{
-		"user":           user,
-		"loggedIn":       loggedIn,
-		"staticUrl":      os.Getenv("STATIC_URL"),
-		"staticCacheKey": staticCacheKey,
-		csrf.TemplateTag: csrf.TemplateField(r),
+		"user":            user,
+		"loggedIn":        loggedIn,
+		"staticUrl":       os.Getenv("STATIC_URL"),
+		"staticCacheKey":  staticCacheKey,
+		"csrfToken":       csrf.Token(r),
+		"csrfTokenHeader": "X-CSRF-Token",
+		csrf.TemplateTag:  csrf.TemplateField(r),
 	}
 
 	if context != nil {

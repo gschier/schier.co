@@ -14,9 +14,11 @@
   <link href="{{ staticUrl }}/build/index.css?c={{ staticCacheKey }}" rel="stylesheet">
   <link rel="stylesheet" href="https://use.fontawesome.com/93839bed07.css" media="all">
 </head>
-<body>
-{% block body %}
-{% endblock %}
+<body data-csrf-token="{{ csrfToken }}" data-csrf-Token-header="{{ csrfTokenHeader }}">
+{% block body %}{% endblock %}
+{% block topLevel %}{% endblock %}
+
 <script src="{{ staticUrl }}/build/index.js?c={{ staticCacheKey }}"></script>
+{% block extraScripts %}{% endblock %}
 </body>
 </html>

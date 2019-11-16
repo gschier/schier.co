@@ -5,8 +5,8 @@
   "scripts": {
     "dev": "run-p frontend:watch backend:run",
     "backend:run": "docker-compose up web",
-    "frontend:watch": "parcel watch --out-dir ./static/build --public-url /static/build/ ./src/index.js",
-    "frontend:build": "parcel build --no-source-maps --out-dir ./static/build --public-url /static/build/ ./src/index.js",
+    "frontend:watch": "parcel watch --global schier --out-dir ./static/build --public-url /static/build/ ./src/index.js",
+    "frontend:build": "parcel build --global schier --no-source-maps --out-dir ./static/build --public-url /static/build/ ./src/index.js",
     "deploy": "primsa deploy --force",
     "format-code": "prettier --write src/**/*.js src/**/*.css"
   },
@@ -25,10 +25,11 @@
     "parcel-bundler": "^1.12.4",
     "parcel-plugin-static-files-copy": "^2.2.1",
     "prettier": "1.19.1",
-    "pretty-quick": "^2.0.1",
-    "tailwindcss": "^1.1.3"
+    "pretty-quick": "^2.0.1"
   },
   "dependencies": {
-    "vue": "^2.6.10"
+    "codemirror": "^5.49.2",
+    "vue": "^2.6.10",
+    "tailwindcss": "^1.1.3"
   }
 }

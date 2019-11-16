@@ -14,6 +14,7 @@ import (
 func BlogRoutes(router *mux.Router) {
 	router.HandleFunc("/blog", routeBlogList).Methods(http.MethodGet)
 	router.HandleFunc("/blog/new", renderHandler("blog/edit.html", nil)).Methods(http.MethodGet)
+	router.HandleFunc("/blog/render", routeBlogRender).Methods(http.MethodPost)
 	router.HandleFunc("/blog/{slug}", routeBlogPost).Methods(http.MethodGet)
 	router.HandleFunc("/blog/{slug}/edit", routeBlogPostEdit).Methods(http.MethodGet)
 
@@ -25,6 +26,40 @@ func BlogRoutes(router *mux.Router) {
 var blogEditTemplate = pageTemplate("blog/edit.html")
 var blogListTemplate = pageTemplate("blog/list.html")
 var blogPostTemplate = pageTemplate("blog/post.html")
+var blogPostPartial = partialTemplate("blog_post.html")
+
+func routeBlogRender(w http.ResponseWriter, r *http.Request) {
+	_ = r.ParseMultipartForm(0)
+
+	content := r.Form.Get("content")
+	slug := r.Form.Get("slug")
+	title := r.Form.Get("title")
+	date := r.Form.Get("date")
+	partial := r.Form.Get("partial") == "true"
+
+	log.Println("HELLO:", content)
+
+	// Render the Markdown so we can store it on the model
+	renderedContent := string(blackfriday.Run([]byte(content)))
+
+	var template *pongo2.Template
+	if partial {
+		template = blogPostPartial
+	} else {
+		template = blogPostTemplate
+	}
+
+	renderTemplate(w, r, template, &pongo2.Context{
+		"blogPost": prisma.BlogPost{
+			Published:       true,
+			Slug:            slug,
+			Title:           title,
+			Date:            date,
+			Content:         content,
+			RenderedContent: renderedContent,
+		},
+	})
+}
 
 func routeBlogPostPublish(w http.ResponseWriter, r *http.Request) {
 	_ = r.ParseForm()

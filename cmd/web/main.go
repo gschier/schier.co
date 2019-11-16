@@ -39,6 +39,7 @@ func applyMiddleware(r *mux.Router, pc *prisma.Client) http.Handler {
 
 func setupRouter() *mux.Router {
 	router := mux.NewRouter()
+	router.StrictSlash(true)
 
 	// Apply routes
 	web.AuthRoutes(router)

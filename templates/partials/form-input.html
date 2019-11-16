@@ -10,9 +10,10 @@
   <textarea
           class="form-input"
           name="{{ name }}"
-          id="i-{{ name }}"
-          rows="20"
+          rows="10"
+          id="{% if id %}{{ id }}{% else %}i-{{ name }}{% endif %}"
           {% if autofocus %}autofocus="autofocus"{% endif %}
+          {% if required %}required="required"{% endif %}
           placeholder="{{ placeholder }}"
   >{{ value }}</textarea>
 {% else %}
@@ -20,8 +21,9 @@
           class="form-input"
           type="{{ type | default:'text' }}"
           name="{{ name }}"
-          id="i-{{ name }}"
           placeholder="{{ placeholder }}"
+          id="{% if id %}{{ id }}{% else %}i-{{ name }}{% endif %}"
+          {% if required %}required="required"{% endif %}
           {% if autofocus %}autofocus="autofocus"{% endif %}
           value="{{ value }}"
   />

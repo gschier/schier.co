@@ -1,0 +1,23 @@
+<nav class="top-nav">
+  <ul class="container">
+    <li class="mr-auto">
+      <a href="/">
+        <img
+                src="{{ staticUrl }}/build/images/greg.svg"
+                alt="Gregory Schier Headshot Art"
+        />
+      </a>
+    </li>
+    <li class="ml-6">
+      <a href="/blog">Blog</a>
+    </li>
+    <li class="ml-6">
+      <a href="/books">Books</a>
+    </li>
+    {% if loggedIn %}
+      <li class="ml-6">
+        <a href="/logout">Logout</a>
+      </li>
+    {% endif %}
+  </ul>
+</nav>
