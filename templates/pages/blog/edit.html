@@ -55,9 +55,6 @@
 
 {% block extraScripts %}
   <script>
-    const titleEl = document.querySelector('input[name=title]');
-    const slugEl = document.querySelector('input[name=slug]');
-
     new schier.Vue({
       el: '#editor-app',
       data: {
@@ -87,10 +84,16 @@
               // prevents it from having to re-fetch the scripts and styles and stuff.
               const partial = newPreviewEl.contentDocument.querySelector('.blog-post-container') ? 'true' : 'false';
 
+              const contentEl = document.querySelector('textarea[name=content]');
+              const titleEl = document.querySelector('input[name=title]');
+              const slugEl = document.querySelector('input[name=slug]');
+
               // Fetch the preview from server
               const formData = new FormData();
+
               formData.append('content', contentEl.value);
               formData.append('title', titleEl.value);
+              formData.append('slug', slugEl.value);
               formData.append('partial', partial);
 
               // Send the AJAX request to fetch the render HTML
