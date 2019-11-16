@@ -25,7 +25,7 @@
         </div>
 
         <!-- Blog Post Editor -->
-        <div class="blog-post-editor" v-if="!hideContentEditor">
+        <div class="blog-post-editor" v-bind:class="{ hidden: hideContentEditor }" v-cloak>
           <div class="blog-post-editor__edit">
             <div class="flex pb-4">
               <h1>Edit Contents</h1>
@@ -36,8 +36,7 @@
             <div id="editor">Editor here...</div>
           </div>
           <div class="blog-post-editor__preview">
-            <iframe id="preview-frame-0" class="h-full w-full" frameborder="0" style="display:none"></iframe>
-            <iframe id="preview-frame-1" class="h-full w-full" frameborder="0" style="display:none"></iframe>
+            <!-- Will be filled by script -->
           </div>
         </div>
         <!-- / Blog Post Editor -->
@@ -75,6 +74,16 @@
           const update = (debounceMillis = 0) => {
             clearTimeout(debounceTimeout);
             debounceTimeout = setTimeout(async () => {
+              const p = document.querySelector('.blog-post-editor__preview');
+              if (!p.hasChildNodes()) {
+                for (let i = 0; i < 2; i++) {
+                  const f = document.createElement('iframe');
+                  f.id = `preview-frame-${i}`;
+                  f.style.display = 'none';
+                  p.appendChild(f);
+                }
+              }
+
               // Swap between two i-frames to prevent loading flicker
               const oldPreviewEl = document.querySelector('#preview-frame-' + (this.previewCount) % 2);
               const newPreviewEl = document.querySelector('#preview-frame-' + (this.previewCount + 1) % 2);

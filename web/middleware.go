@@ -17,6 +17,15 @@ func LoggerMiddleware(next http.Handler) http.Handler {
 	return handlers.LoggingHandler(os.Stdout, next)
 }
 
+func CacheMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if os.Getenv("DEV_ENVIRONMENT") == "development" {
+			w.Header().Set("Cache-Control", "max-age=0")
+		}
+		next.ServeHTTP(w, r)
+	})
+}
+
 // prismaClientMiddleware adds the prisma client to the request context
 func ContextMiddleware(next http.Handler, client *prisma.Client) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

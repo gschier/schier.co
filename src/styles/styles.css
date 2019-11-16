@@ -190,6 +190,10 @@ form input:invalid {
   grid-area: preview;
 }
 
+.blog-post-editor__preview iframe {
+  @apply w-full h-full;
+}
+
 .CodeMirror {
   height: 300px;
   font-family: Monaco, monospace !important;
@@ -199,5 +203,9 @@ form input:invalid {
 /************************/
 /* MUST BE APPLIED LAST */
 /************************/
+
+[v-cloak] {
+  @apply hidden;
+}
 
 @tailwind utilities;

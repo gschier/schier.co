@@ -1,22 +1,22 @@
 {% extends '../../layouts/base.html' %}
 
 {% block content %}
-    <h1 class="flex items-center mb-12">
-      Blog Posts
-      {% if loggedIn %}<a href="/blog/new" class="text-base ml-auto">New</a>{% endif %}
-    </h1>
+  <h1 class="flex items-center mb-12">
+    Blog Posts
+    {% if loggedIn %}<a href="/blog/new" class="text-base ml-auto">New</a>{% endif %}
+  </h1>
   <ul>
     {% for post in blogPosts %}
-            {% if loggedIn or post.Published %}
-                <li class="mt-6 pb-6 border-b border-primary-100">
-                    <h2 class="text-xl">
-                        <a href="/blog/{{ post.Slug }}">
-                            {{ post.Title }} {{ post.Published | yesno:",(Draft)" }}
-                        </a>
-                    </h2>
-                    <div>{{ post.RenderedContent | safe }}</div>
-                </li>
-            {% endif %}
-        {% endfor %}
-    </ul>
+      {% if loggedIn or post.Published %}
+        <li class="blog-post mt-6 pb-6 border-b border-primary-100">
+          <h2 class="text-xl">
+            <a href="/blog/{{ post.Slug }}">
+              {{ post.Title }} {{ post.Published | yesno:",(Draft)" }}
+            </a>
+          </h2>
+          <div>{{ post.RenderedContent | safe }}</div>
+        </li>
+      {% endif %}
+    {% endfor %}
+  </ul>
 {% endblock %}
