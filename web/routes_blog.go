@@ -46,9 +46,9 @@ func routeBlogRender(w http.ResponseWriter, r *http.Request) {
 
 	var template *pongo2.Template
 	if partial {
-		template = blogPostPartial
+		template = blogPostPartial()
 	} else {
-		template = blogPostTemplate
+		template = blogPostTemplate()
 	}
 
 	renderTemplate(w, r, template, &pongo2.Context{
@@ -115,7 +115,7 @@ func routeBlogPostEdit(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	renderTemplate(w, r, blogEditTemplate, &pongo2.Context{"blogPost": blogPost})
+	renderTemplate(w, r, blogEditTemplate(), &pongo2.Context{"blogPost": blogPost})
 }
 
 func routeBlogPostCreateOrUpdate(w http.ResponseWriter, r *http.Request) {
@@ -192,7 +192,7 @@ func routeBlogPost(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Render template
-	renderTemplate(w, r, blogPostTemplate, &pongo2.Context{
+	renderTemplate(w, r, blogPostTemplate(), &pongo2.Context{
 		"blogPost": blogPost,
 	})
 }
@@ -228,7 +228,7 @@ func routeBlogList(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Render template
-	renderTemplate(w, r, blogListTemplate, &pongo2.Context{
+	renderTemplate(w, r, blogListTemplate(), &pongo2.Context{
 		"blogPosts": blogPosts,
 		"tag":       tag,
 	})

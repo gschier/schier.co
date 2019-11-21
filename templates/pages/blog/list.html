@@ -1,10 +1,18 @@
 {% extends '../../layouts/base.html' %}
 
 {% block content %}
-  <h1 class="flex items-center mb-12">
-    {% if tag %}Posts in {{ tag }}{% else %}All Posts{% endif %}
-    {% if loggedIn %}<a href="/blog/new" class="text-base ml-auto">New</a>{% endif %}
-  </h1>
+  <div>
+    <h1 class="flex items-center mb-4">
+      {% if tag %}Posts in {{ tag }}{% else %}Welcome to the Blog!{% endif %}
+      {% if loggedIn %}<a href="/blog/new" class="text-base ml-auto">New</a>{% endif %}
+    </h1>
+    {% if not tag %}
+      <p class="mb-12">
+        This is where I write about life, programming, and other interests.
+      </p>
+    {% endif %}
+    <hr>
+  </div>
   <ul>
     {% for post in blogPosts %}
       {% if loggedIn or post.Published %}
@@ -13,6 +21,9 @@
             <a href="/blog/{{ post.Slug }}">
               {{ post.Title }} {{ post.Published | yesno:",(Draft)" }}
             </a>
+            <time datetime{{ blogPost.Date }}>
+              {{ post.Date | datefmt }}
+            </time>
           </h1>
           <div>{{ post.RenderedContent | safe }}</div>
           <div class="flex mt-6">

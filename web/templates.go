@@ -8,20 +8,53 @@ import (
 	"net/http"
 	"os"
 	"strings"
+	"time"
 )
 
 var staticCacheKey = strings.Replace(uuid.NewV4().String(), "-", "", -1)
 
-func pageTemplate(pagePath string) *pongo2.Template {
-	return pongo2.Must(pongo2.FromFile("templates/pages/" + pagePath))
+func init() {
+	err := pongo2.RegisterFilter(
+		"datefmt",
+		func(in *pongo2.Value, param *pongo2.Value) (*pongo2.Value, *pongo2.Error) {
+			t, err := time.Parse(time.RFC3339, in.String())
+			if err != nil {
+				return nil, &pongo2.Error{OrigError: err}
+			}
+
+			return pongo2.AsValue(t.Format("January _2, 2006")), nil
+		},
+	)
+
+	if err != nil {
+		panic("failed to register template filter: " + err.Error())
+	}
 }
 
-func partialTemplate(partialPath string) *pongo2.Template {
-	return pongo2.Must(pongo2.FromFile("templates/partials/" + partialPath))
+func pageTemplate(pagePath string) func() *pongo2.Template {
+	var cached *pongo2.Template = nil
+	return func() *pongo2.Template {
+		if cached == nil {
+			cached = pongo2.Must(pongo2.FromFile("templates/pages/" + pagePath))
+		}
+
+		return cached
+	}
+}
+
+func partialTemplate(partialPath string) func() *pongo2.Template {
+	var cached *pongo2.Template = nil
+	return func() *pongo2.Template {
+		if cached == nil {
+			cached = pongo2.Must(pongo2.FromFile("templates/partials/" + partialPath))
+		}
+
+		return cached
+	}
 }
 
 func renderHandler(pagePath string, context *pongo2.Context) http.HandlerFunc {
-	t := pageTemplate(pagePath)
+	t := pageTemplate(pagePath)()
 
 	return func(w http.ResponseWriter, r *http.Request) {
 		renderTemplate(w, r, t, context)

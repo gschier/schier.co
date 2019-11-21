@@ -7,7 +7,7 @@ module.exports = {
       primary: colors.blue,
       secondary: colors.pink,
       background: colors.white,
-      foreground: colors.gray['900'],
+      foreground: colors.gray['800'],
       gray: colors.gray,
     },
   },

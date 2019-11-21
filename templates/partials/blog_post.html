@@ -1,6 +1,9 @@
 <div class="blog-post">
-  <h1 class="flex items-center">
+  <h1>
     {{ blogPost.Title }}
+    <time datetime{{ blogPost.Date }}>
+      {{ blogPost.Date | datefmt }}
+    </time>
   </h1>
 
   {% if loggedIn %}
