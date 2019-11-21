@@ -16,8 +16,6 @@
 </head>
 <body data-csrf-token="{{ csrfToken }}" data-csrf-Token-header="{{ csrfTokenHeader }}">
 {% block body %}{% endblock %}
-{% block topLevel %}{% endblock %}
-
 <script src="{{ staticUrl }}/build/index.js?c={{ staticCacheKey }}"></script>
 {% block extraScripts %}{% endblock %}
 </body>

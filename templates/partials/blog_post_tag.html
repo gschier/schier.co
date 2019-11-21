@@ -1,0 +1,7 @@
+  {% for tag in tags|split:"|" %}
+    {% if tag %}
+      <a href="/blog/tags/{{ tag }}" class="tag">
+        {{ tag }}
+      </a>
+    {% endif %}
+  {% endfor %}

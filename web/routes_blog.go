@@ -13,6 +13,7 @@ import (
 
 func BlogRoutes(router *mux.Router) {
 	router.HandleFunc("/blog", routeBlogList).Methods(http.MethodGet)
+	router.HandleFunc("/blog/tags/{tag}", routeBlogList).Methods(http.MethodGet)
 	router.HandleFunc("/blog/new", renderHandler("blog/edit.html", nil)).Methods(http.MethodGet)
 	router.HandleFunc("/blog/render", routeBlogRender).Methods(http.MethodPost)
 	router.HandleFunc("/blog/{slug}", routeBlogPost).Methods(http.MethodGet)
@@ -21,6 +22,7 @@ func BlogRoutes(router *mux.Router) {
 	// Forms
 	router.HandleFunc("/forms/blog/upsert", routeBlogPostCreateOrUpdate).Methods(http.MethodPost)
 	router.HandleFunc("/forms/blog/publish", routeBlogPostPublish).Methods(http.MethodPost)
+	router.HandleFunc("/forms/blog/delete", routeBlogPostDelete).Methods(http.MethodPost)
 }
 
 var blogEditTemplate = pageTemplate("blog/edit.html")
@@ -61,6 +63,25 @@ func routeBlogRender(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
+func routeBlogPostDelete(w http.ResponseWriter, r *http.Request) {
+	_ = r.ParseForm()
+
+	id := r.Form.Get("id")
+
+	client := ctxDB(r)
+	blogPost, err := client.UpdateBlogPost(prisma.BlogPostUpdateParams{
+		Data:  prisma.BlogPostUpdateInput{Deleted: prisma.Bool(true)},
+		Where: prisma.BlogPostWhereUniqueInput{ID: &id},
+	}).Exec(r.Context())
+	if err != nil {
+		log.Println("Failed to delete Post", err)
+		http.Error(w, "Failed to delete Post", http.StatusInternalServerError)
+		return
+	}
+
+	http.Redirect(w, r, "/blog/"+blogPost.Slug, http.StatusSeeOther)
+}
+
 func routeBlogPostPublish(w http.ResponseWriter, r *http.Request) {
 	_ = r.ParseForm()
 
@@ -73,8 +94,8 @@ func routeBlogPostPublish(w http.ResponseWriter, r *http.Request) {
 		Where: prisma.BlogPostWhereUniqueInput{ID: &id},
 	}).Exec(r.Context())
 	if err != nil {
-		log.Println("Failed to delete Post", err)
-		http.Error(w, "Failed to delete Post", http.StatusInternalServerError)
+		log.Println("Failed to publish Post", err)
+		http.Error(w, "Failed to publsh Post", http.StatusInternalServerError)
 		return
 	}
 
@@ -84,17 +105,17 @@ func routeBlogPostPublish(w http.ResponseWriter, r *http.Request) {
 func routeBlogPostEdit(w http.ResponseWriter, r *http.Request) {
 	slug := mux.Vars(r)["slug"]
 
+	baseQuery := ctxDB(r).BlogPost(prisma.BlogPostWhereUniqueInput{Slug: &slug})
+
 	// Fetch blog posts
-	blogPost, err := ctxDB(r).BlogPost(prisma.BlogPostWhereUniqueInput{Slug: &slug}).Exec(r.Context())
+	blogPost, err := baseQuery.Exec(r.Context())
 	if err != nil {
 		log.Println("Failed to fetch blog post", err)
 		http.Error(w, "Failed to get blog post", http.StatusInternalServerError)
 		return
 	}
 
-	renderTemplate(w, r, blogEditTemplate, &pongo2.Context{
-		"blogPost": blogPost,
-	})
+	renderTemplate(w, r, blogEditTemplate, &pongo2.Context{"blogPost": blogPost})
 }
 
 func routeBlogPostCreateOrUpdate(w http.ResponseWriter, r *http.Request) {
@@ -105,6 +126,7 @@ func routeBlogPostCreateOrUpdate(w http.ResponseWriter, r *http.Request) {
 	content := r.Form.Get("content")
 	title := r.Form.Get("title")
 	published := r.Form.Get("published") == "true"
+	tagNames := stringToTags(r.Form.Get("tags"))
 
 	client := ctxDB(r)
 	loggedIn := ctxGetLoggedIn(r)
@@ -126,24 +148,25 @@ func routeBlogPostCreateOrUpdate(w http.ResponseWriter, r *http.Request) {
 	// Render the Markdown so we can store it on the model
 	renderedContent := string(blackfriday.Run([]byte(content)))
 
+	// Upsert blog post
 	_, err := client.UpsertBlogPost(prisma.BlogPostUpsertParams{
 		Where: prisma.BlogPostWhereUniqueInput{ID: &id},
 		Create: prisma.BlogPostCreateInput{
 			Slug:            slug,
 			Title:           title,
 			Published:       published,
-			Date:            time.Now().Format(time.RFC3339),
 			Content:         content,
 			RenderedContent: renderedContent,
-			Author: prisma.UserCreateOneInput{
-				Connect: &prisma.UserWhereUniqueInput{ID: &user.ID},
-			},
+			Date:            time.Now().Format(time.RFC3339),
+			Author:          prisma.UserCreateOneInput{Connect: &prisma.UserWhereUniqueInput{ID: &user.ID}},
+			Tags:            tagsToString(tagNames),
 		},
 		Update: prisma.BlogPostUpdateInput{
 			Slug:            &slug,
 			Title:           &title,
 			Content:         &content,
 			RenderedContent: &renderedContent,
+			Tags:            prisma.Str(tagsToString(tagNames)),
 		},
 	}).Exec(r.Context())
 	if err != nil {
@@ -158,8 +181,10 @@ func routeBlogPostCreateOrUpdate(w http.ResponseWriter, r *http.Request) {
 func routeBlogPost(w http.ResponseWriter, r *http.Request) {
 	slug := mux.Vars(r)["slug"]
 
+	baseQuery := ctxDB(r).BlogPost(prisma.BlogPostWhereUniqueInput{Slug: &slug})
+
 	// Fetch blog posts
-	blogPost, err := ctxDB(r).BlogPost(prisma.BlogPostWhereUniqueInput{Slug: &slug}).Exec(r.Context())
+	blogPost, err := baseQuery.Exec(r.Context())
 	if err != nil {
 		log.Println("Failed to fetch blog post", err)
 		http.Error(w, "Failed to get blog post", http.StatusInternalServerError)
@@ -173,9 +198,22 @@ func routeBlogPost(w http.ResponseWriter, r *http.Request) {
 }
 
 func routeBlogList(w http.ResponseWriter, r *http.Request) {
+	tag := mux.Vars(r)["tag"]
+
+	var tagsContains *string = nil
+	if tag != "" {
+		tagsContains = prisma.Str(tagsToString([]string{tag}))
+	}
+
 	// Fetch blog posts
 	orderBy := prisma.BlogPostOrderByInputCreatedAtDesc
-	blogPosts, err := ctxDB(r).BlogPosts(&prisma.BlogPostsParams{OrderBy: &orderBy}).Exec(r.Context())
+	blogPosts, err := ctxDB(r).BlogPosts(&prisma.BlogPostsParams{
+		OrderBy: &orderBy,
+		Where: &prisma.BlogPostWhereInput{
+			Deleted:      prisma.Bool(false),
+			TagsContains: tagsContains,
+		},
+	}).Exec(r.Context())
 	if err != nil {
 		log.Println("Failed to load blog posts", err)
 		http.Error(w, "Failed to load blog posts", http.StatusInternalServerError)
@@ -192,5 +230,26 @@ func routeBlogList(w http.ResponseWriter, r *http.Request) {
 	// Render template
 	renderTemplate(w, r, blogListTemplate, &pongo2.Context{
 		"blogPosts": blogPosts,
+		"tag":       tag,
 	})
+}
+
+func tagsToString(tags []string) string {
+	for i, t := range tags {
+		tags[i] = strings.ToLower(strings.TrimSpace(t))
+	}
+
+	return "|" + strings.Join(tags, "|") + "|"
+}
+
+func stringToTags(tags string) []string {
+	tags = strings.TrimPrefix(tags, "|")
+	tags = strings.TrimSuffix(tags, "|")
+
+	allTags := strings.Split(tags, "|")
+	for i, t := range allTags {
+		allTags[i] = strings.ToLower(strings.TrimSpace(t))
+	}
+
+	return allTags
 }

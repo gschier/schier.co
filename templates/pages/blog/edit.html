@@ -8,6 +8,8 @@
       {% include '../../partials/form-input.html' with type='hidden' name='id' value=blogPost.ID required=true %}
       {% include '../../partials/form-input.html' with label='Slug' type='text' name='slug' value=blogPost.Slug placeholder='my-blog-post' autofocus=true required=true %}
       {% include '../../partials/form-input.html' with label='Title' type='text' name='title' value=blogPost.Title placeholder='My Blog Post' required=true %}
+      {% include '../../partials/form-input.html' with label='Tags' type='text' name='tags' value=blogPost.Tags placeholder='Tag1, Tag2' %}
+
       <div class="form-row">
         <label for="content">Content
           <button v-on:click="toggleExpand" type="button" class="pull-right">

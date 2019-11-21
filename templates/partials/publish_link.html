@@ -1,0 +1,6 @@
+<form class="inline" action="/forms/blog/publish" method="post">
+  {{ csrfField | safe }}
+  {% include './form-input.html' with type='hidden' name='id' value=blogPost.ID %}
+  {% include './form-input.html' with type='hidden' name='published' value=blogPost.Published | yesno:"false,true" %}
+  <button class="link" type="submit">{{ blogPost.Published | yesno:"Unpublish,Publish" }}</button>
+</form>

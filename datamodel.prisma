@@ -24,21 +24,12 @@ type BlogPost {
     createdAt: DateTime! @createdAt
     updatedAt: DateTime! @updatedAt
     published: Boolean!
+    deleted: Boolean!
     slug: String! @unique
     title: String!
     date: DateTime!
     author: User!
     content: String!
     renderedContent: String!
-}
-
-enum BookState {
-    FINISHED
-    NEXT
-}
-
-type Book {
-    id: ID! @id
-    State: BookState!
-    Rating: Int!
+    tags: String!
 }

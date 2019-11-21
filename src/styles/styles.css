@@ -14,6 +14,7 @@ body {
 main {
   margin-left: auto;
   margin-right: auto;
+  min-height: 30vh;
 }
 
 .container {
@@ -93,6 +94,22 @@ form input:invalid {
 /* MARKDOWN POST */
 /*****************/
 
+.blog-post-preview {
+  @apply mt-12 pb-12 border-b border-primary-100;
+}
+
+.blog-post-preview:last-child {
+  @apply border-none;
+}
+
+.blog-post-preview h1 {
+  @apply mb-4 text-xl;
+}
+
+.blog-post-preview img {
+  display: none;
+}
+
 .blog-post h1 {
   @apply text-4xl;
 }
@@ -149,6 +166,14 @@ form input:invalid {
 
 .bottom-footer a i {
   @apply text-primary-400 no-underline;
+}
+
+/********/
+/* TAGS */
+/********/
+
+.tag {
+  @apply mr-2 py-1 px-3 rounded-full text-xs border-primary-400 border uppercase inline-block;
 }
 
 /********************/

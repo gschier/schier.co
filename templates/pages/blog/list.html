@@ -2,19 +2,25 @@
 
 {% block content %}
   <h1 class="flex items-center mb-12">
-    Blog Posts
+    {% if tag %}Posts in {{ tag }}{% else %}All Posts{% endif %}
     {% if loggedIn %}<a href="/blog/new" class="text-base ml-auto">New</a>{% endif %}
   </h1>
   <ul>
     {% for post in blogPosts %}
       {% if loggedIn or post.Published %}
-        <li class="blog-post mt-6 pb-6 border-b border-primary-100">
-          <h2 class="text-xl">
+        <li class="blog-post-preview">
+          <h1>
             <a href="/blog/{{ post.Slug }}">
               {{ post.Title }} {{ post.Published | yesno:",(Draft)" }}
             </a>
-          </h2>
+          </h1>
           <div>{{ post.RenderedContent | safe }}</div>
+          <div class="flex mt-6">
+            {% include '../../partials/blog_post_tag.html' with tags=post.Tags %}
+            <a href="/" class="ml-auto text-sm">
+              Continue Reading &raquo;
+            </a>
+          </div>
         </li>
       {% endif %}
     {% endfor %}
