@@ -3,19 +3,21 @@
 {% block content %}
   <div id="editor-app">
     <h1 class="mb-6">Edit Post</h1>
-    <form action="/forms/blog/upsert" method="post">
+    <form action="/forms/blog/upsert" method="post" id="edit-form">
       {{ csrfField | safe }}
       {% include '../../partials/form-input.html' with type='hidden' name='id' value=blogPost.ID required=true %}
+      {% include '../../partials/form-input.html' with type='hidden' name='date' value=blogPost.Date required=true %}
       {% include '../../partials/form-input.html' with label='Slug' type='text' name='slug' value=blogPost.Slug placeholder='my-blog-post' autofocus=true required=true %}
       {% include '../../partials/form-input.html' with label='Title' type='text' name='title' value=blogPost.Title placeholder='My Blog Post' required=true %}
       {% include '../../partials/form-input.html' with label='Tags' type='text' name='tags' value=blogPost.Tags placeholder='Tag1, Tag2' %}
 
       <div class="form-row">
-        <label for="content">Content
-          <button v-on:click="toggleExpand" type="button" class="pull-right">
+        <div class="flex">
+          <label for="content">Content</label>
+          <button v-on:click="toggleExpand" type="button" class="ml-auto pl-4 pb-1 opacity-50 hover:opacity-100">
             <i class="fa fa-expand"></i>
           </button>
-        </label>
+        </div>
         <textarea
                 required
                 name="content"
@@ -29,8 +31,12 @@
       <div class="blog-post-editor" v-bind:class="{ hidden: hideContentEditor }" v-cloak>
         <div class="blog-post-editor__edit">
           <div class="flex pb-4">
-            <h1>Edit Contents</h1>
-            <button class="btn bg-gray-200 hover:bg-gray-300 text-gray-500 ml-auto" type="button" v-on:click="toggleExpand">
+            <h1 class="text-xl">Edit Contents</h1>
+            <button
+                    class="btn btn--small bg-gray-200 hover:bg-gray-300 text-gray-500 ml-auto py-2 px-3"
+                    type="button"
+                    v-on:click="toggleExpand"
+            >
               <i class="fa fa-times"></i>
             </button>
           </div>
@@ -92,17 +98,17 @@
               // prevents it from having to re-fetch the scripts and styles and stuff.
               const partial = newPreviewEl.contentDocument.querySelector('.blog-post-container') ? 'true' : 'false';
 
-              const contentEl = document.querySelector('textarea[name=content]');
-              const titleEl = document.querySelector('input[name=title]');
-              const slugEl = document.querySelector('input[name=slug]');
-
               // Fetch the preview from server
               const formData = new FormData();
-
-              formData.append('content', contentEl.value);
-              formData.append('title', titleEl.value);
-              formData.append('slug', slugEl.value);
               formData.append('partial', partial);
+
+              for (const el of document.querySelectorAll('#edit-form input, #edit-form textarea')) {
+                if (!el.hasAttribute('name')) {
+                  continue;
+                }
+
+                formData.append(el.getAttribute('name'), el.value);
+              }
 
               // Send the AJAX request to fetch the render HTML
               const csrfTokenHeaderName = document.body.getAttribute('data-csrf-token-header');

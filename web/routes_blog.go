@@ -39,8 +39,6 @@ func routeBlogRender(w http.ResponseWriter, r *http.Request) {
 	date := r.Form.Get("date")
 	partial := r.Form.Get("partial") == "true"
 
-	log.Println("HELLO:", content)
-
 	// Render the Markdown so we can store it on the model
 	renderedContent := string(blackfriday.Run([]byte(content)))
 
@@ -52,6 +50,7 @@ func routeBlogRender(w http.ResponseWriter, r *http.Request) {
 	}
 
 	renderTemplate(w, r, template, &pongo2.Context{
+		"loggedIn": false,
 		"blogPost": prisma.BlogPost{
 			Published:       true,
 			Slug:            slug,

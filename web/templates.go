@@ -15,7 +15,7 @@ var staticCacheKey = strings.Replace(uuid.NewV4().String(), "-", "", -1)
 
 func init() {
 	err := pongo2.RegisterFilter(
-		"datefmt",
+		"isoformat",
 		func(in *pongo2.Value, param *pongo2.Value) (*pongo2.Value, *pongo2.Error) {
 			t, err := time.Parse(time.RFC3339, in.String())
 			if err != nil {
@@ -80,7 +80,7 @@ func renderTemplate(w http.ResponseWriter, r *http.Request, template *pongo2.Tem
 	}
 
 	if context != nil {
-		newContext = context.Update(newContext)
+		newContext = newContext.Update(*context)
 	}
 
 	err := template.ExecuteWriter(newContext, w)
