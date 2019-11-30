@@ -4,7 +4,7 @@
     A cross-platform desktop app to help software developers interact
     with HTTP-based APIs.
   link: https://insomnia.rest/blog/insomnia-and-kong
-  icon: insomnia.svg
+  icon: insomnia.png
   retired: false
   revenue: Acquired at $20k/month! 🎉
 
@@ -34,7 +34,7 @@
     A Go web framework that makes use of dependency-injection for a
     delightful developer experience.
   link: https://gohemlock.com/
-  icon: hemlock-icon.svg
+  icon: hemlock.png
   retired: false
   revenue: Open Source
 
@@ -44,7 +44,7 @@
     A mobile/web app to help people find the best food in the city. It
     contained full restaurant menus, prices, etc, and users could upload photos.
   link: https://www.youtube.com/watch?v=vwnVEIfIfOU
-  icon: forkjoy.jpg
+  icon: forkjoy.png
   retired: true
   revenue: $0/month
   reason: Shut down because we ran out of funding and couldn’t generate revenue
@@ -56,7 +56,7 @@
     site to teach others how to do the same. It had step-by-step instructions,
     materials lists, and 3D renders of each step.
   link: https://www.youtube.com/watch?v=GH7L61jILYk
-  icon: plans4ramps.jpg
+  icon: plans4ramps.png
   retired: true
   revenue: $0/month
   reason: Shut down because I lost the code

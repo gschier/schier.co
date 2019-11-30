@@ -28,6 +28,10 @@ type tagMarkdown struct {
 func (node *tagMarkdown) Execute(ctx *pongo2.ExecutionContext, writer pongo2.TemplateWriter) *pongo2.Error {
 	b := bytes.NewBuffer(make([]byte, 0, 1024)) // 1 KiB
 
+	// Disable escaping so we can inject HTML
+	ctx = pongo2.NewChildExecutionContext(ctx)
+	ctx.Autoescape = false
+
 	pErr := node.wrapper.Execute(ctx, b)
 	if pErr != nil {
 		return pErr
@@ -122,6 +126,7 @@ func renderTemplate(w http.ResponseWriter, r *http.Request, template *pongo2.Tem
 	}
 
 	newContext := pongo2.Context{
+		"defaultTitle":    "Greg Schier",
 		"user":            user,
 		"loggedIn":        loggedIn,
 		"staticUrl":       os.Getenv("STATIC_URL"),
@@ -146,6 +151,18 @@ func renderTemplate(w http.ResponseWriter, r *http.Request, template *pongo2.Tem
 func RenderMarkdown(md string) []byte {
 	chroma := bfchroma.NewRenderer(
 		bfchroma.WithoutAutodetect(),
+		bfchroma.Extend(blackfriday.NewHTMLRenderer(blackfriday.HTMLRendererParameters{
+			AbsolutePrefix: os.Getenv("STATIC_URL"),
+			//FootnoteAnchorPrefix:       "",
+			//FootnoteReturnLinkContents: "",
+			//HeadingIDPrefix:            "",
+			//HeadingIDSuffix:            "",
+			//HeadingLevelOffset:         0,
+			//Title:                      "",
+			//CSS:                        "",
+			//Icon:                       "",
+			Flags: blackfriday.CommonHTMLFlags,
+		})),
 		bfchroma.ChromaOptions(
 			html.ClassPrefix("chroma-"),
 			html.WithClasses(),

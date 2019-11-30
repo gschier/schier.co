@@ -1,10 +1,15 @@
 @tailwind base;
-@tailwind components;
 
 html {
   @apply bg-background text-primary;
   font-size: 17px;
   font-family: "Open Sans", sans-serif;
+}
+
+@media only screen and (max-width: 600px) {
+  html {
+    font-size: 15px;
+  }
 }
 
 body {
@@ -110,7 +115,7 @@ form input:invalid {
 
 .blog-post-preview time,
 .blog-post time {
-  @apply uppercase block text-sm font-light text-gray-600;
+  @apply uppercase block text-sm text-gray-500;
 }
 
 .blog-post-preview h1 {
@@ -191,7 +196,7 @@ pre.chroma-chroma {
 }
 
 .top-nav a {
-  @apply text-gray-600 font-light;
+  @apply text-gray-500;
 }
 
 .top-nav img {

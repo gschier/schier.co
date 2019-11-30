@@ -6,7 +6,7 @@ RUN apk update && apk upgrade && \
 
 WORKDIR /app
 
-COPY ./go.mod ./go.sum ./
+COPY ./go.mod ./go.sum ./vendor ./
 
 RUN go mod download
 

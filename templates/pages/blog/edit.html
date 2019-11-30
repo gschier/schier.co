@@ -14,9 +14,9 @@
       <div class="form-row">
         <div class="flex">
           <label for="content">Content</label>
-          <button v-on:click="toggleExpand" type="button" class="ml-auto pl-4 pb-1 opacity-50 hover:opacity-100">
-            <i class="fa fa-expand"></i>
-          </button>
+          <a href="#" v-on:click="toggleExpand" class="ml-auto pl-4 text-xs">
+            Full Screen
+          </a>
         </div>
         <textarea
                 required
@@ -33,11 +33,11 @@
           <div class="flex pb-4">
             <h1 class="text-xl">Edit Contents</h1>
             <button
-                    class="btn btn--small bg-gray-200 hover:bg-gray-300 text-gray-500 ml-auto py-2 px-3"
+                    class="btn btn--small bg-gray-200 hover:bg-gray-300 text-gray-500 ml-auto py-1 px-3 text-lg"
                     type="button"
                     v-on:click="toggleExpand"
             >
-              <i class="fa fa-times"></i>
+              &times;
             </button>
           </div>
           <div id="editor">Editor here...</div>
@@ -72,7 +72,9 @@
           e.target.setCustomValidity(validity);
 
         },
-        toggleExpand: function () {
+        toggleExpand: function (e) {
+          e.preventDefault();
+
           this.hideContentEditor = !this.hideContentEditor;
 
           let debounceTimeout = 0;

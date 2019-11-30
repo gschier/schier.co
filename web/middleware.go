@@ -12,21 +12,31 @@ import (
 	"strings"
 )
 
-// logMiddleware logs each request
+const sessionCookieName = "sid"
+
+// LogMiddleware logs each request
 func LoggerMiddleware(next http.Handler) http.Handler {
 	return handlers.LoggingHandler(os.Stdout, next)
 }
 
+// CompressMiddleware enables gzip for requests
+func CompressMiddleware(next http.Handler) http.Handler {
+	return handlers.CompressHandler(next)
+}
+
+// CacheMiddleware configures Cache-Control header
 func CacheMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if os.Getenv("DEV_ENVIRONMENT") == "development" {
 			w.Header().Set("Cache-Control", "max-age=0")
+		} else {
+			w.Header().Set("Cache-Control", "max-age=60")
 		}
 		next.ServeHTTP(w, r)
 	})
 }
 
-// prismaClientMiddleware adds the prisma client to the request context
+// ContextMiddleware adds useful things to the request context
 func ContextMiddleware(next http.Handler, client *prisma.Client) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		var emptyUser *prisma.User = nil
@@ -38,7 +48,7 @@ func ContextMiddleware(next http.Handler, client *prisma.Client) http.Handler {
 	})
 }
 
-// staticMiddleware automatically serves static assets out of the static folder
+// StaticMiddleware automatically serves static assets out of the static folder
 func StaticMiddleware(next http.Handler) http.Handler {
 	fileHandler := http.FileServer(http.Dir("."))
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -60,8 +70,6 @@ func CSRFMiddleware(next http.Handler) http.Handler {
 		csrf.Path("/"),
 	)(next)
 }
-
-const sessionCookieName = "sid"
 
 // UserMiddleware adds the User object to the context if available
 func UserMiddleware(next http.Handler) http.Handler {

@@ -3,19 +3,63 @@ package schier_dev
 import (
 	"context"
 	"github.com/gschier/schier.dev/generated/prisma-client"
-	"github.com/gschier/schier.dev/web"
+	"golang.org/x/crypto/bcrypt"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"log"
+	"os"
 )
 
 func InstallFixtures(client *prisma.Client) {
-	processProjects(client)
-	processFavoriteThings(client)
-	processBlogPosts(client)
+	count := 0
+	count += processUsers(client)
+	count += processProjects(client)
+	count += processFavoriteThings(client)
+	count += processBlogPosts(client)
+
+	log.Printf("Installed %d fixtures\n", count)
 }
 
-func processBlogPosts(client *prisma.Client) {
+func processUsers(client *prisma.Client) int {
+	b, err := ioutil.ReadFile("fixtures/users.yaml")
+	if err != nil {
+		panic(err)
+	}
+
+	var users []*prisma.User
+	err = yaml.Unmarshal(b, &users)
+	if err != nil {
+		panic(err)
+	}
+
+	for _, u := range users {
+		pwdHash, _ := bcrypt.GenerateFromPassword([]byte(os.Getenv("USER_PASSWORD")), bcrypt.DefaultCost)
+		_, err := client.UpsertUser(prisma.UserUpsertParams{
+			Where: prisma.UserWhereUniqueInput{
+				Email: &u.Email,
+			},
+			Create: prisma.UserCreateInput{
+				Type:         &u.Type,
+				Email:        u.Email,
+				Name:         u.Name,
+				PasswordHash: string(pwdHash),
+			},
+			Update: prisma.UserUpdateInput{
+				Type:         &u.Type,
+				Email:        &u.Email,
+				Name:         &u.Name,
+				PasswordHash: prisma.Str(string(pwdHash)),
+			},
+		}).Exec(context.Background())
+		if err != nil {
+			panic(err)
+		}
+	}
+
+	return len(users)
+}
+
+func processBlogPosts(client *prisma.Client) int {
 	b, err := ioutil.ReadFile("fixtures/blog-posts.yaml")
 	if err != nil {
 		panic(err)
@@ -28,22 +72,19 @@ func processBlogPosts(client *prisma.Client) {
 	}
 
 	for _, p := range blogPosts {
-		log.Println("Adding BlogPost:", p.Slug)
-		renderedContent := web.RenderMarkdownStr(p.Content)
 		_, err := client.UpsertBlogPost(prisma.BlogPostUpsertParams{
 			Where: prisma.BlogPostWhereUniqueInput{
 				Slug: &p.Slug,
 			},
 			Create: prisma.BlogPostCreateInput{
-				ID:              nil,
-				Published:       p.Published,
-				Deleted:         p.Deleted,
-				Slug:            p.Slug,
-				Title:           p.Title,
-				Date:            p.Date,
-				Content:         p.Content,
-				RenderedContent: renderedContent,
-				Tags:            p.Tags,
+				ID:        nil,
+				Published: p.Published,
+				Deleted:   p.Deleted,
+				Slug:      p.Slug,
+				Title:     p.Title,
+				Date:      p.Date,
+				Content:   p.Content,
+				Tags:      p.Tags,
 				Author: prisma.UserCreateOneInput{
 					Connect: &prisma.UserWhereUniqueInput{
 						Email: prisma.Str("gschier1990@gmail.com"),
@@ -51,22 +92,23 @@ func processBlogPosts(client *prisma.Client) {
 				},
 			},
 			Update: prisma.BlogPostUpdateInput{
-				Published:       &p.Published,
-				Deleted:         &p.Deleted,
-				Title:           &p.Title,
-				Date:            &p.Date,
-				Content:         &p.Content,
-				RenderedContent: &renderedContent,
-				Tags:            &p.Tags,
+				Published: &p.Published,
+				Deleted:   &p.Deleted,
+				Title:     &p.Title,
+				Date:      &p.Date,
+				Content:   &p.Content,
+				Tags:      &p.Tags,
 			},
 		}).Exec(context.Background())
 		if err != nil {
 			panic(err)
 		}
 	}
+
+	return len(blogPosts)
 }
 
-func processFavoriteThings(client *prisma.Client) {
+func processFavoriteThings(client *prisma.Client) int {
 	b, err := ioutil.ReadFile("fixtures/favorite-things.yaml")
 	if err != nil {
 		panic(err)
@@ -79,7 +121,6 @@ func processFavoriteThings(client *prisma.Client) {
 	}
 
 	for i, p := range favoriteThings {
-		log.Println("Adding FavoriteThing:", p.ID)
 		priority := int32(i)
 		_, err := client.UpsertFavoriteThing(prisma.FavoriteThingUpsertParams{
 			Where: prisma.FavoriteThingWhereUniqueInput{
@@ -103,9 +144,11 @@ func processFavoriteThings(client *prisma.Client) {
 			panic(err)
 		}
 	}
+
+	return len(favoriteThings)
 }
 
-func processProjects(client *prisma.Client) {
+func processProjects(client *prisma.Client) int {
 	b, err := ioutil.ReadFile("fixtures/projects.yaml")
 	if err != nil {
 		panic(err)
@@ -118,7 +161,6 @@ func processProjects(client *prisma.Client) {
 	}
 
 	for i, p := range projects {
-		log.Println("Adding Project:", p.ID)
 		priority := int32(i)
 		_, err := client.UpsertProject(prisma.ProjectUpsertParams{
 			Where: prisma.ProjectWhereUniqueInput{
@@ -150,4 +192,6 @@ func processProjects(client *prisma.Client) {
 			panic(err)
 		}
 	}
+
+	return len(projects)
 }

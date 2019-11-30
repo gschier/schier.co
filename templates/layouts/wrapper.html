@@ -3,20 +3,41 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title>{{ name }}</title>
+  <title>{% block title %}{{ defaultTitle }}{% endblock %}</title>
   <meta name="author" content="Gregory Schier">
   <meta name="description" content="Thoughts on software and technology, by an independent software developer">
   <meta name="generator" content="Hugo 0.37"/>
   <meta name="HandheldFriendly" content="True">
   <meta name="MobileOptimized" content="320">
-  <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="{{ staticUrl }}/build/favicon/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="{{ staticUrl }}/build/favicon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="{{ staticUrl }}/build/favicon/favicon-16x16.png">
+  <link rel="manifest" href="{{ staticUrl }}/build/favicon/site.webmanifest">
+  <link rel="mask-icon" href="{{ staticUrl }}/build/favicon/safari-pinned-tab.svg" color="#5bbad5">
+  <link rel="shortcut icon" href="{{ staticUrl }}/build/favicon/favicon.ico">
+  <meta name="msapplication-TileColor" content="#2d89ef">
+  <meta name="msapplication-config" content="{{ staticUrl }}/build/favicon/browserconfig.xml">
+  <meta name="theme-color" content="#ffffff">
 
   <link href="{{ staticUrl }}/build/index.css?c={{ staticCacheKey }}" rel="stylesheet">
-  <link rel="stylesheet" href="https://use.fontawesome.com/93839bed07.css" media="all">
+
+  {% if not loggedIn %}
+    <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js').then(function () {
+          console.log('[Wrapper] Service Worker Registered');
+        });
+      }
+    </script>
+  {% endif %}
 </head>
 <body data-csrf-token="{{ csrfToken }}" data-csrf-Token-header="{{ csrfTokenHeader }}">
 {% block body %}{% endblock %}
+
 <script src="{{ staticUrl }}/build/index.js?c={{ staticCacheKey }}"></script>
+
 {% block extraScripts %}{% endblock %}
 </body>
 </html>

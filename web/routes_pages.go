@@ -6,13 +6,30 @@ import (
 	"github.com/gschier/schier.dev/generated/prisma-client"
 	"log"
 	"net/http"
+	"strings"
 )
 
 func PagesRoutes(router *mux.Router) {
 	router.HandleFunc("/", routeHome).Methods(http.MethodGet)
+	router.HandleFunc("/robots.txt", routeRobotsTxt).Methods(http.MethodGet)
+	router.HandleFunc("/sw.js", routeServiceWorker).Methods(http.MethodGet)
 }
 
-var HomeTemplate = pageTemplate("page/home.html")
+var robots = strings.TrimSpace(`
+User-agent: *
+Disallow: /login
+Disallow: /register
+`)
+
+var homeTemplate = pageTemplate("page/home.html")
+
+func routeRobotsTxt(w http.ResponseWriter, r *http.Request) {
+	_, _ = w.Write([]byte(robots))
+}
+
+func routeServiceWorker(w http.ResponseWriter, r *http.Request) {
+	http.ServeFile(w, r, "static/build/sw.js")
+}
 
 func routeHome(w http.ResponseWriter, r *http.Request) {
 	client := ctxPrismaClient(r)
@@ -37,7 +54,7 @@ func routeHome(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	renderTemplate(w, r, HomeTemplate(), &pongo2.Context{
+	renderTemplate(w, r, homeTemplate(), &pongo2.Context{
 		"favoriteThings": favoriteThings,
 		"projects":       projects,
 	})

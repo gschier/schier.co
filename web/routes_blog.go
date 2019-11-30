@@ -35,8 +35,12 @@ func routeBlogRender(w http.ResponseWriter, r *http.Request) {
 	content := r.Form.Get("content")
 	slug := r.Form.Get("slug")
 	title := r.Form.Get("title")
-	date := r.Form.Get("date")
 	partial := r.Form.Get("partial") == "true"
+	date := r.Form.Get("date")
+
+	if date == "" {
+		date = time.Now().Format(time.RFC3339)
+	}
 
 	var template *pongo2.Template
 	if partial {
@@ -48,12 +52,11 @@ func routeBlogRender(w http.ResponseWriter, r *http.Request) {
 	renderTemplate(w, r, template, &pongo2.Context{
 		"loggedIn": false,
 		"blogPost": prisma.BlogPost{
-			Published:       true,
-			Slug:            slug,
-			Title:           title,
-			Date:            date,
-			Content:         content,
-			RenderedContent: RenderMarkdownStr(content),
+			Published: true,
+			Slug:      slug,
+			Title:     title,
+			Date:      date,
+			Content:   content,
 		},
 	})
 }
@@ -135,33 +138,23 @@ func routeBlogPostCreateOrUpdate(w http.ResponseWriter, r *http.Request) {
 	// Replace Windows line ending because Blackfriday doesn't handle them
 	content = strings.Replace(content, "\r\n", "\n", -1)
 
-	if !strings.Contains(content, "<!--more-->") {
-		http.Error(w, "Please provide a <!--more--> tag", http.StatusBadRequest)
-		return
-	}
-
-	// Render the Markdown so we can store it on the model
-	renderedContent := RenderMarkdownStr(content)
-
 	// Upsert blog post
 	_, err := client.UpsertBlogPost(prisma.BlogPostUpsertParams{
 		Where: prisma.BlogPostWhereUniqueInput{ID: &id},
 		Create: prisma.BlogPostCreateInput{
-			Slug:            slug,
-			Title:           title,
-			Published:       published,
-			Content:         content,
-			RenderedContent: renderedContent,
-			Date:            time.Now().Format(time.RFC3339),
-			Author:          prisma.UserCreateOneInput{Connect: &prisma.UserWhereUniqueInput{ID: &user.ID}},
-			Tags:            tagsToString(tagNames),
+			Slug:      slug,
+			Title:     title,
+			Published: published,
+			Content:   content,
+			Date:      time.Now().Format(time.RFC3339),
+			Author:    prisma.UserCreateOneInput{Connect: &prisma.UserWhereUniqueInput{ID: &user.ID}},
+			Tags:      tagsToString(tagNames),
 		},
 		Update: prisma.BlogPostUpdateInput{
-			Slug:            &slug,
-			Title:           &title,
-			Content:         &content,
-			RenderedContent: &renderedContent,
-			Tags:            prisma.Str(tagsToString(tagNames)),
+			Slug:    &slug,
+			Title:   &title,
+			Content: &content,
+			Tags:    prisma.Str(tagsToString(tagNames)),
 		},
 	}).Exec(r.Context())
 	if err != nil {
@@ -213,13 +206,6 @@ func routeBlogList(w http.ResponseWriter, r *http.Request) {
 		log.Println("Failed to load blog posts", err)
 		http.Error(w, "Failed to load blog posts", http.StatusInternalServerError)
 		return
-	}
-
-	for i := 0; i < len(blogPosts); i++ {
-		blogPosts[i].RenderedContent = strings.Split(
-			blogPosts[i].RenderedContent,
-			"<!--more-->",
-		)[0]
 	}
 
 	// Render template

@@ -68,7 +68,7 @@ func (client *Client) BlogPost(params BlogPostWhereUniqueInput) *BlogPostExec {
 		params,
 		[2]string{"BlogPostWhereUniqueInput!", "BlogPost"},
 		"blogPost",
-		[]string{"id", "createdAt", "updatedAt", "published", "deleted", "slug", "title", "date", "content", "renderedContent", "tags"})
+		[]string{"id", "createdAt", "updatedAt", "published", "deleted", "slug", "title", "date", "content", "tags"})
 
 	return &BlogPostExec{ret}
 }
@@ -102,7 +102,7 @@ func (client *Client) BlogPosts(params *BlogPostsParams) *BlogPostExecArray {
 		wparams,
 		[3]string{"BlogPostWhereInput", "BlogPostOrderByInput", "BlogPost"},
 		"blogPosts",
-		[]string{"id", "createdAt", "updatedAt", "published", "deleted", "slug", "title", "date", "content", "renderedContent", "tags"})
+		[]string{"id", "createdAt", "updatedAt", "published", "deleted", "slug", "title", "date", "content", "tags"})
 
 	return &BlogPostExecArray{ret}
 }
@@ -557,7 +557,7 @@ func (client *Client) CreateBlogPost(params BlogPostCreateInput) *BlogPostExec {
 		params,
 		[2]string{"BlogPostCreateInput!", "BlogPost"},
 		"createBlogPost",
-		[]string{"id", "createdAt", "updatedAt", "published", "deleted", "slug", "title", "date", "content", "renderedContent", "tags"})
+		[]string{"id", "createdAt", "updatedAt", "published", "deleted", "slug", "title", "date", "content", "tags"})
 
 	return &BlogPostExec{ret}
 }
@@ -575,7 +575,7 @@ func (client *Client) UpdateBlogPost(params BlogPostUpdateParams) *BlogPostExec 
 		},
 		[3]string{"BlogPostUpdateInput!", "BlogPostWhereUniqueInput!", "BlogPost"},
 		"updateBlogPost",
-		[]string{"id", "createdAt", "updatedAt", "published", "deleted", "slug", "title", "date", "content", "renderedContent", "tags"})
+		[]string{"id", "createdAt", "updatedAt", "published", "deleted", "slug", "title", "date", "content", "tags"})
 
 	return &BlogPostExec{ret}
 }
@@ -612,7 +612,7 @@ func (client *Client) UpsertBlogPost(params BlogPostUpsertParams) *BlogPostExec 
 		uparams,
 		[4]string{"BlogPostWhereUniqueInput!", "BlogPostCreateInput!", "BlogPostUpdateInput!", "BlogPost"},
 		"upsertBlogPost",
-		[]string{"id", "createdAt", "updatedAt", "published", "deleted", "slug", "title", "date", "content", "renderedContent", "tags"})
+		[]string{"id", "createdAt", "updatedAt", "published", "deleted", "slug", "title", "date", "content", "tags"})
 
 	return &BlogPostExec{ret}
 }
@@ -622,7 +622,7 @@ func (client *Client) DeleteBlogPost(params BlogPostWhereUniqueInput) *BlogPostE
 		params,
 		[2]string{"BlogPostWhereUniqueInput!", "BlogPost"},
 		"deleteBlogPost",
-		[]string{"id", "createdAt", "updatedAt", "published", "deleted", "slug", "title", "date", "content", "renderedContent", "tags"})
+		[]string{"id", "createdAt", "updatedAt", "published", "deleted", "slug", "title", "date", "content", "tags"})
 
 	return &BlogPostExec{ret}
 }
@@ -939,28 +939,26 @@ func (client *Client) DeleteManyUsers(params *UserWhereInput) *BatchPayloadExec 
 type BlogPostOrderByInput string
 
 const (
-	BlogPostOrderByInputIDAsc               BlogPostOrderByInput = "id_ASC"
-	BlogPostOrderByInputIDDesc              BlogPostOrderByInput = "id_DESC"
-	BlogPostOrderByInputCreatedAtAsc        BlogPostOrderByInput = "createdAt_ASC"
-	BlogPostOrderByInputCreatedAtDesc       BlogPostOrderByInput = "createdAt_DESC"
-	BlogPostOrderByInputUpdatedAtAsc        BlogPostOrderByInput = "updatedAt_ASC"
-	BlogPostOrderByInputUpdatedAtDesc       BlogPostOrderByInput = "updatedAt_DESC"
-	BlogPostOrderByInputPublishedAsc        BlogPostOrderByInput = "published_ASC"
-	BlogPostOrderByInputPublishedDesc       BlogPostOrderByInput = "published_DESC"
-	BlogPostOrderByInputDeletedAsc          BlogPostOrderByInput = "deleted_ASC"
-	BlogPostOrderByInputDeletedDesc         BlogPostOrderByInput = "deleted_DESC"
-	BlogPostOrderByInputSlugAsc             BlogPostOrderByInput = "slug_ASC"
-	BlogPostOrderByInputSlugDesc            BlogPostOrderByInput = "slug_DESC"
-	BlogPostOrderByInputTitleAsc            BlogPostOrderByInput = "title_ASC"
-	BlogPostOrderByInputTitleDesc           BlogPostOrderByInput = "title_DESC"
-	BlogPostOrderByInputDateAsc             BlogPostOrderByInput = "date_ASC"
-	BlogPostOrderByInputDateDesc            BlogPostOrderByInput = "date_DESC"
-	BlogPostOrderByInputContentAsc          BlogPostOrderByInput = "content_ASC"
-	BlogPostOrderByInputContentDesc         BlogPostOrderByInput = "content_DESC"
-	BlogPostOrderByInputRenderedContentAsc  BlogPostOrderByInput = "renderedContent_ASC"
-	BlogPostOrderByInputRenderedContentDesc BlogPostOrderByInput = "renderedContent_DESC"
-	BlogPostOrderByInputTagsAsc             BlogPostOrderByInput = "tags_ASC"
-	BlogPostOrderByInputTagsDesc            BlogPostOrderByInput = "tags_DESC"
+	BlogPostOrderByInputIDAsc         BlogPostOrderByInput = "id_ASC"
+	BlogPostOrderByInputIDDesc        BlogPostOrderByInput = "id_DESC"
+	BlogPostOrderByInputCreatedAtAsc  BlogPostOrderByInput = "createdAt_ASC"
+	BlogPostOrderByInputCreatedAtDesc BlogPostOrderByInput = "createdAt_DESC"
+	BlogPostOrderByInputUpdatedAtAsc  BlogPostOrderByInput = "updatedAt_ASC"
+	BlogPostOrderByInputUpdatedAtDesc BlogPostOrderByInput = "updatedAt_DESC"
+	BlogPostOrderByInputPublishedAsc  BlogPostOrderByInput = "published_ASC"
+	BlogPostOrderByInputPublishedDesc BlogPostOrderByInput = "published_DESC"
+	BlogPostOrderByInputDeletedAsc    BlogPostOrderByInput = "deleted_ASC"
+	BlogPostOrderByInputDeletedDesc   BlogPostOrderByInput = "deleted_DESC"
+	BlogPostOrderByInputSlugAsc       BlogPostOrderByInput = "slug_ASC"
+	BlogPostOrderByInputSlugDesc      BlogPostOrderByInput = "slug_DESC"
+	BlogPostOrderByInputTitleAsc      BlogPostOrderByInput = "title_ASC"
+	BlogPostOrderByInputTitleDesc     BlogPostOrderByInput = "title_DESC"
+	BlogPostOrderByInputDateAsc       BlogPostOrderByInput = "date_ASC"
+	BlogPostOrderByInputDateDesc      BlogPostOrderByInput = "date_DESC"
+	BlogPostOrderByInputContentAsc    BlogPostOrderByInput = "content_ASC"
+	BlogPostOrderByInputContentDesc   BlogPostOrderByInput = "content_DESC"
+	BlogPostOrderByInputTagsAsc       BlogPostOrderByInput = "tags_ASC"
+	BlogPostOrderByInputTagsDesc      BlogPostOrderByInput = "tags_DESC"
 )
 
 type FavoriteThingOrderByInput string
@@ -1170,14 +1168,13 @@ type UserUpdateManyMutationInput struct {
 }
 
 type BlogPostUpdateManyMutationInput struct {
-	Published       *bool   `json:"published,omitempty"`
-	Deleted         *bool   `json:"deleted,omitempty"`
-	Slug            *string `json:"slug,omitempty"`
-	Title           *string `json:"title,omitempty"`
-	Date            *string `json:"date,omitempty"`
-	Content         *string `json:"content,omitempty"`
-	RenderedContent *string `json:"renderedContent,omitempty"`
-	Tags            *string `json:"tags,omitempty"`
+	Published *bool   `json:"published,omitempty"`
+	Deleted   *bool   `json:"deleted,omitempty"`
+	Slug      *string `json:"slug,omitempty"`
+	Title     *string `json:"title,omitempty"`
+	Date      *string `json:"date,omitempty"`
+	Content   *string `json:"content,omitempty"`
+	Tags      *string `json:"tags,omitempty"`
 }
 
 type SessionUpdateInput struct {
@@ -1358,15 +1355,14 @@ type BlogPostSubscriptionWhereInput struct {
 }
 
 type BlogPostUpdateInput struct {
-	Published       *bool                       `json:"published,omitempty"`
-	Deleted         *bool                       `json:"deleted,omitempty"`
-	Slug            *string                     `json:"slug,omitempty"`
-	Title           *string                     `json:"title,omitempty"`
-	Date            *string                     `json:"date,omitempty"`
-	Author          *UserUpdateOneRequiredInput `json:"author,omitempty"`
-	Content         *string                     `json:"content,omitempty"`
-	RenderedContent *string                     `json:"renderedContent,omitempty"`
-	Tags            *string                     `json:"tags,omitempty"`
+	Published *bool                       `json:"published,omitempty"`
+	Deleted   *bool                       `json:"deleted,omitempty"`
+	Slug      *string                     `json:"slug,omitempty"`
+	Title     *string                     `json:"title,omitempty"`
+	Date      *string                     `json:"date,omitempty"`
+	Author    *UserUpdateOneRequiredInput `json:"author,omitempty"`
+	Content   *string                     `json:"content,omitempty"`
+	Tags      *string                     `json:"tags,omitempty"`
 }
 
 type SessionCreateInput struct {
@@ -1383,135 +1379,120 @@ type UserCreateInput struct {
 }
 
 type BlogPostWhereInput struct {
-	ID                           *string              `json:"id,omitempty"`
-	IDNot                        *string              `json:"id_not,omitempty"`
-	IDIn                         []string             `json:"id_in,omitempty"`
-	IDNotIn                      []string             `json:"id_not_in,omitempty"`
-	IDLt                         *string              `json:"id_lt,omitempty"`
-	IDLte                        *string              `json:"id_lte,omitempty"`
-	IDGt                         *string              `json:"id_gt,omitempty"`
-	IDGte                        *string              `json:"id_gte,omitempty"`
-	IDContains                   *string              `json:"id_contains,omitempty"`
-	IDNotContains                *string              `json:"id_not_contains,omitempty"`
-	IDStartsWith                 *string              `json:"id_starts_with,omitempty"`
-	IDNotStartsWith              *string              `json:"id_not_starts_with,omitempty"`
-	IDEndsWith                   *string              `json:"id_ends_with,omitempty"`
-	IDNotEndsWith                *string              `json:"id_not_ends_with,omitempty"`
-	CreatedAt                    *string              `json:"createdAt,omitempty"`
-	CreatedAtNot                 *string              `json:"createdAt_not,omitempty"`
-	CreatedAtIn                  []string             `json:"createdAt_in,omitempty"`
-	CreatedAtNotIn               []string             `json:"createdAt_not_in,omitempty"`
-	CreatedAtLt                  *string              `json:"createdAt_lt,omitempty"`
-	CreatedAtLte                 *string              `json:"createdAt_lte,omitempty"`
-	CreatedAtGt                  *string              `json:"createdAt_gt,omitempty"`
-	CreatedAtGte                 *string              `json:"createdAt_gte,omitempty"`
-	UpdatedAt                    *string              `json:"updatedAt,omitempty"`
-	UpdatedAtNot                 *string              `json:"updatedAt_not,omitempty"`
-	UpdatedAtIn                  []string             `json:"updatedAt_in,omitempty"`
-	UpdatedAtNotIn               []string             `json:"updatedAt_not_in,omitempty"`
-	UpdatedAtLt                  *string              `json:"updatedAt_lt,omitempty"`
-	UpdatedAtLte                 *string              `json:"updatedAt_lte,omitempty"`
-	UpdatedAtGt                  *string              `json:"updatedAt_gt,omitempty"`
-	UpdatedAtGte                 *string              `json:"updatedAt_gte,omitempty"`
-	Published                    *bool                `json:"published,omitempty"`
-	PublishedNot                 *bool                `json:"published_not,omitempty"`
-	Deleted                      *bool                `json:"deleted,omitempty"`
-	DeletedNot                   *bool                `json:"deleted_not,omitempty"`
-	Slug                         *string              `json:"slug,omitempty"`
-	SlugNot                      *string              `json:"slug_not,omitempty"`
-	SlugIn                       []string             `json:"slug_in,omitempty"`
-	SlugNotIn                    []string             `json:"slug_not_in,omitempty"`
-	SlugLt                       *string              `json:"slug_lt,omitempty"`
-	SlugLte                      *string              `json:"slug_lte,omitempty"`
-	SlugGt                       *string              `json:"slug_gt,omitempty"`
-	SlugGte                      *string              `json:"slug_gte,omitempty"`
-	SlugContains                 *string              `json:"slug_contains,omitempty"`
-	SlugNotContains              *string              `json:"slug_not_contains,omitempty"`
-	SlugStartsWith               *string              `json:"slug_starts_with,omitempty"`
-	SlugNotStartsWith            *string              `json:"slug_not_starts_with,omitempty"`
-	SlugEndsWith                 *string              `json:"slug_ends_with,omitempty"`
-	SlugNotEndsWith              *string              `json:"slug_not_ends_with,omitempty"`
-	Title                        *string              `json:"title,omitempty"`
-	TitleNot                     *string              `json:"title_not,omitempty"`
-	TitleIn                      []string             `json:"title_in,omitempty"`
-	TitleNotIn                   []string             `json:"title_not_in,omitempty"`
-	TitleLt                      *string              `json:"title_lt,omitempty"`
-	TitleLte                     *string              `json:"title_lte,omitempty"`
-	TitleGt                      *string              `json:"title_gt,omitempty"`
-	TitleGte                     *string              `json:"title_gte,omitempty"`
-	TitleContains                *string              `json:"title_contains,omitempty"`
-	TitleNotContains             *string              `json:"title_not_contains,omitempty"`
-	TitleStartsWith              *string              `json:"title_starts_with,omitempty"`
-	TitleNotStartsWith           *string              `json:"title_not_starts_with,omitempty"`
-	TitleEndsWith                *string              `json:"title_ends_with,omitempty"`
-	TitleNotEndsWith             *string              `json:"title_not_ends_with,omitempty"`
-	Date                         *string              `json:"date,omitempty"`
-	DateNot                      *string              `json:"date_not,omitempty"`
-	DateIn                       []string             `json:"date_in,omitempty"`
-	DateNotIn                    []string             `json:"date_not_in,omitempty"`
-	DateLt                       *string              `json:"date_lt,omitempty"`
-	DateLte                      *string              `json:"date_lte,omitempty"`
-	DateGt                       *string              `json:"date_gt,omitempty"`
-	DateGte                      *string              `json:"date_gte,omitempty"`
-	Author                       *UserWhereInput      `json:"author,omitempty"`
-	Content                      *string              `json:"content,omitempty"`
-	ContentNot                   *string              `json:"content_not,omitempty"`
-	ContentIn                    []string             `json:"content_in,omitempty"`
-	ContentNotIn                 []string             `json:"content_not_in,omitempty"`
-	ContentLt                    *string              `json:"content_lt,omitempty"`
-	ContentLte                   *string              `json:"content_lte,omitempty"`
-	ContentGt                    *string              `json:"content_gt,omitempty"`
-	ContentGte                   *string              `json:"content_gte,omitempty"`
-	ContentContains              *string              `json:"content_contains,omitempty"`
-	ContentNotContains           *string              `json:"content_not_contains,omitempty"`
-	ContentStartsWith            *string              `json:"content_starts_with,omitempty"`
-	ContentNotStartsWith         *string              `json:"content_not_starts_with,omitempty"`
-	ContentEndsWith              *string              `json:"content_ends_with,omitempty"`
-	ContentNotEndsWith           *string              `json:"content_not_ends_with,omitempty"`
-	RenderedContent              *string              `json:"renderedContent,omitempty"`
-	RenderedContentNot           *string              `json:"renderedContent_not,omitempty"`
-	RenderedContentIn            []string             `json:"renderedContent_in,omitempty"`
-	RenderedContentNotIn         []string             `json:"renderedContent_not_in,omitempty"`
-	RenderedContentLt            *string              `json:"renderedContent_lt,omitempty"`
-	RenderedContentLte           *string              `json:"renderedContent_lte,omitempty"`
-	RenderedContentGt            *string              `json:"renderedContent_gt,omitempty"`
-	RenderedContentGte           *string              `json:"renderedContent_gte,omitempty"`
-	RenderedContentContains      *string              `json:"renderedContent_contains,omitempty"`
-	RenderedContentNotContains   *string              `json:"renderedContent_not_contains,omitempty"`
-	RenderedContentStartsWith    *string              `json:"renderedContent_starts_with,omitempty"`
-	RenderedContentNotStartsWith *string              `json:"renderedContent_not_starts_with,omitempty"`
-	RenderedContentEndsWith      *string              `json:"renderedContent_ends_with,omitempty"`
-	RenderedContentNotEndsWith   *string              `json:"renderedContent_not_ends_with,omitempty"`
-	Tags                         *string              `json:"tags,omitempty"`
-	TagsNot                      *string              `json:"tags_not,omitempty"`
-	TagsIn                       []string             `json:"tags_in,omitempty"`
-	TagsNotIn                    []string             `json:"tags_not_in,omitempty"`
-	TagsLt                       *string              `json:"tags_lt,omitempty"`
-	TagsLte                      *string              `json:"tags_lte,omitempty"`
-	TagsGt                       *string              `json:"tags_gt,omitempty"`
-	TagsGte                      *string              `json:"tags_gte,omitempty"`
-	TagsContains                 *string              `json:"tags_contains,omitempty"`
-	TagsNotContains              *string              `json:"tags_not_contains,omitempty"`
-	TagsStartsWith               *string              `json:"tags_starts_with,omitempty"`
-	TagsNotStartsWith            *string              `json:"tags_not_starts_with,omitempty"`
-	TagsEndsWith                 *string              `json:"tags_ends_with,omitempty"`
-	TagsNotEndsWith              *string              `json:"tags_not_ends_with,omitempty"`
-	And                          []BlogPostWhereInput `json:"AND,omitempty"`
-	Or                           []BlogPostWhereInput `json:"OR,omitempty"`
-	Not                          []BlogPostWhereInput `json:"NOT,omitempty"`
+	ID                   *string              `json:"id,omitempty"`
+	IDNot                *string              `json:"id_not,omitempty"`
+	IDIn                 []string             `json:"id_in,omitempty"`
+	IDNotIn              []string             `json:"id_not_in,omitempty"`
+	IDLt                 *string              `json:"id_lt,omitempty"`
+	IDLte                *string              `json:"id_lte,omitempty"`
+	IDGt                 *string              `json:"id_gt,omitempty"`
+	IDGte                *string              `json:"id_gte,omitempty"`
+	IDContains           *string              `json:"id_contains,omitempty"`
+	IDNotContains        *string              `json:"id_not_contains,omitempty"`
+	IDStartsWith         *string              `json:"id_starts_with,omitempty"`
+	IDNotStartsWith      *string              `json:"id_not_starts_with,omitempty"`
+	IDEndsWith           *string              `json:"id_ends_with,omitempty"`
+	IDNotEndsWith        *string              `json:"id_not_ends_with,omitempty"`
+	CreatedAt            *string              `json:"createdAt,omitempty"`
+	CreatedAtNot         *string              `json:"createdAt_not,omitempty"`
+	CreatedAtIn          []string             `json:"createdAt_in,omitempty"`
+	CreatedAtNotIn       []string             `json:"createdAt_not_in,omitempty"`
+	CreatedAtLt          *string              `json:"createdAt_lt,omitempty"`
+	CreatedAtLte         *string              `json:"createdAt_lte,omitempty"`
+	CreatedAtGt          *string              `json:"createdAt_gt,omitempty"`
+	CreatedAtGte         *string              `json:"createdAt_gte,omitempty"`
+	UpdatedAt            *string              `json:"updatedAt,omitempty"`
+	UpdatedAtNot         *string              `json:"updatedAt_not,omitempty"`
+	UpdatedAtIn          []string             `json:"updatedAt_in,omitempty"`
+	UpdatedAtNotIn       []string             `json:"updatedAt_not_in,omitempty"`
+	UpdatedAtLt          *string              `json:"updatedAt_lt,omitempty"`
+	UpdatedAtLte         *string              `json:"updatedAt_lte,omitempty"`
+	UpdatedAtGt          *string              `json:"updatedAt_gt,omitempty"`
+	UpdatedAtGte         *string              `json:"updatedAt_gte,omitempty"`
+	Published            *bool                `json:"published,omitempty"`
+	PublishedNot         *bool                `json:"published_not,omitempty"`
+	Deleted              *bool                `json:"deleted,omitempty"`
+	DeletedNot           *bool                `json:"deleted_not,omitempty"`
+	Slug                 *string              `json:"slug,omitempty"`
+	SlugNot              *string              `json:"slug_not,omitempty"`
+	SlugIn               []string             `json:"slug_in,omitempty"`
+	SlugNotIn            []string             `json:"slug_not_in,omitempty"`
+	SlugLt               *string              `json:"slug_lt,omitempty"`
+	SlugLte              *string              `json:"slug_lte,omitempty"`
+	SlugGt               *string              `json:"slug_gt,omitempty"`
+	SlugGte              *string              `json:"slug_gte,omitempty"`
+	SlugContains         *string              `json:"slug_contains,omitempty"`
+	SlugNotContains      *string              `json:"slug_not_contains,omitempty"`
+	SlugStartsWith       *string              `json:"slug_starts_with,omitempty"`
+	SlugNotStartsWith    *string              `json:"slug_not_starts_with,omitempty"`
+	SlugEndsWith         *string              `json:"slug_ends_with,omitempty"`
+	SlugNotEndsWith      *string              `json:"slug_not_ends_with,omitempty"`
+	Title                *string              `json:"title,omitempty"`
+	TitleNot             *string              `json:"title_not,omitempty"`
+	TitleIn              []string             `json:"title_in,omitempty"`
+	TitleNotIn           []string             `json:"title_not_in,omitempty"`
+	TitleLt              *string              `json:"title_lt,omitempty"`
+	TitleLte             *string              `json:"title_lte,omitempty"`
+	TitleGt              *string              `json:"title_gt,omitempty"`
+	TitleGte             *string              `json:"title_gte,omitempty"`
+	TitleContains        *string              `json:"title_contains,omitempty"`
+	TitleNotContains     *string              `json:"title_not_contains,omitempty"`
+	TitleStartsWith      *string              `json:"title_starts_with,omitempty"`
+	TitleNotStartsWith   *string              `json:"title_not_starts_with,omitempty"`
+	TitleEndsWith        *string              `json:"title_ends_with,omitempty"`
+	TitleNotEndsWith     *string              `json:"title_not_ends_with,omitempty"`
+	Date                 *string              `json:"date,omitempty"`
+	DateNot              *string              `json:"date_not,omitempty"`
+	DateIn               []string             `json:"date_in,omitempty"`
+	DateNotIn            []string             `json:"date_not_in,omitempty"`
+	DateLt               *string              `json:"date_lt,omitempty"`
+	DateLte              *string              `json:"date_lte,omitempty"`
+	DateGt               *string              `json:"date_gt,omitempty"`
+	DateGte              *string              `json:"date_gte,omitempty"`
+	Author               *UserWhereInput      `json:"author,omitempty"`
+	Content              *string              `json:"content,omitempty"`
+	ContentNot           *string              `json:"content_not,omitempty"`
+	ContentIn            []string             `json:"content_in,omitempty"`
+	ContentNotIn         []string             `json:"content_not_in,omitempty"`
+	ContentLt            *string              `json:"content_lt,omitempty"`
+	ContentLte           *string              `json:"content_lte,omitempty"`
+	ContentGt            *string              `json:"content_gt,omitempty"`
+	ContentGte           *string              `json:"content_gte,omitempty"`
+	ContentContains      *string              `json:"content_contains,omitempty"`
+	ContentNotContains   *string              `json:"content_not_contains,omitempty"`
+	ContentStartsWith    *string              `json:"content_starts_with,omitempty"`
+	ContentNotStartsWith *string              `json:"content_not_starts_with,omitempty"`
+	ContentEndsWith      *string              `json:"content_ends_with,omitempty"`
+	ContentNotEndsWith   *string              `json:"content_not_ends_with,omitempty"`
+	Tags                 *string              `json:"tags,omitempty"`
+	TagsNot              *string              `json:"tags_not,omitempty"`
+	TagsIn               []string             `json:"tags_in,omitempty"`
+	TagsNotIn            []string             `json:"tags_not_in,omitempty"`
+	TagsLt               *string              `json:"tags_lt,omitempty"`
+	TagsLte              *string              `json:"tags_lte,omitempty"`
+	TagsGt               *string              `json:"tags_gt,omitempty"`
+	TagsGte              *string              `json:"tags_gte,omitempty"`
+	TagsContains         *string              `json:"tags_contains,omitempty"`
+	TagsNotContains      *string              `json:"tags_not_contains,omitempty"`
+	TagsStartsWith       *string              `json:"tags_starts_with,omitempty"`
+	TagsNotStartsWith    *string              `json:"tags_not_starts_with,omitempty"`
+	TagsEndsWith         *string              `json:"tags_ends_with,omitempty"`
+	TagsNotEndsWith      *string              `json:"tags_not_ends_with,omitempty"`
+	And                  []BlogPostWhereInput `json:"AND,omitempty"`
+	Or                   []BlogPostWhereInput `json:"OR,omitempty"`
+	Not                  []BlogPostWhereInput `json:"NOT,omitempty"`
 }
 
 type BlogPostCreateInput struct {
-	ID              *string            `json:"id,omitempty"`
-	Published       bool               `json:"published"`
-	Deleted         bool               `json:"deleted"`
-	Slug            string             `json:"slug"`
-	Title           string             `json:"title"`
-	Date            string             `json:"date"`
-	Author          UserCreateOneInput `json:"author"`
-	Content         string             `json:"content"`
-	RenderedContent string             `json:"renderedContent"`
-	Tags            string             `json:"tags"`
+	ID        *string            `json:"id,omitempty"`
+	Published bool               `json:"published"`
+	Deleted   bool               `json:"deleted"`
+	Slug      string             `json:"slug"`
+	Title     string             `json:"title"`
+	Date      string             `json:"date"`
+	Author    UserCreateOneInput `json:"author"`
+	Content   string             `json:"content"`
+	Tags      string             `json:"tags"`
 }
 
 type UserCreateOneInput struct {
@@ -1776,7 +1757,7 @@ func (instance *BlogPostEdgeExec) Node() *BlogPostExec {
 		nil,
 		[2]string{"", "BlogPost"},
 		"node",
-		[]string{"id", "createdAt", "updatedAt", "published", "deleted", "slug", "title", "date", "content", "renderedContent", "tags"})
+		[]string{"id", "createdAt", "updatedAt", "published", "deleted", "slug", "title", "date", "content", "tags"})
 
 	return &BlogPostExec{ret}
 }
@@ -2068,20 +2049,19 @@ func (instance BlogPostExecArray) Exec(ctx context.Context) ([]BlogPost, error) 
 	return v, err
 }
 
-var BlogPostFields = []string{"id", "createdAt", "updatedAt", "published", "deleted", "slug", "title", "date", "content", "renderedContent", "tags"}
+var BlogPostFields = []string{"id", "createdAt", "updatedAt", "published", "deleted", "slug", "title", "date", "content", "tags"}
 
 type BlogPost struct {
-	ID              string `json:"id"`
-	CreatedAt       string `json:"createdAt"`
-	UpdatedAt       string `json:"updatedAt"`
-	Published       bool   `json:"published"`
-	Deleted         bool   `json:"deleted"`
-	Slug            string `json:"slug"`
-	Title           string `json:"title"`
-	Date            string `json:"date"`
-	Content         string `json:"content"`
-	RenderedContent string `json:"renderedContent"`
-	Tags            string `json:"tags"`
+	ID        string `json:"id"`
+	CreatedAt string `json:"createdAt"`
+	UpdatedAt string `json:"updatedAt"`
+	Published bool   `json:"published"`
+	Deleted   bool   `json:"deleted"`
+	Slug      string `json:"slug"`
+	Title     string `json:"title"`
+	Date      string `json:"date"`
+	Content   string `json:"content"`
+	Tags      string `json:"tags"`
 }
 
 type SessionConnectionExec struct {
@@ -2352,7 +2332,7 @@ func (instance *BlogPostSubscriptionPayloadExec) Node() *BlogPostExec {
 		nil,
 		[2]string{"", "BlogPost"},
 		"node",
-		[]string{"id", "createdAt", "updatedAt", "published", "deleted", "slug", "title", "date", "content", "renderedContent", "tags"})
+		[]string{"id", "createdAt", "updatedAt", "published", "deleted", "slug", "title", "date", "content", "tags"})
 
 	return &BlogPostExec{ret}
 }
@@ -2363,7 +2343,7 @@ func (instance *BlogPostSubscriptionPayloadExec) PreviousValues() *BlogPostPrevi
 		nil,
 		[2]string{"", "BlogPostPreviousValues"},
 		"previousValues",
-		[]string{"id", "createdAt", "updatedAt", "published", "deleted", "slug", "title", "date", "content", "renderedContent", "tags"})
+		[]string{"id", "createdAt", "updatedAt", "published", "deleted", "slug", "title", "date", "content", "tags"})
 
 	return &BlogPostPreviousValuesExec{ret}
 }
@@ -2432,20 +2412,19 @@ func (instance BlogPostPreviousValuesExecArray) Exec(ctx context.Context) ([]Blo
 	return v, err
 }
 
-var BlogPostPreviousValuesFields = []string{"id", "createdAt", "updatedAt", "published", "deleted", "slug", "title", "date", "content", "renderedContent", "tags"}
+var BlogPostPreviousValuesFields = []string{"id", "createdAt", "updatedAt", "published", "deleted", "slug", "title", "date", "content", "tags"}
 
 type BlogPostPreviousValues struct {
-	ID              string `json:"id"`
-	CreatedAt       string `json:"createdAt"`
-	UpdatedAt       string `json:"updatedAt"`
-	Published       bool   `json:"published"`
-	Deleted         bool   `json:"deleted"`
-	Slug            string `json:"slug"`
-	Title           string `json:"title"`
-	Date            string `json:"date"`
-	Content         string `json:"content"`
-	RenderedContent string `json:"renderedContent"`
-	Tags            string `json:"tags"`
+	ID        string `json:"id"`
+	CreatedAt string `json:"createdAt"`
+	UpdatedAt string `json:"updatedAt"`
+	Published bool   `json:"published"`
+	Deleted   bool   `json:"deleted"`
+	Slug      string `json:"slug"`
+	Title     string `json:"title"`
+	Date      string `json:"date"`
+	Content   string `json:"content"`
+	Tags      string `json:"tags"`
 }
 
 type FavoriteThingConnectionExec struct {

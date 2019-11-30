@@ -30,7 +30,6 @@ type BlogPost {
     date: DateTime!
     author: User!
     content: String!
-    renderedContent: String!
     tags: String!
 }
 

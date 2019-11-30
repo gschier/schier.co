@@ -15,8 +15,9 @@ services:
       PRISMA_ENDPOINT: http://prisma:4488
       PRISMA_SECRET: development
       CSRF_KEY: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-      STATIC_URL: /static
+      STATIC_URL: http://localhost:8084/static
       DEV_ENVIRONMENT: development
+      USER_PASSWORD: testing123
     depends_on:
       - prisma
       - postgres
