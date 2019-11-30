@@ -1,0 +1,14 @@
+- id: intellij
+  name: IntelliJ Idea
+  link: https://www.jetbrains.com/idea/
+  description: for development in all languages
+
+- id: affinity
+  name: Affinity Designer
+  link: https://affinity.serif.com/designer/
+  description: for creating vector graphics
+
+- id: newton
+  name: Newton Mail
+  link: https://newtonhq.com/
+  description: for managing email

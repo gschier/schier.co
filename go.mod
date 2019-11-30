@@ -15,4 +15,5 @@ require (
 	github.com/satori/go.uuid v1.2.0
 	github.com/shurcooL/sanitized_anchor_name v1.0.0 // indirect
 	golang.org/x/crypto v0.0.0-20191111213947-16651526fdb4
+	gopkg.in/yaml.v2 v2.2.2
 )

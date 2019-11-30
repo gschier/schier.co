@@ -7,6 +7,7 @@
     "backend:run": "docker-compose up web",
     "frontend:watch": "parcel watch --global schier --out-dir ./static/build --public-url /static/build/ ./src/index.js",
     "frontend:build": "parcel build --global schier --no-source-maps --out-dir ./static/build --public-url /static/build/ ./src/index.js",
+    "fixtures": "docker-compose run web go run github.com/gschier/schier.dev/cmd/fixtures",
     "deploy": "primsa deploy --force",
     "format-code": "prettier --write src/**/*.js src/**/*.css"
   },

@@ -26,7 +26,7 @@ func routeLogin(w http.ResponseWriter, r *http.Request) {
 	password := r.Form.Get("password")
 	email := r.Form.Get("email")
 
-	client := ctxDB(r)
+	client := ctxPrismaClient(r)
 
 	user, err := client.User(prisma.UserWhereUniqueInput{
 		Email: &email,
@@ -50,7 +50,7 @@ func routeLogin(w http.ResponseWriter, r *http.Request) {
 }
 
 func routeRegister(w http.ResponseWriter, r *http.Request) {
-	client := ctxDB(r)
+	client := ctxPrismaClient(r)
 
 	_ = r.ParseForm()
 	password := r.Form.Get("password")
@@ -97,9 +97,9 @@ func login(w http.ResponseWriter, r *http.Request, user *prisma.User, client *pr
 
 func logout(w http.ResponseWriter, r *http.Request, to string) {
 	http.SetCookie(w, &http.Cookie{
-		Name:     sessionCookieName,
-		Path:     "/",
-		MaxAge:  -1,
+		Name:   sessionCookieName,
+		Path:   "/",
+		MaxAge: -1,
 	})
 	http.Redirect(w, r, to, http.StatusSeeOther)
 }

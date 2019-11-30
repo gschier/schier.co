@@ -33,3 +33,23 @@ type BlogPost {
     renderedContent: String!
     tags: String!
 }
+
+type Project {
+    id: ID! @id
+    priority: Int!
+    name: String!
+    link: String!
+    icon: String!
+    description: String!
+    retired: Boolean!
+    revenue: String!
+    reason: String
+}
+
+type FavoriteThing {
+    id: ID! @id
+    priority: Int!
+    name: String!
+    link: String!
+    description: String!
+}

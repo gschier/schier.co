@@ -2,13 +2,13 @@
 @tailwind components;
 
 html {
-  @apply bg-background text-foreground text-foreground;
-  font-size: 16px;
+  @apply bg-background text-primary;
+  font-size: 17px;
   font-family: "Open Sans", sans-serif;
 }
 
 body {
-  @apply p-0 text-foreground;
+  @apply p-0 text-primary;
 }
 
 main {
@@ -27,12 +27,16 @@ main {
 
 a,
 .link {
-  @apply text-primary-500;
+  @apply text-secondary;
 }
 
 a:hover,
 .link:hover {
   text-decoration: underline;
+}
+
+p {
+  @apply mb-8 leading-relaxed;
 }
 
 h1 {
@@ -114,39 +118,39 @@ form input:invalid {
 }
 
 .blog-post-preview h1 a:not(:hover) {
-  @apply text-foreground;
+  color: inherit;
 }
 
-.blog-post h1 {
+.content h1 {
   @apply text-3xl;
 }
 
-.blog-post h2 {
+.content h2 {
   @apply text-2xl pt-2;
 }
 
-.blog-post li {
+.content li {
   @apply list-disc ml-6;
 }
 
-.blog-post > * {
-  @apply my-4;
+.content > * {
+  @apply my-6;
 }
 
-.blog-post img {
+.content img {
   @apply inline-block;
 }
 
-.blog-post pre {
-  @apply bg-foreground text-background p-8 overflow-auto rounded text-sm;
+.content pre {
+  @apply bg-foreground text-inverted p-8 overflow-auto rounded text-sm;
 
 }
 
-.blog-post hr {
-  @apply text-primary-100 border-0 border-b border-primary-200 my-8;
+.content hr {
+  @apply text-gray-100 border-0 border-b border-primary-200 my-8;
 }
 
-.blog-post footer {
+.content footer {
   @apply mt-8;
 }
 
@@ -180,7 +184,7 @@ form input:invalid {
 }
 
 .bottom-footer a i {
-  @apply text-primary-400 no-underline;
+  @apply text-secondary no-underline;
 }
 
 /********/
@@ -188,7 +192,9 @@ form input:invalid {
 /********/
 
 .tag {
-  @apply mr-2 py-1 px-3 rounded-full text-xs border-primary-400 border uppercase inline-block;
+  @apply mr-2 rounded-full border-primary-400 border uppercase inline-block leading-relaxed;
+  font-size: 0.75rem;
+  padding: 0.08rem 0.6rem;
 }
 
 /********************/

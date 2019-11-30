@@ -67,7 +67,7 @@ func routeBlogPostDelete(w http.ResponseWriter, r *http.Request) {
 
 	id := r.Form.Get("id")
 
-	client := ctxDB(r)
+	client := ctxPrismaClient(r)
 	blogPost, err := client.UpdateBlogPost(prisma.BlogPostUpdateParams{
 		Data:  prisma.BlogPostUpdateInput{Deleted: prisma.Bool(true)},
 		Where: prisma.BlogPostWhereUniqueInput{ID: &id},
@@ -87,7 +87,7 @@ func routeBlogPostPublish(w http.ResponseWriter, r *http.Request) {
 	published := r.Form.Get("published") == "true"
 	id := r.Form.Get("id")
 
-	client := ctxDB(r)
+	client := ctxPrismaClient(r)
 	blogPost, err := client.UpdateBlogPost(prisma.BlogPostUpdateParams{
 		Data:  prisma.BlogPostUpdateInput{Published: &published},
 		Where: prisma.BlogPostWhereUniqueInput{ID: &id},
@@ -104,7 +104,7 @@ func routeBlogPostPublish(w http.ResponseWriter, r *http.Request) {
 func routeBlogPostEdit(w http.ResponseWriter, r *http.Request) {
 	slug := mux.Vars(r)["slug"]
 
-	baseQuery := ctxDB(r).BlogPost(prisma.BlogPostWhereUniqueInput{Slug: &slug})
+	baseQuery := ctxPrismaClient(r).BlogPost(prisma.BlogPostWhereUniqueInput{Slug: &slug})
 
 	// Fetch blog posts
 	blogPost, err := baseQuery.Exec(r.Context())
@@ -127,7 +127,7 @@ func routeBlogPostCreateOrUpdate(w http.ResponseWriter, r *http.Request) {
 	published := r.Form.Get("published") == "true"
 	tagNames := stringToTags(r.Form.Get("tags"))
 
-	client := ctxDB(r)
+	client := ctxPrismaClient(r)
 	loggedIn := ctxGetLoggedIn(r)
 	user := ctxGetUser(r)
 
@@ -180,7 +180,7 @@ func routeBlogPostCreateOrUpdate(w http.ResponseWriter, r *http.Request) {
 func routeBlogPost(w http.ResponseWriter, r *http.Request) {
 	slug := mux.Vars(r)["slug"]
 
-	baseQuery := ctxDB(r).BlogPost(prisma.BlogPostWhereUniqueInput{Slug: &slug})
+	baseQuery := ctxPrismaClient(r).BlogPost(prisma.BlogPostWhereUniqueInput{Slug: &slug})
 
 	// Fetch blog posts
 	blogPost, err := baseQuery.Exec(r.Context())
@@ -206,7 +206,7 @@ func routeBlogList(w http.ResponseWriter, r *http.Request) {
 
 	// Fetch blog posts
 	orderBy := prisma.BlogPostOrderByInputCreatedAtDesc
-	blogPosts, err := ctxDB(r).BlogPosts(&prisma.BlogPostsParams{
+	blogPosts, err := ctxPrismaClient(r).BlogPosts(&prisma.BlogPostsParams{
 		OrderBy: &orderBy,
 		Where: &prisma.BlogPostWhereInput{
 			Deleted:      prisma.Bool(false),

@@ -1,16 +1,15 @@
 version: '3'
 services:
   web:
-    image: go:1.12
-    entrypoint: 'reflex -s -r \.(go|html)$$ -d none go run github.com/gschier/schier.dev/cmd/web'
+    command: 'reflex -s -r \.(go|html)$$ -d none go run github.com/gschier/schier.dev/cmd/web'
     build:
       context: .
       dockerfile: Dockerfile
-    restart: unless-stopped
     volumes:
       - .:/app
     ports:
       - "8084:8084"
+    restart: always
     environment:
       PORT: "8084"
       PRISMA_ENDPOINT: http://prisma:4488

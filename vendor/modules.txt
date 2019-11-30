@@ -29,3 +29,5 @@ github.com/shurcooL/sanitized_anchor_name
 # golang.org/x/crypto v0.0.0-20191111213947-16651526fdb4
 golang.org/x/crypto/bcrypt
 golang.org/x/crypto/blowfish
+# gopkg.in/yaml.v2 v2.2.2
+gopkg.in/yaml.v2

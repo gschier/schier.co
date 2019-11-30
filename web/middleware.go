@@ -31,7 +31,7 @@ func ContextMiddleware(next http.Handler, client *prisma.Client) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		var emptyUser *prisma.User = nil
 
-		r = ctxSetClient(r, client)
+		r = ctxSetPrismaClient(r, client)
 		r = ctxSetUserAndLoggedIn(r, emptyUser)
 
 		next.ServeHTTP(w, r)
@@ -66,7 +66,7 @@ const sessionCookieName = "sid"
 // UserMiddleware adds the User object to the context if available
 func UserMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		client := ctxDB(r)
+		client := ctxPrismaClient(r)
 
 		c, err := r.Cookie(sessionCookieName)
 

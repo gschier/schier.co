@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/gorilla/mux"
+	schier_dev "github.com/gschier/schier.dev"
 	"github.com/gschier/schier.dev/generated/prisma-client"
 	"github.com/gschier/schier.dev/web"
 	"log"
@@ -14,10 +15,7 @@ const pageRoot = "templates/pages/generic"
 func main() {
 	router := setupRouter()
 
-	handler := applyMiddleware(router, prisma.New(&prisma.Options{
-		Endpoint: os.Getenv("PRISMA_ENDPOINT"),
-		Secret:   os.Getenv("PRISMA_SECRET"),
-	}))
+	handler := applyMiddleware(router, schier_dev.NewPrismaClient())
 
 	startServer(handler)
 }
@@ -45,6 +43,7 @@ func setupRouter() *mux.Router {
 	// Apply routes
 	web.AuthRoutes(router)
 	web.BlogRoutes(router)
+	web.PagesRoutes(router)
 	web.NotFoundRoutes(router)
 
 	return router

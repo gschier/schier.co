@@ -1,0 +1,62 @@
+- id: insomnia
+  name: Insomnia
+  description: |
+    A cross-platform desktop app to help software developers interact
+    with HTTP-based APIs.
+  link: https://insomnia.rest/blog/insomnia-and-kong
+  icon: insomnia.svg
+  retired: false
+  revenue: Acquired at $20k/month! 🎉
+
+- id: platform-pixels
+  name: Platform Pixels
+  description: |
+    A 2D cross-platform adventure game with high difficulty because
+    games are too easy these days.
+  link: https://platformpixels.com
+  icon: platformpixels.png
+  retired: false
+  revenue: $??/month
+
+- id: to-read
+  name: To Read
+  description: |
+    An Android app for tracking the books you want to read. Basically,
+    a to-do list specific to books.
+  link: https://play.google.com/store/apps/details?id=com.gregschier.toread
+  icon: toread.png
+  retired: false
+  revenue: $100/month
+
+- id: hemlock
+  name: Hemlock
+  description: |
+    A Go web framework that makes use of dependency-injection for a
+    delightful developer experience.
+  link: https://gohemlock.com/
+  icon: hemlock-icon.svg
+  retired: false
+  revenue: Open Source
+
+- id: forkjoy
+  name: Forkjoy
+  description: |
+    A mobile/web app to help people find the best food in the city. It
+    contained full restaurant menus, prices, etc, and users could upload photos.
+  link: https://www.youtube.com/watch?v=vwnVEIfIfOU
+  icon: forkjoy.jpg
+  retired: true
+  revenue: $0/month
+  reason: Shut down because we ran out of funding and couldn’t generate revenue
+
+- id: plans4ramps
+  name: Plans4Ramps
+  description: |
+    The first real website I made. I built many BMX ramps growing up made this
+    site to teach others how to do the same. It had step-by-step instructions,
+    materials lists, and 3D renders of each step.
+  link: https://www.youtube.com/watch?v=GH7L61jILYk
+  icon: plans4ramps.jpg
+  retired: true
+  revenue: $0/month
+  reason: Shut down because I lost the code

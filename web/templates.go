@@ -1,17 +1,48 @@
 package web
 
 import (
+	"bytes"
+	"fmt"
 	"github.com/flosch/pongo2"
 	"github.com/gorilla/csrf"
+	"github.com/russross/blackfriday/v2"
 	"github.com/satori/go.uuid"
 	"log"
 	"net/http"
 	"os"
+	"regexp"
 	"strings"
 	"time"
 )
 
 var staticCacheKey = strings.Replace(uuid.NewV4().String(), "-", "", -1)
+
+type tagMarkdown struct {
+	wrapper *pongo2.NodeWrapper
+}
+
+var tagWhitespaceRegex = regexp.MustCompile(`(?m)^[\t ]+(.*)`)
+
+func (node *tagMarkdown) Execute(ctx *pongo2.ExecutionContext, writer pongo2.TemplateWriter) *pongo2.Error {
+	b := bytes.NewBuffer(make([]byte, 0, 1024)) // 1 KiB
+
+	pErr := node.wrapper.Execute(ctx, b)
+	if pErr != nil {
+		return pErr
+	}
+
+	// Remove leading whitespace
+	md := tagWhitespaceRegex.ReplaceAllString(b.String(), "$1")
+	fmt.Println(md)
+
+	renderedContent := blackfriday.Run([]byte(md))
+	_, err := writer.Write(renderedContent)
+	if err != nil {
+		return &pongo2.Error{OrigError: err}
+	}
+
+	return nil
+}
 
 func init() {
 	err := pongo2.RegisterFilter(
@@ -28,6 +59,25 @@ func init() {
 
 	if err != nil {
 		panic("failed to register template filter: " + err.Error())
+	}
+
+	err = pongo2.RegisterTag(
+		"markdown",
+		func(doc *pongo2.Parser, start *pongo2.Token, arguments *pongo2.Parser) (pongo2.INodeTag, *pongo2.Error) {
+			wrapper, _, err := doc.WrapUntilTag("endmarkdown")
+			if err != nil {
+				return nil, err
+			}
+			node := &tagMarkdown{
+				wrapper: wrapper,
+			}
+
+			return node, nil
+		},
+	)
+
+	if err != nil {
+		panic("failed to register template tag: " + err.Error())
 	}
 }
 

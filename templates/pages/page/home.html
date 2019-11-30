@@ -1,0 +1,89 @@
+{% extends '../../layouts/base.html' %}
+
+{% block content %}
+  <div class="content blog-post">
+    <h1>Hey {{ user.Name | default:"there" }}, I'm Greg!</h1>
+    <p>
+      I'm an independent software developer from Canada. Web development is my primary focus,
+      but I also like to dabble with mobile apps, games, and design.
+    </p>
+    <p>
+      The best way to reach out to me is on Twitter <a href="https://twitter.com/GregorySchier">@GregorySchier</a>
+    </p>
+    <p>
+      <img
+              src="{{ staticUrl }}/build/images/me.jpg"
+              class="rounded-full mx-auto my-12 block"
+              alt="Greg Schier bust"
+              style="height:200px;box-shadow:1px 1px 0.7rem rgba(0,0,0,0.2)"
+      />
+    </p>
+
+    <h2>Projects</h2>
+
+    <p>
+      I love building things. Here are some of the projects I currently maintain.
+    </p>
+
+    {% for project in projects %}
+      {% if not project.Retired %}
+        <div class="mt-10">
+          <h3 class="text-xl">
+            <a href="{{ project.Link }}" class="flex">
+              <img
+                      src="{{ staticUrl }}/build/images/icons/{{ project.Icon }}"
+                      alt="{{ project.Name }} icon"
+                      class="h-6 rounded mr-2"
+              />
+              {{ project.Name }}
+            </a>
+          </h3>
+          <p class="mt-2">
+            <strong>{{ project.Revenue }}</strong><br>
+            {{ project.Description }}
+          </p>
+        </div>
+      {% endif %}
+    {% endfor %}
+
+    <h2>Retired Projects</h2>
+
+    <p>
+      Some projects don't stand the test of time. Here are a few that I've had to shut down for
+      various reasons.
+    </p>
+
+    {% for project in projects %}
+      {% if project.Retired %}
+        <div class="mt-10">
+          <h3 class="text-xl">
+            <a href="{{ project.Link }}" class="flex">
+              <img
+                      src="{{ staticUrl }}/build/images/icons/{{ project.Icon }}"
+                      alt="{{ project.Name }} icon"
+                      class="h-6 rounded mr-2"
+              />
+              {{ project.Name }}
+            </a>
+          </h3>
+          <p class="mt-2">
+            <strong>{{ project.Revenue }}</strong><br>
+            {{ project.Description }}
+          </p>
+        </div>
+      {% endif %}
+    {% endfor %}
+
+    <h2>My Favorite Things</h2>
+
+    <ul>
+      {% for thing in favoriteThings %}
+        <li>
+          <a href="{{ thing.Link }}">
+            {{ thing.Name }}
+          </a> – {{ thing.Description }}
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+{% endblock %}
