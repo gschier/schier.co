@@ -1,6 +1,8 @@
 module github.com/gschier/schier.dev
 
 require (
+	github.com/Depado/bfchroma v1.2.0
+	github.com/alecthomas/chroma v0.6.0
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible // indirect
 	github.com/flosch/pongo2 v0.0.0-20190707114632-bbf5a6c351f4
 	github.com/gorilla/csrf v1.6.1
@@ -13,7 +15,6 @@ require (
 	github.com/russross/blackfriday v2.0.0+incompatible // indirect
 	github.com/russross/blackfriday/v2 v2.0.1
 	github.com/satori/go.uuid v1.2.0
-	github.com/shurcooL/sanitized_anchor_name v1.0.0 // indirect
 	golang.org/x/crypto v0.0.0-20191111213947-16651526fdb4
 	gopkg.in/yaml.v2 v2.2.2
 )

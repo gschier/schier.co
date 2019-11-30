@@ -141,11 +141,6 @@ form input:invalid {
   @apply inline-block;
 }
 
-.content pre {
-  @apply bg-foreground text-inverted p-8 overflow-auto rounded text-xs font-mono;
-
-}
-
 .content :not(pre) code {
   @apply text-xs bg-gray-200 rounded px-1 border-2 border-gray-200 font-mono;
 }
@@ -162,27 +157,28 @@ form input:invalid {
 /* SYNTAX HIGHLIGHTING */
 /***********************/
 
-.hljs {
-  @apply text-gray-200;
+pre.chroma-chroma {
+  @apply block bg-gray-100 p-6 overflow-auto rounded text-xs font-mono border border-gray-200 overflow-x-auto cursor-text;
 }
 
-.hljs-comment {
-  @apply italic text-gray-600 font-bold;
+.chroma-cm,
+.chroma-c1 {
+  @apply italic text-syntax4;
 }
 
-.hljs-string {
+.chroma-s2 {
   @apply text-syntax1;
 }
 
-.hljs-built_in {
+.chroma-nb {
   @apply text-gray-500 text-syntax2;
 }
 
-.hljs-keyword {
-  @apply text-gray-500 font-bold text-syntax3;
+.chroma-kd {
+  @apply text-syntax3;
 }
 
-.hljs-number {
+.chroma-mi {
   @apply text-syntax1;
 }
 

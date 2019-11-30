@@ -3,6 +3,8 @@ package web
 import (
 	"bytes"
 	"fmt"
+	"github.com/Depado/bfchroma"
+	"github.com/alecthomas/chroma/formatters/html"
 	"github.com/flosch/pongo2"
 	"github.com/gorilla/csrf"
 	"github.com/russross/blackfriday/v2"
@@ -17,11 +19,11 @@ import (
 
 var staticCacheKey = strings.Replace(uuid.NewV4().String(), "-", "", -1)
 
+var tagWhitespaceRegex = regexp.MustCompile(`(?m)^[\t ]+(.*)`)
+
 type tagMarkdown struct {
 	wrapper *pongo2.NodeWrapper
 }
-
-var tagWhitespaceRegex = regexp.MustCompile(`(?m)^[\t ]+(.*)`)
 
 func (node *tagMarkdown) Execute(ctx *pongo2.ExecutionContext, writer pongo2.TemplateWriter) *pongo2.Error {
 	b := bytes.NewBuffer(make([]byte, 0, 1024)) // 1 KiB
@@ -35,7 +37,7 @@ func (node *tagMarkdown) Execute(ctx *pongo2.ExecutionContext, writer pongo2.Tem
 	md := tagWhitespaceRegex.ReplaceAllString(b.String(), "$1")
 	fmt.Println(md)
 
-	renderedContent := blackfriday.Run([]byte(md))
+	renderedContent := RenderMarkdown(md)
 	_, err := writer.Write(renderedContent)
 	if err != nil {
 		return &pongo2.Error{OrigError: err}
@@ -139,4 +141,20 @@ func renderTemplate(w http.ResponseWriter, r *http.Request, template *pongo2.Tem
 		http.Error(w, "Failed to render", http.StatusInternalServerError)
 		return
 	}
+}
+
+func RenderMarkdown(md string) []byte {
+	chroma := bfchroma.NewRenderer(
+		bfchroma.WithoutAutodetect(),
+		bfchroma.ChromaOptions(
+			html.ClassPrefix("chroma-"),
+			html.WithClasses(),
+		),
+	)
+
+	return blackfriday.Run([]byte(md), blackfriday.WithRenderer(chroma))
+}
+
+func RenderMarkdownStr(md string) string {
+	return string(RenderMarkdown(md))
 }

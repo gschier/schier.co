@@ -15,9 +15,10 @@ module.exports = {
       secondary: colors.blue['500'],
       danger: colors.red['500'],
       gray: colors.gray,
-      syntax1: colors.purple['300'],
-      syntax2: colors.blue['300'],
-      syntax3: colors.indigo['300'],
+      syntax1: colors.purple['500'],
+      syntax2: colors.blue['500'],
+      syntax3: colors.indigo['500'],
+      syntax4: colors.gray['500'],
     },
     opacity: {
       '0': '0',

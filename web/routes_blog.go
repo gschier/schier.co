@@ -4,7 +4,6 @@ import (
 	"github.com/flosch/pongo2"
 	"github.com/gorilla/mux"
 	"github.com/gschier/schier.dev/generated/prisma-client"
-	"github.com/russross/blackfriday/v2"
 	"log"
 	"net/http"
 	"strings"
@@ -39,9 +38,6 @@ func routeBlogRender(w http.ResponseWriter, r *http.Request) {
 	date := r.Form.Get("date")
 	partial := r.Form.Get("partial") == "true"
 
-	// Render the Markdown so we can store it on the model
-	renderedContent := string(blackfriday.Run([]byte(content)))
-
 	var template *pongo2.Template
 	if partial {
 		template = blogPostPartial()
@@ -57,7 +53,7 @@ func routeBlogRender(w http.ResponseWriter, r *http.Request) {
 			Title:           title,
 			Date:            date,
 			Content:         content,
-			RenderedContent: renderedContent,
+			RenderedContent: RenderMarkdownStr(content),
 		},
 	})
 }
@@ -145,7 +141,7 @@ func routeBlogPostCreateOrUpdate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Render the Markdown so we can store it on the model
-	renderedContent := string(blackfriday.Run([]byte(content)))
+	renderedContent := RenderMarkdownStr(content)
 
 	// Upsert blog post
 	_, err := client.UpsertBlogPost(prisma.BlogPostUpsertParams{

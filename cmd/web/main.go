@@ -13,10 +13,14 @@ import (
 const pageRoot = "templates/pages/generic"
 
 func main() {
+	client := schier_dev.NewPrismaClient()
+
+	// Install fixtures
+	schier_dev.InstallFixtures(client)
+
+	// Setup router
 	router := setupRouter()
-
-	handler := applyMiddleware(router, schier_dev.NewPrismaClient())
-
+	handler := applyMiddleware(router, client)
 	startServer(handler)
 }
 
