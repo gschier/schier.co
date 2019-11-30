@@ -26,9 +26,7 @@
             </time>
           </h1>
           <div>
-            {% markdown %}
-              {{ post.Content | split:"<!--more-->" | first }}
-            {% endmarkdown %}
+            {{ post.Content | split:"<!--more-->" | first | markdown | safe }}
           </div>
           <div class="flex mt-8">
             {% include '../../partials/blog_post_tag.html' with tags=post.Tags %}

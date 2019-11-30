@@ -23,15 +23,13 @@
 
   <link href="{{ staticUrl }}/build/index.css?c={{ staticCacheKey }}" rel="stylesheet">
 
-  {% if not loggedIn %}
-    <script>
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js').then(function () {
-          console.log('[Wrapper] Service Worker Registered');
-        });
-      }
-    </script>
-  {% endif %}
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js').then(function () {
+        console.log('[Wrapper] Service Worker Registered');
+      });
+    }
+  </script>
 </head>
 <body data-csrf-token="{{ csrfToken }}" data-csrf-Token-header="{{ csrfTokenHeader }}">
 {% block body %}{% endblock %}

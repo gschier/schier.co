@@ -143,7 +143,7 @@ form input:invalid {
 }
 
 .content img {
-  @apply inline-block;
+  @apply inline-block mx-auto block ;
 }
 
 .content :not(pre) code {

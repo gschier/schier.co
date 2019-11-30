@@ -12,9 +12,7 @@
     {% include './delete_link.html' %}
   {% endif %}
 
-  {% markdown %}
-    {{ blogPost.Content }}
-  {% endmarkdown %}
+  {{ blogPost.Content | markdown | safe }}
 
   <footer>
     {% include './blog_post_tag.html' with tags=blogPost.Tags %}

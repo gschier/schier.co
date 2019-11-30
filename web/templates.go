@@ -1,8 +1,6 @@
 package web
 
 import (
-	"bytes"
-	"fmt"
 	"github.com/Depado/bfchroma"
 	"github.com/alecthomas/chroma/formatters/html"
 	"github.com/flosch/pongo2"
@@ -12,43 +10,30 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"regexp"
 	"strings"
 	"time"
 )
 
 var staticCacheKey = strings.Replace(uuid.NewV4().String(), "-", "", -1)
 
-var tagWhitespaceRegex = regexp.MustCompile(`(?m)^[\t ]+(.*)`)
+var chroma = bfchroma.NewRenderer(
+	bfchroma.WithoutAutodetect(),
+	bfchroma.Extend(
+		blackfriday.NewHTMLRenderer(blackfriday.HTMLRendererParameters{
+			AbsolutePrefix: os.Getenv("STATIC_URL"),
+			Flags:          blackfriday.CommonHTMLFlags,
+		}),
+	),
+	bfchroma.ChromaOptions(
+		html.ClassPrefix("chroma-"),
+		html.WithClasses(),
+	),
+)
 
-type tagMarkdown struct {
-	wrapper *pongo2.NodeWrapper
-}
-
-func (node *tagMarkdown) Execute(ctx *pongo2.ExecutionContext, writer pongo2.TemplateWriter) *pongo2.Error {
-	b := bytes.NewBuffer(make([]byte, 0, 1024)) // 1 KiB
-
-	// Disable escaping so we can inject HTML
-	ctx = pongo2.NewChildExecutionContext(ctx)
-	ctx.Autoescape = false
-
-	pErr := node.wrapper.Execute(ctx, b)
-	if pErr != nil {
-		return pErr
-	}
-
-	// Remove leading whitespace
-	md := tagWhitespaceRegex.ReplaceAllString(b.String(), "$1")
-	fmt.Println(md)
-
-	renderedContent := RenderMarkdown(md)
-	_, err := writer.Write(renderedContent)
-	if err != nil {
-		return &pongo2.Error{OrigError: err}
-	}
-
-	return nil
-}
+var bfRenderer = blackfriday.WithRenderer(chroma)
+var bfExtensions = blackfriday.WithExtensions(
+	blackfriday.CommonExtensions | blackfriday.AutoHeadingIDs,
+)
 
 func init() {
 	err := pongo2.RegisterFilter(
@@ -64,26 +49,18 @@ func init() {
 	)
 
 	if err != nil {
-		panic("failed to register template filter: " + err.Error())
+		panic("failed to register isoformat filter: " + err.Error())
 	}
 
-	err = pongo2.RegisterTag(
+	err = pongo2.RegisterFilter(
 		"markdown",
-		func(doc *pongo2.Parser, start *pongo2.Token, arguments *pongo2.Parser) (pongo2.INodeTag, *pongo2.Error) {
-			wrapper, _, err := doc.WrapUntilTag("endmarkdown")
-			if err != nil {
-				return nil, err
-			}
-			node := &tagMarkdown{
-				wrapper: wrapper,
-			}
-
-			return node, nil
+		func(in *pongo2.Value, param *pongo2.Value) (*pongo2.Value, *pongo2.Error) {
+			return pongo2.AsValue(RenderMarkdownStr(in.String())), nil
 		},
 	)
 
 	if err != nil {
-		panic("failed to register template tag: " + err.Error())
+		panic("failed to register markdown filter: " + err.Error())
 	}
 }
 
@@ -149,27 +126,8 @@ func renderTemplate(w http.ResponseWriter, r *http.Request, template *pongo2.Tem
 }
 
 func RenderMarkdown(md string) []byte {
-	chroma := bfchroma.NewRenderer(
-		bfchroma.WithoutAutodetect(),
-		bfchroma.Extend(blackfriday.NewHTMLRenderer(blackfriday.HTMLRendererParameters{
-			AbsolutePrefix: os.Getenv("STATIC_URL"),
-			//FootnoteAnchorPrefix:       "",
-			//FootnoteReturnLinkContents: "",
-			//HeadingIDPrefix:            "",
-			//HeadingIDSuffix:            "",
-			//HeadingLevelOffset:         0,
-			//Title:                      "",
-			//CSS:                        "",
-			//Icon:                       "",
-			Flags: blackfriday.CommonHTMLFlags,
-		})),
-		bfchroma.ChromaOptions(
-			html.ClassPrefix("chroma-"),
-			html.WithClasses(),
-		),
-	)
 
-	return blackfriday.Run([]byte(md), blackfriday.WithRenderer(chroma))
+	return blackfriday.Run([]byte(md), bfRenderer, bfExtensions)
 }
 
 func RenderMarkdownStr(md string) string {
