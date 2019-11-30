@@ -16,7 +16,7 @@
   <ul>
     {% for post in blogPosts %}
       {% if loggedIn or post.Published %}
-        <li class="blog-post-preview">
+        <li class="content blog-post-preview">
           <h1>
             <a href="/blog/{{ post.Slug }}">
               {{ post.Title }} {{ post.Published | yesno:",(Draft)" }}

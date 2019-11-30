@@ -142,8 +142,12 @@ form input:invalid {
 }
 
 .content pre {
-  @apply bg-foreground text-inverted p-8 overflow-auto rounded text-sm;
+  @apply bg-foreground text-inverted p-8 overflow-auto rounded text-xs font-mono;
 
+}
+
+.content :not(pre) code {
+  @apply text-xs bg-gray-200 rounded px-1 border-2 border-gray-200 font-mono;
 }
 
 .content hr {
@@ -152,6 +156,34 @@ form input:invalid {
 
 .content footer {
   @apply mt-8;
+}
+
+/***********************/
+/* SYNTAX HIGHLIGHTING */
+/***********************/
+
+.hljs {
+  @apply text-gray-200;
+}
+
+.hljs-comment {
+  @apply italic text-gray-600 font-bold;
+}
+
+.hljs-string {
+  @apply text-syntax1;
+}
+
+.hljs-built_in {
+  @apply text-gray-500 text-syntax2;
+}
+
+.hljs-keyword {
+  @apply text-gray-500 font-bold text-syntax3;
+}
+
+.hljs-number {
+  @apply text-syntax1;
 }
 
 /******************/

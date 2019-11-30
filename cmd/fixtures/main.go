@@ -4,6 +4,7 @@ import (
 	"context"
 	schier "github.com/gschier/schier.dev"
 	"github.com/gschier/schier.dev/generated/prisma-client"
+	"github.com/russross/blackfriday/v2"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"log"
@@ -14,6 +15,58 @@ func main() {
 
 	processProjects(client)
 	processFavoriteThings(client)
+	processBlogPosts(client)
+}
+
+func processBlogPosts(client *prisma.Client) {
+	b, err := ioutil.ReadFile("cmd/fixtures/data/blog-posts.yaml")
+	if err != nil {
+		panic(err)
+	}
+
+	var blogPosts []*prisma.BlogPost
+	err = yaml.Unmarshal(b, &blogPosts)
+	if err != nil {
+		panic(err)
+	}
+
+	for _, p := range blogPosts {
+		log.Println("Adding BlogPost:", p.Slug)
+		renderedContent := string(blackfriday.Run([]byte(p.Content)))
+		_, err := client.UpsertBlogPost(prisma.BlogPostUpsertParams{
+			Where: prisma.BlogPostWhereUniqueInput{
+				Slug: &p.Slug,
+			},
+			Create: prisma.BlogPostCreateInput{
+				ID:              nil,
+				Published:       p.Published,
+				Deleted:         p.Deleted,
+				Slug:            p.Slug,
+				Title:           p.Title,
+				Date:            p.Date,
+				Content:         p.Content,
+				RenderedContent: renderedContent,
+				Tags:            p.Tags,
+				Author: prisma.UserCreateOneInput{
+					Connect: &prisma.UserWhereUniqueInput{
+						Email: prisma.Str("gschier1990@gmail.com"),
+					},
+				},
+			},
+			Update: prisma.BlogPostUpdateInput{
+				Published:       &p.Published,
+				Deleted:         &p.Deleted,
+				Title:           &p.Title,
+				Date:            &p.Date,
+				Content:         &p.Content,
+				RenderedContent: &renderedContent,
+				Tags:            &p.Tags,
+			},
+		}).Exec(context.Background())
+		if err != nil {
+			panic(err)
+		}
+	}
 }
 
 func processFavoriteThings(client *prisma.Client) {
