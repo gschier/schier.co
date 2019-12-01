@@ -1,6 +1,6 @@
 <nav class="top-nav">
   <ul class="container">
-    <li class="mr-auto">
+    <li>
       <a href="/">
         <img
                 src="{{ staticUrl }}/build/images/greg.svg"
@@ -8,14 +8,14 @@
         />
       </a>
     </li>
-    <li class="ml-6">
+    <li>
       <a href="/books">Books</a>
     </li>
-    <li class="ml-6">
+    <li>
       <a href="/blog">Blog</a>
     </li>
     {% if loggedIn %}
-      <li class="ml-6">
+      <li>
         <a href="/logout">Logout</a>
       </li>
     {% endif %}

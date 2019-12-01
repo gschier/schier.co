@@ -1,8 +1,13 @@
 {% extends '../../layouts/base.html' %}
 
 {% block content %}
+  <style>
+    .hide {
+      display: none;
+    }
+  </style>
   <div id="editor-app">
-    <h1 class="mb-6">Edit Post</h1>
+    <h1 style="margin-bottom:1rem;">Edit Post</h1>
     <form action="/forms/blog/upsert" method="post" id="edit-form">
       {{ csrfField | safe }}
       {% include '../../partials/form-input.html' with type='hidden' name='id' value=blogPost.ID required=true %}
@@ -12,9 +17,9 @@
       {% include '../../partials/form-input.html' with label='Tags' type='text' name='tags' value=blogPost.Tags placeholder='Tag1, Tag2' %}
 
       <div class="form-row">
-        <div class="flex">
+        <div style="display:flex">
           <label for="content">Content</label>
-          <a href="#" v-on:click="toggleExpand" class="ml-auto pl-4 text-xs">
+          <a href="#" v-on:click="toggleExpand" style="margin-left:auto;font-size:0.8em;">
             Full Screen
           </a>
         </div>
@@ -28,15 +33,11 @@
       </div>
 
       <!-- Blog Post Editor -->
-      <div class="blog-post-editor" v-bind:class="{ hidden: hideContentEditor }" v-cloak>
+      <div class="blog-post-editor" v-bind:class="{ hide: hideContentEditor }" v-cloak>
         <div class="blog-post-editor__edit">
-          <div class="flex pb-4">
+          <div style="display:flex;">
             <h1 class="text-xl">Edit Contents</h1>
-            <button
-                    class="btn btn--small bg-gray-200 hover:bg-gray-300 text-gray-500 ml-auto py-1 px-3 text-lg"
-                    type="button"
-                    v-on:click="toggleExpand"
-            >
+            <button class="btn btn-gray btn-small" type="button" v-on:click="toggleExpand">
               &times;
             </button>
           </div>
@@ -48,8 +49,8 @@
       </div>
       <!-- / Blog Post Editor -->
 
-      <div class="flex">
-        <button class="ml-auto btn">
+      <div style="display:flex">
+        <button class="btn">
           {% if blogPost %}Update{% else %}Create{% endif %}
         </button>
       </div>

@@ -1,4 +1,4 @@
-<form class="inline" action="/forms/blog/delete" method="post">
+<form class="inline-form" action="/forms/blog/delete" method="post">
   {{ csrfField | safe }}
   {% include './form-input.html' with type='hidden' name='id' value=blogPost.ID %}
   <button class="link" type="submit">Delete</button>

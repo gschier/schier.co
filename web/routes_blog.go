@@ -148,13 +148,13 @@ func routeBlogPostCreateOrUpdate(w http.ResponseWriter, r *http.Request) {
 			Content:   content,
 			Date:      time.Now().Format(time.RFC3339),
 			Author:    prisma.UserCreateOneInput{Connect: &prisma.UserWhereUniqueInput{ID: &user.ID}},
-			Tags:      tagsToString(tagNames),
+			Tags:      TagsToString(tagNames),
 		},
 		Update: prisma.BlogPostUpdateInput{
 			Slug:    &slug,
 			Title:   &title,
 			Content: &content,
-			Tags:    prisma.Str(tagsToString(tagNames)),
+			Tags:    prisma.Str(TagsToString(tagNames)),
 		},
 	}).Exec(r.Context())
 	if err != nil {
@@ -190,17 +190,18 @@ func routeBlogList(w http.ResponseWriter, r *http.Request) {
 
 	var tagsContains *string = nil
 	if tag != "" {
-		tagsContains = prisma.Str(tagsToString([]string{tag}))
+		tagsContains = prisma.Str(TagsToString([]string{tag}))
 	}
 
 	// Fetch blog posts
 	orderBy := prisma.BlogPostOrderByInputCreatedAtDesc
 	blogPosts, err := ctxPrismaClient(r).BlogPosts(&prisma.BlogPostsParams{
-		OrderBy: &orderBy,
 		Where: &prisma.BlogPostWhereInput{
 			Deleted:      prisma.Bool(false),
 			TagsContains: tagsContains,
 		},
+		OrderBy: &orderBy,
+		First:   prisma.Int32(10),
 	}).Exec(r.Context())
 	if err != nil {
 		log.Println("Failed to load blog posts", err)
@@ -215,7 +216,7 @@ func routeBlogList(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-func tagsToString(tags []string) string {
+func TagsToString(tags []string) string {
 	for i, t := range tags {
 		tags[i] = strings.ToLower(strings.TrimSpace(t))
 	}

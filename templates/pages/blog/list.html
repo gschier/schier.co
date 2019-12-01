@@ -1,13 +1,13 @@
 {% extends '../../layouts/base.html' %}
 
 {% block content %}
-  <div>
-    <h1 class="flex items-center mb-4">
+  <div class="content">
+    <h1>
       {% if tag %}Posts in {{ tag }}{% else %}Welcome to the Blog!{% endif %}
-      {% if loggedIn %}<a href="/blog/new" class="text-base ml-auto">New</a>{% endif %}
     </h1>
+    {% if loggedIn %}<a href="/blog/new">New Post</a>{% endif %}
     {% if not tag %}
-      <p class="mb-12">
+      <p>
         This is where I write about life, programming, and other interests.
       </p>
     {% endif %}
@@ -17,20 +17,20 @@
     {% for post in blogPosts %}
       {% if loggedIn or post.Published %}
         <li class="content blog-post-preview">
-          <h1>
+          <h2>
             <a href="/blog/{{ post.Slug }}">
               {{ post.Title }} {{ post.Published | yesno:",(Draft)" }}
             </a>
             <time datetime{{ blogPost.Date }}>
               {{ post.Date | isoformat }}
             </time>
-          </h1>
+          </h2>
           <div>
             {{ post.Content | split:"<!--more-->" | first | markdown | safe }}
           </div>
-          <div class="flex mt-8">
+          <div class="blog-post-continue">
             {% include '../../partials/blog_post_tag.html' with tags=post.Tags %}
-            <a href="/" class="ml-auto text-sm">
+            <a href="/">
               Continue Reading &raquo;
             </a>
           </div>

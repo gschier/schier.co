@@ -9,17 +9,14 @@
     </p>
     <p>
       The best way to reach out to me is on Twitter <a href="https://twitter.com/GregorySchier" rel="noopener">
-      @GregorySchier
-    </a>
+      @GregorySchier</a>
     </p>
-    <p>
-      <img
-              src="{{ staticUrl }}/build/images/me.jpg"
-              class="rounded-full mx-auto my-12 block"
-              alt="Greg Schier bust"
-              style="height:200px;box-shadow:1px 1px 0.7rem rgba(0,0,0,0.2)"
-      />
-    </p>
+    <img
+            src="{{ staticUrl }}/build/images/me.jpg"
+            class="avatar"
+            alt="Greg Schier bust"
+            style="height:200px;box-shadow:1px 1px 0.7rem rgba(0,0,0,0.2)"
+    />
 
     <h2>Projects</h2>
 
@@ -29,18 +26,14 @@
 
     {% for project in projects %}
       {% if not project.Retired %}
-        <div class="mt-10">
-          <h3 class="text-xl">
-            <a href="{{ project.Link }}" class="flex">
-              <img
-                      src="{{ staticUrl }}/build/images/icons/{{ project.Icon }}"
-                      alt="{{ project.Name }} icon"
-                      class="h-6 rounded mr-2"
-              />
+        <div class="project">
+          <h3>
+            <a href="{{ project.Link }}">
+              <img src="{{ staticUrl }}/build/images/icons/{{ project.Icon }}" alt="{{ project.Name }} icon"/>
               {{ project.Name }}
             </a>
           </h3>
-          <p class="mt-2">
+          <p>
             <strong>{{ project.Revenue }}</strong><br>
             {{ project.Description }}
           </p>
@@ -57,20 +50,17 @@
 
     {% for project in projects %}
       {% if project.Retired %}
-        <div class="mt-10">
-          <h3 class="text-xl">
-            <a href="{{ project.Link }}" class="flex">
-              <img
-                      src="{{ staticUrl }}/build/images/icons/{{ project.Icon }}"
-                      alt="{{ project.Name }} icon"
-                      class="h-6 rounded mr-2"
-              />
+        <div class="project">
+          <h3>
+            <a href="{{ project.Link }}">
+              <img src="{{ staticUrl }}/build/images/icons/{{ project.Icon }}" alt="{{ project.Name }} icon"/>
               {{ project.Name }}
             </a>
           </h3>
-          <p class="mt-2">
+          <p>
             <strong>{{ project.Revenue }}</strong><br>
-            {{ project.Description }}
+            {{ project.Description }}<br>
+            <small>{{ project.Reason }}</small>
           </p>
         </div>
       {% endif %}

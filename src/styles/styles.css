@@ -65,16 +65,40 @@ h6 {
   @apply bg-primary-500;
 }
 
-.btn.btn--small {
-  @apply py-1 px-3 text-sm rounded;
+.btn.btn-gray {
+  @apply bg-gray-200 text-gray-500 ml-auto py-1 px-3 text-lg;
+}
+
+.btn.btn-gray:hover {
+  @apply bg-gray-300;
+}
+
+.btn.btn-small {
+  @apply py-1 px-3 text-sm rounded h-8;
 }
 
 /*********/
 /* FORMS */
 /*********/
 
+.form-wrapper {
+  @apply mx-auto max-w-sm;
+}
+
+.form-wrapper form {
+  @apply my-6;
+}
+
 .form-row {
   @apply mb-6;
+}
+
+.form-actions {
+  @apply flex items-center;
+}
+
+.form-actions > *:last-child {
+  @apply ml-auto;
 }
 
 form label {
@@ -102,11 +126,19 @@ form input:invalid {
 /*****************/
 
 .blog-post-preview {
-  @apply mt-12 pb-12 border-b border-primary-100;
+  @apply mt-12 pb-6 border-b border-primary-100;
 }
 
 .blog-post-preview:last-child {
   @apply border-none;
+}
+
+.blog-post-continue {
+  @apply flex;
+}
+
+.blog-post-continue a:last-child {
+  @apply ml-auto text-sm;
 }
 
 .blog-post-preview img {
@@ -118,11 +150,11 @@ form input:invalid {
   @apply uppercase block text-sm text-gray-500;
 }
 
-.blog-post-preview h1 {
+.blog-post-preview h2 {
   @apply mb-4 text-2xl;
 }
 
-.blog-post-preview h1 a:not(:hover) {
+.blog-post-preview h2 a:not(:hover) {
   color: inherit;
 }
 
@@ -142,8 +174,8 @@ form input:invalid {
   @apply my-6;
 }
 
-.content img {
-  @apply inline-block mx-auto block ;
+.content p > img {
+  @apply block mx-auto rounded-sm my-8;
 }
 
 .content :not(pre) code {
@@ -171,6 +203,8 @@ pre.chroma-chroma {
   @apply italic text-syntax4;
 }
 
+.chroma-s1,
+.chroma-sb,
 .chroma-s2 {
   @apply text-syntax1;
 }
@@ -179,6 +213,7 @@ pre.chroma-chroma {
   @apply text-gray-500 text-syntax2;
 }
 
+.chroma-k,
 .chroma-kd {
   @apply text-syntax3;
 }
@@ -203,12 +238,28 @@ pre.chroma-chroma {
   @apply rounded-full h-10;
 }
 
+.top-nav li {
+  @apply ml-6;
+}
+
+.top-nav li:first-child {
+  @apply ml-0 mr-auto;
+}
+
 /*****************/
 /* BOTTOM FOOTER */
 /*****************/
 
 .bottom-footer {
-  @apply bg-gray-100 py-20;
+  @apply bg-gray-100 py-20 mt-20;
+}
+
+.bottom-footer .links {
+  @apply text-center pt-8 text-sm text-gray-500;
+}
+
+.bottom-footer .links p {
+  @apply mt-2;
 }
 
 .bottom-footer img {
@@ -281,6 +332,46 @@ pre.chroma-chroma {
   line-height: 1.2rem;
 }
 
+/***********/
+/* PROJECT */
+/***********/
+
+.project {
+  @apply mt-10;
+}
+
+.project img {
+  @apply h-6 rounded-sm mr-2;
+}
+
+.project h3 {
+  @apply text-xl;
+}
+
+.project h3 > a {
+  @apply flex;
+}
+
+.project small {
+  @apply text-sm text-gray-600 italic;
+}
+
+/**********/
+/* AVATAR */
+/**********/
+
+.avatar {
+  @apply rounded-full mx-auto my-12 block;
+}
+
+/***********/
+/* HELPERS */
+/***********/
+
+.inline-form {
+  @apply inline;
+}
+
 /************************/
 /* MUST BE APPLIED LAST */
 /************************/
@@ -288,5 +379,3 @@ pre.chroma-chroma {
 [v-cloak] {
   @apply hidden;
 }
-
-@tailwind utilities;

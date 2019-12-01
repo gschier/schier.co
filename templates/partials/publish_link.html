@@ -1,4 +1,4 @@
-<form class="inline" action="/forms/blog/publish" method="post">
+<form class="inline-form" action="/forms/blog/publish" method="post">
   {{ csrfField | safe }}
   {% include './form-input.html' with id='pi' type='hidden' name='id' value=blogPost.ID %}
   {% include './form-input.html' with id='pp' type='hidden' name='published' value=blogPost.Published | yesno:"false,true" %}
