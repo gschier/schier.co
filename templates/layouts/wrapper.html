@@ -3,14 +3,21 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
   <title>{% block title %}{{ defaultTitle }}{% endblock %}</title>
   <meta name="author" content="Gregory Schier">
   <meta name="description" content="Thoughts on software and technology, by an independent software developer">
-  <meta name="generator" content="Hugo 0.37"/>
+
+  {# Meta #}
   <meta name="HandheldFriendly" content="True">
   <meta name="MobileOptimized" content="320">
   <meta name="viewport" content="width=device-width,initial-scale=1">
 
+  {# RSS #}
+  <link href="{{ rssUrl }}" rel="alternate" type="application/rss+xml" title="Gregory Schier"/>
+  <link href="{{ rssUrl }}" rel="feed" type="application/rss+xml" title="Gregory Schier"/>
+
+  {# Favicon #}
   <link rel="apple-touch-icon" sizes="180x180" href="{{ staticUrl }}/build/favicon/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="{{ staticUrl }}/build/favicon/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="{{ staticUrl }}/build/favicon/favicon-16x16.png">
@@ -21,8 +28,8 @@
   <meta name="msapplication-config" content="{{ staticUrl }}/build/favicon/browserconfig.xml">
   <meta name="theme-color" content="#ffffff">
 
+  {# Scripts and Styles #}
   <link href="{{ staticUrl }}/build/index.css" rel="stylesheet">
-
   <script>
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('/sw.js').then(function () {

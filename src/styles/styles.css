@@ -255,7 +255,7 @@ pre.chroma-chroma {
 }
 
 .top-nav img {
-  @apply rounded-full h-10;
+  @apply h-10;
 }
 
 .top-nav li {

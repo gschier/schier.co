@@ -1,8 +1,8 @@
 # github.com/Depado/bfchroma v1.2.0
 github.com/Depado/bfchroma
 # github.com/alecthomas/chroma v0.6.0
-github.com/alecthomas/chroma
 github.com/alecthomas/chroma/formatters/html
+github.com/alecthomas/chroma
 github.com/alecthomas/chroma/lexers
 github.com/alecthomas/chroma/styles
 github.com/alecthomas/chroma/lexers/a
@@ -42,6 +42,8 @@ github.com/dlclark/regexp2/syntax
 github.com/flosch/pongo2
 # github.com/gorilla/csrf v1.6.1
 github.com/gorilla/csrf
+# github.com/gorilla/feeds v1.1.1
+github.com/gorilla/feeds
 # github.com/gorilla/handlers v1.4.2
 github.com/gorilla/handlers
 # github.com/gorilla/mux v1.7.3
@@ -60,8 +62,6 @@ github.com/pkg/errors
 github.com/prisma/prisma-client-lib-go
 # github.com/russross/blackfriday/v2 v2.0.1
 github.com/russross/blackfriday/v2
-# github.com/satori/go.uuid v1.2.0
-github.com/satori/go.uuid
 # github.com/shurcooL/sanitized_anchor_name v1.0.0
 github.com/shurcooL/sanitized_anchor_name
 # golang.org/x/crypto v0.0.0-20191111213947-16651526fdb4

@@ -2,10 +2,12 @@ package web
 
 import (
 	"github.com/flosch/pongo2"
+	"github.com/gorilla/feeds"
 	"github.com/gorilla/mux"
 	"github.com/gschier/schier.dev/generated/prisma-client"
 	"log"
 	"net/http"
+	"os"
 	"strconv"
 	"strings"
 	"time"
@@ -13,6 +15,7 @@ import (
 
 func BlogRoutes(router *mux.Router) {
 	router.HandleFunc("/blog", routeBlogList).Methods(http.MethodGet)
+	router.HandleFunc("/blog/rss.xml", routeBlogRSS).Methods(http.MethodGet)
 	router.HandleFunc("/blog/{page:[0-9]+}", routeBlogList).Methods(http.MethodGet)
 	router.HandleFunc("/blog/tags/{tag}", routeBlogList).Methods(http.MethodGet)
 	router.HandleFunc("/blog/new", renderHandler("blog/edit.html", nil)).Methods(http.MethodGet)
@@ -185,6 +188,71 @@ func routeBlogPost(w http.ResponseWriter, r *http.Request) {
 	renderTemplate(w, r, blogPostTemplate(), &pongo2.Context{
 		"blogPost": blogPost,
 	})
+}
+
+func routeBlogRSS(w http.ResponseWriter, r *http.Request) {
+	countStr := r.URL.Query().Get("limit")
+
+	count := 20
+	if countStr != "" {
+		count, _ = strconv.Atoi(countStr)
+	}
+
+	// Fetch blog posts
+	orderBy := prisma.BlogPostOrderByInputCreatedAtDesc
+	blogPosts, err := ctxPrismaClient(r).BlogPosts(&prisma.BlogPostsParams{
+		Where: &prisma.BlogPostWhereInput{
+			Deleted: prisma.Bool(false),
+		},
+		OrderBy: &orderBy,
+		First:   prisma.Int32(int32(count)),
+	}).Exec(r.Context())
+	if err != nil {
+		log.Println("Failed to load blog posts", err)
+		http.Error(w, "Failed to load blog posts", http.StatusInternalServerError)
+		return
+	}
+
+	feedUpdated, _ := time.Parse(time.RFC3339, blogPosts[0].Date)
+	feedCreated, _ := time.Parse(time.RFC3339, blogPosts[len(blogPosts)-1].Date)
+
+	feed := &feeds.Feed{
+		Updated:     feedUpdated,
+		Created:     feedCreated,
+		Title:       "Gregory Schier",
+		Subtitle:    "Hey there, I'm Greg!",
+		Description: "Recent content from me",
+		Copyright:   "Gregory Schier",
+		Items:       make([]*feeds.Item, len(blogPosts)),
+		Author:      &feeds.Author{Name: "Gregory Schier"},
+		Link:        &feeds.Link{Href: os.Getenv("BASE_URL") + "/blog"},
+		Image: &feeds.Image{
+			Url:    os.Getenv("STATIC_URL") + "/images/greg-large.png",
+			Width:  200,
+			Height: 200,
+		},
+	}
+
+	for i, blogPost := range blogPosts {
+		updated, _ := time.Parse(time.RFC3339, blogPost.Date)
+		created, _ := time.Parse(time.RFC3339, blogPost.CreatedAt)
+		feed.Items[i] = &feeds.Item{
+			Title:   strings.Replace(blogPost.Title, "–", "&ndash;", -1),
+			Id:      blogPost.ID,
+			Updated: updated,
+			Created: created,
+			Content: RenderMarkdownStr(blogPost.Content),
+			Link:    &feeds.Link{Href: os.Getenv("BASE_URL") + "/blog/" + blogPost.Slug},
+			Author: &feeds.Author{
+				Name: "Gregory Schier",
+			},
+		}
+	}
+
+	w.Header().Set("Content-Type", "application/xml")
+	rss, err := feed.ToRss()
+
+	_, _ = w.Write([]byte(rss))
 }
 
 func routeBlogList(w http.ResponseWriter, r *http.Request) {
