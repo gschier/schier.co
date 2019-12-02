@@ -129,10 +129,6 @@ form input:invalid {
   @apply mt-12 pb-6 border-b border-primary-100;
 }
 
-.blog-post-preview:last-child {
-  @apply border-none;
-}
-
 .blog-post-continue {
   @apply flex;
 }
@@ -183,11 +179,31 @@ form input:invalid {
 }
 
 .content hr {
-  @apply text-gray-100 border-0 border-b border-primary-200 my-8;
+  @apply text-gray-100 border-0 border-b my-8;
 }
 
 .content footer {
   @apply mt-8;
+}
+
+/**************/
+/* PAGINATION */
+/**************/
+
+.pagination {
+  @apply mt-10 flex justify-between;
+}
+
+.pagination-center {
+  @apply text-center w-full;
+}
+
+.pagination-left {
+  @apply w-20 text-left;
+}
+
+.pagination-right {
+  @apply w-20 text-center;
 }
 
 /***********************/

@@ -38,4 +38,23 @@
       {% endif %}
     {% endfor %}
   </ul>
+
+  <div class="pagination">
+    <div class="pagination-left">
+      {% if blogsPagePrev != blogsPage %}
+        <a href="/blog/{{ blogsPagePrev }}" class="left">Previous</a>
+      {% endif %}
+    </div>
+
+    <div class="pagination-center">
+      Page {{ blogsPageFriendly }}
+    </div>
+
+    <div class="pagination-right">
+      {% if blogsPageNext != blogsPage %}
+        <a href="/blog/{{ blogsPageNext }}">Next</a>
+      {% else %}
+      {% endif %}
+    </div>
+  </div>
 {% endblock %}

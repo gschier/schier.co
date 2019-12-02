@@ -6,12 +6,14 @@ import (
 	"github.com/gschier/schier.dev/generated/prisma-client"
 	"log"
 	"net/http"
+	"strconv"
 	"strings"
 	"time"
 )
 
 func BlogRoutes(router *mux.Router) {
 	router.HandleFunc("/blog", routeBlogList).Methods(http.MethodGet)
+	router.HandleFunc("/blog/{page:[0-9]+}", routeBlogList).Methods(http.MethodGet)
 	router.HandleFunc("/blog/tags/{tag}", routeBlogList).Methods(http.MethodGet)
 	router.HandleFunc("/blog/new", renderHandler("blog/edit.html", nil)).Methods(http.MethodGet)
 	router.HandleFunc("/blog/render", routeBlogRender).Methods(http.MethodPost)
@@ -187,6 +189,10 @@ func routeBlogPost(w http.ResponseWriter, r *http.Request) {
 
 func routeBlogList(w http.ResponseWriter, r *http.Request) {
 	tag := mux.Vars(r)["tag"]
+	page, _ := strconv.Atoi(mux.Vars(r)["page"])
+
+	first := 10
+	skip := page * first
 
 	var tagsContains *string = nil
 	if tag != "" {
@@ -201,7 +207,8 @@ func routeBlogList(w http.ResponseWriter, r *http.Request) {
 			TagsContains: tagsContains,
 		},
 		OrderBy: &orderBy,
-		First:   prisma.Int32(10),
+		Skip:    prisma.Int32(int32(skip)),
+		First:   prisma.Int32(int32(first + 1)),
 	}).Exec(r.Context())
 	if err != nil {
 		log.Println("Failed to load blog posts", err)
@@ -209,10 +216,28 @@ func routeBlogList(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	pageNext := page
+	pagePrevious := page
+	if len(blogPosts) > first {
+		pageNext++
+	}
+	if page > 0 {
+		pagePrevious--
+	}
+
+	// Remove the n+1 post
+	if len(blogPosts) > 0 {
+		blogPosts = blogPosts[:len(blogPosts)-1]
+	}
+
 	// Render template
 	renderTemplate(w, r, blogListTemplate(), &pongo2.Context{
-		"blogPosts": blogPosts,
-		"tag":       tag,
+		"tag":               tag,
+		"blogPosts":         blogPosts,
+		"blogsPage":         page,
+		"blogsPageFriendly": page + 1,
+		"blogsPagePrev":     pagePrevious,
+		"blogsPageNext":     pageNext,
 	})
 }
 
