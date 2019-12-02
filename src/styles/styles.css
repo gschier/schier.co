@@ -130,7 +130,11 @@ form input:invalid {
 }
 
 .blog-post-continue {
-  @apply flex;
+  @apply flex flex-wrap;
+}
+
+.blog-post-continue > * {
+  @apply mt-4;
 }
 
 .blog-post-continue a:last-child {
