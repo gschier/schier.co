@@ -14,14 +14,18 @@ import (
 )
 
 func BlogRoutes(router *mux.Router) {
-	router.HandleFunc("/blog", routeBlogList).Methods(http.MethodGet)
+	// RSS
+	router.Handle("/rss.xml", http.RedirectHandler("/blog/rss.xml", http.StatusTemporaryRedirect)).Methods(http.MethodGet)
 	router.HandleFunc("/blog/rss.xml", routeBlogRSS).Methods(http.MethodGet)
-	router.HandleFunc("/blog/{page:[0-9]+}", routeBlogList).Methods(http.MethodGet)
-	router.HandleFunc("/blog/tags/{tag}", routeBlogList).Methods(http.MethodGet)
+
+	// Regular stuff
+	router.HandleFunc("/blog", routeBlogList).Methods(http.MethodGet)
 	router.HandleFunc("/blog/new", renderHandler("blog/edit.html", nil)).Methods(http.MethodGet)
 	router.HandleFunc("/blog/render", routeBlogRender).Methods(http.MethodPost)
+	router.HandleFunc("/blog/{page:[0-9]+}", routeBlogList).Methods(http.MethodGet)
 	router.HandleFunc("/blog/{slug}", routeBlogPost).Methods(http.MethodGet)
 	router.HandleFunc("/blog/{slug}/edit", routeBlogPostEdit).Methods(http.MethodGet)
+	router.HandleFunc("/blog/tags/{tag}", routeBlogList).Methods(http.MethodGet)
 
 	// Forms
 	router.HandleFunc("/forms/blog/upsert", routeBlogPostCreateOrUpdate).Methods(http.MethodPost)
