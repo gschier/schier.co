@@ -26,18 +26,7 @@
 
     {% for project in projects %}
       {% if not project.Retired %}
-        <div class="project">
-          <h3>
-            <a href="{{ project.Link }}">
-              <img src="{{ staticUrl }}/build/images/icons/{{ project.Icon }}" alt="{{ project.Name }} icon"/>
-              {{ project.Name }}
-            </a>
-          </h3>
-          <p>
-            <strong>{{ project.Revenue }}</strong><br>
-            {{ project.Description }}
-          </p>
-        </div>
+        {% include '../../partials/project.html' with project=project %}
       {% endif %}
     {% endfor %}
 
@@ -50,19 +39,7 @@
 
     {% for project in projects %}
       {% if project.Retired %}
-        <div class="project">
-          <h3>
-            <a href="{{ project.Link }}">
-              <img src="{{ staticUrl }}/build/images/icons/{{ project.Icon }}" alt="{{ project.Name }} icon"/>
-              {{ project.Name }}
-            </a>
-          </h3>
-          <p>
-            <strong>{{ project.Revenue }}</strong><br>
-            {{ project.Description }}<br>
-            <small>{{ project.Reason }}</small>
-          </p>
-        </div>
+        {% include '../../partials/project.html' with project=project %}
       {% endif %}
     {% endfor %}
 

@@ -1,0 +1,15 @@
+<div class="project">
+  <h3>
+    <a href="{{ project.Link }}">
+      <img src="{{ staticUrl }}/build/images/icons/{{ project.Icon }}" alt="{{ project.Name }} icon"/>
+      {{ project.Name }}
+    </a>
+  </h3>
+  {{ project.Revenue | markdown }}
+  {{ project.Description | markdown }}
+  {% if project.Reason %}
+    <small>
+      {{ project.Reason }}
+    </small>
+  {% endif %}
+</div>

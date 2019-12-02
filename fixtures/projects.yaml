@@ -3,10 +3,10 @@
   description: |
     A cross-platform desktop app to help software developers interact
     with HTTP-based APIs.
-  link: https://insomnia.rest/blog/insomnia-and-kong
+  link: https://insomnia.rest
   icon: insomnia.png
   retired: false
-  revenue: Acquired at $20k/month! 🎉
+  revenue: '**~~$20k/month~~** [Acquired](https://insomnia.rest/blog/insomnia-and-kong)! 🎉'
 
 - id: platform-pixels
   name: Platform Pixels
@@ -16,7 +16,7 @@
   link: https://platformpixels.com
   icon: platformpixels.png
   retired: false
-  revenue: $??/month
+  revenue: '**$??/month**'
 
 - id: to-read
   name: To Read
@@ -26,7 +26,7 @@
   link: https://play.google.com/store/apps/details?id=com.gregschier.toread
   icon: toread.png
   retired: false
-  revenue: $100/month
+  revenue: '**$100/month** ads + IAP'
 
 - id: hemlock
   name: Hemlock
@@ -36,7 +36,7 @@
   link: https://gohemlock.com/
   icon: hemlock.png
   retired: false
-  revenue: Open Source
+  revenue: '**Open Source**'
 
 - id: forkjoy
   name: Forkjoy
@@ -46,7 +46,7 @@
   link: https://www.youtube.com/watch?v=vwnVEIfIfOU
   icon: forkjoy.png
   retired: true
-  revenue: $0/month
+  revenue: '**$0/month**'
   reason: Shut down because we ran out of funding and couldn’t generate revenue
 
 - id: plans4ramps
@@ -58,5 +58,5 @@
   link: https://www.youtube.com/watch?v=GH7L61jILYk
   icon: plans4ramps.png
   retired: true
-  revenue: $0/month
+  revenue: '**$40/month** ads'
   reason: Shut down because I lost the code

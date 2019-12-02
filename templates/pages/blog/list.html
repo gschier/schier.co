@@ -26,7 +26,7 @@
             </time>
           </h2>
           <div>
-            {{ post.Content | split:"<!--more-->" | first | markdown | safe }}
+            {{ post.Content | split:"<!--more-->" | first | markdown }}
           </div>
           <div class="blog-post-continue">
             {% include '../../partials/blog_post_tag.html' with tags=post.Tags %}

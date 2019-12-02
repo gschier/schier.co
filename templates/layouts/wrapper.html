@@ -21,7 +21,7 @@
   <meta name="msapplication-config" content="{{ staticUrl }}/build/favicon/browserconfig.xml">
   <meta name="theme-color" content="#ffffff">
 
-  <link href="{{ staticUrl }}/build/index.css?c={{ staticCacheKey }}" rel="stylesheet">
+  <link href="{{ staticUrl }}/build/index.css" rel="stylesheet">
 
   <script>
     if ('serviceWorker' in navigator) {
@@ -34,7 +34,7 @@
 <body data-csrf-token="{{ csrfToken }}" data-csrf-Token-header="{{ csrfTokenHeader }}">
 {% block body %}{% endblock %}
 
-<script src="{{ staticUrl }}/build/index.js?c={{ staticCacheKey }}"></script>
+<script src="{{ staticUrl }}/build/index.js"></script>
 
 {% block extraScripts %}{% endblock %}
 </body>

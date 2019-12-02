@@ -191,7 +191,7 @@ func routeBlogList(w http.ResponseWriter, r *http.Request) {
 	tag := mux.Vars(r)["tag"]
 	page, _ := strconv.Atoi(mux.Vars(r)["page"])
 
-	first := 10
+	first := 8
 	skip := page * first
 
 	var tagsContains *string = nil

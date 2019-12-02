@@ -6,15 +6,11 @@ import (
 	"github.com/flosch/pongo2"
 	"github.com/gorilla/csrf"
 	"github.com/russross/blackfriday/v2"
-	"github.com/satori/go.uuid"
 	"log"
 	"net/http"
 	"os"
-	"strings"
 	"time"
 )
-
-var staticCacheKey = strings.Replace(uuid.NewV4().String(), "-", "", -1)
 
 var chroma = bfchroma.NewRenderer(
 	bfchroma.WithoutAutodetect(),
@@ -55,7 +51,7 @@ func init() {
 	err = pongo2.RegisterFilter(
 		"markdown",
 		func(in *pongo2.Value, param *pongo2.Value) (*pongo2.Value, *pongo2.Error) {
-			return pongo2.AsValue(RenderMarkdownStr(in.String())), nil
+			return pongo2.AsSafeValue(RenderMarkdownStr(in.String())), nil
 		},
 	)
 
@@ -98,16 +94,11 @@ func renderTemplate(w http.ResponseWriter, r *http.Request, template *pongo2.Tem
 	user := ctxGetUser(r)
 	loggedIn := ctxGetLoggedIn(r)
 
-	if os.Getenv("DEV_ENVIRONMENT") == "development" {
-		staticCacheKey = strings.Replace(uuid.NewV4().String(), "-", "", -1)
-	}
-
 	newContext := pongo2.Context{
 		"defaultTitle":    "Greg Schier",
 		"user":            user,
 		"loggedIn":        loggedIn,
 		"staticUrl":       os.Getenv("STATIC_URL"),
-		"staticCacheKey":  staticCacheKey,
 		"csrfToken":       csrf.Token(r),
 		"csrfTokenHeader": "X-CSRF-Token",
 		csrf.TemplateTag:  csrf.TemplateField(r),
@@ -126,7 +117,6 @@ func renderTemplate(w http.ResponseWriter, r *http.Request, template *pongo2.Tem
 }
 
 func RenderMarkdown(md string) []byte {
-
 	return blackfriday.Run([]byte(md), bfRenderer, bfExtensions)
 }
 
