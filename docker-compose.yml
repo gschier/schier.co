@@ -4,7 +4,7 @@ services:
     command: 'reflex -s -r \.(go|html)$$ -d none go run github.com/gschier/schier.dev/cmd/web'
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     volumes:
       - .:/app
     ports:
