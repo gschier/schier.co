@@ -1,5 +1,8 @@
 module github.com/gschier/schier.dev
 
+// +heroku goVersion go1.12
+// +heroku install ./cmd/...
+
 require (
 	github.com/Depado/bfchroma v1.2.0
 	github.com/alecthomas/chroma v0.6.0
