@@ -9,10 +9,12 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"regexp"
 	"strings"
 )
 
 const sessionCookieName = "sid"
+var cachedPaths = regexp.MustCompile("\\.(png|svg|jpg|jpeg|js|css)$")
 
 // LogMiddleware logs each request
 func LoggerMiddleware(next http.Handler) http.Handler {
@@ -27,11 +29,16 @@ func CompressMiddleware(next http.Handler) http.Handler {
 // CacheMiddleware configures Cache-Control header
 func CacheMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if os.Getenv("DEV_ENVIRONMENT") == "development" {
-			w.Header().Set("Cache-Control", "max-age=0")
+		shouldCache := true
+		shouldCache = shouldCache && cachedPaths.MatchString(r.URL.Path)
+		shouldCache = shouldCache && os.Getenv("DEV_ENVIRONMENT") != "development"
+
+		if shouldCache {
+			w.Header().Set("Cache-Control", "public, max-age=7200, must-revalidate")
 		} else {
-			w.Header().Set("Cache-Control", "max-age=60")
+			w.Header().Set("Cache-Control", "public, max-age=0, must-revalidate")
 		}
+
 		next.ServeHTTP(w, r)
 	})
 }

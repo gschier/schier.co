@@ -29,7 +29,15 @@
   <meta name="theme-color" content="#ffffff">
 
   {# Scripts and Styles #}
-  <link href="{{ staticUrl }}/build/index.css" rel="stylesheet">
+  {% if isDev %}
+    {# HMR-able styles/scripts #}
+    <script src="{{ staticUrl }}/build/index.js"></script>
+    <link rel="stylesheet" href="{{ staticUrl }}/build/index.css">
+  {% else %}
+    {# inlineable styles #}
+    <style>{{ "index.css" | inlineStatic }}</style>
+  {% endif %}
+
   <script>
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('/sw.js').then(function () {
@@ -40,8 +48,6 @@
 </head>
 <body data-csrf-token="{{ csrfToken }}" data-csrf-Token-header="{{ csrfTokenHeader }}">
 {% block body %}{% endblock %}
-
-<script src="{{ staticUrl }}/build/index.js"></script>
 
 {% block extraScripts %}{% endblock %}
 {% if not loggedIn and gaId %}

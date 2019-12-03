@@ -6,6 +6,7 @@ import (
 	"github.com/flosch/pongo2"
 	"github.com/gorilla/csrf"
 	"github.com/russross/blackfriday/v2"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
@@ -41,6 +42,22 @@ func init() {
 			}
 
 			return pongo2.AsValue(t.Format("January _2, 2006")), nil
+		},
+	)
+
+	if err != nil {
+		panic("failed to register isoformat filter: " + err.Error())
+	}
+
+	err = pongo2.RegisterFilter(
+		"inlineStatic",
+		func(in *pongo2.Value, param *pongo2.Value) (*pongo2.Value, *pongo2.Error) {
+			b, err := ioutil.ReadFile("./static/build/" + in.String())
+			if err != nil {
+				return nil, &pongo2.Error{OrigError: err}
+			}
+
+			return pongo2.AsValue(string(b)), nil
 		},
 	)
 
@@ -99,6 +116,7 @@ func renderTemplate(w http.ResponseWriter, r *http.Request, template *pongo2.Tem
 		"csrfTokenHeader": "X-CSRF-Token",
 		"defaultTitle":    "Greg Schier",
 		"gaId":            os.Getenv("GA_ID"),
+		"isDev":           os.Getenv("DEV_ENVIRONMENT") == "development",
 		"loggedIn":        loggedIn,
 		"rssUrl":          os.Getenv("BASE_URL") + "/rss.xml",
 		"staticUrl":       os.Getenv("STATIC_URL"),

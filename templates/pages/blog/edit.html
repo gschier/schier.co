@@ -58,7 +58,12 @@
   </div>
 {% endblock %}
 
+{% block extraStyles %}
+  <link rel="stylesheet" href="{{ staticUrl }}/build/editor.css">
+{% endblock %}
+
 {% block extraScripts %}
+  <script src="{{ staticUrl }}/build/editor.js"></script>
   <script>
     new schier.Vue({
       el: '#editor-app',
