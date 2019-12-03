@@ -1,6 +1,9 @@
-{% extends '../../layouts/base.html' %} {% block extraStyles %}
+{% extends '../../layouts/base.html' %}
+{% block extraStyles %}
   <link rel="stylesheet" href="{{ staticUrl }}/build/editor.css"/>
-{% endblock %} {% block content %}
+{% endblock %}
+
+{% block content %}
   <style>
     .hide {
       display: none;
@@ -9,7 +12,8 @@
   <div id="editor-app">
     <h1 style="margin-bottom:1rem;">Edit Post</h1>
     <form action="/forms/blog/upsert" method="post" id="edit-form">
-      {{ csrfField | safe }} {% include '../../partials/form-input.html' with type='hidden' name='id' value=blogPost.ID required=true %}
+      {{ csrfField | safe }}
+      {% include '../../partials/form-input.html' with type='hidden' name='id' value=blogPost.ID required=true %}
       {% include '../../partials/form-input.html' with type='hidden' name='date' value=blogPost.Date required=true %}
       {% include '../../partials/form-input.html' with label='Slug' type='text' name='slug' value=blogPost.Slug placeholder='my-blog-post' autofocus=true required=true %}
       {% include '../../partials/form-input.html' with label='Title' type='text' name='title' value=blogPost.Title placeholder='My Blog Post' required=true %}
@@ -67,10 +71,16 @@
       </div>
     </form>
   </div>
-{% endblock %} {% block extraScripts %}
+{% endblock %}
+
+{% block extraScripts %}
   <script src="{{ staticUrl }}/build/editor.js"></script>
   <script>
     new schier.Vue({
+      // Set delimiter so it doesn't conflict with what's in <textarea>
+      delimiters: ['{[(', ')]}'],
+
+      // Render Vue app
       el: '#editor-app',
       data: {
         previewCount: 0,
@@ -151,9 +161,7 @@
 
               if (partial === 'true') {
                 // Basic swap of blog post inside already-loaded page
-                newPreviewEl.contentDocument.querySelector(
-                  '.blog-post-container'
-                ).innerHTML = previewHtml;
+                newPreviewEl.contentDocument.querySelector('.blog-post-container').innerHTML = previewHtml;
                 oldPreviewEl.style.display = 'none';
                 newPreviewEl.style.display = 'block';
                 newPreviewEl.contentDocument.scrollingElement.scrollTop = oldScrollTop;

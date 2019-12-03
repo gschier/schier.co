@@ -29,7 +29,9 @@ var chroma = bfchroma.NewRenderer(
 
 var bfRenderer = blackfriday.WithRenderer(chroma)
 var bfExtensions = blackfriday.WithExtensions(
-	blackfriday.CommonExtensions | blackfriday.AutoHeadingIDs,
+	blackfriday.CommonExtensions |
+		blackfriday.AutoHeadingIDs |
+		blackfriday.NoEmptyLineBeforeBlock,
 )
 
 func init() {

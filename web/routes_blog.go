@@ -124,6 +124,8 @@ func routeBlogPostEdit(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	log.Println("RENDER", blogPost.Slug)
+
 	renderTemplate(w, r, blogEditTemplate(), &pongo2.Context{"blogPost": blogPost})
 }
 
