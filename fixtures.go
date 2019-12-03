@@ -21,7 +21,7 @@ func InstallFixtures(client *prisma.Client) {
 	count += processBooks(client)
 
 	//count += processBlogPosts(client)
-	count += backfillBlogPosts(client, "./oldcontent")
+	//count += backfillBlogPosts(client, "./oldcontent")
 
 	log.Printf("Installed %d fixtures\n", count)
 }
