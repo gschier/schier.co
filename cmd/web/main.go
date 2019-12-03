@@ -49,9 +49,7 @@ func applyMiddleware(r *mux.Router, pc *prisma.Client) http.Handler {
 	handler = web.ContextMiddleware(handler, pc)
 	handler = web.CSRFMiddleware(handler)
 	handler = web.CompressMiddleware(handler)
-	handler = web.CanonicalHostMiddleware(os.Getenv("CANONICAL_HOST"), handler)
 	handler = web.CacheMiddleware(handler)
-	handler = web.ProxyHeadersMiddleware(handler)
 	handler = web.LoggerMiddleware(handler)
 
 	return handler

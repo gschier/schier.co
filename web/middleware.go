@@ -27,15 +27,6 @@ func CompressMiddleware(next http.Handler) http.Handler {
 	return handlers.CompressHandler(next)
 }
 
-func ProxyHeadersMiddleware(next http.Handler) http.Handler {
-	return handlers.ProxyHeaders(next)
-}
-
-func CanonicalHostMiddleware(canonicalHost string, next http.Handler) http.Handler {
-	canonical := handlers.CanonicalHost(canonicalHost, 302)
-	return canonical(next)
-}
-
 // CacheMiddleware configures Cache-Control header
 func CacheMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
