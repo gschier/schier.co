@@ -23,6 +23,7 @@ func BlogRoutes(router *mux.Router) {
 	router.HandleFunc("/blog/new", renderHandler("blog/edit.html", nil)).Methods(http.MethodGet)
 	router.HandleFunc("/blog/render", routeBlogRender).Methods(http.MethodPost)
 	router.HandleFunc("/blog/{page:[0-9]+}", routeBlogList).Methods(http.MethodGet)
+	router.HandleFunc("/blog/{slug}.html", routeBlogPostSuffix).Methods(http.MethodGet)
 	router.HandleFunc("/blog/{slug}", routeBlogPost).Methods(http.MethodGet)
 	router.HandleFunc("/blog/{year}/{month}/{day}/{slug}", routeBlogPostYMD).Methods(http.MethodGet)
 	router.HandleFunc("/blog/{slug}/edit", routeBlogPostEdit).Methods(http.MethodGet)
@@ -178,6 +179,15 @@ func routeBlogPostCreateOrUpdate(w http.ResponseWriter, r *http.Request) {
 
 func routeBlogPostYMD(w http.ResponseWriter, r *http.Request) {
 	slug := mux.Vars(r)["slug"]
+	slug = strings.TrimSuffix(slug, ".html")
+
+	// Redirect away from year/month/day path. Just keeping this here for google
+	http.Redirect(w, r, "/blog/"+slug, http.StatusFound)
+}
+
+func routeBlogPostSuffix(w http.ResponseWriter, r *http.Request) {
+	slug := mux.Vars(r)["slug"]
+	slug = strings.TrimSuffix(slug, ".html")
 
 	// Redirect away from year/month/day path. Just keeping this here for google
 	http.Redirect(w, r, "/blog/"+slug, http.StatusFound)
