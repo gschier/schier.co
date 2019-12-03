@@ -220,6 +220,7 @@ form input:invalid {
 
 pre.chroma-chroma {
   @apply block bg-gray-100 p-6 overflow-auto rounded text-xs font-mono border border-gray-200 overflow-x-auto cursor-text;
+  tab-size: 4;
 }
 
 .chroma-cm,
@@ -233,6 +234,7 @@ pre.chroma-chroma {
   @apply text-syntax1;
 }
 
+.chroma-nt,
 .chroma-nb {
   @apply text-gray-500 text-syntax2;
 }
