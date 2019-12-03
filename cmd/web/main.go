@@ -51,6 +51,7 @@ func applyMiddleware(r *mux.Router, pc *prisma.Client) http.Handler {
 	handler = web.CacheMiddleware(handler)
 	handler = web.LoggerMiddleware(handler)
 	handler = web.CompressMiddleware(handler)
+	handler = web.WWWMiddleware(handler)
 
 	return handler
 }
