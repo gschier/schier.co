@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 services:
   web:
     command: 'reflex -s -r \.(go|html)$$ -d none go run github.com/gschier/schier.dev/cmd/web'
@@ -17,7 +17,8 @@ services:
       CSRF_KEY: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
       STATIC_URL: /static
       BASE_URL: http://localhost:8084
-      GA_ID: '' # UA-9837747-4
+      GA_ID: "" # UA-9837747-4
+      CANONICAL_HOST: localhost
       DEV_ENVIRONMENT: development
       USER_PASSWORD: testing123
     depends_on:
@@ -27,7 +28,7 @@ services:
     image: prismagraphql/prisma:1.34
     restart: always
     ports:
-      - '4488:4488'
+      - "4488:4488"
     environment:
       PRISMA_CONFIG: |
         port: 4488

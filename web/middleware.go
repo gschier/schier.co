@@ -14,6 +14,7 @@ import (
 )
 
 const sessionCookieName = "sid"
+
 var cachedPaths = regexp.MustCompile("\\.(png|svg|jpg|jpeg|js|css)$")
 
 // LogMiddleware logs each request
@@ -26,17 +27,13 @@ func CompressMiddleware(next http.Handler) http.Handler {
 	return handlers.CompressHandler(next)
 }
 
-// WWWMiddleware enables gzip for requests
-func WWWMiddleware(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if strings.HasPrefix(r.URL.Host, "www.") {
-			strings.TrimPrefix(r.Host, "www.")
-			http.Redirect(w, r, r.URL.String(), http.StatusFound)
-			return
-		}
+func ProxyHeadersMiddleware(next http.Handler) http.Handler {
+	return handlers.ProxyHeaders(next)
+}
 
-		next.ServeHTTP(w, r)
-	})
+func CanonicalHostMiddleware(canonicalHost string, next http.Handler) http.Handler {
+	canonical := handlers.CanonicalHost(canonicalHost, 302)
+	return canonical(next)
 }
 
 // CacheMiddleware configures Cache-Control header
