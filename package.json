@@ -11,6 +11,11 @@
     "deploy": "primsa deploy --force",
     "format-code": "prettier --write src/**/*.js src/**/*.css"
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged && npm run frontend:build"
+    }
+  },
   "staticFiles": {
     "staticPath": [
       {
