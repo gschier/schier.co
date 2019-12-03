@@ -15,6 +15,8 @@ const pageRoot = "templates/pages/generic"
 func main() {
 	client := schier_dev.NewPrismaClient()
 
+	go schier_dev.InstallFixtures(client)
+
 	// Setup router
 	router := setupRouter()
 	handler := applyMiddleware(router, client)

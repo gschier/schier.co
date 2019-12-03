@@ -20,7 +20,6 @@ func InstallFixtures(client *prisma.Client) {
 	count += processFavoriteThings(client)
 	count += processBooks(client)
 
-	//count += processBlogPosts(client)
 	//count += backfillBlogPosts(client, "./oldcontent")
 
 	log.Printf("Installed %d fixtures\n", count)
@@ -190,55 +189,6 @@ func processProjects(client *prisma.Client) int {
 	}
 
 	return len(projects)
-}
-
-func processBlogPosts(client *prisma.Client) int {
-	b, err := ioutil.ReadFile("fixtures/blog-posts.yaml")
-	if err != nil {
-		panic(err)
-	}
-
-	var blogPosts []*prisma.BlogPost
-	err = yaml.Unmarshal(b, &blogPosts)
-	if err != nil {
-		panic(err)
-	}
-
-	for _, p := range blogPosts {
-		_, err := client.UpsertBlogPost(prisma.BlogPostUpsertParams{
-			Where: prisma.BlogPostWhereUniqueInput{
-				Slug: &p.Slug,
-			},
-			Create: prisma.BlogPostCreateInput{
-				ID:        nil,
-				Published: p.Published,
-				Deleted:   p.Deleted,
-				Slug:      p.Slug,
-				Title:     p.Title,
-				Date:      p.Date,
-				Content:   p.Content,
-				Tags:      p.Tags,
-				Author: prisma.UserCreateOneInput{
-					Connect: &prisma.UserWhereUniqueInput{
-						Email: prisma.Str("gschier1990@gmail.com"),
-					},
-				},
-			},
-			Update: prisma.BlogPostUpdateInput{
-				Published: &p.Published,
-				Deleted:   &p.Deleted,
-				Title:     &p.Title,
-				Date:      &p.Date,
-				Content:   &p.Content,
-				Tags:      &p.Tags,
-			},
-		}).Exec(context.Background())
-		if err != nil {
-			panic(err)
-		}
-	}
-
-	return len(blogPosts)
 }
 
 func backfillBlogPosts(client *prisma.Client, dir string) int {
