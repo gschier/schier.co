@@ -1,7 +1,6 @@
 const cacheName = 'schier.co';
 const filesToCache = [
   '/static/build/index.css',
-  '/static/build/index.js',
   '/static/build/images/me.jpg',
   '/static/build/images/greg.png',
   '/static/build/images/greg-large.png',
