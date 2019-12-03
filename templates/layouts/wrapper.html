@@ -44,7 +44,7 @@
 <script src="{{ staticUrl }}/build/index.js"></script>
 
 {% block extraScripts %}{% endblock %}
-{% if gaId %}
+{% if not loggedIn and gaId %}
   <script>
     window.ga = window.ga || function () {
       (ga.q = ga.q || []).push(arguments);
