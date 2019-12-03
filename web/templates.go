@@ -57,7 +57,7 @@ func init() {
 				return nil, &pongo2.Error{OrigError: err}
 			}
 
-			return pongo2.AsValue(string(b)), nil
+			return pongo2.AsSafeValue(string(b)), nil
 		},
 	)
 
