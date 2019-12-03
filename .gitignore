@@ -2,7 +2,6 @@ node_modules
 .cache
 .DS_Store
 static/dev
-static/build
-oldcontent
 static/images
+oldcontent
 .env.prod
