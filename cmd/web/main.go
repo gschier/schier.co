@@ -24,6 +24,20 @@ func main() {
 	startServer(handler)
 }
 
+func setupRouter() *mux.Router {
+	router := mux.NewRouter()
+	router.StrictSlash(true)
+
+	// Apply routes
+	web.AuthRoutes(router)
+	web.BlogRoutes(router)
+	web.BooksRoutes(router)
+	web.PagesRoutes(router)
+	web.NotFoundRoutes(router)
+
+	return router
+}
+
 func applyMiddleware(r *mux.Router, pc *prisma.Client) http.Handler {
 	// Apply global middleware. Note, we're doing it this way
 	// because Gorilla doesn't apply middleware to 404
@@ -39,19 +53,6 @@ func applyMiddleware(r *mux.Router, pc *prisma.Client) http.Handler {
 	handler = web.CompressMiddleware(handler)
 
 	return handler
-}
-
-func setupRouter() *mux.Router {
-	router := mux.NewRouter()
-	router.StrictSlash(true)
-
-	// Apply routes
-	web.AuthRoutes(router)
-	web.BlogRoutes(router)
-	web.PagesRoutes(router)
-	web.NotFoundRoutes(router)
-
-	return router
 }
 
 func startServer(h http.Handler) {

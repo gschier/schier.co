@@ -52,3 +52,11 @@ type FavoriteThing {
     link: String!
     description: String!
 }
+
+type Book {
+    id: ID! @id
+    title: String!
+    author: String!
+    rank: Int
+    link: String
+}

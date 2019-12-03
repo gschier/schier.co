@@ -15,7 +15,7 @@ import (
 
 func BlogRoutes(router *mux.Router) {
 	// RSS
-	router.Handle("/rss.xml", http.RedirectHandler("/blog/rss.xml", http.StatusTemporaryRedirect)).Methods(http.MethodGet)
+	router.Handle("/rss.xml", http.RedirectHandler("/blog/rss.xml", http.StatusSeeOther)).Methods(http.MethodGet)
 	router.HandleFunc("/blog/rss.xml", routeBlogRSS).Methods(http.MethodGet)
 
 	// Regular stuff

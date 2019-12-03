@@ -1,0 +1,33 @@
+{% extends '../../layouts/base.html' %}
+
+{% block content %}
+  <div class="content">
+    <h1>Books I've Read 📚</h1>
+
+    <p>
+      I hated reading for most of my life. I started reading in 2017 after a friend gave me the book
+      Chaos Monkeys as a gift for mentoring his university students.
+    </p>
+
+    <p>
+      To my surprise, I now love reading. I’m always looking for new books so, if you have any
+      suggestions, please let me know!
+    </p>
+
+    <h2>Top 10</h2>
+
+    <ol>
+      {% for book in books %}
+        <li>
+          {% if book.Link %}
+            <a href="{{ book.Link }}">
+              {{ book.Title }} ({{ book.Author }})
+            </a>
+          {% else %}
+            {{ book.Title }} ({{ book.Author }})
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ol>
+  </div>
+{% endblock %}

@@ -44,5 +44,14 @@
 <script src="{{ staticUrl }}/build/index.js"></script>
 
 {% block extraScripts %}{% endblock %}
+{% if gaId %}
+  <script>
+    window.ga = window.ga || function () {
+      (ga.q = ga.q || []).push(arguments);
+    }, ga.l = +new Date, ga('create', {{ gaId }}, 'auto'), ga('send', 'pageview');</script>
+  <script async src="//www.google-analytics.com/analytics.js"></script>
+{% else %}
+  <!-- Google Analytics Disabled -->
+{% endif %}
 </body>
 </html>

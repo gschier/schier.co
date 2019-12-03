@@ -166,8 +166,12 @@ form input:invalid {
   @apply text-2xl pt-2;
 }
 
-.content li {
+.content ul li {
   @apply list-disc ml-6;
+}
+
+.content ol li {
+  @apply list-decimal ml-6;
 }
 
 .content > * {

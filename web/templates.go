@@ -95,13 +95,14 @@ func renderTemplate(w http.ResponseWriter, r *http.Request, template *pongo2.Tem
 	loggedIn := ctxGetLoggedIn(r)
 
 	newContext := pongo2.Context{
-		"rssUrl":          os.Getenv("BASE_URL") + "/rss.xml",
-		"defaultTitle":    "Greg Schier",
-		"user":            user,
-		"loggedIn":        loggedIn,
-		"staticUrl":       os.Getenv("STATIC_URL"),
 		"csrfToken":       csrf.Token(r),
 		"csrfTokenHeader": "X-CSRF-Token",
+		"defaultTitle":    "Greg Schier",
+		"gaId":            os.Getenv("GA_ID"),
+		"loggedIn":        loggedIn,
+		"rssUrl":          os.Getenv("BASE_URL") + "/rss.xml",
+		"staticUrl":       os.Getenv("STATIC_URL"),
+		"user":            user,
 		csrf.TemplateTag:  csrf.TemplateField(r),
 	}
 

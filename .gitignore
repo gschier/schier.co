@@ -5,3 +5,4 @@ static/dev
 static/build
 oldcontent
 static/images
+.env.prod

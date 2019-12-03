@@ -19,6 +19,7 @@ func InstallFixtures(client *prisma.Client) {
 	count += processProjects(client)
 	count += processFavoriteThings(client)
 	count += processBlogPosts(client)
+	count += processBooks(client)
 
 	//count += backfillBlogPosts(client, "./oldcontent")
 
@@ -102,6 +103,45 @@ func processFavoriteThings(client *prisma.Client) int {
 	}
 
 	return len(favoriteThings)
+}
+
+func processBooks(client *prisma.Client) int {
+	b, err := ioutil.ReadFile("fixtures/books.yaml")
+	if err != nil {
+		panic(err)
+	}
+
+	var books []*prisma.Book
+	err = yaml.Unmarshal(b, &books)
+	if err != nil {
+		panic(err)
+	}
+
+	for _, p := range books {
+		_, err := client.UpsertBook(prisma.BookUpsertParams{
+			Where: prisma.BookWhereUniqueInput{
+				ID: &p.ID,
+			},
+			Create: prisma.BookCreateInput{
+				ID:     &p.ID,
+				Rank:   p.Rank,
+				Title:  p.Title,
+				Author: p.Author,
+				Link:   p.Link,
+			},
+			Update: prisma.BookUpdateInput{
+				Title:  &p.Title,
+				Author: &p.Author,
+				Rank:   p.Rank,
+				Link:   p.Link,
+			},
+		}).Exec(context.Background())
+		if err != nil {
+			panic(err)
+		}
+	}
+
+	return len(books)
 }
 
 func processProjects(client *prisma.Client) int {

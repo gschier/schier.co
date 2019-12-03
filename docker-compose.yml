@@ -17,6 +17,7 @@ services:
       CSRF_KEY: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
       STATIC_URL: /static
       BASE_URL: http://localhost:8084
+      GA_ID: '' # UA-9837747-4
       DEV_ENVIRONMENT: development
       USER_PASSWORD: testing123
     depends_on:

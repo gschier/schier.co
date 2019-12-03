@@ -1,0 +1,59 @@
+- id: shoe-dog
+  rank: 1
+  title: Shoe Dog
+  author: Phil Knight
+  link: https://www.amazon.ca/Shoe-Dog-Memoir-Creator-Nike/dp/1501135910
+
+- id: chaos-monkeys
+  rank: 2
+  title: Chaos Monkeys
+  author: Antonio García Martínez
+  link: https://www.amazon.ca/Chaos-Monkeys-Obscene-Fortune-Failure/dp/0062458191
+
+- id: anything-you-want
+  rank: 3
+  title: Anything You Want
+  author: Derek Sivers
+  link: https://www.amazon.ca/Anything-You-Want-Lessons-Entrepreneur/dp/1591848261
+
+- id: made-to-stick
+  rank: 4
+  title: Made to Stick
+  author: Chip and Dan Heath
+  link: https://www.amazon.ca/Made-Stick-Ideas-Survive-Others/dp/1400064287
+
+- id: steve-jobs
+  rank: 5
+  title: Steve Jobs
+  author: Walter Isaacson
+  link: https://www.amazon.ca/Steve-Jobs-Walter-Isaacson/dp/1451648537
+
+- id: quiet
+  rank: 6
+  title: 'Quiet: The Power of Introverts'
+  author: Susan Cain
+  link: https://www.amazon.ca/Quiet-Power-Introverts-World-Talking/dp/0307352153
+
+- id: what-talk-running
+  rank: 7
+  title: What I Talk About When I Talk About Running
+  author: Haruki Murakami
+  link: https://www.amazon.ca/What-Talk-About-When-Running/dp/0385681917
+
+- id: power-of-habit
+  rank: 8
+  title: The Power of Habit
+  author: Charles Duhigg
+  link: https://www.amazon.ca/Power-Habit-What-Life-Business/dp/0385669763
+
+- id: trigger-point-therapy
+  rank: 9
+  title: The Trigger Point Therapy Workbook
+  author: Clair Davies
+  link: https://www.amazon.ca/Trigger-Point-Therapy-Workbook-Self-Treatment/dp/1572243759
+
+- id: emperor-maladies
+  rank: 10
+  title: The Emperor of All Maladies
+  author: Siddhartha Mukherjee
+  link: https://www.amazon.ca/Emperor-All-Maladies-Biography-Cancer/dp/1439170916
