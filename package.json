@@ -5,8 +5,8 @@
   "scripts": {
     "dev": "run-p frontend:watch backend:run",
     "backend:run": "docker-compose up web",
-    "frontend:watch": "rm -r ./static/build && parcel watch --global schier --out-dir ./static/build --public-url /static/build/ ./src/editor.js ./src/sw.js ./src/index.css",
-    "frontend:build": "rm -r ./static/build && parcel build --global schier --no-source-maps --out-dir ./static/build ./src/editor.js ./src/sw.js ./src/index.css",
+    "frontend:watch": "rm -r ./static/build && parcel watch --global schier --out-dir ./static/build --public-url /static/build/ ./src/editor.js ./src/sw.js ./src/index.js",
+    "frontend:build": "rm -r ./static/build && parcel build --global schier --no-source-maps --out-dir ./static/build ./src/editor.js ./src/sw.js ./src/index.js",
     "fixtures": "docker-compose run web go run github.com/gschier/schier.dev/cmd/fixtures",
     "deploy": "primsa deploy --force",
     "format-code": "prettier --write src/**/*.js src/**/*.css"

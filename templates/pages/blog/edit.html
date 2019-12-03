@@ -1,173 +1,205 @@
-{% extends '../../layouts/base.html' %}
+{% extends '../../layouts/base.html' %} {% block extraStyles %}
+<link rel="stylesheet" href="{{ staticUrl }}/build/editor.css" />
+{% endblock %} {% block content %}
+<style>
+  .hide {
+    display: none;
+  }
+</style>
+<div id="editor-app">
+  <h1 style="margin-bottom:1rem;">Edit Post</h1>
+  <form action="/forms/blog/upsert" method="post" id="edit-form">
+    {{ csrfField | safe }} {% include '../../partials/form-input.html' with
+    type='hidden' name='id' value=blogPost.ID required=true %} {% include
+    '../../partials/form-input.html' with type='hidden' name='date'
+    value=blogPost.Date required=true %} {% include
+    '../../partials/form-input.html' with label='Slug' type='text' name='slug'
+    value=blogPost.Slug placeholder='my-blog-post' autofocus=true required=true
+    %} {% include '../../partials/form-input.html' with label='Title'
+    type='text' name='title' value=blogPost.Title placeholder='My Blog Post'
+    required=true %} {% include '../../partials/form-input.html' with
+    label='Tags' type='text' name='tags' value=blogPost.Tags placeholder='Tag1,
+    Tag2' %}
 
-{% block content %}
-  <style>
-    .hide {
-      display: none;
-    }
-  </style>
-  <div id="editor-app">
-    <h1 style="margin-bottom:1rem;">Edit Post</h1>
-    <form action="/forms/blog/upsert" method="post" id="edit-form">
-      {{ csrfField | safe }}
-      {% include '../../partials/form-input.html' with type='hidden' name='id' value=blogPost.ID required=true %}
-      {% include '../../partials/form-input.html' with type='hidden' name='date' value=blogPost.Date required=true %}
-      {% include '../../partials/form-input.html' with label='Slug' type='text' name='slug' value=blogPost.Slug placeholder='my-blog-post' autofocus=true required=true %}
-      {% include '../../partials/form-input.html' with label='Title' type='text' name='title' value=blogPost.Title placeholder='My Blog Post' required=true %}
-      {% include '../../partials/form-input.html' with label='Tags' type='text' name='tags' value=blogPost.Tags placeholder='Tag1, Tag2' %}
-
-      <div class="form-row">
-        <div style="display:flex">
-          <label for="content">Content</label>
-          <a href="#" v-on:click="toggleExpand" style="margin-left:auto;font-size:0.8em;">
-            Full Screen
-          </a>
-        </div>
-        <textarea
-                required
-                name="content"
-                id="content"
-                rows="10"
-                @input="onContentChange"
-        >{{ blogPost.Content }}</textarea>
-      </div>
-
-      <!-- Blog Post Editor -->
-      <div class="blog-post-editor" v-bind:class="{ hide: hideContentEditor }" v-cloak>
-        <div class="blog-post-editor__edit">
-          <div style="display:flex;">
-            <h1 class="text-xl">Edit Contents</h1>
-            <button class="btn btn-gray btn-small" type="button" v-on:click="toggleExpand">
-              &times;
-            </button>
-          </div>
-          <div id="editor">Editor here...</div>
-        </div>
-        <div class="blog-post-editor__preview">
-          <!-- Will be filled by script -->
-        </div>
-      </div>
-      <!-- / Blog Post Editor -->
-
+    <div class="form-row">
       <div style="display:flex">
-        <button class="btn">
-          {% if blogPost %}Update{% else %}Create{% endif %}
-        </button>
+        <label for="content">Content</label>
+        <a
+          href="#"
+          v-on:click="toggleExpand"
+          style="margin-left:auto;font-size:0.8em;"
+        >
+          Full Screen
+        </a>
       </div>
-    </form>
-  </div>
-{% endblock %}
+      <textarea
+        required
+        name="content"
+        id="content"
+        rows="10"
+        @input="onContentChange"
+      >
+{{ blogPost.Content }}</textarea
+      >
+    </div>
 
-{% block extraStyles %}
-  <link rel="stylesheet" href="{{ staticUrl }}/build/editor.css">
-{% endblock %}
+    <!-- Blog Post Editor -->
+    <div
+      class="blog-post-editor"
+      v-bind:class="{ hide: hideContentEditor }"
+      v-cloak
+    >
+      <div class="blog-post-editor__edit">
+        <div style="display:flex;">
+          <h1 class="text-xl">Edit Contents</h1>
+          <button
+            class="btn btn-gray btn-small"
+            type="button"
+            v-on:click="toggleExpand"
+          >
+            &times;
+          </button>
+        </div>
+        <div id="editor">Editor here...</div>
+      </div>
+      <div class="blog-post-editor__preview">
+        <!-- Will be filled by script -->
+      </div>
+    </div>
+    <!-- / Blog Post Editor -->
 
-{% block extraScripts %}
-  <script src="{{ staticUrl }}/build/editor.js"></script>
-  <script>
-    new schier.Vue({
-      el: '#editor-app',
-      data: {
-        previewCount: 0,
-        hideContentEditor: true,
-        cm: null,
+    <div style="display:flex">
+      <button class="btn">
+        {% if blogPost %}Update{% else %}Create{% endif %}
+      </button>
+    </div>
+  </form>
+</div>
+{% endblock %} {% block extraScripts %}
+<script src="{{ staticUrl }}/build/editor.js"></script>
+<script>
+  new schier.Vue({
+    el: "#editor-app",
+    data: {
+      previewCount: 0,
+      hideContentEditor: true,
+      cm: null
+    },
+    methods: {
+      onContentChange: function(e) {
+        const validity = e.target.value.includes("<!--more-->")
+          ? ""
+          : "Missing <!--more--> tag";
+        e.target.setCustomValidity(validity);
       },
-      methods: {
-        onContentChange: function (e) {
-          const validity = e.target.value.includes('<!--more-->') ? '' : 'Missing <!--more--> tag';
-          e.target.setCustomValidity(validity);
+      toggleExpand: function(e) {
+        e.preventDefault();
 
-        },
-        toggleExpand: function (e) {
-          e.preventDefault();
+        this.hideContentEditor = !this.hideContentEditor;
 
-          this.hideContentEditor = !this.hideContentEditor;
-
-          let debounceTimeout = 0;
-          const update = (debounceMillis = 0) => {
-            clearTimeout(debounceTimeout);
-            debounceTimeout = setTimeout(async () => {
-              const p = document.querySelector('.blog-post-editor__preview');
-              if (!p.hasChildNodes()) {
-                for (let i = 0; i < 2; i++) {
-                  const f = document.createElement('iframe');
-                  f.id = `preview-frame-${i}`;
-                  f.style.display = 'none';
-                  p.appendChild(f);
-                }
+        let debounceTimeout = 0;
+        const update = (debounceMillis = 0) => {
+          clearTimeout(debounceTimeout);
+          debounceTimeout = setTimeout(async () => {
+            const p = document.querySelector(".blog-post-editor__preview");
+            if (!p.hasChildNodes()) {
+              for (let i = 0; i < 2; i++) {
+                const f = document.createElement("iframe");
+                f.id = `preview-frame-${i}`;
+                f.style.display = "none";
+                p.appendChild(f);
               }
-
-              // Swap between two i-frames to prevent loading flicker
-              const oldPreviewEl = document.querySelector('#preview-frame-' + (this.previewCount) % 2);
-              const newPreviewEl = document.querySelector('#preview-frame-' + (this.previewCount + 1) % 2);
-              this.previewCount++;
-
-              // If the iFrame already had content, we can just fetch the partial and replace it. This
-              // prevents it from having to re-fetch the scripts and styles and stuff.
-              const partial = newPreviewEl.contentDocument.querySelector('.blog-post-container') ? 'true' : 'false';
-
-              // Fetch the preview from server
-              const formData = new FormData();
-              formData.append('partial', partial);
-
-              for (const el of document.querySelectorAll('#edit-form input, #edit-form textarea')) {
-                if (!el.hasAttribute('name')) {
-                  continue;
-                }
-
-                formData.append(el.getAttribute('name'), el.value);
-              }
-
-              // Send the AJAX request to fetch the render HTML
-              const csrfTokenHeaderName = document.body.getAttribute('data-csrf-token-header');
-              const csrfToken = document.body.getAttribute('data-csrf-token');
-              const resp = await fetch('/blog/render', {
-                method: 'POST',
-                body: formData,
-                headers: { [csrfTokenHeaderName]: csrfToken }
-              });
-              const previewHtml = await resp.text();
-
-              const oldScrollTop = oldPreviewEl.contentDocument.scrollingElement.scrollTop;
-
-              if (partial === 'true') {
-                // Basic swap of blog post inside already-loaded page
-                newPreviewEl.contentDocument.querySelector('.blog-post-container').innerHTML = previewHtml;
-                oldPreviewEl.style.display = 'none';
-                newPreviewEl.style.display = 'block';
-                newPreviewEl.contentDocument.scrollingElement.scrollTop = oldScrollTop;
-              } else {
-                // Replace entire document
-                newPreviewEl.addEventListener('load', () => {
-                  oldPreviewEl.style.display = 'none';
-                  newPreviewEl.style.display = 'block';
-                  newPreviewEl.contentDocument.scrollingElement.scrollTop = oldScrollTop;
-                });
-                newPreviewEl.contentWindow.document.open();
-                newPreviewEl.contentWindow.document.write(previewHtml);
-                newPreviewEl.contentWindow.document.close();
-              }
-            }, debounceMillis);
-          };
-
-          setTimeout(() => {
-            if (this.hideContentEditor) {
-              return;
             }
 
-            if (this.cm) {
-              this.cm.refresh();
+            // Swap between two i-frames to prevent loading flicker
+            const oldPreviewEl = document.querySelector(
+              "#preview-frame-" + (this.previewCount % 2)
+            );
+            const newPreviewEl = document.querySelector(
+              "#preview-frame-" + ((this.previewCount + 1) % 2)
+            );
+            this.previewCount++;
+
+            // If the iFrame already had content, we can just fetch the partial and replace it. This
+            // prevents it from having to re-fetch the scripts and styles and stuff.
+            const partial = newPreviewEl.contentDocument.querySelector(
+              ".blog-post-container"
+            )
+              ? "true"
+              : "false";
+
+            // Fetch the preview from server
+            const formData = new FormData();
+            formData.append("partial", partial);
+
+            for (const el of document.querySelectorAll(
+              "#edit-form input, #edit-form textarea"
+            )) {
+              if (!el.hasAttribute("name")) {
+                continue;
+              }
+
+              formData.append(el.getAttribute("name"), el.value);
+            }
+
+            // Send the AJAX request to fetch the render HTML
+            const csrfTokenHeaderName = document.body.getAttribute(
+              "data-csrf-token-header"
+            );
+            const csrfToken = document.body.getAttribute("data-csrf-token");
+            const resp = await fetch("/blog/render", {
+              method: "POST",
+              body: formData,
+              headers: { [csrfTokenHeaderName]: csrfToken }
+            });
+            const previewHtml = await resp.text();
+
+            const oldScrollTop =
+              oldPreviewEl.contentDocument.scrollingElement.scrollTop;
+
+            if (partial === "true") {
+              // Basic swap of blog post inside already-loaded page
+              newPreviewEl.contentDocument.querySelector(
+                ".blog-post-container"
+              ).innerHTML = previewHtml;
+              oldPreviewEl.style.display = "none";
+              newPreviewEl.style.display = "block";
+              newPreviewEl.contentDocument.scrollingElement.scrollTop = oldScrollTop;
             } else {
-              const contentEl = document.querySelector('textarea[name=content]');
-              this.cm = schier.setupEditor(contentEl, document.querySelector('#editor'));
-              this.cm.on('change', () => update(500));
-              this.cm.focus();
+              // Replace entire document
+              newPreviewEl.addEventListener("load", () => {
+                oldPreviewEl.style.display = "none";
+                newPreviewEl.style.display = "block";
+                newPreviewEl.contentDocument.scrollingElement.scrollTop = oldScrollTop;
+              });
+              newPreviewEl.contentWindow.document.open();
+              newPreviewEl.contentWindow.document.write(previewHtml);
+              newPreviewEl.contentWindow.document.close();
             }
+          }, debounceMillis);
+        };
 
-            update(0);
-          });
-        }
+        setTimeout(() => {
+          if (this.hideContentEditor) {
+            return;
+          }
+
+          if (this.cm) {
+            this.cm.refresh();
+          } else {
+            const contentEl = document.querySelector("textarea[name=content]");
+            this.cm = schier.setupEditor(
+              contentEl,
+              document.querySelector("#editor")
+            );
+            this.cm.on("change", () => update(500));
+            this.cm.focus();
+          }
+
+          update(0);
+        });
       }
-    });
-  </script>
+    }
+  });
+</script>
 {% endblock %}
