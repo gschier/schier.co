@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"sort"
 	"strconv"
 	"strings"
 	"time"
@@ -22,6 +23,7 @@ func BlogRoutes(router *mux.Router) {
 	router.HandleFunc("/blog", routeBlogList).Methods(http.MethodGet)
 	router.HandleFunc("/blog/new", renderHandler("blog/edit.html", nil)).Methods(http.MethodGet)
 	router.HandleFunc("/blog/render", routeBlogRender).Methods(http.MethodPost)
+	router.HandleFunc("/blog/tags", routeBlogTags).Methods(http.MethodGet)
 	router.HandleFunc("/blog/{page:[0-9]+}", routeBlogList).Methods(http.MethodGet)
 	router.HandleFunc("/blog/{slug}.html", routeBlogPostSuffix).Methods(http.MethodGet)
 	router.HandleFunc("/blog/{slug}", routeBlogPost).Methods(http.MethodGet)
@@ -38,7 +40,52 @@ func BlogRoutes(router *mux.Router) {
 var blogEditTemplate = pageTemplate("blog/edit.html")
 var blogListTemplate = pageTemplate("blog/list.html")
 var blogPostTemplate = pageTemplate("blog/post.html")
+var blogTagsTemplate = pageTemplate("blog/tags.html")
 var blogPostPartial = partialTemplate("blog_post.html")
+
+func routeBlogTags(w http.ResponseWriter, r *http.Request) {
+	client := ctxPrismaClient(r)
+	blogPosts, err := client.BlogPosts(&prisma.BlogPostsParams{
+		Where: &prisma.BlogPostWhereInput{
+			Deleted:   prisma.Bool(false),
+			Published: prisma.Bool(true),
+			TagsNot:   prisma.Str(""),
+		},
+	}).Exec(r.Context())
+	if err != nil {
+		log.Println("Failed to query Posts", err)
+		http.Error(w, "Failed to query Posts", http.StatusInternalServerError)
+		return
+	}
+
+	tagsMap := make(map[string]int, 0)
+	for _, p := range blogPosts {
+		for _, newTag := range stringToTags(p.Tags) {
+			if newTag == "" {
+				continue
+			}
+
+			if _, ok := tagsMap[newTag]; !ok {
+				tagsMap[newTag] = 0
+			}
+
+			tagsMap[newTag]++
+		}
+	}
+
+	tags := make([]postTag, 0)
+	for tag, count := range tagsMap {
+		tags = append(tags, postTag{
+			Name: tag,
+			Count: count,
+		})
+	}
+
+	sort.Sort(ByTag(tags))
+	renderTemplate(w, r, blogTagsTemplate(), &pongo2.Context{
+		"tags": tags,
+	})
+}
 
 func routeBlogRender(w http.ResponseWriter, r *http.Request) {
 	_ = r.ParseMultipartForm(0)
@@ -351,4 +398,21 @@ func stringToTags(tags string) []string {
 	}
 
 	return allTags
+}
+
+type postTag struct {
+	Name       string
+	Count      int
+}
+
+type ByTag []postTag
+
+func (t ByTag) Len() int      { return len(t) }
+func (t ByTag) Swap(i, j int) { t[i], t[j] = t[j], t[i] }
+func (t ByTag) Less(i, j int) bool {
+	if t[i].Count == t[j].Count {
+		return t[i].Name > t[j].Name
+	}
+
+	return t[i].Count > t[j].Count
 }

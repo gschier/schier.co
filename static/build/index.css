@@ -1037,6 +1037,18 @@ pre.chroma-chroma {
 
 /********/
 
+.all-tags {
+  display: -webkit-box;
+  display: flex;
+  flex-wrap: wrap;
+  -webkit-box-pack: justify;
+          justify-content: space-between;
+}
+
+.all-tags .tag {
+  margin-top: 0.5rem;
+}
+
 .tag {
   margin-right: 0.5rem;
   border-radius: 9999px;
