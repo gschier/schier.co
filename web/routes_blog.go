@@ -19,17 +19,21 @@ func BlogRoutes(router *mux.Router) {
 	router.Handle("/rss.xml", http.RedirectHandler("/blog/rss.xml", http.StatusSeeOther)).Methods(http.MethodGet)
 	router.HandleFunc("/blog/rss.xml", routeBlogRSS).Methods(http.MethodGet)
 
-	// Regular stuff
+	// Blog Static
 	router.HandleFunc("/blog", routeBlogList).Methods(http.MethodGet)
 	router.HandleFunc("/blog/new", renderHandler("blog/edit.html", nil)).Methods(http.MethodGet)
 	router.HandleFunc("/blog/render", routeBlogRender).Methods(http.MethodPost)
+
+	// Tags
 	router.HandleFunc("/blog/tags", routeBlogTags).Methods(http.MethodGet)
+	router.HandleFunc("/blog/tags/{tag}", routeBlogList).Methods(http.MethodGet)
+
+	// Posts
 	router.HandleFunc("/blog/{page:[0-9]+}", routeBlogList).Methods(http.MethodGet)
 	router.HandleFunc("/blog/{slug}.html", routeBlogPostSuffix).Methods(http.MethodGet)
 	router.HandleFunc("/blog/{slug}", routeBlogPost).Methods(http.MethodGet)
 	router.HandleFunc("/blog/{year}/{month}/{day}/{slug}", routeBlogPostYMD).Methods(http.MethodGet)
 	router.HandleFunc("/blog/{slug}/edit", routeBlogPostEdit).Methods(http.MethodGet)
-	router.HandleFunc("/blog/tags/{tag}", routeBlogList).Methods(http.MethodGet)
 
 	// Forms
 	router.HandleFunc("/forms/blog/upsert", routeBlogPostCreateOrUpdate).Methods(http.MethodPost)
@@ -76,7 +80,7 @@ func routeBlogTags(w http.ResponseWriter, r *http.Request) {
 	tags := make([]postTag, 0)
 	for tag, count := range tagsMap {
 		tags = append(tags, postTag{
-			Name: tag,
+			Name:  tag,
 			Count: count,
 		})
 	}
@@ -364,8 +368,8 @@ func routeBlogList(w http.ResponseWriter, r *http.Request) {
 		pagePrevious--
 	}
 
-	// Remove the n+1 post
-	if len(blogPosts) > 0 {
+	// Remove the n+1 post if it's there
+	if len(blogPosts) > first {
 		blogPosts = blogPosts[:len(blogPosts)-1]
 	}
 
@@ -401,8 +405,8 @@ func stringToTags(tags string) []string {
 }
 
 type postTag struct {
-	Name       string
-	Count      int
+	Name  string
+	Count int
 }
 
 type ByTag []postTag
