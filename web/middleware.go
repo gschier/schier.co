@@ -11,6 +11,7 @@ import (
 	"os"
 	"regexp"
 	"strings"
+	"time"
 )
 
 const sessionCookieName = "sid"
@@ -20,6 +21,15 @@ var cachedPaths = regexp.MustCompile("\\.(png|svg|jpg|jpeg|js|css)$")
 // LogMiddleware logs each request
 func LoggerMiddleware(next http.Handler) http.Handler {
 	return handlers.LoggingHandler(os.Stdout, next)
+}
+
+// LogMiddleware logs each request
+func DeployTimeMiddleware(next http.Handler) http.Handler {
+	var deploy = time.Now().Format(time.RFC3339)
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("x-deploy", deploy)
+		next.ServeHTTP(w, r)
+	})
 }
 
 // CompressMiddleware enables gzip for requests

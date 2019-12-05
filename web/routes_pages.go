@@ -21,10 +21,19 @@ Disallow: /login
 Disallow: /register
 `)
 
+var robotsNone = strings.TrimSpace(`
+User-agent: *
+Disallow: *
+`)
+
 var homeTemplate = pageTemplate("page/home.html")
 
 func routeRobotsTxt(w http.ResponseWriter, r *http.Request) {
-	_, _ = w.Write([]byte(robots))
+	if r.Host == "schier.co" {
+		_, _ = w.Write([]byte(robots))
+	} else {
+		_, _ = w.Write([]byte(robotsNone))
+	}
 }
 
 func routeServiceWorker(w http.ResponseWriter, r *http.Request) {
