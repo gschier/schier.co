@@ -17,9 +17,16 @@
       <a href="{{ rssUrl }}" type="application/rss+xml" target="_blank">
         RSS
       </a>
-      <p>
-        Thanks for visiting!
-      </p>
+      {% if loggedIn %}
+        <p>
+          {{ user.Email }}
+          <a href="/logout">Logout</a>
+        </p>
+      {% else %}
+        <p>
+          Thanks for visiting!
+        </p>
+      {% endif %}
     </div>
   </div>
 </footer>

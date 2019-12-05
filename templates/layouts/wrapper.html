@@ -48,7 +48,7 @@
     }
   </script>
 </head>
-<body data-csrf-token="{{ csrfToken }}" data-csrf-Token-header="{{ csrfTokenHeader }}">
+<body data-csrf-token="{{ csrfToken }}" data-csrf-Token-header="{{ csrfTokenHeader }}" data-logged-in="{{ loggedIn | yesno:"yes,no" }}">
 {% block body %}{% endblock %}
 
 {% block extraScripts %}{% endblock %}
