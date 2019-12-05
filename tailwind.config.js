@@ -7,6 +7,7 @@ module.exports = {
       primary: colors.blue,
       background: colors.white,
       foreground: colors.gray['800'],
+      danger: colors.red,
       gray: colors.gray,
     },
     textColor: {

@@ -1,0 +1,30 @@
+{% extends '../../layouts/base.html' %}
+
+{% block content %}
+  <div class="form-wrapper">
+    <h1>Create an Account</h1>
+    <form method="post">
+      {% if error %}
+        <p class="notice">
+          {{ error }}
+        </p>
+      {% endif %}
+      {{ csrfField | safe }}
+      <div class="form-row">
+        {% include '../../partials/form-input.html' with label='Email' type='email' name='email' placeholder='me@example.com' autofocus=true %}
+      </div>
+      <div class="form-row">
+        {% include '../../partials/form-input.html' with label='Name' name='name' placeholder='Tim Burton' %}
+      </div>
+      <div class="form-row">
+        {% include '../../partials/form-input.html' with label='Password' type='password' name='password' placeholder='•••••••••••••••••' %}
+      </div>
+      <div class="form-actions">
+        <a href="/login">or login</a>
+        <button class="btn">
+          Register
+        </button>
+      </div>
+    </form>
+  </div>
+{% endblock %}

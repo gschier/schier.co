@@ -1,26 +1,44 @@
 package web
 
 import (
+	"github.com/flosch/pongo2"
 	"github.com/gorilla/mux"
 	"github.com/gschier/schier.dev/generated/prisma-client"
 	"golang.org/x/crypto/bcrypt"
 	"log"
 	"net/http"
+	"os"
 )
 
 func AuthRoutes(router *mux.Router) {
 	router.HandleFunc("/logout", routeLogout).Methods(http.MethodGet).Name("logout")
 
 	// Forms
-	router.HandleFunc("/forms/login", routeLogin).Methods(http.MethodPost).Name("login")
-	router.HandleFunc("/forms/register", routeRegister).Methods(http.MethodPost).Name("register")
+	router.HandleFunc("/login", routeLogin).Methods(http.MethodPost, http.MethodGet).Name("login")
+	router.HandleFunc("/register", routeRegister).Methods(http.MethodPost, http.MethodGet).Name("register")
 }
+
+var loginTemplate = pageTemplate("auth/login.html")
+var registerTemplate = pageTemplate("auth/register.html")
 
 func routeLogout(w http.ResponseWriter, r *http.Request) {
 	logout(w, r, "/")
 }
 
 func routeLogin(w http.ResponseWriter, r *http.Request) {
+	render := func(email, password, error string) {
+		renderTemplate(w, r, loginTemplate(), &pongo2.Context{
+			"email":    email,
+			"password": password,
+			"error":    error,
+		})
+	}
+
+	if r.Method == http.MethodGet {
+		render("", "", "")
+		return
+	}
+
 	_ = r.ParseForm()
 
 	password := r.Form.Get("password")
@@ -32,17 +50,13 @@ func routeLogin(w http.ResponseWriter, r *http.Request) {
 		Email: &email,
 	}).Exec(r.Context())
 	if err != nil {
-		log.Println("User fetch failed", err.Error())
-		w.WriteHeader(http.StatusUnauthorized)
-		_, _ = w.Write([]byte("Bad username/password"))
+		render(email, password, "Invalid username or password")
 		return
 	}
 
 	err = bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(password))
 	if err != nil {
-		log.Println("Bcrypt login failed", err.Error())
-		w.WriteHeader(http.StatusUnauthorized)
-		_, _ = w.Write([]byte("Bad username/password"))
+		render(email, password, "Invalid username or password")
 		return
 	}
 
@@ -50,17 +64,51 @@ func routeLogin(w http.ResponseWriter, r *http.Request) {
 }
 
 func routeRegister(w http.ResponseWriter, r *http.Request) {
-	client := ctxPrismaClient(r)
+	render := func(email, name, password, error string) {
+		renderTemplate(w, r, registerTemplate(), &pongo2.Context{
+			"email":    email,
+			"password": password,
+			"name":     name,
+			"error":    error,
+		})
+	}
+
+	if r.Method == http.MethodGet {
+		render("", "", "", "")
+		return
+	}
 
 	_ = r.ParseForm()
-	password := r.Form.Get("password")
 	email := r.Form.Get("email")
 	name := r.Form.Get("name")
+	password := r.Form.Get("password")
+
+	if email == "" {
+		render(email, name, password, "valid email required")
+		return
+	}
+
+	if name == "" {
+		render(email, name, password, "valid name required")
+		return
+	}
+
+	if len(password) < 5 {
+		render(email, name, password, "valid password required")
+		return
+	}
+
+	if os.Getenv("DEV_ENVIRONMENT") != "development" {
+		render(email, name, password, "registration disabled for non-dev environment")
+	}
+
+	client := ctxPrismaClient(r)
 
 	// Generate password hash
 	pwdHash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		log.Println("Error generating user password", err.Error())
+		render(email, name, password, "Error creating account")
 		return
 	}
 
@@ -71,7 +119,8 @@ func routeRegister(w http.ResponseWriter, r *http.Request) {
 		PasswordHash: string(pwdHash),
 	}).Exec(r.Context())
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		log.Println("Error creating user", err.Error())
+		render(email, name, password, "Error creating account")
 		return
 	}
 
