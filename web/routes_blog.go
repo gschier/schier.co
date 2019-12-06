@@ -314,7 +314,7 @@ func routeBlogRSS(w http.ResponseWriter, r *http.Request) {
 		Author:      &feeds.Author{Name: "Gregory Schier"},
 		Link:        &feeds.Link{Href: os.Getenv("BASE_URL") + "/blog"},
 		Image: &feeds.Image{
-			Url:    os.Getenv("STATIC_URL") + "/images/greg-large.png",
+			Url:    os.Getenv("STATIC_URL") + "/favicon/android-chrome-512x512.png",
 			Width:  200,
 			Height: 200,
 		},
