@@ -249,10 +249,24 @@ func routeBlogPostSuffix(w http.ResponseWriter, r *http.Request) {
 func routeBlogPost(w http.ResponseWriter, r *http.Request) {
 	slug := mux.Vars(r)["slug"]
 
-	baseQuery := ctxPrismaClient(r).BlogPost(prisma.BlogPostWhereUniqueInput{Slug: &slug})
+	loggedIn := ctxGetLoggedIn(r)
 
-	// Fetch blog posts
-	blogPost, err := baseQuery.Exec(r.Context())
+	blogPostWhere := prisma.BlogPostWhereInput{Slug: &slug}
+
+	// Don't show non-published and deleted posts to guests
+	if !loggedIn {
+		blogPostWhere.Deleted = prisma.Bool(false)
+		blogPostWhere.Published = prisma.Bool(true)
+	}
+
+	// Fetch post
+	blogPost, err := ctxPrismaClient(r).BlogPost(
+		prisma.BlogPostWhereUniqueInput{Slug: &slug},
+	).Exec(r.Context())
+	if err == prisma.ErrNoResult {
+		http.NotFound(w, r)
+		return
+	}
 	if err != nil {
 		log.Println("Failed to fetch blog post", err)
 		http.Error(w, "Failed to get blog post", http.StatusInternalServerError)
