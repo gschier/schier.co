@@ -260,9 +260,7 @@ func routeBlogPost(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Fetch post
-	blogPost, err := ctxPrismaClient(r).BlogPost(
-		prisma.BlogPostWhereUniqueInput{Slug: &slug},
-	).Exec(r.Context())
+	blogPost, err := ctxPrismaClient(r).BlogPost(blogPostWhere).Exec(r.Context())
 	if err == prisma.ErrNoResult {
 		http.NotFound(w, r)
 		return
