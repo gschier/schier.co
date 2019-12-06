@@ -193,9 +193,7 @@ func routeBlogPostCreateOrUpdate(w http.ResponseWriter, r *http.Request) {
 	user := ctxGetUser(r)
 
 	if !loggedIn {
-		w.WriteHeader(http.StatusNotFound)
-		w.Write([]byte("HELLO"))
-		//routeNotFound(w, r)
+		routeNotFound(w, r)
 		return
 	}
 
@@ -269,9 +267,7 @@ func routeBlogPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if len(blogPosts) == 0 {
-		w.WriteHeader(404)
-		w.Write([]byte("HELLO"))
-		//routeNotFound(w, r)
+		routeNotFound(w, r)
 		return
 	}
 
