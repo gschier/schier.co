@@ -175,8 +175,6 @@ func routeBlogPostEdit(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	log.Println("RENDER", blogPost.Slug)
-
 	renderTemplate(w, r, blogEditTemplate(), &pongo2.Context{"blogPost": blogPost})
 }
 
@@ -195,7 +193,9 @@ func routeBlogPostCreateOrUpdate(w http.ResponseWriter, r *http.Request) {
 	user := ctxGetUser(r)
 
 	if !loggedIn {
-		routeNotFound(w, r)
+		w.WriteHeader(http.StatusNotFound)
+		w.Write([]byte("HELLO"))
+		//routeNotFound(w, r)
 		return
 	}
 
@@ -269,7 +269,9 @@ func routeBlogPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if len(blogPosts) == 0 {
-		routeNotFound(w, r)
+		w.WriteHeader(404)
+		w.Write([]byte("HELLO"))
+		//routeNotFound(w, r)
 		return
 	}
 

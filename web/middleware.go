@@ -70,11 +70,6 @@ func DeployHeadersMiddleware(next http.Handler) http.Handler {
 	})
 }
 
-// CompressMiddleware enables gzip for requests
-func CompressMiddleware(next http.Handler) http.Handler {
-	return handlers.CompressHandler(next)
-}
-
 // CacheHeadersMiddleware configures Cache-Control header
 func CacheHeadersMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
