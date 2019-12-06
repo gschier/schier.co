@@ -18,17 +18,54 @@ const sessionCookieName = "sid"
 
 var cachedPaths = regexp.MustCompile("\\.(png|svg|jpg|jpeg|js|css)$")
 
+type writer struct {
+	wOG                      http.ResponseWriter
+	defaultHeaders           map[string]string
+	hasWrittenDefaultHeaders bool
+}
+
+func (w *writer) SetDefaultHeader(n, v string) {
+	w.defaultHeaders[n] = v
+}
+
+func (w *writer) Header() http.Header {
+	return w.wOG.Header()
+}
+
+func (w *writer) Write(b []byte) (int, error) {
+	w.tryWriteDefaultHeaders()
+	return w.wOG.Write(b)
+}
+
+func (w *writer) WriteHeader(status int) {
+	w.tryWriteDefaultHeaders()
+	w.wOG.WriteHeader(status)
+}
+
+func (w *writer) tryWriteDefaultHeaders() {
+	if w.hasWrittenDefaultHeaders {
+		return
+	}
+
+	w.hasWrittenDefaultHeaders = true
+
+	for name, value := range w.defaultHeaders {
+		w.wOG.Header().Set(name, value)
+	}
+}
+
 // LogMiddleware logs each request
 func LoggerMiddleware(next http.Handler) http.Handler {
 	return handlers.LoggingHandler(os.Stdout, next)
 }
 
-// LogMiddleware logs each request
+// DeployMiddleware adds deploy time as a header to all responses
 func DeployTimeMiddleware(next http.Handler) http.Handler {
 	var deploy = time.Now().Format(time.RFC3339)
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("x-deploy", deploy)
-		next.ServeHTTP(w, r)
+		wNew := &writer{wOG: w, defaultHeaders: map[string]string{}}
+		wNew.SetDefaultHeader("X-Deploy", deploy)
+		next.ServeHTTP(wNew, r)
 	})
 }
 
@@ -40,17 +77,18 @@ func CompressMiddleware(next http.Handler) http.Handler {
 // CacheMiddleware configures Cache-Control header
 func CacheMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		wNew := &writer{wOG: w, defaultHeaders: map[string]string{}}
 		shouldCache := true
 		shouldCache = shouldCache && cachedPaths.MatchString(r.URL.Path)
 		shouldCache = shouldCache && os.Getenv("DEV_ENVIRONMENT") != "development"
 
 		if shouldCache {
-			w.Header().Set("Cache-Control", "public, max-age=7200, must-revalidate")
+			wNew.SetDefaultHeader("Cache-Control", "public, max-age=7200, must-revalidate")
 		} else {
-			w.Header().Set("Cache-Control", "public, max-age=0, must-revalidate")
+			wNew.SetDefaultHeader("Cache-Control", "public, max-age=0, must-revalidate")
 		}
 
-		next.ServeHTTP(w, r)
+		next.ServeHTTP(wNew, r)
 	})
 }
 
