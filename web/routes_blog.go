@@ -251,7 +251,7 @@ func routeBlogPost(w http.ResponseWriter, r *http.Request) {
 
 	loggedIn := ctxGetLoggedIn(r)
 
-	blogPostWhere := prisma.BlogPostWhereInput{Slug: &slug}
+	blogPostWhere := &prisma.BlogPostWhereInput{Slug: &slug}
 
 	// Don't show non-published and deleted posts to guests
 	if !loggedIn {
@@ -260,20 +260,22 @@ func routeBlogPost(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Fetch post
-	blogPost, err := ctxPrismaClient(r).BlogPost(blogPostWhere).Exec(r.Context())
-	if err == prisma.ErrNoResult {
-		http.NotFound(w, r)
-		return
-	}
+	blogPosts, err := ctxPrismaClient(r).BlogPosts(
+		&prisma.BlogPostsParams{Where: blogPostWhere},
+	).Exec(r.Context())
 	if err != nil {
 		log.Println("Failed to fetch blog post", err)
 		http.Error(w, "Failed to get blog post", http.StatusInternalServerError)
 		return
 	}
+	if len(blogPosts) == 0 {
+		http.NotFound(w, r)
+		return
+	}
 
 	// Render template
 	renderTemplate(w, r, blogPostTemplate(), &pongo2.Context{
-		"blogPost": blogPost,
+		"blogPost": blogPosts[0],
 	})
 }
 
