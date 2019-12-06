@@ -195,7 +195,7 @@ func routeBlogPostCreateOrUpdate(w http.ResponseWriter, r *http.Request) {
 	user := ctxGetUser(r)
 
 	if !loggedIn {
-		http.NotFound(w, r)
+		routeNotFound(w, r)
 		return
 	}
 
@@ -269,7 +269,7 @@ func routeBlogPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if len(blogPosts) == 0 {
-		http.NotFound(w, r)
+		routeNotFound(w, r)
 		return
 	}
 
