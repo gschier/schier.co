@@ -3,14 +3,11 @@ package main
 import (
 	"github.com/gorilla/mux"
 	schier_dev "github.com/gschier/schier.dev"
-	"github.com/gschier/schier.dev/generated/prisma-client"
 	"github.com/gschier/schier.dev/web"
 	"log"
 	"net/http"
 	"os"
 )
-
-const pageRoot = "templates/pages/generic"
 
 func main() {
 	client := schier_dev.NewPrismaClient()
@@ -20,7 +17,13 @@ func main() {
 	// Setup router
 	router := setupRouter()
 
-	handler := applyMiddleware(router, client)
+	// Route-specific middleware
+	router.Use(web.NewContextMiddleware(client))
+	router.Use(web.CompressMiddleware)
+	router.Use(web.CSRFMiddleware)
+	router.Use(web.UserMiddleware)
+
+	handler := applyMiddleware(router)
 	startServer(handler)
 }
 
@@ -38,20 +41,15 @@ func setupRouter() *mux.Router {
 	return router
 }
 
-func applyMiddleware(r *mux.Router, pc *prisma.Client) http.Handler {
+func applyMiddleware(r *mux.Router) http.Handler {
 	// Apply global middleware. Note, we're doing it this way
 	// because Gorilla doesn't apply middleware to 404
 	var handler http.Handler = r
 
-	// Add global middleware
-	handler = web.GenericPageMiddleware(handler, pageRoot)
-	handler = web.UserMiddleware(handler)
-	handler = web.DeployTimeMiddleware(handler)
-	handler = web.ContextMiddleware(handler, pc)
+	// Global middleware
 	handler = web.StaticMiddleware(handler)
-	handler = web.CSRFMiddleware(handler)
-	handler = web.CompressMiddleware(handler)
-	handler = web.CacheMiddleware(handler)
+	handler = web.DeployHeadersMiddleware(handler)
+	handler = web.CacheHeadersMiddleware(handler)
 	handler = web.LoggerMiddleware(handler)
 
 	return handler
