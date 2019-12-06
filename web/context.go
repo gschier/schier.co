@@ -15,15 +15,27 @@ var (
 )
 
 func ctxPrismaClient(r *http.Request) *prisma.Client {
-	return r.Context().Value(ctxKeyClient).(*prisma.Client)
+	if c, ok := r.Context().Value(ctxKeyClient).(*prisma.Client); ok {
+		return c
+	}
+
+	panic("Prisma client not set on request context")
 }
 
 func ctxGetUser(r *http.Request) *prisma.User {
-	return r.Context().Value(ctxKeyUser).(*prisma.User)
+	if u, ok := r.Context().Value(ctxKeyUser).(*prisma.User); ok {
+		return u
+	}
+
+	return nil
 }
 
 func ctxGetLoggedIn(r *http.Request) bool {
-	return r.Context().Value(ctxKeyLoggedIn).(bool)
+	if loggedIn, ok := r.Context().Value(ctxKeyLoggedIn).(bool); ok {
+		return loggedIn
+	}
+
+	return false
 }
 
 func ctxSetPrismaClient(r *http.Request, c *prisma.Client) *http.Request {

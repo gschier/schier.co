@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/gorilla/mux"
 	schier_dev "github.com/gschier/schier.dev"
+	"github.com/gschier/schier.dev/generated/prisma-client"
 	"github.com/gschier/schier.dev/web"
 	"log"
 	"net/http"
@@ -15,21 +16,21 @@ func main() {
 	go schier_dev.InstallFixtures(client)
 
 	// Setup router
-	router := setupRouter()
-
-	// Route-specific middleware
-	router.Use(web.NewContextMiddleware(client))
-	router.Use(web.CompressMiddleware)
-	router.Use(web.CSRFMiddleware)
-	router.Use(web.UserMiddleware)
+	router := setupRouter(client)
 
 	handler := applyMiddleware(router)
 	startServer(handler)
 }
 
-func setupRouter() *mux.Router {
+func setupRouter(client *prisma.Client) *mux.Router {
 	router := mux.NewRouter()
 	router.StrictSlash(true)
+
+	// Route-specific middleware
+	router.Use(web.NewContextMiddleware(client))
+	router.Use(web.CSRFMiddleware)
+	router.Use(web.CompressMiddleware)
+	router.Use(web.UserMiddleware)
 
 	// Apply routes
 	web.AuthRoutes(router)
