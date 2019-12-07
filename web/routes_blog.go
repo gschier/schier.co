@@ -272,6 +272,7 @@ func routeBlogPost(w http.ResponseWriter, r *http.Request) {
 	// Render template
 	renderTemplate(w, r, blogPostTemplate(), &pongo2.Context{
 		"blogPost": blogPosts[0],
+		"words": strings.Count(blogPosts[0].Content, " "),
 	})
 }
 

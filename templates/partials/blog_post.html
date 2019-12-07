@@ -2,7 +2,7 @@
   <h1>
     {{ blogPost.Published | yesno:",📝 " }}{{ blogPost.Title }}
     <time datetime{{ blogPost.Date }}>
-      {{ blogPost.Date | isoformat }}
+      {{ blogPost.Date | isoformat }} {% if loggedIn %}({{ words }} words){% endif %}
     </time>
   </h1>
 
