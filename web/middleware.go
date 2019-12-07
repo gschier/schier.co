@@ -9,7 +9,6 @@ import (
 	"net/http"
 	"os"
 	"regexp"
-	"strings"
 	"time"
 )
 
@@ -100,26 +99,6 @@ func NewContextMiddleware(client *prisma.Client) mux.MiddlewareFunc{
 			next.ServeHTTP(w, r)
 		})
 	}
-}
-
-// StaticMiddleware automatically serves static assets out of the static folder
-func StaticMiddleware(next http.Handler) http.Handler {
-	fileHandler := http.FileServer(http.Dir("."))
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		// Shortcut to serve images out of static
-		if strings.HasPrefix(r.URL.Path, "/images") {
-			http.ServeFile(w, r, "./static"+r.URL.Path)
-			return
-		}
-
-		// Serve everything else out of static
-		if strings.HasPrefix(r.URL.Path, "/static") {
-			fileHandler.ServeHTTP(w, r)
-			return
-		}
-
-		next.ServeHTTP(w, r)
-	})
 }
 
 // CSRFMiddleware adds CSRF handling and protection to requests

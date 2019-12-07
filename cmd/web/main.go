@@ -37,6 +37,7 @@ func setupRouter(client *prisma.Client) *mux.Router {
 	web.BlogRoutes(router)
 	web.BooksRoutes(router)
 	web.PagesRoutes(router)
+	web.StaticRoutes(router)
 
 	return router
 }
@@ -47,7 +48,6 @@ func applyMiddleware(r *mux.Router) http.Handler {
 	var handler http.Handler = r
 
 	// Global middleware
-	handler = web.StaticMiddleware(handler)
 	handler = web.DeployHeadersMiddleware(handler)
 	handler = web.CacheHeadersMiddleware(handler)
 	handler = web.LoggerMiddleware(handler)

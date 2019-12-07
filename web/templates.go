@@ -1,6 +1,7 @@
 package web
 
 import (
+	"fmt"
 	"github.com/Depado/bfchroma"
 	"github.com/alecthomas/chroma/formatters/html"
 	"github.com/flosch/pongo2"
@@ -8,6 +9,7 @@ import (
 	"github.com/russross/blackfriday/v2"
 	"io/ioutil"
 	"log"
+	"math/rand"
 	"net/http"
 	"os"
 	"strings"
@@ -114,15 +116,22 @@ func renderTemplate(w http.ResponseWriter, r *http.Request, template *pongo2.Tem
 	user := ctxGetUser(r)
 	loggedIn := ctxGetLoggedIn(r)
 
+	isDev := os.Getenv("DEV_ENVIRONMENT") == "development"
+
+	staticBreak := ""
+	if isDev {
+		staticBreak = "-" + fmt.Sprint(rand.Int())
+	}
+
 	newContext := pongo2.Context{
 		"csrfToken":       csrf.Token(r),
 		"csrfTokenHeader": "X-CSRF-Token",
 		"defaultTitle":    "Greg Schier",
 		"gaId":            os.Getenv("GA_ID"),
-		"isDev":           os.Getenv("DEV_ENVIRONMENT") == "development",
+		"isDev":           isDev,
 		"loggedIn":        loggedIn,
 		"rssUrl":          os.Getenv("BASE_URL") + "/rss.xml",
-		"staticUrl":       os.Getenv("STATIC_URL"),
+		"staticUrl":       os.Getenv("STATIC_URL")+staticBreak,
 		"user":            user,
 		csrf.TemplateTag:  csrf.TemplateField(r),
 	}
