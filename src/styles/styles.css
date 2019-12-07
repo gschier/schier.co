@@ -273,7 +273,7 @@ pre.chroma-chroma {
 }
 
 .top-nav img {
-  @apply h-10 rounded-full;
+  @apply h-10;
 }
 
 .top-nav li {
@@ -301,7 +301,7 @@ pre.chroma-chroma {
 }
 
 .bottom-footer img {
-  @apply rounded-full mx-auto;
+  @apply mx-auto;
   width: 7rem;
 }
 
