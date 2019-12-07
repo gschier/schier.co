@@ -250,10 +250,9 @@ func routeBlogPost(w http.ResponseWriter, r *http.Request) {
 
 	blogPostWhere := &prisma.BlogPostWhereInput{Slug: &slug}
 
-	// Don't show non-published and deleted posts to guests
+	// Don't show deleted posts to guests
 	if !loggedIn {
 		blogPostWhere.Deleted = prisma.Bool(false)
-		blogPostWhere.Published = prisma.Bool(true)
 	}
 
 	// Fetch post
