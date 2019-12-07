@@ -7,6 +7,7 @@ import (
 )
 
 func StaticRoutes(router *mux.Router) {
+	router.PathPrefix("/static/").HandlerFunc(routeStatic)
 	router.PathPrefix("/static{cache}/").HandlerFunc(routeStatic)
 	router.PathPrefix("/images/").HandlerFunc(routeStatic)
 }
