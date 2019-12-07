@@ -10,12 +10,14 @@ import (
 	"github.com/russross/blackfriday/v2"
 	"io/ioutil"
 	"log"
-	"math/rand"
 	"net/http"
 	"os"
 	"strings"
 	"time"
 )
+
+// Use server start time as static cache key breaker
+var staticBreaker = time.Now().Unix()
 
 var chroma = bfchroma.NewRenderer(
 	bfchroma.WithoutAutodetect(),
@@ -142,9 +144,9 @@ func renderTemplate(w http.ResponseWriter, r *http.Request, template *pongo2.Tem
 
 	isDev := os.Getenv("DEV_ENVIRONMENT") == "development"
 
-	staticBreak := ""
+	// Update static breaker every request if we're on dev
 	if isDev {
-		staticBreak = "-" + fmt.Sprint(rand.Int())
+		staticBreaker = time.Now().Unix()
 	}
 
 	newContext := pongo2.Context{
@@ -155,7 +157,7 @@ func renderTemplate(w http.ResponseWriter, r *http.Request, template *pongo2.Tem
 		"isDev":           isDev,
 		"loggedIn":        loggedIn,
 		"rssUrl":          os.Getenv("BASE_URL") + "/rss.xml",
-		"staticUrl":       os.Getenv("STATIC_URL")+staticBreak,
+		"staticUrl":       fmt.Sprintf("%s-%d", os.Getenv("STATIC_URL"), staticBreaker),
 		"user":            user,
 		csrf.TemplateTag:  csrf.TemplateField(r),
 	}

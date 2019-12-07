@@ -12,7 +12,6 @@ import (
 func PagesRoutes(router *mux.Router) {
 	router.HandleFunc("/", routeHome).Methods(http.MethodGet)
 	router.HandleFunc("/robots.txt", routeRobotsTxt).Methods(http.MethodGet)
-	router.HandleFunc("/sw.js", routeServiceWorker).Methods(http.MethodGet)
 }
 
 var robots = strings.TrimSpace(`
@@ -34,10 +33,6 @@ func routeRobotsTxt(w http.ResponseWriter, r *http.Request) {
 	} else {
 		_, _ = w.Write([]byte(robotsNone))
 	}
-}
-
-func routeServiceWorker(w http.ResponseWriter, r *http.Request) {
-	http.ServeFile(w, r, "static/build/sw.js")
 }
 
 func routeHome(w http.ResponseWriter, r *http.Request) {
