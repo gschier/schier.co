@@ -28,5 +28,5 @@ func routeStatic(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	routeNotFound(w, r)
+	http.NotFound(w, r)
 }

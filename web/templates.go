@@ -1,6 +1,7 @@
 package web
 
 import (
+	"encoding/base64"
 	"fmt"
 	"github.com/Depado/bfchroma"
 	"github.com/alecthomas/chroma/formatters/html"
@@ -55,7 +56,7 @@ func init() {
 	}
 
 	err = pongo2.RegisterFilter(
-		"inlineStatic",
+		"base64",
 		func(in *pongo2.Value, param *pongo2.Value) (*pongo2.Value, *pongo2.Error) {
 			b, err := ioutil.ReadFile("./static/build/" + in.String())
 			if err != nil {
@@ -68,6 +69,29 @@ func init() {
 
 	if err != nil {
 		panic("failed to register isoformat filter: " + err.Error())
+	}
+
+	err = pongo2.RegisterFilter(
+		"inlineStatic",
+		func(in *pongo2.Value, param *pongo2.Value) (*pongo2.Value, *pongo2.Error) {
+			b, err := ioutil.ReadFile("./static/build/" + in.String())
+			if err != nil {
+				return nil, &pongo2.Error{OrigError: err}
+			}
+
+			var finalValue string
+			if param.String() == "base64" {
+				finalValue = base64.StdEncoding.EncodeToString(b)
+			} else {
+				finalValue = string(b)
+			}
+
+			return pongo2.AsValue(finalValue), nil
+		},
+	)
+
+	if err != nil {
+		panic("failed to register inlineStatic filter: " + err.Error())
 	}
 
 	err = pongo2.RegisterFilter(

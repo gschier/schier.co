@@ -119,7 +119,7 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   return newRequire;
 })({"sw.js":[function(require,module,exports) {
 var cacheName = 'schier.co';
-var filesToCache = ['/static/build/index.css', '/static/build/images/greg.svg', '/static/build/favicon/favicon.ico', '/static/build/favicon/site.webmanifest', '/static/build/favicon/android-chrome-192x192.png'];
+var filesToCache = ['/static/build/index.css', '/static/build/images/me.jpg', '/static/build/favicon/favicon.ico', '/static/build/favicon/site.webmanifest', '/static/build/favicon/android-chrome-192x192.png'];
 self.addEventListener('install', function (e) {
   console.log('[ServiceWorker] Install');
   e.waitUntil(caches.open(cacheName).then(function (cache) {
@@ -169,7 +169,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57457" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57954" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

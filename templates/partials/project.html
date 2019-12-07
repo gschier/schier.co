@@ -1,7 +1,10 @@
 <div class="project">
   <h3>
     <a href="{{ project.Link }}">
-      <img src="{{ staticUrl }}/build/images/icons/{{ project.Icon }}" alt="{{ project.Name }} icon"/>
+      <img
+              src="data:image/png;base64,{{ 'images/icons/' | add:project.Icon | inlineStatic:'base64' }}"
+              alt="{{ project.Name }} icon"
+      />
       {{ project.Name }}
     </a>
   </h3>

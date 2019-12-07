@@ -35,7 +35,7 @@
     <link rel="stylesheet" href="{{ staticUrl }}/build/index.css">
   {% else %}
     {# inlineable styles #}
-    <style>{{ "index.css" | inlineStatic }}</style>
+    <style>{{ "index.css" | inlineStatic | safe }}</style>
   {% endif %}
 
   {% block extraStyles %}{% endblock %}
@@ -48,7 +48,7 @@
     }
   </script>
 </head>
-<body data-csrf-token="{{ csrfToken }}" data-csrf-Token-header="{{ csrfTokenHeader }}" data-logged-in="{{ loggedIn | yesno:"yes,no" }}">
+<body data-csrf-token="{{ csrfToken }}" data-csrf-Token-header="{{ csrfTokenHeader }}" data-logged-in="{{ loggedIn | yesno:'yes,no' }}">
 {% block body %}{% endblock %}
 
 {% block extraScripts %}{% endblock %}

@@ -1,7 +1,7 @@
 const cacheName = 'schier.co';
 const filesToCache = [
   '/static/build/index.css',
-  '/static/build/images/greg.svg',
+  '/static/build/images/me.jpg',
   '/static/build/favicon/favicon.ico',
   '/static/build/favicon/site.webmanifest',
   '/static/build/favicon/android-chrome-192x192.png',
