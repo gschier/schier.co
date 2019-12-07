@@ -335,7 +335,7 @@ pre.chroma-chroma {
   @apply bg-background;
   display: grid;
   grid-template-areas: "editor preview";
-  grid-template-columns: minmax(20rem, 36rem) minmax(50%, 1fr);
+  grid-template-columns: 1fr 1fr;
   grid-template-rows: 100%;
   position: fixed;
   top: 0;
@@ -345,13 +345,13 @@ pre.chroma-chroma {
 }
 
 .blog-post-editor__edit {
-  @apply p-4;
+  @apply p-4 mx-auto w-full;
   grid-area: editor;
   display: grid;
   grid-template-rows: auto minmax(0, 1fr);
-  width: 100%;
   height: 100vh;
   max-height: 100vh;
+  max-width: 40rem;
 }
 
 .blog-post-editor__edit .CodeMirror {

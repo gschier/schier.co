@@ -47,7 +47,7 @@
       >
         <div class="blog-post-editor__edit">
           <div style="display:flex;">
-            <h1 class="text-xl">Edit Contents</h1>
+            <h1 class="text-xl">{{ blogPost.Title | default:"New Post" }}</h1>
             <button
                     class="btn btn-gray btn-small"
                     type="button"

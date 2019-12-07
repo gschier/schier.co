@@ -115,6 +115,7 @@ func routeBlogRender(w http.ResponseWriter, r *http.Request) {
 
 	renderTemplate(w, r, template, &pongo2.Context{
 		"loggedIn": false,
+		"words": strings.Count(content, " "),
 		"blogPost": prisma.BlogPost{
 			Published: true,
 			Slug:      slug,
