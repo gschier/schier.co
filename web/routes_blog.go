@@ -95,6 +95,8 @@ func routeBlogRender(w http.ResponseWriter, r *http.Request) {
 	_ = r.ParseMultipartForm(0)
 
 	content := r.Form.Get("content")
+
+	// Replace Windows line ending because Blackfriday doesn't handle them
 	slug := r.Form.Get("slug")
 	title := r.Form.Get("title")
 	partial := r.Form.Get("partial") == "true"
@@ -196,9 +198,6 @@ func routeBlogPostCreateOrUpdate(w http.ResponseWriter, r *http.Request) {
 		routeNotFound(w, r)
 		return
 	}
-
-	// Replace Windows line ending because Blackfriday doesn't handle them
-	content = strings.Replace(content, "\r\n", "\n", -1)
 
 	// Upsert blog post
 	_, err := client.UpsertBlogPost(prisma.BlogPostUpsertParams{

@@ -10,6 +10,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 	"time"
 )
 
@@ -145,6 +146,9 @@ func renderTemplate(w http.ResponseWriter, r *http.Request, template *pongo2.Tem
 }
 
 func RenderMarkdown(md string) []byte {
+	// Blackfriday doesn't like Windows line endings
+	md = strings.Replace(md, "\r\n", "\n", -1)
+
 	return blackfriday.Run([]byte(md), bfRenderer, bfExtensions)
 }
 
