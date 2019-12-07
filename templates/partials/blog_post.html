@@ -1,6 +1,6 @@
 <div class="content blog-post">
   <h1>
-    {{ blogPost.Title }}
+    {% if not blogPost.published %}📝&nbsp;{% endif %}{{ blogPost.Title }}
     <time datetime{{ blogPost.Date }}>
       {{ blogPost.Date | isoformat }}
     </time>
