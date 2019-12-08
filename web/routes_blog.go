@@ -323,11 +323,11 @@ func routeBlogRSS(w http.ResponseWriter, r *http.Request) {
 	}
 
 	for i, blogPost := range blogPosts {
-		updated, _ := time.Parse(time.RFC3339, blogPost.Date)
-		created, _ := time.Parse(time.RFC3339, blogPost.CreatedAt)
+		updated, _ := time.Parse(time.RFC3339, blogPost.UpdatedAt)
+		created, _ := time.Parse(time.RFC3339, blogPost.Date)
 		feed.Items[i] = &feeds.Item{
 			Title:   strings.Replace(blogPost.Title, "–", "&ndash;", -1),
-			Id:      blogPost.ID,
+			Id:      os.Getenv("BASE_URL") + "/blog/" + blogPost.ID,
 			Updated: updated,
 			Created: created,
 			Content: RenderMarkdownStr(blogPost.Content),
