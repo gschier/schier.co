@@ -330,7 +330,8 @@ func routeBlogRSS(w http.ResponseWriter, r *http.Request) {
 			Content: RenderMarkdownStr(blogPost.Content),
 			Link:    &feeds.Link{Href: os.Getenv("BASE_URL") + "/blog/" + blogPost.Slug},
 			Author: &feeds.Author{
-				Name: "Gregory Schier",
+				Name:  "Gregory Schier",
+				Email: "greg@schier.co",
 			},
 		}
 	}

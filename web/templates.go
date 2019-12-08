@@ -155,7 +155,7 @@ func renderTemplate(w http.ResponseWriter, r *http.Request, template *pongo2.Tem
 		"gaId":            os.Getenv("GA_ID"),
 		"isDev":           isDev,
 		"loggedIn":        loggedIn,
-		"rssUrl":          os.Getenv("BASE_URL") + "/rss.xml",
+		"rssUrl":          "/rss.xml",
 		"staticUrl":       fmt.Sprintf("%s-%d", os.Getenv("STATIC_URL"), staticBreaker),
 		"user":            user,
 		csrf.TemplateTag:  csrf.TemplateField(r),
