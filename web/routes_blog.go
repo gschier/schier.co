@@ -310,14 +310,16 @@ func routeBlogRSS(w http.ResponseWriter, r *http.Request) {
 		Description: "Recent content from me",
 		Copyright:   "Gregory Schier",
 		Items:       make([]*feeds.Item, len(blogPosts)),
-		Author:      &feeds.Author{
-			Name: "Gregory Schier",
+		Author: &feeds.Author{
+			Name:  "Gregory Schier",
 			Email: "greg@schier.co",
 		},
-		Link:        &feeds.Link{Href: os.Getenv("BASE_URL") + "/blog"},
+		Link: &feeds.Link{
+			Href: os.Getenv("BASE_URL") + "/blog",
+		},
 		Image: &feeds.Image{
 			Url:   os.Getenv("BASE_URL") + "/static/favicon/android-chrome-512x512.png",
-			Link:  os.Getenv("BASE_URL"),
+			Link:  os.Getenv("BASE_URL") + "/blog",
 			Title: "Gregory Schier",
 		},
 	}
