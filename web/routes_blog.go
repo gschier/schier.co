@@ -302,11 +302,9 @@ func routeBlogRSS(w http.ResponseWriter, r *http.Request) {
 	}
 
 	feedUpdated, _ := time.Parse(time.RFC3339, blogPosts[0].Date)
-	feedCreated, _ := time.Parse(time.RFC3339, blogPosts[len(blogPosts)-1].Date)
 
 	feed := &feeds.Feed{
 		Updated:     feedUpdated,
-		Created:     feedCreated,
 		Title:       "Gregory Schier",
 		Subtitle:    "Hey there, I'm Greg!",
 		Description: "Recent content from me",
