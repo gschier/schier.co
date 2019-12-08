@@ -13,8 +13,6 @@ import (
 func main() {
 	client := schier_dev.NewPrismaClient()
 
-	go schier_dev.InstallFixtures(client)
-
 	// Setup router
 	router := setupRouter(client)
 
