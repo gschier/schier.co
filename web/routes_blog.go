@@ -115,7 +115,7 @@ func routeBlogRender(w http.ResponseWriter, r *http.Request) {
 
 	renderTemplate(w, r, template, &pongo2.Context{
 		"loggedIn": false,
-		"words": strings.Count(content, " "),
+		"words":    strings.Count(content, " "),
 		"blogPost": prisma.BlogPost{
 			Published: true,
 			Slug:      slug,
@@ -273,7 +273,7 @@ func routeBlogPost(w http.ResponseWriter, r *http.Request) {
 	// Render template
 	renderTemplate(w, r, blogPostTemplate(), &pongo2.Context{
 		"blogPost": blogPosts[0],
-		"words": strings.Count(blogPosts[0].Content, " "),
+		"words":    strings.Count(blogPosts[0].Content, " "),
 	})
 }
 
@@ -289,7 +289,8 @@ func routeBlogRSS(w http.ResponseWriter, r *http.Request) {
 	orderBy := prisma.BlogPostOrderByInputCreatedAtDesc
 	blogPosts, err := ctxPrismaClient(r).BlogPosts(&prisma.BlogPostsParams{
 		Where: &prisma.BlogPostWhereInput{
-			Deleted: prisma.Bool(false),
+			Deleted:   prisma.Bool(false),
+			Published: prisma.Bool(true),
 		},
 		OrderBy: &orderBy,
 		First:   prisma.Int32(int32(count)),
