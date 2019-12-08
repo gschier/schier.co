@@ -306,16 +306,16 @@ func routeBlogRSS(w http.ResponseWriter, r *http.Request) {
 	feed := &feeds.Feed{
 		Updated:     feedUpdated,
 		Title:       "Gregory Schier",
-		Subtitle:    "Hey there, I'm Greg!",
+		Subtitle:    "Blog posts",
 		Description: "Recent content from me",
 		Copyright:   "Gregory Schier",
 		Items:       make([]*feeds.Item, len(blogPosts)),
 		Author:      &feeds.Author{Name: "Gregory Schier"},
 		Link:        &feeds.Link{Href: os.Getenv("BASE_URL") + "/blog"},
 		Image: &feeds.Image{
-			Url:    os.Getenv("STATIC_URL") + "/favicon/android-chrome-512x512.png",
-			Width:  200,
-			Height: 200,
+			Url:   os.Getenv("BASE_URL") + "/static/favicon/android-chrome-512x512.png",
+			Link:  os.Getenv("BASE_URL"),
+			Title: "Gregory Schier",
 		},
 	}
 
@@ -328,7 +328,9 @@ func routeBlogRSS(w http.ResponseWriter, r *http.Request) {
 			Updated: updated,
 			Created: created,
 			Content: RenderMarkdownStr(blogPost.Content),
-			Link:    &feeds.Link{Href: os.Getenv("BASE_URL") + "/blog/" + blogPost.Slug},
+			Link: &feeds.Link{
+				Href: os.Getenv("BASE_URL") + "/blog/" + blogPost.Slug,
+			},
 			Author: &feeds.Author{
 				Name:  "Gregory Schier",
 				Email: "greg@schier.co",
