@@ -24,7 +24,6 @@ var chroma = bfchroma.NewRenderer(
 	bfchroma.Extend(
 		blackfriday.NewHTMLRenderer(blackfriday.HTMLRendererParameters{
 			Flags:          blackfriday.CommonHTMLFlags,
-			AbsolutePrefix: os.Getenv("STATIC_URL"),
 		}),
 	),
 	bfchroma.ChromaOptions(
