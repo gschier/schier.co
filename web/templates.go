@@ -159,7 +159,7 @@ func renderTemplate(w http.ResponseWriter, r *http.Request, template *pongo2.Tem
 		"pageTitle":        "",
 		"pageDescription":  "Thoughts on software and technology, by an independent software developer",
 		"pageImage":        "",
-		"pageImageDefault": os.Getenv("BASE_URL") + "/static/build/images/me.jpg",
+		"pageImageDefault": os.Getenv("BASE_URL") + "/static/build/images/greg.png",
 		"rssUrl":           "/rss.xml",
 		"staticUrl":        fmt.Sprintf("%s-%d", os.Getenv("STATIC_URL"), staticBreaker),
 		"user":             user,
