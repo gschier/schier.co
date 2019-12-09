@@ -64,6 +64,8 @@ github.com/prisma/prisma-client-lib-go
 github.com/russross/blackfriday/v2
 # github.com/shurcooL/sanitized_anchor_name v1.0.0
 github.com/shurcooL/sanitized_anchor_name
+# github.com/writeas/go-strip-markdown v2.0.1+incompatible
+github.com/writeas/go-strip-markdown
 # golang.org/x/crypto v0.0.0-20191111213947-16651526fdb4
 golang.org/x/crypto/bcrypt
 golang.org/x/crypto/blowfish

@@ -5,6 +5,7 @@ import (
 	"github.com/gorilla/feeds"
 	"github.com/gorilla/mux"
 	"github.com/gschier/schier.dev/generated/prisma-client"
+	stripmd "github.com/writeas/go-strip-markdown"
 	"log"
 	"net/http"
 	"os"
@@ -443,11 +444,12 @@ func stringToTags(tags string) []string {
 }
 
 func wordCount(md string) int {
-	return strings.Count(md, " ")
+	return strings.Count(stripmd.Strip(md), " ")
 }
 
 func summary(md string) string {
-	return strings.Split(md, "<!--more-->")[0]
+	summaryMD := strings.Split(md, "<!--more-->")[0]
+	return stripmd.Strip(summaryMD)
 }
 
 type postTag struct {
