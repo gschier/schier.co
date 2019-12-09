@@ -88,7 +88,7 @@ func routeBlogTags(w http.ResponseWriter, r *http.Request) {
 	sort.Sort(ByTag(tags))
 	renderTemplate(w, r, blogTagsTemplate(), &pongo2.Context{
 		"pageTitle": "Post Tags",
-		"tags": tags,
+		"tags":      tags,
 	})
 }
 
@@ -116,7 +116,7 @@ func routeBlogRender(w http.ResponseWriter, r *http.Request) {
 
 	renderTemplate(w, r, template, &pongo2.Context{
 		"loggedIn":  false,
-		"words":     strings.Count(content, " "),
+		"words":     wordCount(content),
 		"pageTitle": title,
 		"blogPost": prisma.BlogPost{
 			Published: true,
@@ -289,10 +289,11 @@ func routeBlogPost(w http.ResponseWriter, r *http.Request) {
 
 	// Render template
 	renderTemplate(w, r, blogPostTemplate(), &pongo2.Context{
-		"pageTitle": blogPosts[0].Title,
-		"pageImage": blogPosts[0].Image,
-		"blogPost":  blogPosts[0],
-		"words":     strings.Count(blogPosts[0].Content, " "),
+		"pageTitle":       blogPosts[0].Title,
+		"pageImage":       blogPosts[0].Image,
+		"pageDescription": summary(blogPosts[0].Content),
+		"blogPost":        blogPosts[0],
+		"words":           wordCount(blogPosts[0].Content),
 	})
 }
 
@@ -439,6 +440,14 @@ func stringToTags(tags string) []string {
 	}
 
 	return allTags
+}
+
+func wordCount(md string) int {
+	return strings.Count(md, " ")
+}
+
+func summary(md string) string {
+	return strings.Split(md, "<!--more-->")[0]
 }
 
 type postTag struct {
