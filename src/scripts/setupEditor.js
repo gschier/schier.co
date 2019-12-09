@@ -30,7 +30,7 @@ import "codemirror/addon/lint/lint";
 import "codemirror/addon/lint/json-lint";
 import "codemirror/addon/lint/lint.css";
 
-import codeMirrorTypo from 'codemirror-typo';
+import codeMirrorTypo from "codemirror-typo";
 
 export function setupEditor(textareaEl, containerEl) {
   const cm = CodeMirror(
@@ -62,7 +62,7 @@ export function setupEditor(textareaEl, containerEl) {
     textareaEl.value = c.getValue();
   });
 
-  codeMirrorTypo(cm, 'en_US', '/static/build/dictionaries');
+  codeMirrorTypo(cm, "en_US", "/static/build/dictionaries");
 
   return cm;
 }

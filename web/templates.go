@@ -23,7 +23,7 @@ var chroma = bfchroma.NewRenderer(
 	bfchroma.WithoutAutodetect(),
 	bfchroma.Extend(
 		blackfriday.NewHTMLRenderer(blackfriday.HTMLRendererParameters{
-			Flags:          blackfriday.CommonHTMLFlags,
+			Flags: blackfriday.CommonHTMLFlags,
 		}),
 	),
 	bfchroma.ChromaOptions(
@@ -148,17 +148,22 @@ func renderTemplate(w http.ResponseWriter, r *http.Request, template *pongo2.Tem
 		staticBreaker = time.Now().Unix()
 	}
 
+	log.Println("URL", r.URL.Path)
 	newContext := pongo2.Context{
-		"csrfToken":       csrf.Token(r),
-		"csrfTokenHeader": "X-CSRF-Token",
-		"defaultTitle":    "Greg Schier",
-		"gaId":            os.Getenv("GA_ID"),
-		"isDev":           isDev,
-		"loggedIn":        loggedIn,
-		"rssUrl":          "/rss.xml",
-		"staticUrl":       fmt.Sprintf("%s-%d", os.Getenv("STATIC_URL"), staticBreaker),
-		"user":            user,
-		csrf.TemplateTag:  csrf.TemplateField(r),
+		"csrfToken":        csrf.Token(r),
+		"csrfTokenHeader":  "X-CSRF-Token",
+		"gaId":             os.Getenv("GA_ID"),
+		"isDev":            isDev,
+		"loggedIn":         loggedIn,
+		"pageUrl":          os.Getenv("BASE_URL") + r.URL.EscapedPath(),
+		"pageTitle":        "",
+		"pageDescription":  "Thoughts on software and technology, by an independent software developer",
+		"pageImage":        "",
+		"pageImageDefault": os.Getenv("BASE_URL") + "/static/build/images/me.jpg",
+		"rssUrl":           "/rss.xml",
+		"staticUrl":        fmt.Sprintf("%s-%d", os.Getenv("STATIC_URL"), staticBreaker),
+		"user":             user,
+		csrf.TemplateTag:   csrf.TemplateField(r),
 	}
 
 	if context != nil {

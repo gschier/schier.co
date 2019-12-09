@@ -29,6 +29,7 @@ func routeBooks(w http.ResponseWriter, r *http.Request) {
 
 	// Render template
 	renderTemplate(w, r, booksTemplate(), &pongo2.Context{
-		"books": books,
+		"books":     books,
+		"pageTitle": "Books",
 	})
 }

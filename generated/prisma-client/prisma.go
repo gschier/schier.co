@@ -70,7 +70,7 @@ func (client *Client) BlogPost(params BlogPostWhereUniqueInput) *BlogPostExec {
 		params,
 		[2]string{"BlogPostWhereUniqueInput!", "BlogPost"},
 		"blogPost",
-		[]string{"id", "createdAt", "updatedAt", "published", "deleted", "slug", "title", "date", "content", "tags"})
+		[]string{"id", "createdAt", "updatedAt", "slug", "published", "deleted", "image", "title", "date", "content", "tags"})
 
 	return &BlogPostExec{ret}
 }
@@ -104,7 +104,7 @@ func (client *Client) BlogPosts(params *BlogPostsParams) *BlogPostExecArray {
 		wparams,
 		[3]string{"BlogPostWhereInput", "BlogPostOrderByInput", "BlogPost"},
 		"blogPosts",
-		[]string{"id", "createdAt", "updatedAt", "published", "deleted", "slug", "title", "date", "content", "tags"})
+		[]string{"id", "createdAt", "updatedAt", "slug", "published", "deleted", "image", "title", "date", "content", "tags"})
 
 	return &BlogPostExecArray{ret}
 }
@@ -119,47 +119,8 @@ type BlogPostsConnectionParams struct {
 	Last    *int32                `json:"last,omitempty"`
 }
 
-// Nodes return just nodes without cursors. It uses the already fetched edges.
-func (s *BlogPostConnection) Nodes() []BlogPost {
-	var nodes []BlogPost
-	for _, edge := range s.Edges {
-		nodes = append(nodes, edge.Node)
-	}
-	return nodes
-}
-
-// Nodes return just nodes without cursors, but as a slice of pointers. It uses the already fetched edges.
-func (s *BlogPostConnection) NodesPtr() []*BlogPost {
-	var nodes []*BlogPost
-	for _, edge := range s.Edges {
-		item := edge
-		nodes = append(nodes, &item.Node)
-	}
-	return nodes
-}
-
-func (client *Client) BlogPostsConnection(params *BlogPostsConnectionParams) *BlogPostConnectionExec {
-	var wparams *prisma.WhereParams
-	if params != nil {
-		wparams = &prisma.WhereParams{
-			Where:   params.Where,
-			OrderBy: (*string)(params.OrderBy),
-			Skip:    params.Skip,
-			After:   params.After,
-			Before:  params.Before,
-			First:   params.First,
-			Last:    params.Last,
-		}
-	}
-
-	ret := client.Client.GetMany(
-		nil,
-		wparams,
-		[3]string{"BlogPostWhereInput", "BlogPostOrderByInput", "BlogPost"},
-		"blogPostsConnection",
-		[]string{"edges", "pageInfo"})
-
-	return &BlogPostConnectionExec{ret}
+func (client *Client) BlogPostsConnection(params *BlogPostsConnectionParams) BlogPostConnectionExec {
+	panic("not implemented")
 }
 
 func (client *Client) Book(params BookWhereUniqueInput) *BookExec {
@@ -217,47 +178,8 @@ type BooksConnectionParams struct {
 	Last    *int32            `json:"last,omitempty"`
 }
 
-// Nodes return just nodes without cursors. It uses the already fetched edges.
-func (s *BookConnection) Nodes() []Book {
-	var nodes []Book
-	for _, edge := range s.Edges {
-		nodes = append(nodes, edge.Node)
-	}
-	return nodes
-}
-
-// Nodes return just nodes without cursors, but as a slice of pointers. It uses the already fetched edges.
-func (s *BookConnection) NodesPtr() []*Book {
-	var nodes []*Book
-	for _, edge := range s.Edges {
-		item := edge
-		nodes = append(nodes, &item.Node)
-	}
-	return nodes
-}
-
-func (client *Client) BooksConnection(params *BooksConnectionParams) *BookConnectionExec {
-	var wparams *prisma.WhereParams
-	if params != nil {
-		wparams = &prisma.WhereParams{
-			Where:   params.Where,
-			OrderBy: (*string)(params.OrderBy),
-			Skip:    params.Skip,
-			After:   params.After,
-			Before:  params.Before,
-			First:   params.First,
-			Last:    params.Last,
-		}
-	}
-
-	ret := client.Client.GetMany(
-		nil,
-		wparams,
-		[3]string{"BookWhereInput", "BookOrderByInput", "Book"},
-		"booksConnection",
-		[]string{"edges", "pageInfo"})
-
-	return &BookConnectionExec{ret}
+func (client *Client) BooksConnection(params *BooksConnectionParams) BookConnectionExec {
+	panic("not implemented")
 }
 
 func (client *Client) FavoriteThing(params FavoriteThingWhereUniqueInput) *FavoriteThingExec {
@@ -315,47 +237,8 @@ type FavoriteThingsConnectionParams struct {
 	Last    *int32                     `json:"last,omitempty"`
 }
 
-// Nodes return just nodes without cursors. It uses the already fetched edges.
-func (s *FavoriteThingConnection) Nodes() []FavoriteThing {
-	var nodes []FavoriteThing
-	for _, edge := range s.Edges {
-		nodes = append(nodes, edge.Node)
-	}
-	return nodes
-}
-
-// Nodes return just nodes without cursors, but as a slice of pointers. It uses the already fetched edges.
-func (s *FavoriteThingConnection) NodesPtr() []*FavoriteThing {
-	var nodes []*FavoriteThing
-	for _, edge := range s.Edges {
-		item := edge
-		nodes = append(nodes, &item.Node)
-	}
-	return nodes
-}
-
-func (client *Client) FavoriteThingsConnection(params *FavoriteThingsConnectionParams) *FavoriteThingConnectionExec {
-	var wparams *prisma.WhereParams
-	if params != nil {
-		wparams = &prisma.WhereParams{
-			Where:   params.Where,
-			OrderBy: (*string)(params.OrderBy),
-			Skip:    params.Skip,
-			After:   params.After,
-			Before:  params.Before,
-			First:   params.First,
-			Last:    params.Last,
-		}
-	}
-
-	ret := client.Client.GetMany(
-		nil,
-		wparams,
-		[3]string{"FavoriteThingWhereInput", "FavoriteThingOrderByInput", "FavoriteThing"},
-		"favoriteThingsConnection",
-		[]string{"edges", "pageInfo"})
-
-	return &FavoriteThingConnectionExec{ret}
+func (client *Client) FavoriteThingsConnection(params *FavoriteThingsConnectionParams) FavoriteThingConnectionExec {
+	panic("not implemented")
 }
 
 func (client *Client) Project(params ProjectWhereUniqueInput) *ProjectExec {
@@ -413,47 +296,8 @@ type ProjectsConnectionParams struct {
 	Last    *int32               `json:"last,omitempty"`
 }
 
-// Nodes return just nodes without cursors. It uses the already fetched edges.
-func (s *ProjectConnection) Nodes() []Project {
-	var nodes []Project
-	for _, edge := range s.Edges {
-		nodes = append(nodes, edge.Node)
-	}
-	return nodes
-}
-
-// Nodes return just nodes without cursors, but as a slice of pointers. It uses the already fetched edges.
-func (s *ProjectConnection) NodesPtr() []*Project {
-	var nodes []*Project
-	for _, edge := range s.Edges {
-		item := edge
-		nodes = append(nodes, &item.Node)
-	}
-	return nodes
-}
-
-func (client *Client) ProjectsConnection(params *ProjectsConnectionParams) *ProjectConnectionExec {
-	var wparams *prisma.WhereParams
-	if params != nil {
-		wparams = &prisma.WhereParams{
-			Where:   params.Where,
-			OrderBy: (*string)(params.OrderBy),
-			Skip:    params.Skip,
-			After:   params.After,
-			Before:  params.Before,
-			First:   params.First,
-			Last:    params.Last,
-		}
-	}
-
-	ret := client.Client.GetMany(
-		nil,
-		wparams,
-		[3]string{"ProjectWhereInput", "ProjectOrderByInput", "Project"},
-		"projectsConnection",
-		[]string{"edges", "pageInfo"})
-
-	return &ProjectConnectionExec{ret}
+func (client *Client) ProjectsConnection(params *ProjectsConnectionParams) ProjectConnectionExec {
+	panic("not implemented")
 }
 
 func (client *Client) Session(params SessionWhereUniqueInput) *SessionExec {
@@ -511,47 +355,8 @@ type SessionsConnectionParams struct {
 	Last    *int32               `json:"last,omitempty"`
 }
 
-// Nodes return just nodes without cursors. It uses the already fetched edges.
-func (s *SessionConnection) Nodes() []Session {
-	var nodes []Session
-	for _, edge := range s.Edges {
-		nodes = append(nodes, edge.Node)
-	}
-	return nodes
-}
-
-// Nodes return just nodes without cursors, but as a slice of pointers. It uses the already fetched edges.
-func (s *SessionConnection) NodesPtr() []*Session {
-	var nodes []*Session
-	for _, edge := range s.Edges {
-		item := edge
-		nodes = append(nodes, &item.Node)
-	}
-	return nodes
-}
-
-func (client *Client) SessionsConnection(params *SessionsConnectionParams) *SessionConnectionExec {
-	var wparams *prisma.WhereParams
-	if params != nil {
-		wparams = &prisma.WhereParams{
-			Where:   params.Where,
-			OrderBy: (*string)(params.OrderBy),
-			Skip:    params.Skip,
-			After:   params.After,
-			Before:  params.Before,
-			First:   params.First,
-			Last:    params.Last,
-		}
-	}
-
-	ret := client.Client.GetMany(
-		nil,
-		wparams,
-		[3]string{"SessionWhereInput", "SessionOrderByInput", "Session"},
-		"sessionsConnection",
-		[]string{"edges", "pageInfo"})
-
-	return &SessionConnectionExec{ret}
+func (client *Client) SessionsConnection(params *SessionsConnectionParams) SessionConnectionExec {
+	panic("not implemented")
 }
 
 func (client *Client) User(params UserWhereUniqueInput) *UserExec {
@@ -609,47 +414,8 @@ type UsersConnectionParams struct {
 	Last    *int32            `json:"last,omitempty"`
 }
 
-// Nodes return just nodes without cursors. It uses the already fetched edges.
-func (s *UserConnection) Nodes() []User {
-	var nodes []User
-	for _, edge := range s.Edges {
-		nodes = append(nodes, edge.Node)
-	}
-	return nodes
-}
-
-// Nodes return just nodes without cursors, but as a slice of pointers. It uses the already fetched edges.
-func (s *UserConnection) NodesPtr() []*User {
-	var nodes []*User
-	for _, edge := range s.Edges {
-		item := edge
-		nodes = append(nodes, &item.Node)
-	}
-	return nodes
-}
-
-func (client *Client) UsersConnection(params *UsersConnectionParams) *UserConnectionExec {
-	var wparams *prisma.WhereParams
-	if params != nil {
-		wparams = &prisma.WhereParams{
-			Where:   params.Where,
-			OrderBy: (*string)(params.OrderBy),
-			Skip:    params.Skip,
-			After:   params.After,
-			Before:  params.Before,
-			First:   params.First,
-			Last:    params.Last,
-		}
-	}
-
-	ret := client.Client.GetMany(
-		nil,
-		wparams,
-		[3]string{"UserWhereInput", "UserOrderByInput", "User"},
-		"usersConnection",
-		[]string{"edges", "pageInfo"})
-
-	return &UserConnectionExec{ret}
+func (client *Client) UsersConnection(params *UsersConnectionParams) UserConnectionExec {
+	panic("not implemented")
 }
 
 func (client *Client) CreateBlogPost(params BlogPostCreateInput) *BlogPostExec {
@@ -657,7 +423,7 @@ func (client *Client) CreateBlogPost(params BlogPostCreateInput) *BlogPostExec {
 		params,
 		[2]string{"BlogPostCreateInput!", "BlogPost"},
 		"createBlogPost",
-		[]string{"id", "createdAt", "updatedAt", "published", "deleted", "slug", "title", "date", "content", "tags"})
+		[]string{"id", "createdAt", "updatedAt", "slug", "published", "deleted", "image", "title", "date", "content", "tags"})
 
 	return &BlogPostExec{ret}
 }
@@ -675,7 +441,7 @@ func (client *Client) UpdateBlogPost(params BlogPostUpdateParams) *BlogPostExec 
 		},
 		[3]string{"BlogPostUpdateInput!", "BlogPostWhereUniqueInput!", "BlogPost"},
 		"updateBlogPost",
-		[]string{"id", "createdAt", "updatedAt", "published", "deleted", "slug", "title", "date", "content", "tags"})
+		[]string{"id", "createdAt", "updatedAt", "slug", "published", "deleted", "image", "title", "date", "content", "tags"})
 
 	return &BlogPostExec{ret}
 }
@@ -712,7 +478,7 @@ func (client *Client) UpsertBlogPost(params BlogPostUpsertParams) *BlogPostExec 
 		uparams,
 		[4]string{"BlogPostWhereUniqueInput!", "BlogPostCreateInput!", "BlogPostUpdateInput!", "BlogPost"},
 		"upsertBlogPost",
-		[]string{"id", "createdAt", "updatedAt", "published", "deleted", "slug", "title", "date", "content", "tags"})
+		[]string{"id", "createdAt", "updatedAt", "slug", "published", "deleted", "image", "title", "date", "content", "tags"})
 
 	return &BlogPostExec{ret}
 }
@@ -722,7 +488,7 @@ func (client *Client) DeleteBlogPost(params BlogPostWhereUniqueInput) *BlogPostE
 		params,
 		[2]string{"BlogPostWhereUniqueInput!", "BlogPost"},
 		"deleteBlogPost",
-		[]string{"id", "createdAt", "updatedAt", "published", "deleted", "slug", "title", "date", "content", "tags"})
+		[]string{"id", "createdAt", "updatedAt", "slug", "published", "deleted", "image", "title", "date", "content", "tags"})
 
 	return &BlogPostExec{ret}
 }
@@ -1125,12 +891,14 @@ const (
 	BlogPostOrderByInputCreatedAtDesc BlogPostOrderByInput = "createdAt_DESC"
 	BlogPostOrderByInputUpdatedAtAsc  BlogPostOrderByInput = "updatedAt_ASC"
 	BlogPostOrderByInputUpdatedAtDesc BlogPostOrderByInput = "updatedAt_DESC"
+	BlogPostOrderByInputSlugAsc       BlogPostOrderByInput = "slug_ASC"
+	BlogPostOrderByInputSlugDesc      BlogPostOrderByInput = "slug_DESC"
 	BlogPostOrderByInputPublishedAsc  BlogPostOrderByInput = "published_ASC"
 	BlogPostOrderByInputPublishedDesc BlogPostOrderByInput = "published_DESC"
 	BlogPostOrderByInputDeletedAsc    BlogPostOrderByInput = "deleted_ASC"
 	BlogPostOrderByInputDeletedDesc   BlogPostOrderByInput = "deleted_DESC"
-	BlogPostOrderByInputSlugAsc       BlogPostOrderByInput = "slug_ASC"
-	BlogPostOrderByInputSlugDesc      BlogPostOrderByInput = "slug_DESC"
+	BlogPostOrderByInputImageAsc      BlogPostOrderByInput = "image_ASC"
+	BlogPostOrderByInputImageDesc     BlogPostOrderByInput = "image_DESC"
 	BlogPostOrderByInputTitleAsc      BlogPostOrderByInput = "title_ASC"
 	BlogPostOrderByInputTitleDesc     BlogPostOrderByInput = "title_DESC"
 	BlogPostOrderByInputDateAsc       BlogPostOrderByInput = "date_ASC"
@@ -1585,10 +1353,6 @@ type BlogPostWhereInput struct {
 	UpdatedAtLte         *string              `json:"updatedAt_lte,omitempty"`
 	UpdatedAtGt          *string              `json:"updatedAt_gt,omitempty"`
 	UpdatedAtGte         *string              `json:"updatedAt_gte,omitempty"`
-	Published            *bool                `json:"published,omitempty"`
-	PublishedNot         *bool                `json:"published_not,omitempty"`
-	Deleted              *bool                `json:"deleted,omitempty"`
-	DeletedNot           *bool                `json:"deleted_not,omitempty"`
 	Slug                 *string              `json:"slug,omitempty"`
 	SlugNot              *string              `json:"slug_not,omitempty"`
 	SlugIn               []string             `json:"slug_in,omitempty"`
@@ -1603,6 +1367,24 @@ type BlogPostWhereInput struct {
 	SlugNotStartsWith    *string              `json:"slug_not_starts_with,omitempty"`
 	SlugEndsWith         *string              `json:"slug_ends_with,omitempty"`
 	SlugNotEndsWith      *string              `json:"slug_not_ends_with,omitempty"`
+	Published            *bool                `json:"published,omitempty"`
+	PublishedNot         *bool                `json:"published_not,omitempty"`
+	Deleted              *bool                `json:"deleted,omitempty"`
+	DeletedNot           *bool                `json:"deleted_not,omitempty"`
+	Image                *string              `json:"image,omitempty"`
+	ImageNot             *string              `json:"image_not,omitempty"`
+	ImageIn              []string             `json:"image_in,omitempty"`
+	ImageNotIn           []string             `json:"image_not_in,omitempty"`
+	ImageLt              *string              `json:"image_lt,omitempty"`
+	ImageLte             *string              `json:"image_lte,omitempty"`
+	ImageGt              *string              `json:"image_gt,omitempty"`
+	ImageGte             *string              `json:"image_gte,omitempty"`
+	ImageContains        *string              `json:"image_contains,omitempty"`
+	ImageNotContains     *string              `json:"image_not_contains,omitempty"`
+	ImageStartsWith      *string              `json:"image_starts_with,omitempty"`
+	ImageNotStartsWith   *string              `json:"image_not_starts_with,omitempty"`
+	ImageEndsWith        *string              `json:"image_ends_with,omitempty"`
+	ImageNotEndsWith     *string              `json:"image_not_ends_with,omitempty"`
 	Title                *string              `json:"title,omitempty"`
 	TitleNot             *string              `json:"title_not,omitempty"`
 	TitleIn              []string             `json:"title_in,omitempty"`
@@ -1660,9 +1442,10 @@ type BlogPostWhereInput struct {
 }
 
 type BlogPostUpdateManyMutationInput struct {
+	Slug      *string `json:"slug,omitempty"`
 	Published *bool   `json:"published,omitempty"`
 	Deleted   *bool   `json:"deleted,omitempty"`
-	Slug      *string `json:"slug,omitempty"`
+	Image     *string `json:"image,omitempty"`
 	Title     *string `json:"title,omitempty"`
 	Date      *string `json:"date,omitempty"`
 	Content   *string `json:"content,omitempty"`
@@ -1850,9 +1633,10 @@ type BookWhereInput struct {
 }
 
 type BlogPostUpdateInput struct {
+	Slug      *string                     `json:"slug,omitempty"`
 	Published *bool                       `json:"published,omitempty"`
 	Deleted   *bool                       `json:"deleted,omitempty"`
-	Slug      *string                     `json:"slug,omitempty"`
+	Image     *string                     `json:"image,omitempty"`
 	Title     *string                     `json:"title,omitempty"`
 	Date      *string                     `json:"date,omitempty"`
 	Author    *UserUpdateOneRequiredInput `json:"author,omitempty"`
@@ -1893,9 +1677,10 @@ type BookSubscriptionWhereInput struct {
 
 type BlogPostCreateInput struct {
 	ID        *string            `json:"id,omitempty"`
+	Slug      string             `json:"slug"`
 	Published bool               `json:"published"`
 	Deleted   bool               `json:"deleted"`
-	Slug      string             `json:"slug"`
+	Image     string             `json:"image"`
 	Title     string             `json:"title"`
 	Date      string             `json:"date"`
 	Author    UserCreateOneInput `json:"author"`
@@ -1980,25 +1765,18 @@ func (instance *UserConnectionExec) PageInfo() *PageInfoExec {
 	return &PageInfoExec{ret}
 }
 
-func (instance *UserConnectionExec) Edges() *UserEdgeExecArray {
-	edges := instance.exec.Client.GetMany(
+func (instance *UserConnectionExec) Edges() *UserEdgeExec {
+	ret := instance.exec.Client.GetOne(
 		instance.exec,
 		nil,
-		[3]string{"UserWhereInput", "UserOrderByInput", "UserEdge"},
+		[2]string{"", "UserEdge"},
 		"edges",
 		[]string{"cursor"})
 
-	nodes := edges.Client.GetOne(
-		edges,
-		nil,
-		[2]string{"", "User"},
-		"node",
-		UserFields)
-
-	return &UserEdgeExecArray{nodes}
+	return &UserEdgeExec{ret}
 }
 
-func (instance *UserConnectionExec) Aggregate(ctx context.Context) (*Aggregate, error) {
+func (instance *UserConnectionExec) Aggregate(ctx context.Context) (Aggregate, error) {
 	ret := instance.exec.Client.GetOne(
 		instance.exec,
 		nil,
@@ -2008,24 +1786,19 @@ func (instance *UserConnectionExec) Aggregate(ctx context.Context) (*Aggregate, 
 
 	var v Aggregate
 	_, err := ret.Exec(ctx, &v)
-	return &v, err
+	return v, err
 }
 
 func (instance UserConnectionExec) Exec(ctx context.Context) (*UserConnection, error) {
-	edges, err := instance.Edges().Exec(ctx)
+	var v UserConnection
+	ok, err := instance.exec.Exec(ctx, &v)
 	if err != nil {
 		return nil, err
 	}
-
-	pageInfo, err := instance.PageInfo().Exec(ctx)
-	if err != nil {
-		return nil, err
+	if !ok {
+		return nil, ErrNoResult
 	}
-
-	return &UserConnection{
-		Edges:    edges,
-		PageInfo: *pageInfo,
-	}, nil
+	return &v, nil
 }
 
 func (instance UserConnectionExec) Exists(ctx context.Context) (bool, error) {
@@ -2042,11 +1815,7 @@ func (instance UserConnectionExecArray) Exec(ctx context.Context) ([]UserConnect
 	return v, err
 }
 
-var UserConnectionFields = []string{}
-
 type UserConnection struct {
-	PageInfo PageInfo   `json:"pageInfo"`
-	Edges    []UserEdge `json:"edges"`
 }
 
 type UserPreviousValuesExec struct {
@@ -2079,8 +1848,6 @@ func (instance UserPreviousValuesExecArray) Exec(ctx context.Context) ([]UserPre
 	return v, err
 }
 
-var UserPreviousValuesFields = []string{"id", "type", "createdAt", "updatedAt", "email", "name", "passwordHash"}
-
 type UserPreviousValues struct {
 	ID           string   `json:"id"`
 	Type         UserType `json:"type"`
@@ -2101,7 +1868,7 @@ func (instance *BlogPostEdgeExec) Node() *BlogPostExec {
 		nil,
 		[2]string{"", "BlogPost"},
 		"node",
-		[]string{"id", "createdAt", "updatedAt", "published", "deleted", "slug", "title", "date", "content", "tags"})
+		[]string{"id", "createdAt", "updatedAt", "slug", "published", "deleted", "image", "title", "date", "content", "tags"})
 
 	return &BlogPostExec{ret}
 }
@@ -2132,11 +1899,8 @@ func (instance BlogPostEdgeExecArray) Exec(ctx context.Context) ([]BlogPostEdge,
 	return v, err
 }
 
-var BlogPostEdgeFields = []string{"cursor"}
-
 type BlogPostEdge struct {
-	Node   BlogPost `json:"node"`
-	Cursor string   `json:"cursor"`
+	Cursor string `json:"cursor"`
 }
 
 type PageInfoExec struct {
@@ -2168,8 +1932,6 @@ func (instance PageInfoExecArray) Exec(ctx context.Context) ([]PageInfo, error) 
 	err := instance.exec.ExecArray(ctx, &v)
 	return v, err
 }
-
-var PageInfoFields = []string{"hasNextPage", "hasPreviousPage", "startCursor", "endCursor"}
 
 type PageInfo struct {
 	HasNextPage     bool    `json:"hasNextPage"`
@@ -2219,11 +1981,8 @@ func (instance SessionEdgeExecArray) Exec(ctx context.Context) ([]SessionEdge, e
 	return v, err
 }
 
-var SessionEdgeFields = []string{"cursor"}
-
 type SessionEdge struct {
-	Node   Session `json:"node"`
-	Cursor string  `json:"cursor"`
+	Cursor string `json:"cursor"`
 }
 
 type BlogPostConnectionExec struct {
@@ -2241,25 +2000,18 @@ func (instance *BlogPostConnectionExec) PageInfo() *PageInfoExec {
 	return &PageInfoExec{ret}
 }
 
-func (instance *BlogPostConnectionExec) Edges() *BlogPostEdgeExecArray {
-	edges := instance.exec.Client.GetMany(
+func (instance *BlogPostConnectionExec) Edges() *BlogPostEdgeExec {
+	ret := instance.exec.Client.GetOne(
 		instance.exec,
 		nil,
-		[3]string{"BlogPostWhereInput", "BlogPostOrderByInput", "BlogPostEdge"},
+		[2]string{"", "BlogPostEdge"},
 		"edges",
 		[]string{"cursor"})
 
-	nodes := edges.Client.GetOne(
-		edges,
-		nil,
-		[2]string{"", "BlogPost"},
-		"node",
-		BlogPostFields)
-
-	return &BlogPostEdgeExecArray{nodes}
+	return &BlogPostEdgeExec{ret}
 }
 
-func (instance *BlogPostConnectionExec) Aggregate(ctx context.Context) (*Aggregate, error) {
+func (instance *BlogPostConnectionExec) Aggregate(ctx context.Context) (Aggregate, error) {
 	ret := instance.exec.Client.GetOne(
 		instance.exec,
 		nil,
@@ -2269,24 +2021,19 @@ func (instance *BlogPostConnectionExec) Aggregate(ctx context.Context) (*Aggrega
 
 	var v Aggregate
 	_, err := ret.Exec(ctx, &v)
-	return &v, err
+	return v, err
 }
 
 func (instance BlogPostConnectionExec) Exec(ctx context.Context) (*BlogPostConnection, error) {
-	edges, err := instance.Edges().Exec(ctx)
+	var v BlogPostConnection
+	ok, err := instance.exec.Exec(ctx, &v)
 	if err != nil {
 		return nil, err
 	}
-
-	pageInfo, err := instance.PageInfo().Exec(ctx)
-	if err != nil {
-		return nil, err
+	if !ok {
+		return nil, ErrNoResult
 	}
-
-	return &BlogPostConnection{
-		Edges:    edges,
-		PageInfo: *pageInfo,
-	}, nil
+	return &v, nil
 }
 
 func (instance BlogPostConnectionExec) Exists(ctx context.Context) (bool, error) {
@@ -2303,11 +2050,7 @@ func (instance BlogPostConnectionExecArray) Exec(ctx context.Context) ([]BlogPos
 	return v, err
 }
 
-var BlogPostConnectionFields = []string{}
-
 type BlogPostConnection struct {
-	PageInfo PageInfo       `json:"pageInfo"`
-	Edges    []BlogPostEdge `json:"edges"`
 }
 
 type SessionExec struct {
@@ -2351,8 +2094,6 @@ func (instance SessionExecArray) Exec(ctx context.Context) ([]Session, error) {
 	return v, err
 }
 
-var SessionFields = []string{"id", "createdAt"}
-
 type Session struct {
 	ID        string `json:"id"`
 	CreatedAt string `json:"createdAt"`
@@ -2373,25 +2114,18 @@ func (instance *SessionConnectionExec) PageInfo() *PageInfoExec {
 	return &PageInfoExec{ret}
 }
 
-func (instance *SessionConnectionExec) Edges() *SessionEdgeExecArray {
-	edges := instance.exec.Client.GetMany(
+func (instance *SessionConnectionExec) Edges() *SessionEdgeExec {
+	ret := instance.exec.Client.GetOne(
 		instance.exec,
 		nil,
-		[3]string{"SessionWhereInput", "SessionOrderByInput", "SessionEdge"},
+		[2]string{"", "SessionEdge"},
 		"edges",
 		[]string{"cursor"})
 
-	nodes := edges.Client.GetOne(
-		edges,
-		nil,
-		[2]string{"", "Session"},
-		"node",
-		SessionFields)
-
-	return &SessionEdgeExecArray{nodes}
+	return &SessionEdgeExec{ret}
 }
 
-func (instance *SessionConnectionExec) Aggregate(ctx context.Context) (*Aggregate, error) {
+func (instance *SessionConnectionExec) Aggregate(ctx context.Context) (Aggregate, error) {
 	ret := instance.exec.Client.GetOne(
 		instance.exec,
 		nil,
@@ -2401,24 +2135,19 @@ func (instance *SessionConnectionExec) Aggregate(ctx context.Context) (*Aggregat
 
 	var v Aggregate
 	_, err := ret.Exec(ctx, &v)
-	return &v, err
+	return v, err
 }
 
 func (instance SessionConnectionExec) Exec(ctx context.Context) (*SessionConnection, error) {
-	edges, err := instance.Edges().Exec(ctx)
+	var v SessionConnection
+	ok, err := instance.exec.Exec(ctx, &v)
 	if err != nil {
 		return nil, err
 	}
-
-	pageInfo, err := instance.PageInfo().Exec(ctx)
-	if err != nil {
-		return nil, err
+	if !ok {
+		return nil, ErrNoResult
 	}
-
-	return &SessionConnection{
-		Edges:    edges,
-		PageInfo: *pageInfo,
-	}, nil
+	return &v, nil
 }
 
 func (instance SessionConnectionExec) Exists(ctx context.Context) (bool, error) {
@@ -2435,11 +2164,7 @@ func (instance SessionConnectionExecArray) Exec(ctx context.Context) ([]SessionC
 	return v, err
 }
 
-var SessionConnectionFields = []string{}
-
 type SessionConnection struct {
-	PageInfo PageInfo      `json:"pageInfo"`
-	Edges    []SessionEdge `json:"edges"`
 }
 
 type BlogPostExec struct {
@@ -2483,15 +2208,14 @@ func (instance BlogPostExecArray) Exec(ctx context.Context) ([]BlogPost, error) 
 	return v, err
 }
 
-var BlogPostFields = []string{"id", "createdAt", "updatedAt", "published", "deleted", "slug", "title", "date", "content", "tags"}
-
 type BlogPost struct {
 	ID        string `json:"id"`
 	CreatedAt string `json:"createdAt"`
 	UpdatedAt string `json:"updatedAt"`
+	Slug      string `json:"slug"`
 	Published bool   `json:"published"`
 	Deleted   bool   `json:"deleted"`
-	Slug      string `json:"slug"`
+	Image     string `json:"image"`
 	Title     string `json:"title"`
 	Date      string `json:"date"`
 	Content   string `json:"content"`
@@ -2539,11 +2263,8 @@ func (instance ProjectEdgeExecArray) Exec(ctx context.Context) ([]ProjectEdge, e
 	return v, err
 }
 
-var ProjectEdgeFields = []string{"cursor"}
-
 type ProjectEdge struct {
-	Node   Project `json:"node"`
-	Cursor string  `json:"cursor"`
+	Cursor string `json:"cursor"`
 }
 
 type ProjectConnectionExec struct {
@@ -2561,25 +2282,18 @@ func (instance *ProjectConnectionExec) PageInfo() *PageInfoExec {
 	return &PageInfoExec{ret}
 }
 
-func (instance *ProjectConnectionExec) Edges() *ProjectEdgeExecArray {
-	edges := instance.exec.Client.GetMany(
+func (instance *ProjectConnectionExec) Edges() *ProjectEdgeExec {
+	ret := instance.exec.Client.GetOne(
 		instance.exec,
 		nil,
-		[3]string{"ProjectWhereInput", "ProjectOrderByInput", "ProjectEdge"},
+		[2]string{"", "ProjectEdge"},
 		"edges",
 		[]string{"cursor"})
 
-	nodes := edges.Client.GetOne(
-		edges,
-		nil,
-		[2]string{"", "Project"},
-		"node",
-		ProjectFields)
-
-	return &ProjectEdgeExecArray{nodes}
+	return &ProjectEdgeExec{ret}
 }
 
-func (instance *ProjectConnectionExec) Aggregate(ctx context.Context) (*Aggregate, error) {
+func (instance *ProjectConnectionExec) Aggregate(ctx context.Context) (Aggregate, error) {
 	ret := instance.exec.Client.GetOne(
 		instance.exec,
 		nil,
@@ -2589,24 +2303,19 @@ func (instance *ProjectConnectionExec) Aggregate(ctx context.Context) (*Aggregat
 
 	var v Aggregate
 	_, err := ret.Exec(ctx, &v)
-	return &v, err
+	return v, err
 }
 
 func (instance ProjectConnectionExec) Exec(ctx context.Context) (*ProjectConnection, error) {
-	edges, err := instance.Edges().Exec(ctx)
+	var v ProjectConnection
+	ok, err := instance.exec.Exec(ctx, &v)
 	if err != nil {
 		return nil, err
 	}
-
-	pageInfo, err := instance.PageInfo().Exec(ctx)
-	if err != nil {
-		return nil, err
+	if !ok {
+		return nil, ErrNoResult
 	}
-
-	return &ProjectConnection{
-		Edges:    edges,
-		PageInfo: *pageInfo,
-	}, nil
+	return &v, nil
 }
 
 func (instance ProjectConnectionExec) Exists(ctx context.Context) (bool, error) {
@@ -2623,11 +2332,7 @@ func (instance ProjectConnectionExecArray) Exec(ctx context.Context) ([]ProjectC
 	return v, err
 }
 
-var ProjectConnectionFields = []string{}
-
 type ProjectConnection struct {
-	PageInfo PageInfo      `json:"pageInfo"`
-	Edges    []ProjectEdge `json:"edges"`
 }
 
 type BlogPostSubscriptionPayloadExec struct {
@@ -2640,7 +2345,7 @@ func (instance *BlogPostSubscriptionPayloadExec) Node() *BlogPostExec {
 		nil,
 		[2]string{"", "BlogPost"},
 		"node",
-		[]string{"id", "createdAt", "updatedAt", "published", "deleted", "slug", "title", "date", "content", "tags"})
+		[]string{"id", "createdAt", "updatedAt", "slug", "published", "deleted", "image", "title", "date", "content", "tags"})
 
 	return &BlogPostExec{ret}
 }
@@ -2651,7 +2356,7 @@ func (instance *BlogPostSubscriptionPayloadExec) PreviousValues() *BlogPostPrevi
 		nil,
 		[2]string{"", "BlogPostPreviousValues"},
 		"previousValues",
-		[]string{"id", "createdAt", "updatedAt", "published", "deleted", "slug", "title", "date", "content", "tags"})
+		[]string{"id", "createdAt", "updatedAt", "slug", "published", "deleted", "image", "title", "date", "content", "tags"})
 
 	return &BlogPostPreviousValuesExec{ret}
 }
@@ -2682,11 +2387,8 @@ func (instance BlogPostSubscriptionPayloadExecArray) Exec(ctx context.Context) (
 	return v, err
 }
 
-var BlogPostSubscriptionPayloadFields = []string{"mutation", "updatedFields"}
-
 type BlogPostSubscriptionPayload struct {
 	Mutation      MutationType `json:"mutation"`
-	Node          *BlogPost    `json:"node,omitempty"`
 	UpdatedFields []string     `json:"updatedFields,omitempty"`
 }
 
@@ -2720,15 +2422,14 @@ func (instance BlogPostPreviousValuesExecArray) Exec(ctx context.Context) ([]Blo
 	return v, err
 }
 
-var BlogPostPreviousValuesFields = []string{"id", "createdAt", "updatedAt", "published", "deleted", "slug", "title", "date", "content", "tags"}
-
 type BlogPostPreviousValues struct {
 	ID        string `json:"id"`
 	CreatedAt string `json:"createdAt"`
 	UpdatedAt string `json:"updatedAt"`
+	Slug      string `json:"slug"`
 	Published bool   `json:"published"`
 	Deleted   bool   `json:"deleted"`
-	Slug      string `json:"slug"`
+	Image     string `json:"image"`
 	Title     string `json:"title"`
 	Date      string `json:"date"`
 	Content   string `json:"content"`
@@ -2750,25 +2451,18 @@ func (instance *FavoriteThingConnectionExec) PageInfo() *PageInfoExec {
 	return &PageInfoExec{ret}
 }
 
-func (instance *FavoriteThingConnectionExec) Edges() *FavoriteThingEdgeExecArray {
-	edges := instance.exec.Client.GetMany(
+func (instance *FavoriteThingConnectionExec) Edges() *FavoriteThingEdgeExec {
+	ret := instance.exec.Client.GetOne(
 		instance.exec,
 		nil,
-		[3]string{"FavoriteThingWhereInput", "FavoriteThingOrderByInput", "FavoriteThingEdge"},
+		[2]string{"", "FavoriteThingEdge"},
 		"edges",
 		[]string{"cursor"})
 
-	nodes := edges.Client.GetOne(
-		edges,
-		nil,
-		[2]string{"", "FavoriteThing"},
-		"node",
-		FavoriteThingFields)
-
-	return &FavoriteThingEdgeExecArray{nodes}
+	return &FavoriteThingEdgeExec{ret}
 }
 
-func (instance *FavoriteThingConnectionExec) Aggregate(ctx context.Context) (*Aggregate, error) {
+func (instance *FavoriteThingConnectionExec) Aggregate(ctx context.Context) (Aggregate, error) {
 	ret := instance.exec.Client.GetOne(
 		instance.exec,
 		nil,
@@ -2778,24 +2472,19 @@ func (instance *FavoriteThingConnectionExec) Aggregate(ctx context.Context) (*Ag
 
 	var v Aggregate
 	_, err := ret.Exec(ctx, &v)
-	return &v, err
+	return v, err
 }
 
 func (instance FavoriteThingConnectionExec) Exec(ctx context.Context) (*FavoriteThingConnection, error) {
-	edges, err := instance.Edges().Exec(ctx)
+	var v FavoriteThingConnection
+	ok, err := instance.exec.Exec(ctx, &v)
 	if err != nil {
 		return nil, err
 	}
-
-	pageInfo, err := instance.PageInfo().Exec(ctx)
-	if err != nil {
-		return nil, err
+	if !ok {
+		return nil, ErrNoResult
 	}
-
-	return &FavoriteThingConnection{
-		Edges:    edges,
-		PageInfo: *pageInfo,
-	}, nil
+	return &v, nil
 }
 
 func (instance FavoriteThingConnectionExec) Exists(ctx context.Context) (bool, error) {
@@ -2812,11 +2501,7 @@ func (instance FavoriteThingConnectionExecArray) Exec(ctx context.Context) ([]Fa
 	return v, err
 }
 
-var FavoriteThingConnectionFields = []string{}
-
 type FavoriteThingConnection struct {
-	PageInfo PageInfo            `json:"pageInfo"`
-	Edges    []FavoriteThingEdge `json:"edges"`
 }
 
 type UserExec struct {
@@ -2848,8 +2533,6 @@ func (instance UserExecArray) Exec(ctx context.Context) ([]User, error) {
 	err := instance.exec.ExecArray(ctx, &v)
 	return v, err
 }
-
-var UserFields = []string{"id", "type", "createdAt", "updatedAt", "email", "name", "passwordHash"}
 
 type User struct {
 	ID           string   `json:"id"`
@@ -2913,11 +2596,8 @@ func (instance BookSubscriptionPayloadExecArray) Exec(ctx context.Context) ([]Bo
 	return v, err
 }
 
-var BookSubscriptionPayloadFields = []string{"mutation", "updatedFields"}
-
 type BookSubscriptionPayload struct {
 	Mutation      MutationType `json:"mutation"`
-	Node          *Book        `json:"node,omitempty"`
 	UpdatedFields []string     `json:"updatedFields,omitempty"`
 }
 
@@ -2936,25 +2616,18 @@ func (instance *BookConnectionExec) PageInfo() *PageInfoExec {
 	return &PageInfoExec{ret}
 }
 
-func (instance *BookConnectionExec) Edges() *BookEdgeExecArray {
-	edges := instance.exec.Client.GetMany(
+func (instance *BookConnectionExec) Edges() *BookEdgeExec {
+	ret := instance.exec.Client.GetOne(
 		instance.exec,
 		nil,
-		[3]string{"BookWhereInput", "BookOrderByInput", "BookEdge"},
+		[2]string{"", "BookEdge"},
 		"edges",
 		[]string{"cursor"})
 
-	nodes := edges.Client.GetOne(
-		edges,
-		nil,
-		[2]string{"", "Book"},
-		"node",
-		BookFields)
-
-	return &BookEdgeExecArray{nodes}
+	return &BookEdgeExec{ret}
 }
 
-func (instance *BookConnectionExec) Aggregate(ctx context.Context) (*Aggregate, error) {
+func (instance *BookConnectionExec) Aggregate(ctx context.Context) (Aggregate, error) {
 	ret := instance.exec.Client.GetOne(
 		instance.exec,
 		nil,
@@ -2964,24 +2637,19 @@ func (instance *BookConnectionExec) Aggregate(ctx context.Context) (*Aggregate, 
 
 	var v Aggregate
 	_, err := ret.Exec(ctx, &v)
-	return &v, err
+	return v, err
 }
 
 func (instance BookConnectionExec) Exec(ctx context.Context) (*BookConnection, error) {
-	edges, err := instance.Edges().Exec(ctx)
+	var v BookConnection
+	ok, err := instance.exec.Exec(ctx, &v)
 	if err != nil {
 		return nil, err
 	}
-
-	pageInfo, err := instance.PageInfo().Exec(ctx)
-	if err != nil {
-		return nil, err
+	if !ok {
+		return nil, ErrNoResult
 	}
-
-	return &BookConnection{
-		Edges:    edges,
-		PageInfo: *pageInfo,
-	}, nil
+	return &v, nil
 }
 
 func (instance BookConnectionExec) Exists(ctx context.Context) (bool, error) {
@@ -2998,11 +2666,7 @@ func (instance BookConnectionExecArray) Exec(ctx context.Context) ([]BookConnect
 	return v, err
 }
 
-var BookConnectionFields = []string{}
-
 type BookConnection struct {
-	PageInfo PageInfo   `json:"pageInfo"`
-	Edges    []BookEdge `json:"edges"`
 }
 
 type BookPreviousValuesExec struct {
@@ -3034,8 +2698,6 @@ func (instance BookPreviousValuesExecArray) Exec(ctx context.Context) ([]BookPre
 	err := instance.exec.ExecArray(ctx, &v)
 	return v, err
 }
-
-var BookPreviousValuesFields = []string{"id", "title", "author", "rank", "link"}
 
 type BookPreviousValues struct {
 	ID     string  `json:"id"`
@@ -3086,10 +2748,7 @@ func (instance UserEdgeExecArray) Exec(ctx context.Context) ([]UserEdge, error) 
 	return v, err
 }
 
-var UserEdgeFields = []string{"cursor"}
-
 type UserEdge struct {
-	Node   User   `json:"node"`
 	Cursor string `json:"cursor"`
 }
 
@@ -3122,8 +2781,6 @@ func (instance SessionPreviousValuesExecArray) Exec(ctx context.Context) ([]Sess
 	err := instance.exec.ExecArray(ctx, &v)
 	return v, err
 }
-
-var SessionPreviousValuesFields = []string{"id", "createdAt"}
 
 type SessionPreviousValues struct {
 	ID        string `json:"id"`
@@ -3182,11 +2839,8 @@ func (instance UserSubscriptionPayloadExecArray) Exec(ctx context.Context) ([]Us
 	return v, err
 }
 
-var UserSubscriptionPayloadFields = []string{"mutation", "updatedFields"}
-
 type UserSubscriptionPayload struct {
 	Mutation      MutationType `json:"mutation"`
-	Node          *User        `json:"node,omitempty"`
 	UpdatedFields []string     `json:"updatedFields,omitempty"`
 }
 
@@ -3242,12 +2896,9 @@ func (instance FavoriteThingSubscriptionPayloadExecArray) Exec(ctx context.Conte
 	return v, err
 }
 
-var FavoriteThingSubscriptionPayloadFields = []string{"mutation", "updatedFields"}
-
 type FavoriteThingSubscriptionPayload struct {
-	Mutation      MutationType   `json:"mutation"`
-	Node          *FavoriteThing `json:"node,omitempty"`
-	UpdatedFields []string       `json:"updatedFields,omitempty"`
+	Mutation      MutationType `json:"mutation"`
+	UpdatedFields []string     `json:"updatedFields,omitempty"`
 }
 
 type FavoriteThingEdgeExec struct {
@@ -3291,11 +2942,8 @@ func (instance FavoriteThingEdgeExecArray) Exec(ctx context.Context) ([]Favorite
 	return v, err
 }
 
-var FavoriteThingEdgeFields = []string{"cursor"}
-
 type FavoriteThingEdge struct {
-	Node   FavoriteThing `json:"node"`
-	Cursor string        `json:"cursor"`
+	Cursor string `json:"cursor"`
 }
 
 type BookEdgeExec struct {
@@ -3339,10 +2987,7 @@ func (instance BookEdgeExecArray) Exec(ctx context.Context) ([]BookEdge, error) 
 	return v, err
 }
 
-var BookEdgeFields = []string{"cursor"}
-
 type BookEdge struct {
-	Node   Book   `json:"node"`
 	Cursor string `json:"cursor"`
 }
 
@@ -3375,8 +3020,6 @@ func (instance ProjectPreviousValuesExecArray) Exec(ctx context.Context) ([]Proj
 	err := instance.exec.ExecArray(ctx, &v)
 	return v, err
 }
-
-var ProjectPreviousValuesFields = []string{"id", "priority", "name", "link", "icon", "description", "retired", "revenue", "reason"}
 
 type ProjectPreviousValues struct {
 	ID          string  `json:"id"`
@@ -3442,11 +3085,8 @@ func (instance ProjectSubscriptionPayloadExecArray) Exec(ctx context.Context) ([
 	return v, err
 }
 
-var ProjectSubscriptionPayloadFields = []string{"mutation", "updatedFields"}
-
 type ProjectSubscriptionPayload struct {
 	Mutation      MutationType `json:"mutation"`
-	Node          *Project     `json:"node,omitempty"`
 	UpdatedFields []string     `json:"updatedFields,omitempty"`
 }
 
@@ -3502,11 +3142,8 @@ func (instance SessionSubscriptionPayloadExecArray) Exec(ctx context.Context) ([
 	return v, err
 }
 
-var SessionSubscriptionPayloadFields = []string{"mutation", "updatedFields"}
-
 type SessionSubscriptionPayload struct {
 	Mutation      MutationType `json:"mutation"`
-	Node          *Session     `json:"node,omitempty"`
 	UpdatedFields []string     `json:"updatedFields,omitempty"`
 }
 
@@ -3539,8 +3176,6 @@ func (instance FavoriteThingPreviousValuesExecArray) Exec(ctx context.Context) (
 	err := instance.exec.ExecArray(ctx, &v)
 	return v, err
 }
-
-var FavoriteThingPreviousValuesFields = []string{"id", "priority", "name", "link", "description"}
 
 type FavoriteThingPreviousValues struct {
 	ID          string `json:"id"`
@@ -3580,8 +3215,6 @@ func (instance BookExecArray) Exec(ctx context.Context) ([]Book, error) {
 	return v, err
 }
 
-var BookFields = []string{"id", "title", "author", "rank", "link"}
-
 type Book struct {
 	ID     string  `json:"id"`
 	Title  string  `json:"title"`
@@ -3620,8 +3253,6 @@ func (instance FavoriteThingExecArray) Exec(ctx context.Context) ([]FavoriteThin
 	return v, err
 }
 
-var FavoriteThingFields = []string{"id", "priority", "name", "link", "description"}
-
 type FavoriteThing struct {
 	ID          string `json:"id"`
 	Priority    int32  `json:"priority"`
@@ -3659,8 +3290,6 @@ func (instance ProjectExecArray) Exec(ctx context.Context) ([]Project, error) {
 	err := instance.exec.ExecArray(ctx, &v)
 	return v, err
 }
-
-var ProjectFields = []string{"id", "priority", "name", "link", "icon", "description", "retired", "revenue", "reason"}
 
 type Project struct {
 	ID          string  `json:"id"`

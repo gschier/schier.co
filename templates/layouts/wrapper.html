@@ -4,9 +4,9 @@
   <meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
-  <title>{% block title %}{{ defaultTitle }}{% endblock %}</title>
+  <title>{% if pageTitle %}{{ pageTitle }} – {% endif %}Gregory Schier</title>
   <meta name="author" content="Gregory Schier">
-  <meta name="description" content="Thoughts on software and technology, by an independent software developer">
+  <meta name="description" content="{{ pageDescription }}">
 
   {# Meta #}
   <meta name="HandheldFriendly" content="True">
@@ -28,6 +28,20 @@
   <meta name="msapplication-config" content="{{ staticUrl }}/build/favicon/browserconfig.xml">
   <meta name="theme-color" content="#ffffff">
 
+  {# Social Metadata #}
+  <meta name="twitter:site" content="@GregorySchier"/>
+  <meta name="twitter:creator" content="@GregorySchier"/>
+  <meta property="og:url" content="{{ pageUrl }}"/>
+  <meta property="og:title" content="{% if pageTitle %}{{ pageTitle }} – {% endif %}Gregory Schier"/>
+  <meta property="og:description" content="{{ pageDescription }}"/>
+  {% if pageImage %}
+    <meta name="twitter:card" content="summary_large_image"/>
+    <meta property="og:image" content="{{ pageImage }}"/>
+  {% else %}
+    <meta name="twitter:card" content="summary"/>
+    <meta property="og:image" content="{{ pageImageDefault }}"/>
+  {% endif %}
+
   {# Scripts and Styles #}
   {% if isDev %}
     {# HMR-able styles/scripts #}
@@ -40,7 +54,11 @@
 
   {% block extraStyles %}{% endblock %}
 </head>
-<body data-csrf-token="{{ csrfToken }}" data-csrf-Token-header="{{ csrfTokenHeader }}" data-logged-in="{{ loggedIn | yesno:'yes,no' }}">
+<body
+        data-csrf-token="{{ csrfToken }}"
+        data-csrf-Token-header="{{ csrfTokenHeader }}"
+        data-logged-in="{{ loggedIn | yesno:'yes,no' }}"
+>
 {% block body %}{% endblock %}
 
 {% block extraScripts %}{% endblock %}

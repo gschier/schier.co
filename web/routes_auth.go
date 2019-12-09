@@ -28,9 +28,10 @@ func routeLogout(w http.ResponseWriter, r *http.Request) {
 func routeLogin(w http.ResponseWriter, r *http.Request) {
 	render := func(email, password, error string) {
 		renderTemplate(w, r, loginTemplate(), &pongo2.Context{
-			"email":    email,
-			"password": password,
-			"error":    error,
+			"pageTitle": "Login",
+			"email":     email,
+			"password":  password,
+			"error":     error,
 		})
 	}
 
@@ -66,10 +67,11 @@ func routeLogin(w http.ResponseWriter, r *http.Request) {
 func routeRegister(w http.ResponseWriter, r *http.Request) {
 	render := func(email, name, password, error string) {
 		renderTemplate(w, r, registerTemplate(), &pongo2.Context{
-			"email":    email,
-			"password": password,
-			"name":     name,
-			"error":    error,
+			"pageTitle": "Register",
+			"email":     email,
+			"password":  password,
+			"name":      name,
+			"error":     error,
 		})
 	}
 

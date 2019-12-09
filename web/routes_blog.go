@@ -21,7 +21,7 @@ func BlogRoutes(router *mux.Router) {
 
 	// Blog Static
 	router.HandleFunc("/blog", routeBlogList).Methods(http.MethodGet)
-	router.HandleFunc("/blog/new", renderHandler("blog/edit.html", nil)).Methods(http.MethodGet)
+	router.HandleFunc("/blog/new", routeBlogPostEdit).Methods(http.MethodGet)
 	router.HandleFunc("/blog/render", routeBlogRender).Methods(http.MethodPost)
 
 	// Tags
@@ -87,6 +87,7 @@ func routeBlogTags(w http.ResponseWriter, r *http.Request) {
 
 	sort.Sort(ByTag(tags))
 	renderTemplate(w, r, blogTagsTemplate(), &pongo2.Context{
+		"pageTitle": "Post Tags",
 		"tags": tags,
 	})
 }
@@ -114,8 +115,9 @@ func routeBlogRender(w http.ResponseWriter, r *http.Request) {
 	}
 
 	renderTemplate(w, r, template, &pongo2.Context{
-		"loggedIn": false,
-		"words":    strings.Count(content, " "),
+		"loggedIn":  false,
+		"words":     strings.Count(content, " "),
+		"pageTitle": title,
 		"blogPost": prisma.BlogPost{
 			Published: true,
 			Slug:      slug,
@@ -168,7 +170,15 @@ func routeBlogPostPublish(w http.ResponseWriter, r *http.Request) {
 func routeBlogPostEdit(w http.ResponseWriter, r *http.Request) {
 	slug := mux.Vars(r)["slug"]
 
-	baseQuery := ctxPrismaClient(r).BlogPost(prisma.BlogPostWhereUniqueInput{Slug: &slug})
+	// Slug won't exist if it's a new post
+	if slug == "" {
+		renderTemplate(w, r, blogEditTemplate(), nil)
+		return
+	}
+
+	baseQuery := ctxPrismaClient(r).BlogPost(prisma.BlogPostWhereUniqueInput{
+		Slug: &slug,
+	})
 
 	// Fetch blog posts
 	blogPost, err := baseQuery.Exec(r.Context())
@@ -178,7 +188,11 @@ func routeBlogPostEdit(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	renderTemplate(w, r, blogEditTemplate(), &pongo2.Context{"blogPost": blogPost})
+	renderTemplate(w, r, blogEditTemplate(), &pongo2.Context{
+		"pageTitle": blogPost.Title,
+		"pageImage": blogPost.Image,
+		"blogPost":  blogPost,
+	})
 }
 
 func routeBlogPostCreateOrUpdate(w http.ResponseWriter, r *http.Request) {
@@ -188,6 +202,7 @@ func routeBlogPostCreateOrUpdate(w http.ResponseWriter, r *http.Request) {
 	slug := r.Form.Get("slug")
 	content := r.Form.Get("content")
 	title := r.Form.Get("title")
+	image := r.Form.Get("image")
 	published := r.Form.Get("published") == "true"
 	tagNames := stringToTags(r.Form.Get("tags"))
 
@@ -208,6 +223,7 @@ func routeBlogPostCreateOrUpdate(w http.ResponseWriter, r *http.Request) {
 			Title:     title,
 			Published: published,
 			Content:   content,
+			Image:     image,
 			Date:      time.Now().Format(time.RFC3339),
 			Author:    prisma.UserCreateOneInput{Connect: &prisma.UserWhereUniqueInput{ID: &user.ID}},
 			Tags:      TagsToString(tagNames),
@@ -216,6 +232,7 @@ func routeBlogPostCreateOrUpdate(w http.ResponseWriter, r *http.Request) {
 			Slug:    &slug,
 			Title:   &title,
 			Content: &content,
+			Image:   &image,
 			Tags:    prisma.Str(TagsToString(tagNames)),
 		},
 	}).Exec(r.Context())
@@ -272,8 +289,10 @@ func routeBlogPost(w http.ResponseWriter, r *http.Request) {
 
 	// Render template
 	renderTemplate(w, r, blogPostTemplate(), &pongo2.Context{
-		"blogPost": blogPosts[0],
-		"words":    strings.Count(blogPosts[0].Content, " "),
+		"pageTitle": blogPosts[0].Title,
+		"pageImage": blogPosts[0].Image,
+		"blogPost":  blogPosts[0],
+		"words":     strings.Count(blogPosts[0].Content, " "),
 	})
 }
 
@@ -392,6 +411,7 @@ func routeBlogList(w http.ResponseWriter, r *http.Request) {
 
 	// Render template
 	renderTemplate(w, r, blogListTemplate(), &pongo2.Context{
+		"pageTitle":         "Blog Posts",
 		"tag":               tag,
 		"blogPosts":         blogPosts,
 		"blogsPage":         page,

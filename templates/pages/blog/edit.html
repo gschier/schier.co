@@ -1,22 +1,23 @@
 {% extends '../../layouts/base.html' %}
+
 {% block extraStyles %}
   <link rel="stylesheet" href="{{ staticUrl }}/build/editor.css"/>
-{% endblock %}
-
-{% block content %}
   <style>
     .hide {
       display: none;
     }
   </style>
+{% endblock %}
+
+{% block content %}
   <div id="editor-app">
     <h1 style="margin-bottom:1rem;">Edit Post</h1>
     <form action="/forms/blog/upsert" method="post" id="edit-form">
       {{ csrfField | safe }}
       {% include '../../partials/form-input.html' with type='hidden' name='id' value=blogPost.ID required=true %}
-      {% include '../../partials/form-input.html' with type='hidden' name='date' value=blogPost.Date required=true %}
       {% include '../../partials/form-input.html' with label='Slug' type='text' name='slug' value=blogPost.Slug placeholder='my-blog-post' autofocus=true required=true %}
       {% include '../../partials/form-input.html' with label='Title' type='text' name='title' value=blogPost.Title placeholder='My Blog Post' required=true %}
+      {% include '../../partials/form-input.html' with label='Image' type='url' name='image' value=blogPost.Image placeholder='https://assets.schier.dev/images/insomnia-growth.png' %}
       {% include '../../partials/form-input.html' with label='Tags' type='text' name='tags' value=blogPost.Tags placeholder='Tag1, Tag2' %}
 
       <div class="form-row">
