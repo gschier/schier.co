@@ -32,7 +32,7 @@
   <meta name="twitter:site" content="@GregorySchier"/>
   <meta name="twitter:creator" content="@GregorySchier"/>
   <meta property="og:url" content="{{ pageUrl }}"/>
-  <meta property="og:title" content="{% if pageTitle %}{{ pageTitle }} – {% endif %}Gregory Schier"/>
+  <meta property="og:title" content="{% if pageTitle %}{{ pageTitle }}{% else %}Gregory Schier{% endif %}"/>
   <meta property="og:description" content="{{ pageDescription }}"/>
   {% if pageImage %}
     <meta name="twitter:card" content="summary_large_image"/>
