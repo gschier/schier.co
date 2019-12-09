@@ -23,6 +23,10 @@
         "staticOutDir": "images"
       },
       {
+        "staticPath": "src/dictionaries",
+        "staticOutDir": "dictionaries"
+      },
+      {
         "staticPath": "src/favicon",
         "staticOutDir": "favicon"
       }
@@ -40,6 +44,7 @@
   },
   "dependencies": {
     "codemirror": "^5.49.2",
+    "codemirror-typo": "^1.0.1",
     "tailwindcss": "^1.1.3",
     "vue": "^2.6.10"
   }

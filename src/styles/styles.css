@@ -364,6 +364,11 @@ pre.chroma-chroma {
   @apply shadow-none;
 }
 
+.blog-post-editor__edit .CodeMirror-gutters,
+.blog-post-editor__edit .CodeMirror-gutter-wrapper {
+  @apply hidden;
+}
+
 .blog-post-editor__preview {
   grid-area: preview;
 }

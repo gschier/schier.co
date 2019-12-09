@@ -1,5 +1,6 @@
 import CodeMirror from "codemirror";
 import "codemirror/mode/markdown/markdown";
+import "codemirror/addon/mode/overlay";
 import "codemirror/lib/codemirror.css";
 import "codemirror/theme/idea.css";
 import "codemirror/theme/neat.css";
@@ -29,6 +30,8 @@ import "codemirror/addon/lint/lint";
 import "codemirror/addon/lint/json-lint";
 import "codemirror/addon/lint/lint.css";
 
+import codeMirrorTypo from 'codemirror-typo';
+
 export function setupEditor(textareaEl, containerEl) {
   const cm = CodeMirror(
     function(elt) {
@@ -37,7 +40,8 @@ export function setupEditor(textareaEl, containerEl) {
     {
       value: textareaEl.value,
       theme: "neat",
-      mode: "markdown",
+      mode: "spell-checker",
+      backdrop: "markdown",
       placeholder: "Start Typing...",
       height: "auto",
       foldGutter: true,
@@ -53,8 +57,12 @@ export function setupEditor(textareaEl, containerEl) {
       })
     }
   );
+
   cm.on("change", (c, v) => {
     textareaEl.value = c.getValue();
   });
+
+  codeMirrorTypo(cm, 'en_US', '/static/build/dictionaries');
+
   return cm;
 }
