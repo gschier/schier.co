@@ -63,8 +63,9 @@ func LoggerMiddleware(next http.Handler) http.Handler {
 func ForceLoginHostnameMiddleware(hosts []string, next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		loggedIn := ctxGetLoggedIn(r)
+
 		for _, host := range hosts {
-			if host == r.Host && !loggedIn {
+			if host == r.Host && !loggedIn && r.URL.Path != "/login" {
 				http.Redirect(w, r, "/login", http.StatusFound)
 			}
 		}
