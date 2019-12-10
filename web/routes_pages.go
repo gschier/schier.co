@@ -11,6 +11,7 @@ import (
 
 func PagesRoutes(router *mux.Router) {
 	router.HandleFunc("/", routeHome).Methods(http.MethodGet)
+	router.HandleFunc("/projects", routeProjects).Methods(http.MethodGet)
 	router.HandleFunc("/robots.txt", routeRobotsTxt).Methods(http.MethodGet)
 }
 
@@ -26,6 +27,7 @@ Disallow: *
 `)
 
 var homeTemplate = pageTemplate("page/home.html")
+var projectsTemplate = pageTemplate("page/projects.html")
 
 func routeRobotsTxt(w http.ResponseWriter, r *http.Request) {
 	if r.Host == "schier.co" {
@@ -33,6 +35,24 @@ func routeRobotsTxt(w http.ResponseWriter, r *http.Request) {
 	} else {
 		_, _ = w.Write([]byte(robotsNone))
 	}
+}
+
+func routeProjects(w http.ResponseWriter, r *http.Request) {
+	client := ctxPrismaClient(r)
+
+	projectOrderBy := prisma.ProjectOrderByInputPriorityAsc
+	projects, err := client.Projects(
+		&prisma.ProjectsParams{OrderBy: &projectOrderBy},
+	).Exec(r.Context())
+	if err != nil {
+		log.Println("Failed to fetch projects: " + err.Error())
+		http.Error(w, "Failed to fetch projects", http.StatusInternalServerError)
+		return
+	}
+
+	renderTemplate(w, r, projectsTemplate(), &pongo2.Context{
+		"projects":       projects,
+	})
 }
 
 func routeHome(w http.ResponseWriter, r *http.Request) {

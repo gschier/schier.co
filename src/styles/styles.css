@@ -145,10 +145,6 @@ form input:invalid {
   @apply flex flex-wrap;
 }
 
-.blog-post-continue > * {
-  @apply mt-4;
-}
-
 .blog-post-continue a:last-child {
   @apply ml-auto text-sm;
 }

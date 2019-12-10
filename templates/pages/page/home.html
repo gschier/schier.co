@@ -5,7 +5,8 @@
     <h1>Hey there, I'm Greg!</h1>
     <p>
       I'm an independent software developer from Canada. Web development is my primary focus,
-      but I also like to dabble with mobile apps, games, and design.
+      but I also like to dabble with mobile apps, games, and design. Check out some of the
+      <a href="/projects">Projects I'm working on 🧰</a>
     </p>
     <p>
       The best way to reach out to me is on Twitter <a href="https://twitter.com/GregorySchier" rel="noopener">
@@ -30,36 +31,7 @@
 
     <hr>
 
-    <h2>Projects 🏡</h2>
-
-    <p>
-      I love building things. Here are some of the projects I currently maintain.
-    </p>
-
-    {% for project in projects %}
-      {% if not project.Retired %}
-        {% include '../../partials/project.html' with project=project %}
-      {% endif %}
-    {% endfor %}
-
-    <hr>
-
-    <h2>Retired Projects 🏚</h2>
-
-    <p>
-      Some projects don't stand the test of time. Here are a few that I've had to shut down for
-      various reasons.
-    </p>
-
-    {% for project in projects %}
-      {% if project.Retired %}
-        {% include '../../partials/project.html' with project=project %}
-      {% endif %}
-    {% endfor %}
-
-    <hr>
-
-    <h2>Favorite Books 📚</h2>
+    <h2>Top 10 Books 📚</h2>
     <p>I only started reading a couple years ago. Here are my favorites so far.</p>
     <ol>
       {% for book in books %}
