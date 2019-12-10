@@ -178,6 +178,10 @@ form input:invalid {
   @apply text-2xl pt-2;
 }
 
+.content h3 {
+  @apply text-xl;
+}
+
 .content ul li {
   @apply list-disc ml-6;
 }

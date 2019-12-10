@@ -74,9 +74,21 @@ func routeHome(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Fetch books
+	orderBy := prisma.BookOrderByInputRankAsc
+	books, err := ctxPrismaClient(r).Books(&prisma.BooksParams{
+		OrderBy: &orderBy,
+	}).Exec(r.Context())
+	if err != nil {
+		log.Println("Failed to load books", err)
+		http.Error(w, "Failed to load books", http.StatusInternalServerError)
+		return
+	}
+
 	renderTemplate(w, r, homeTemplate(), &pongo2.Context{
 		"favoriteThings": favoriteThings,
 		"projects":       projects,
 		"blogPosts":      blogPosts,
+		"books":          books,
 	})
 }
