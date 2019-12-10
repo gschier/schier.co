@@ -59,6 +59,20 @@ func LoggerMiddleware(next http.Handler) http.Handler {
 	return handlers.LoggingHandler(os.Stdout, next)
 }
 
+// ForceLoginHostnameMiddleware forces host names to be logged in
+func ForceLoginHostnameMiddleware(hosts []string, next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		loggedIn := ctxGetLoggedIn(r)
+		for _, host := range hosts {
+			if host == r.Host && !loggedIn {
+				http.Redirect(w, r, "/login", http.StatusFound)
+			}
+		}
+
+		next.ServeHTTP(w, r)
+	})
+}
+
 // DeployMiddleware adds deploy time as a header to all responses
 func DeployHeadersMiddleware(next http.Handler) http.Handler {
 	var deploy = time.Now().Format(time.RFC3339)

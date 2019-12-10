@@ -46,6 +46,7 @@ func applyMiddleware(r *mux.Router) http.Handler {
 	var handler http.Handler = r
 
 	// Global middleware
+	handler = web.ForceLoginHostnameMiddleware([]string{"schier.dev"}, handler)
 	handler = web.DeployHeadersMiddleware(handler)
 	handler = web.CacheHeadersMiddleware(handler)
 	handler = web.LoggerMiddleware(handler)
