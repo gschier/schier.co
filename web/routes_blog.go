@@ -52,7 +52,6 @@ func routeBlogTags(w http.ResponseWriter, r *http.Request) {
 	client := ctxPrismaClient(r)
 	blogPosts, err := client.BlogPosts(&prisma.BlogPostsParams{
 		Where: &prisma.BlogPostWhereInput{
-			Deleted:   prisma.Bool(false),
 			Published: prisma.Bool(true),
 			TagsNot:   prisma.Str(""),
 		},
@@ -135,10 +134,7 @@ func routeBlogPostDelete(w http.ResponseWriter, r *http.Request) {
 	id := r.Form.Get("id")
 
 	client := ctxPrismaClient(r)
-	blogPost, err := client.UpdateBlogPost(prisma.BlogPostUpdateParams{
-		Data:  prisma.BlogPostUpdateInput{Deleted: prisma.Bool(true)},
-		Where: prisma.BlogPostWhereUniqueInput{ID: &id},
-	}).Exec(r.Context())
+	blogPost, err := client.DeleteBlogPost(prisma.BlogPostWhereUniqueInput{ID: &id}).Exec(r.Context())
 	if err != nil {
 		log.Println("Failed to delete Post", err)
 		http.Error(w, "Failed to delete Post", http.StatusInternalServerError)
@@ -156,7 +152,10 @@ func routeBlogPostPublish(w http.ResponseWriter, r *http.Request) {
 
 	client := ctxPrismaClient(r)
 	blogPost, err := client.UpdateBlogPost(prisma.BlogPostUpdateParams{
-		Data:  prisma.BlogPostUpdateInput{Published: &published},
+		Data: prisma.BlogPostUpdateInput{
+			Published: &published,
+			Date:      prisma.Str(time.Now().Format(time.RFC3339)),
+		},
 		Where: prisma.BlogPostWhereUniqueInput{ID: &id},
 	}).Exec(r.Context())
 	if err != nil {
@@ -204,7 +203,6 @@ func routeBlogPostCreateOrUpdate(w http.ResponseWriter, r *http.Request) {
 	content := r.Form.Get("content")
 	title := r.Form.Get("title")
 	image := r.Form.Get("image")
-	published := r.Form.Get("published") == "true"
 	tagNames := stringToTags(r.Form.Get("tags"))
 
 	client := ctxPrismaClient(r)
@@ -216,19 +214,13 @@ func routeBlogPostCreateOrUpdate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// When updating, bump the date as long as it's not published yet
-	var updateDate *string = nil
-	if !published || id == "" {
-		updateDate = prisma.Str(time.Now().Format(time.RFC3339))
-	}
-
 	// Upsert blog post
 	_, err := client.UpsertBlogPost(prisma.BlogPostUpsertParams{
 		Where: prisma.BlogPostWhereUniqueInput{ID: &id},
 		Create: prisma.BlogPostCreateInput{
 			Slug:      slug,
 			Title:     title,
-			Published: published,
+			Published: false,
 			Content:   content,
 			Image:     image,
 			Date:      time.Now().Format(time.RFC3339),
@@ -238,7 +230,6 @@ func routeBlogPostCreateOrUpdate(w http.ResponseWriter, r *http.Request) {
 		Update: prisma.BlogPostUpdateInput{
 			Slug:    &slug,
 			Title:   &title,
-			Date:    updateDate,
 			Content: &content,
 			Image:   &image,
 			Tags:    prisma.Str(TagsToString(tagNames)),
@@ -272,14 +263,7 @@ func routeBlogPostSuffix(w http.ResponseWriter, r *http.Request) {
 func routeBlogPost(w http.ResponseWriter, r *http.Request) {
 	slug := mux.Vars(r)["slug"]
 
-	loggedIn := ctxGetLoggedIn(r)
-
 	blogPostWhere := &prisma.BlogPostWhereInput{Slug: &slug}
-
-	// Don't show deleted posts to guests
-	if !loggedIn {
-		blogPostWhere.Deleted = prisma.Bool(false)
-	}
 
 	// Fetch post
 	blogPosts, err := ctxPrismaClient(r).BlogPosts(
@@ -316,10 +300,7 @@ func routeBlogRSS(w http.ResponseWriter, r *http.Request) {
 	// Fetch blog posts
 	orderBy := prisma.BlogPostOrderByInputCreatedAtDesc
 	blogPosts, err := ctxPrismaClient(r).BlogPosts(&prisma.BlogPostsParams{
-		Where: &prisma.BlogPostWhereInput{
-			Deleted:   prisma.Bool(false),
-			Published: prisma.Bool(true),
-		},
+		Where:   &prisma.BlogPostWhereInput{Published: prisma.Bool(true)},
 		OrderBy: &orderBy,
 		First:   prisma.Int32(int32(count)),
 	}).Exec(r.Context())
@@ -391,7 +372,6 @@ func routeBlogList(w http.ResponseWriter, r *http.Request) {
 	orderBy := prisma.BlogPostOrderByInputCreatedAtDesc
 	blogPosts, err := ctxPrismaClient(r).BlogPosts(&prisma.BlogPostsParams{
 		Where: &prisma.BlogPostWhereInput{
-			Deleted:      prisma.Bool(false),
 			Published:    prisma.Bool(true),
 			TagsContains: tagsContains,
 		},
@@ -407,10 +387,7 @@ func routeBlogList(w http.ResponseWriter, r *http.Request) {
 
 	// Fetch blog posts
 	blogPostDrafts, err := ctxPrismaClient(r).BlogPosts(&prisma.BlogPostsParams{
-		Where: &prisma.BlogPostWhereInput{
-			Deleted:   prisma.Bool(false),
-			Published: prisma.Bool(false),
-		},
+		Where:   &prisma.BlogPostWhereInput{Published: prisma.Bool(false)},
 		OrderBy: &orderBy,
 	}).Exec(r.Context())
 	if err != nil {

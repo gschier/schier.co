@@ -25,7 +25,6 @@ type BlogPost {
     updatedAt: DateTime! @updatedAt
     slug: String! @unique
     published: Boolean!
-    deleted: Boolean!
     image: String!
     title: String!
     date: DateTime!

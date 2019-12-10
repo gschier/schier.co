@@ -61,7 +61,6 @@ func routeHome(w http.ResponseWriter, r *http.Request) {
 	blogPostsOrderBy := prisma.BlogPostOrderByInputDateDesc
 	blogPosts, err := client.BlogPosts(&prisma.BlogPostsParams{
 		Where: &prisma.BlogPostWhereInput{
-			Deleted:   prisma.Bool(false),
 			Published: prisma.Bool(true),
 			DateGt:    prisma.Str("2017-01-01"),
 		},
