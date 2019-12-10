@@ -59,21 +59,6 @@ func LoggerMiddleware(next http.Handler) http.Handler {
 	return handlers.LoggingHandler(os.Stdout, next)
 }
 
-// ForceLoginHostnameMiddleware forces host names to be logged in
-func ForceLoginHostnameMiddleware(hosts []string, next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		loggedIn := ctxGetLoggedIn(r)
-
-		for _, host := range hosts {
-			if host == r.Host && !loggedIn && r.URL.Path != "/login" {
-				http.Redirect(w, r, "/login", http.StatusFound)
-			}
-		}
-
-		next.ServeHTTP(w, r)
-	})
-}
-
 // DeployMiddleware adds deploy time as a header to all responses
 func DeployHeadersMiddleware(next http.Handler) http.Handler {
 	var deploy = time.Now().Format(time.RFC3339)
@@ -100,20 +85,6 @@ func CacheHeadersMiddleware(next http.Handler) http.Handler {
 
 		next.ServeHTTP(wNew, r)
 	})
-}
-
-// ContextMiddleware adds useful things to the request context
-func NewContextMiddleware(client *prisma.Client) mux.MiddlewareFunc{
-	return func(next http.Handler) http.Handler {
-		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			var emptyUser *prisma.User = nil
-
-			r = ctxSetPrismaClient(r, client)
-			r = ctxSetUserAndLoggedIn(r, emptyUser)
-
-			next.ServeHTTP(w, r)
-		})
-	}
 }
 
 // CSRFMiddleware adds CSRF handling and protection to requests
@@ -156,4 +127,33 @@ func UserMiddleware(next http.Handler) http.Handler {
 
 		next.ServeHTTP(w, r)
 	})
+}
+
+// NewForceLoginHostMiddleware adds useful things to the request context
+func NewForceLoginHostMiddleware(host string) mux.MiddlewareFunc {
+	return func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			loggedIn := ctxGetLoggedIn(r)
+
+			if host == r.Host && !loggedIn && r.URL.Path != "/login" {
+				http.Redirect(w, r, "/login", http.StatusFound)
+			}
+
+			next.ServeHTTP(w, r)
+		})
+	}
+}
+
+// ContextMiddleware adds useful things to the request context
+func NewContextMiddleware(client *prisma.Client) mux.MiddlewareFunc {
+	return func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			var emptyUser *prisma.User = nil
+
+			r = ctxSetPrismaClient(r, client)
+			r = ctxSetUserAndLoggedIn(r, emptyUser)
+
+			next.ServeHTTP(w, r)
+		})
+	}
 }
