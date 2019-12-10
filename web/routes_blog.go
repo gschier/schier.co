@@ -134,14 +134,14 @@ func routeBlogPostDelete(w http.ResponseWriter, r *http.Request) {
 	id := r.Form.Get("id")
 
 	client := ctxPrismaClient(r)
-	blogPost, err := client.DeleteBlogPost(prisma.BlogPostWhereUniqueInput{ID: &id}).Exec(r.Context())
+	_, err := client.DeleteBlogPost(prisma.BlogPostWhereUniqueInput{ID: &id}).Exec(r.Context())
 	if err != nil {
 		log.Println("Failed to delete Post", err)
 		http.Error(w, "Failed to delete Post", http.StatusInternalServerError)
 		return
 	}
 
-	http.Redirect(w, r, "/blog/"+blogPost.Slug, http.StatusSeeOther)
+	http.Redirect(w, r, "/blog", http.StatusSeeOther)
 }
 
 func routeBlogPostPublish(w http.ResponseWriter, r *http.Request) {
