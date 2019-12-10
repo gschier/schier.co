@@ -216,6 +216,12 @@ func routeBlogPostCreateOrUpdate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// When updating, bump the date as long as it's not published yet
+	var updateDate *string = nil
+	if !published || id == "" {
+		updateDate = prisma.Str(time.Now().Format(time.RFC3339))
+	}
+
 	// Upsert blog post
 	_, err := client.UpsertBlogPost(prisma.BlogPostUpsertParams{
 		Where: prisma.BlogPostWhereUniqueInput{ID: &id},
@@ -232,6 +238,7 @@ func routeBlogPostCreateOrUpdate(w http.ResponseWriter, r *http.Request) {
 		Update: prisma.BlogPostUpdateInput{
 			Slug:    &slug,
 			Title:   &title,
+			Date:    updateDate,
 			Content: &content,
 			Image:   &image,
 			Tags:    prisma.Str(TagsToString(tagNames)),
@@ -385,6 +392,7 @@ func routeBlogList(w http.ResponseWriter, r *http.Request) {
 	blogPosts, err := ctxPrismaClient(r).BlogPosts(&prisma.BlogPostsParams{
 		Where: &prisma.BlogPostWhereInput{
 			Deleted:      prisma.Bool(false),
+			Published:    prisma.Bool(true),
 			TagsContains: tagsContains,
 		},
 		OrderBy: &orderBy,
@@ -394,6 +402,20 @@ func routeBlogList(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Println("Failed to load blog posts", err)
 		http.Error(w, "Failed to load blog posts", http.StatusInternalServerError)
+		return
+	}
+
+	// Fetch blog posts
+	blogPostDrafts, err := ctxPrismaClient(r).BlogPosts(&prisma.BlogPostsParams{
+		Where: &prisma.BlogPostWhereInput{
+			Deleted:   prisma.Bool(false),
+			Published: prisma.Bool(false),
+		},
+		OrderBy: &orderBy,
+	}).Exec(r.Context())
+	if err != nil {
+		log.Println("Failed to load blog post blogPostDrafts", err)
+		http.Error(w, "Failed to load blog posts blogPostDrafts", http.StatusInternalServerError)
 		return
 	}
 
@@ -413,13 +435,14 @@ func routeBlogList(w http.ResponseWriter, r *http.Request) {
 
 	// Render template
 	renderTemplate(w, r, blogListTemplate(), &pongo2.Context{
-		"pageTitle":         "Blog Posts",
-		"tag":               tag,
-		"blogPosts":         blogPosts,
-		"blogsPage":         page,
-		"blogsPageFriendly": page + 1,
-		"blogsPagePrev":     pagePrevious,
-		"blogsPageNext":     pageNext,
+		"pageTitle":        "Blog Posts",
+		"tag":              tag,
+		"blogPosts":        blogPosts,
+		"blogPostDrafts":   blogPostDrafts,
+		"blogPage":         page,
+		"blogPageFriendly": page + 1,
+		"blogPagePrev":     pagePrevious,
+		"blogPageNext":     pageNext,
 	})
 }
 

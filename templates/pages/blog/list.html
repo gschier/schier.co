@@ -14,15 +14,15 @@
         You can view the most recent posts below, or <a href="/blog/tags">Browse Tags</a>.
       </p>
     {% endif %}
-    <hr>
   </div>
+  <hr>
   <ul>
-    {% for post in blogPosts %}
-      {% if loggedIn or post.Published %}
+    {% if loggedIn or post.Published %}
+      {% for post in blogPostDrafts %}
         <li class="content blog-post-preview">
           <h2>
             <a href="/blog/{{ post.Slug }}">
-               {{ post.Published | yesno:",📝 " }}{{ post.Title }}
+              📝 {{ post.Title }}
             </a>
             <time datetime{{ blogPost.Date }}>
               {{ post.Date | isoformat }}
@@ -38,24 +38,45 @@
             </a>
           </div>
         </li>
-      {% endif %}
+      {% endfor %}
+    {% endif %}
+    {% for post in blogPosts %}
+      <li class="content blog-post-preview">
+        <h2>
+          <a href="/blog/{{ post.Slug }}">
+            {{ post.Title }}
+          </a>
+          <time datetime{{ blogPost.Date }}>
+            {{ post.Date | isoformat }}
+          </time>
+        </h2>
+        <div>
+          {{ post.Content | split:"<!--more-->" | first | markdown }}
+        </div>
+        <div class="blog-post-continue">
+          {% include '../../partials/blog_post_tag.html' with tags=post.Tags %}
+          <a href="/">
+            Continue Reading &raquo;
+          </a>
+        </div>
+      </li>
     {% endfor %}
   </ul>
 
   <div class="pagination">
     <div class="pagination-left">
-      {% if blogsPagePrev != blogsPage %}
-        <a href="/blog/{{ blogsPagePrev }}" class="left">Previous</a>
+      {% if blogPagePrev != blogPage %}
+        <a href="/blog/{{ blogPagePrev }}" class="left">Previous</a>
       {% endif %}
     </div>
 
     <div class="pagination-center">
-      Page {{ blogsPageFriendly }}
+      Page {{ blogPageFriendly }}
     </div>
 
     <div class="pagination-right">
-      {% if blogsPageNext != blogsPage %}
-        <a href="/blog/{{ blogsPageNext }}">Next</a>
+      {% if blogPageNext != blogPage %}
+        <a href="/blog/{{ blogPageNext }}">Next</a>
       {% else %}
       {% endif %}
     </div>
