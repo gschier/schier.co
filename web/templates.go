@@ -17,6 +17,7 @@ import (
 
 // Use server start time as static cache key breaker
 var staticBreaker = time.Now().Unix()
+var deployTime = time.Now().Format(time.RFC3339)
 
 var chroma = bfchroma.NewRenderer(
 	bfchroma.WithoutAutodetect(),
@@ -139,14 +140,6 @@ func partialTemplate(partialPath string) func() *pongo2.Template {
 	}
 }
 
-func renderHandler(pagePath string, context *pongo2.Context) http.HandlerFunc {
-	t := pageTemplate(pagePath)()
-
-	return func(w http.ResponseWriter, r *http.Request) {
-		renderTemplate(w, r, t, context)
-	}
-}
-
 func renderTemplate(w http.ResponseWriter, r *http.Request, template *pongo2.Template, context *pongo2.Context) {
 	user := ctxGetUser(r)
 	loggedIn := ctxGetLoggedIn(r)
@@ -164,6 +157,7 @@ func renderTemplate(w http.ResponseWriter, r *http.Request, template *pongo2.Tem
 		"gaId":             os.Getenv("GA_ID"),
 		"isDev":            isDev,
 		"loggedIn":         loggedIn,
+		"deployTime":       deployTime,
 		"pageUrl":          os.Getenv("BASE_URL") + r.URL.EscapedPath(),
 		"pageTitle":        "",
 		"pageDescription":  "Thoughts on software and technology, by an independent software developer",

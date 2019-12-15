@@ -55,6 +55,7 @@
   {% block extraStyles %}{% endblock %}
 </head>
 <body
+        data-deployed="{{ deployTime }}"
         data-csrf-token="{{ csrfToken }}"
         data-csrf-Token-header="{{ csrfTokenHeader }}"
         data-logged-in="{{ loggedIn | yesno:'yes,no' }}"
