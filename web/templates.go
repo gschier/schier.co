@@ -12,7 +12,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"strings"
 	"time"
 )
 
@@ -105,6 +104,17 @@ func init() {
 	if err != nil {
 		panic("failed to register markdown filter: " + err.Error())
 	}
+
+	err = pongo2.RegisterFilter(
+		"summary",
+		func(in *pongo2.Value, param *pongo2.Value) (*pongo2.Value, *pongo2.Error) {
+			return pongo2.AsValue(summary(in.String())), nil
+		},
+	)
+
+	if err != nil {
+		panic("failed to register summary filter: " + err.Error())
+	}
 }
 
 func pageTemplate(pagePath string) func() *pongo2.Template {
@@ -148,7 +158,6 @@ func renderTemplate(w http.ResponseWriter, r *http.Request, template *pongo2.Tem
 		staticBreaker = time.Now().Unix()
 	}
 
-	log.Println("URL", r.URL.Path)
 	newContext := pongo2.Context{
 		"csrfToken":        csrf.Token(r),
 		"csrfTokenHeader":  "X-CSRF-Token",
@@ -185,9 +194,6 @@ func renderTemplate(w http.ResponseWriter, r *http.Request, template *pongo2.Tem
 }
 
 func RenderMarkdown(md string) []byte {
-	// BlackFriday doesn't like Windows line endings
-	md = strings.Replace(md, "\r\n", "\n", -1)
-
 	return blackfriday.Run([]byte(md), bfRenderer, bfExtensions)
 }
 

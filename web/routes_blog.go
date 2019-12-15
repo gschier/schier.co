@@ -4,6 +4,7 @@ import (
 	"github.com/flosch/pongo2"
 	"github.com/gorilla/feeds"
 	"github.com/gorilla/mux"
+	slugLib "github.com/gosimple/slug"
 	"github.com/gschier/schier.dev/generated/prisma-client"
 	stripmd "github.com/writeas/go-strip-markdown"
 	"log"
@@ -204,6 +205,14 @@ func routeBlogPostCreateOrUpdate(w http.ResponseWriter, r *http.Request) {
 	title := r.Form.Get("title")
 	image := r.Form.Get("image")
 	tagNames := stringToTags(r.Form.Get("tags"))
+
+	if slug == "" {
+		slug = slugLib.Make(title)
+	}
+
+	// BlackFriday doesn't like Windows line endings
+	content = strings.Replace(content, "\r\n", "\n", -1)
+
 
 	client := ctxPrismaClient(r)
 	loggedIn := ctxGetLoggedIn(r)
@@ -448,7 +457,16 @@ func wordCount(md string) int {
 }
 
 func summary(md string) string {
-	summaryMD := strings.Split(md, "<!--more-->")[0]
+	md = strings.Replace(md, "\r\n", "\n", -1)
+
+	var summaryMD string
+	if strings.Contains(md, "<!--more-->") {
+		summaryMD = strings.Split(md, "<!--more-->")[0]
+	} else {
+		// Take the first paragraph if no <!--more-->
+		summaryMD = strings.Split(md, "\n\n")[0]
+	}
+
 	return stripmd.Strip(summaryMD)
 }
 

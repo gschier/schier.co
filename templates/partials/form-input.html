@@ -12,6 +12,7 @@
           name="{{ name }}"
           rows="10"
           id="{% if id %}{{ id }}{% else %}i-{{ name }}{% endif %}"
+          {% if disabled %}disabled="disabled"{% endif %}
           {% if autofocus %}autofocus="autofocus"{% endif %}
           {% if required %}required="required"{% endif %}
           placeholder="{{ placeholder }}"
@@ -23,6 +24,7 @@
           name="{{ name }}"
           placeholder="{{ placeholder }}"
           id="{% if id %}{{ id }}{% else %}i-{{ name }}{% endif %}"
+          {% if disabled %}disabled="disabled"{% endif %}
           {% if required %}required="required"{% endif %}
           {% if autofocus %}autofocus="autofocus"{% endif %}
           value="{{ value }}"

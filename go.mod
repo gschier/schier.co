@@ -12,6 +12,7 @@ require (
 	github.com/gorilla/feeds v1.1.1
 	github.com/gorilla/handlers v1.4.2
 	github.com/gorilla/mux v1.7.3
+	github.com/gosimple/slug v1.9.0
 	github.com/machinebox/graphql v0.2.2
 	github.com/mitchellh/mapstructure v1.1.2 // indirect
 	github.com/pkg/errors v0.8.1 // indirect
