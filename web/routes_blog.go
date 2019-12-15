@@ -213,7 +213,6 @@ func routeBlogPostCreateOrUpdate(w http.ResponseWriter, r *http.Request) {
 	// BlackFriday doesn't like Windows line endings
 	content = strings.Replace(content, "\r\n", "\n", -1)
 
-
 	client := ctxPrismaClient(r)
 	loggedIn := ctxGetLoggedIn(r)
 	user := ctxGetUser(r)

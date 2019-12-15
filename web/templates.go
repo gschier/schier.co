@@ -12,6 +12,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 	"time"
 )
 
@@ -98,7 +99,10 @@ func init() {
 	err = pongo2.RegisterFilter(
 		"markdown",
 		func(in *pongo2.Value, param *pongo2.Value) (*pongo2.Value, *pongo2.Error) {
-			return pongo2.AsSafeValue(RenderMarkdownStr(in.String())), nil
+			// BlackFriday doesn't like Windows line endings
+			md := strings.Replace(in.String(), "\r\n", "\n", -1)
+
+			return pongo2.AsSafeValue(RenderMarkdownStr(md)), nil
 		},
 	)
 
