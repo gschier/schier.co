@@ -80,7 +80,10 @@ func CacheHeadersMiddleware(next http.Handler) http.Handler {
 		if shouldCache {
 			wNew.SetDefaultHeader("Cache-Control", "public, max-age=7200, must-revalidate")
 		} else {
-			wNew.SetDefaultHeader("Cache-Control", "public, max-age=0, must-revalidate")
+			// https://stackoverflow.com/questions/49547/how-do-we-control-web-page-caching-across-all-browsers/2068407#2068407
+			wNew.SetDefaultHeader("Cache-Control", "no-store, must-revalidate")
+			wNew.SetDefaultHeader("Expires", "0")
+			wNew.SetDefaultHeader("Vary", "Cookie")
 		}
 
 		next.ServeHTTP(wNew, r)
