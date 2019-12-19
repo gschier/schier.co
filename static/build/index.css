@@ -602,7 +602,7 @@ video {
 html {
   background-color: #fff;
   color: #4a5568;
-  font-size: 17px;
+  font-size: 18px;
   font-family: "Open Sans", sans-serif;
 }
 
@@ -629,11 +629,11 @@ main {
 }
 
 .container {
-  max-width: 36rem;
   margin-left: auto;
   margin-right: auto;
   padding-left: 1rem;
   padding-right: 1rem;
+  max-width: 40rem;
 }
 
 .link {

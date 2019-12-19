@@ -2,7 +2,7 @@
 
 html {
   @apply bg-background text-primary;
-  font-size: 17px;
+  font-size: 18px;
   font-family: "Open Sans", sans-serif;
 }
 
@@ -27,7 +27,8 @@ main {
 }
 
 .container {
-  @apply max-w-xl mx-auto px-4;
+  @apply mx-auto px-4;
+  max-width: 40rem;
 }
 
 .link {
