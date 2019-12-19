@@ -14,8 +14,9 @@ require (
 	github.com/gorilla/mux v1.7.3
 	github.com/gosimple/slug v1.9.0
 	github.com/machinebox/graphql v0.2.2
+	github.com/mailgun/mailgun-go/v3 v3.6.3 // indirect
+	github.com/mailjet/mailjet-apiv3-go v0.0.0-20190724151621-55e56f74078c
 	github.com/mitchellh/mapstructure v1.1.2 // indirect
-	github.com/pkg/errors v0.8.1 // indirect
 	github.com/prisma/prisma-client-lib-go v0.0.0-20181017161110-68a1f9908416
 	github.com/russross/blackfriday v2.0.0+incompatible // indirect
 	github.com/russross/blackfriday/v2 v2.0.1
