@@ -8,7 +8,7 @@ html {
 
 @media only screen and (max-width: 600px) {
   html {
-    font-size: 15px;
+    font-size: 16px;
   }
 }
 
@@ -231,8 +231,9 @@ form input:invalid {
 /***********************/
 
 pre.chroma-chroma {
-  @apply block bg-gray-100 p-6 overflow-auto rounded text-xs font-mono border border-gray-200 overflow-x-auto cursor-text;
+  @apply block bg-gray-100 p-6 overflow-auto rounded font-mono border border-gray-200 overflow-x-auto cursor-text;
   tab-size: 4;
+  font-size: 0.8em;
 }
 
 .chroma-cm,
