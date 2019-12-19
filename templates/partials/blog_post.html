@@ -1,4 +1,4 @@
-<div class="content blog-post">
+<article class="content blog-post">
   <h1>
     {{ blogPost.Published | yesno:",📝 " }}{{ blogPost.Title }}
     <time datetime{{ blogPost.Date }}>
@@ -17,4 +17,4 @@
   <footer>
     {% include './blog_post_tag.html' with tags=blogPost.Tags %}
   </footer>
-</div>
+</article>

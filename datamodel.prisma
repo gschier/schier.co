@@ -60,3 +60,10 @@ type Book {
     rank: Int
     link: String
 }
+
+type Subscriber {
+    id: ID! @id
+    email: String! @unique
+    name: String!
+    confirmed: Boolean!
+}

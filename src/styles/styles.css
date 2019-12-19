@@ -82,6 +82,10 @@ h6 {
   @apply py-1 px-3 text-sm rounded h-8;
 }
 
+.btn.btn-wide {
+  @apply w-full;
+}
+
 /**********/
 /* NOTICE */
 /**********/
@@ -121,12 +125,17 @@ form label {
 .CodeMirror,
 form input,
 form textarea {
-  @apply shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight;
+  @apply appearance-none border border-gray-300 rounded w-full py-2 px-3 text-gray-700 leading-tight;
+}
+
+textarea::placeholder,
+input::placeholder {
+  @apply text-gray-400;
 }
 
 .CodeMirror-focused,
 form input:focus {
-  @apply outline-none shadow-outline;
+  @apply outline-none border border-primary-400;
 }
 
 form textarea:invalid,
@@ -300,6 +309,23 @@ pre.chroma-chroma {
 
 .bottom-footer .links p {
   @apply mt-2 mb-0;
+}
+
+.bottom-footer form {
+  @apply mx-auto px-4 pt-12;
+  max-width: 24rem;
+}
+
+.bottom-footer form div {
+  @apply flex;
+}
+
+.bottom-footer form input {
+  @apply rounded-r-none border-r-0;
+}
+
+.bottom-footer form .btn {
+  @apply w-auto text-center text-xs rounded-l-none;
 }
 
 .bottom-footer img {

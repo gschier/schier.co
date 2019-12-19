@@ -4,10 +4,10 @@
   tags: '|Meta|'
   published: true
   content: |
-    I got fed up with WordPress so I developed my own simple blogging platform using
-    [Node.js](https://nodejs.org/ "Node.js"), [Express](https://expressjs.com/ "Express
-    Web Application Framework"), and
-    [Markdown](https://daringfireball.net/projects/markdown/ "Markdown") as a post format.
+  I got fed up with WordPress so I developed my own simple blogging platform using
+  [Node.js](https://nodejs.org/ "Node.js"), [Express](https://expressjs.com/ "Express
+  Web Application Framework"), and
+  [Markdown](https://daringfireball.net/projects/markdown/ "Markdown") as a post format.
 
     <!--more-->
 

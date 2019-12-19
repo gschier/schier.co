@@ -1,32 +1,41 @@
 <footer class="bottom-footer">
   <div class="container">
-    <img
-      src="data:image/svg+xml;base64,{{ 'images/greg.svg' | inlineStatic:'base64' }}"
-      alt="Gregory Schier vector headshot"
-    />
+    <div>
+      <img
+              src="data:image/svg+xml;base64,{{ 'images/greg.svg' | inlineStatic:'base64' }}"
+              alt="Gregory Schier vector headshot"
+      />
 
-    <div class="links">
-      <a href="//twitter.com/GregorySchier" rel="noopener">
-        Twitter
-      </a>
-      |
-      <a href="//github.com/gschier" rel="noopener">
-        GitHub
-      </a>
-      |
-      <a href="{{ rssUrl }}" type="application/rss+xml" target="_blank">
-        RSS
-      </a>
-      {% if loggedIn %}
-        <p>
-          {{ user.Email }}
-          <a href="/logout">Logout</a>
-        </p>
-      {% else %}
-        <p>
-          Thanks for visiting!
-        </p>
-      {% endif %}
+      <div class="links">
+        <a href="//twitter.com/GregorySchier" rel="noopener">
+          Twitter
+        </a>
+        |
+        <a href="//github.com/gschier" rel="noopener">
+          GitHub
+        </a>
+        |
+        <a href="{{ rssUrl }}" type="application/rss+xml" target="_blank">
+          RSS
+        </a>
+        {% if loggedIn %}
+          <p>
+            {{ user.Email }}
+            <a href="/logout">Logout</a>
+          </p>
+        {% else %}
+          <p>
+            Thanks for visiting!
+          </p>
+        {% endif %}
+      </div>
     </div>
+    <form action="/forms/newsletter/subscribe" method="post">
+      {{ csrfField | safe }}
+      <div>
+        <input name="email" type="email" placeholder="me@example.com">
+        <button class="btn">Subscribe</button>
+      </div>
+    </form>
   </div>
 </footer>

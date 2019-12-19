@@ -710,6 +710,10 @@ h6 {
   height: 2rem;
 }
 
+.btn.btn-wide {
+  width: 100%;
+}
+
 /**********/
 
 /* NOTICE */
@@ -772,11 +776,11 @@ form label {
 .CodeMirror,
 form input,
 form textarea {
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
   -webkit-appearance: none;
      -moz-appearance: none;
           appearance: none;
   border-width: 1px;
+  border-color: #e2e8f0;
   border-radius: 0.25rem;
   width: 100%;
   padding-top: 0.5rem;
@@ -787,10 +791,32 @@ form textarea {
   line-height: 1.25;
 }
 
+textarea::-webkit-input-placeholder, input::-webkit-input-placeholder {
+  color: #cbd5e0;
+}
+
+textarea::-moz-placeholder, input::-moz-placeholder {
+  color: #cbd5e0;
+}
+
+textarea:-ms-input-placeholder, input:-ms-input-placeholder {
+  color: #cbd5e0;
+}
+
+textarea::-ms-input-placeholder, input::-ms-input-placeholder {
+  color: #cbd5e0;
+}
+
+textarea::placeholder,
+input::placeholder {
+  color: #cbd5e0;
+}
+
 .CodeMirror-focused,
 form input:focus {
   outline: 0;
-  box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.5);
+  border-width: 1px;
+  border-color: #63b3ed;
 }
 
 form textarea:invalid,
@@ -1042,6 +1068,34 @@ pre.chroma-chroma {
 .bottom-footer .links p {
   margin-top: 0.5rem;
   margin-bottom: 0;
+}
+
+.bottom-footer form {
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 3rem;
+  max-width: 24rem;
+}
+
+.bottom-footer form div {
+  display: -webkit-box;
+  display: flex;
+}
+
+.bottom-footer form input {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  border-right-width: 0;
+}
+
+.bottom-footer form .btn {
+  width: auto;
+  text-align: center;
+  font-size: 0.75rem;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
 }
 
 .bottom-footer img {

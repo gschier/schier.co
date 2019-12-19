@@ -119,8 +119,47 @@ type BlogPostsConnectionParams struct {
 	Last    *int32                `json:"last,omitempty"`
 }
 
-func (client *Client) BlogPostsConnection(params *BlogPostsConnectionParams) BlogPostConnectionExec {
-	panic("not implemented")
+// Nodes return just nodes without cursors. It uses the already fetched edges.
+func (s *BlogPostConnection) Nodes() []BlogPost {
+	var nodes []BlogPost
+	for _, edge := range s.Edges {
+		nodes = append(nodes, edge.Node)
+	}
+	return nodes
+}
+
+// Nodes return just nodes without cursors, but as a slice of pointers. It uses the already fetched edges.
+func (s *BlogPostConnection) NodesPtr() []*BlogPost {
+	var nodes []*BlogPost
+	for _, edge := range s.Edges {
+		item := edge
+		nodes = append(nodes, &item.Node)
+	}
+	return nodes
+}
+
+func (client *Client) BlogPostsConnection(params *BlogPostsConnectionParams) *BlogPostConnectionExec {
+	var wparams *prisma.WhereParams
+	if params != nil {
+		wparams = &prisma.WhereParams{
+			Where:   params.Where,
+			OrderBy: (*string)(params.OrderBy),
+			Skip:    params.Skip,
+			After:   params.After,
+			Before:  params.Before,
+			First:   params.First,
+			Last:    params.Last,
+		}
+	}
+
+	ret := client.Client.GetMany(
+		nil,
+		wparams,
+		[3]string{"BlogPostWhereInput", "BlogPostOrderByInput", "BlogPost"},
+		"blogPostsConnection",
+		[]string{"edges", "pageInfo"})
+
+	return &BlogPostConnectionExec{ret}
 }
 
 func (client *Client) Book(params BookWhereUniqueInput) *BookExec {
@@ -178,8 +217,47 @@ type BooksConnectionParams struct {
 	Last    *int32            `json:"last,omitempty"`
 }
 
-func (client *Client) BooksConnection(params *BooksConnectionParams) BookConnectionExec {
-	panic("not implemented")
+// Nodes return just nodes without cursors. It uses the already fetched edges.
+func (s *BookConnection) Nodes() []Book {
+	var nodes []Book
+	for _, edge := range s.Edges {
+		nodes = append(nodes, edge.Node)
+	}
+	return nodes
+}
+
+// Nodes return just nodes without cursors, but as a slice of pointers. It uses the already fetched edges.
+func (s *BookConnection) NodesPtr() []*Book {
+	var nodes []*Book
+	for _, edge := range s.Edges {
+		item := edge
+		nodes = append(nodes, &item.Node)
+	}
+	return nodes
+}
+
+func (client *Client) BooksConnection(params *BooksConnectionParams) *BookConnectionExec {
+	var wparams *prisma.WhereParams
+	if params != nil {
+		wparams = &prisma.WhereParams{
+			Where:   params.Where,
+			OrderBy: (*string)(params.OrderBy),
+			Skip:    params.Skip,
+			After:   params.After,
+			Before:  params.Before,
+			First:   params.First,
+			Last:    params.Last,
+		}
+	}
+
+	ret := client.Client.GetMany(
+		nil,
+		wparams,
+		[3]string{"BookWhereInput", "BookOrderByInput", "Book"},
+		"booksConnection",
+		[]string{"edges", "pageInfo"})
+
+	return &BookConnectionExec{ret}
 }
 
 func (client *Client) FavoriteThing(params FavoriteThingWhereUniqueInput) *FavoriteThingExec {
@@ -237,8 +315,47 @@ type FavoriteThingsConnectionParams struct {
 	Last    *int32                     `json:"last,omitempty"`
 }
 
-func (client *Client) FavoriteThingsConnection(params *FavoriteThingsConnectionParams) FavoriteThingConnectionExec {
-	panic("not implemented")
+// Nodes return just nodes without cursors. It uses the already fetched edges.
+func (s *FavoriteThingConnection) Nodes() []FavoriteThing {
+	var nodes []FavoriteThing
+	for _, edge := range s.Edges {
+		nodes = append(nodes, edge.Node)
+	}
+	return nodes
+}
+
+// Nodes return just nodes without cursors, but as a slice of pointers. It uses the already fetched edges.
+func (s *FavoriteThingConnection) NodesPtr() []*FavoriteThing {
+	var nodes []*FavoriteThing
+	for _, edge := range s.Edges {
+		item := edge
+		nodes = append(nodes, &item.Node)
+	}
+	return nodes
+}
+
+func (client *Client) FavoriteThingsConnection(params *FavoriteThingsConnectionParams) *FavoriteThingConnectionExec {
+	var wparams *prisma.WhereParams
+	if params != nil {
+		wparams = &prisma.WhereParams{
+			Where:   params.Where,
+			OrderBy: (*string)(params.OrderBy),
+			Skip:    params.Skip,
+			After:   params.After,
+			Before:  params.Before,
+			First:   params.First,
+			Last:    params.Last,
+		}
+	}
+
+	ret := client.Client.GetMany(
+		nil,
+		wparams,
+		[3]string{"FavoriteThingWhereInput", "FavoriteThingOrderByInput", "FavoriteThing"},
+		"favoriteThingsConnection",
+		[]string{"edges", "pageInfo"})
+
+	return &FavoriteThingConnectionExec{ret}
 }
 
 func (client *Client) Project(params ProjectWhereUniqueInput) *ProjectExec {
@@ -296,8 +413,47 @@ type ProjectsConnectionParams struct {
 	Last    *int32               `json:"last,omitempty"`
 }
 
-func (client *Client) ProjectsConnection(params *ProjectsConnectionParams) ProjectConnectionExec {
-	panic("not implemented")
+// Nodes return just nodes without cursors. It uses the already fetched edges.
+func (s *ProjectConnection) Nodes() []Project {
+	var nodes []Project
+	for _, edge := range s.Edges {
+		nodes = append(nodes, edge.Node)
+	}
+	return nodes
+}
+
+// Nodes return just nodes without cursors, but as a slice of pointers. It uses the already fetched edges.
+func (s *ProjectConnection) NodesPtr() []*Project {
+	var nodes []*Project
+	for _, edge := range s.Edges {
+		item := edge
+		nodes = append(nodes, &item.Node)
+	}
+	return nodes
+}
+
+func (client *Client) ProjectsConnection(params *ProjectsConnectionParams) *ProjectConnectionExec {
+	var wparams *prisma.WhereParams
+	if params != nil {
+		wparams = &prisma.WhereParams{
+			Where:   params.Where,
+			OrderBy: (*string)(params.OrderBy),
+			Skip:    params.Skip,
+			After:   params.After,
+			Before:  params.Before,
+			First:   params.First,
+			Last:    params.Last,
+		}
+	}
+
+	ret := client.Client.GetMany(
+		nil,
+		wparams,
+		[3]string{"ProjectWhereInput", "ProjectOrderByInput", "Project"},
+		"projectsConnection",
+		[]string{"edges", "pageInfo"})
+
+	return &ProjectConnectionExec{ret}
 }
 
 func (client *Client) Session(params SessionWhereUniqueInput) *SessionExec {
@@ -355,8 +511,145 @@ type SessionsConnectionParams struct {
 	Last    *int32               `json:"last,omitempty"`
 }
 
-func (client *Client) SessionsConnection(params *SessionsConnectionParams) SessionConnectionExec {
-	panic("not implemented")
+// Nodes return just nodes without cursors. It uses the already fetched edges.
+func (s *SessionConnection) Nodes() []Session {
+	var nodes []Session
+	for _, edge := range s.Edges {
+		nodes = append(nodes, edge.Node)
+	}
+	return nodes
+}
+
+// Nodes return just nodes without cursors, but as a slice of pointers. It uses the already fetched edges.
+func (s *SessionConnection) NodesPtr() []*Session {
+	var nodes []*Session
+	for _, edge := range s.Edges {
+		item := edge
+		nodes = append(nodes, &item.Node)
+	}
+	return nodes
+}
+
+func (client *Client) SessionsConnection(params *SessionsConnectionParams) *SessionConnectionExec {
+	var wparams *prisma.WhereParams
+	if params != nil {
+		wparams = &prisma.WhereParams{
+			Where:   params.Where,
+			OrderBy: (*string)(params.OrderBy),
+			Skip:    params.Skip,
+			After:   params.After,
+			Before:  params.Before,
+			First:   params.First,
+			Last:    params.Last,
+		}
+	}
+
+	ret := client.Client.GetMany(
+		nil,
+		wparams,
+		[3]string{"SessionWhereInput", "SessionOrderByInput", "Session"},
+		"sessionsConnection",
+		[]string{"edges", "pageInfo"})
+
+	return &SessionConnectionExec{ret}
+}
+
+func (client *Client) Subscriber(params SubscriberWhereUniqueInput) *SubscriberExec {
+	ret := client.Client.GetOne(
+		nil,
+		params,
+		[2]string{"SubscriberWhereUniqueInput!", "Subscriber"},
+		"subscriber",
+		[]string{"id", "email", "name", "confirmed"})
+
+	return &SubscriberExec{ret}
+}
+
+type SubscribersParams struct {
+	Where   *SubscriberWhereInput   `json:"where,omitempty"`
+	OrderBy *SubscriberOrderByInput `json:"orderBy,omitempty"`
+	Skip    *int32                  `json:"skip,omitempty"`
+	After   *string                 `json:"after,omitempty"`
+	Before  *string                 `json:"before,omitempty"`
+	First   *int32                  `json:"first,omitempty"`
+	Last    *int32                  `json:"last,omitempty"`
+}
+
+func (client *Client) Subscribers(params *SubscribersParams) *SubscriberExecArray {
+	var wparams *prisma.WhereParams
+	if params != nil {
+		wparams = &prisma.WhereParams{
+			Where:   params.Where,
+			OrderBy: (*string)(params.OrderBy),
+			Skip:    params.Skip,
+			After:   params.After,
+			Before:  params.Before,
+			First:   params.First,
+			Last:    params.Last,
+		}
+	}
+
+	ret := client.Client.GetMany(
+		nil,
+		wparams,
+		[3]string{"SubscriberWhereInput", "SubscriberOrderByInput", "Subscriber"},
+		"subscribers",
+		[]string{"id", "email", "name", "confirmed"})
+
+	return &SubscriberExecArray{ret}
+}
+
+type SubscribersConnectionParams struct {
+	Where   *SubscriberWhereInput   `json:"where,omitempty"`
+	OrderBy *SubscriberOrderByInput `json:"orderBy,omitempty"`
+	Skip    *int32                  `json:"skip,omitempty"`
+	After   *string                 `json:"after,omitempty"`
+	Before  *string                 `json:"before,omitempty"`
+	First   *int32                  `json:"first,omitempty"`
+	Last    *int32                  `json:"last,omitempty"`
+}
+
+// Nodes return just nodes without cursors. It uses the already fetched edges.
+func (s *SubscriberConnection) Nodes() []Subscriber {
+	var nodes []Subscriber
+	for _, edge := range s.Edges {
+		nodes = append(nodes, edge.Node)
+	}
+	return nodes
+}
+
+// Nodes return just nodes without cursors, but as a slice of pointers. It uses the already fetched edges.
+func (s *SubscriberConnection) NodesPtr() []*Subscriber {
+	var nodes []*Subscriber
+	for _, edge := range s.Edges {
+		item := edge
+		nodes = append(nodes, &item.Node)
+	}
+	return nodes
+}
+
+func (client *Client) SubscribersConnection(params *SubscribersConnectionParams) *SubscriberConnectionExec {
+	var wparams *prisma.WhereParams
+	if params != nil {
+		wparams = &prisma.WhereParams{
+			Where:   params.Where,
+			OrderBy: (*string)(params.OrderBy),
+			Skip:    params.Skip,
+			After:   params.After,
+			Before:  params.Before,
+			First:   params.First,
+			Last:    params.Last,
+		}
+	}
+
+	ret := client.Client.GetMany(
+		nil,
+		wparams,
+		[3]string{"SubscriberWhereInput", "SubscriberOrderByInput", "Subscriber"},
+		"subscribersConnection",
+		[]string{"edges", "pageInfo"})
+
+	return &SubscriberConnectionExec{ret}
 }
 
 func (client *Client) User(params UserWhereUniqueInput) *UserExec {
@@ -414,8 +707,47 @@ type UsersConnectionParams struct {
 	Last    *int32            `json:"last,omitempty"`
 }
 
-func (client *Client) UsersConnection(params *UsersConnectionParams) UserConnectionExec {
-	panic("not implemented")
+// Nodes return just nodes without cursors. It uses the already fetched edges.
+func (s *UserConnection) Nodes() []User {
+	var nodes []User
+	for _, edge := range s.Edges {
+		nodes = append(nodes, edge.Node)
+	}
+	return nodes
+}
+
+// Nodes return just nodes without cursors, but as a slice of pointers. It uses the already fetched edges.
+func (s *UserConnection) NodesPtr() []*User {
+	var nodes []*User
+	for _, edge := range s.Edges {
+		item := edge
+		nodes = append(nodes, &item.Node)
+	}
+	return nodes
+}
+
+func (client *Client) UsersConnection(params *UsersConnectionParams) *UserConnectionExec {
+	var wparams *prisma.WhereParams
+	if params != nil {
+		wparams = &prisma.WhereParams{
+			Where:   params.Where,
+			OrderBy: (*string)(params.OrderBy),
+			Skip:    params.Skip,
+			After:   params.After,
+			Before:  params.Before,
+			First:   params.First,
+			Last:    params.Last,
+		}
+	}
+
+	ret := client.Client.GetMany(
+		nil,
+		wparams,
+		[3]string{"UserWhereInput", "UserOrderByInput", "User"},
+		"usersConnection",
+		[]string{"edges", "pageInfo"})
+
+	return &UserConnectionExec{ret}
 }
 
 func (client *Client) CreateBlogPost(params BlogPostCreateInput) *BlogPostExec {
@@ -802,6 +1134,86 @@ func (client *Client) DeleteManySessions(params *SessionWhereInput) *BatchPayloa
 	return &BatchPayloadExec{exec}
 }
 
+func (client *Client) CreateSubscriber(params SubscriberCreateInput) *SubscriberExec {
+	ret := client.Client.Create(
+		params,
+		[2]string{"SubscriberCreateInput!", "Subscriber"},
+		"createSubscriber",
+		[]string{"id", "email", "name", "confirmed"})
+
+	return &SubscriberExec{ret}
+}
+
+type SubscriberUpdateParams struct {
+	Data  SubscriberUpdateInput      `json:"data"`
+	Where SubscriberWhereUniqueInput `json:"where"`
+}
+
+func (client *Client) UpdateSubscriber(params SubscriberUpdateParams) *SubscriberExec {
+	ret := client.Client.Update(
+		prisma.UpdateParams{
+			Data:  params.Data,
+			Where: params.Where,
+		},
+		[3]string{"SubscriberUpdateInput!", "SubscriberWhereUniqueInput!", "Subscriber"},
+		"updateSubscriber",
+		[]string{"id", "email", "name", "confirmed"})
+
+	return &SubscriberExec{ret}
+}
+
+type SubscriberUpdateManyParams struct {
+	Data  SubscriberUpdateManyMutationInput `json:"data"`
+	Where *SubscriberWhereInput             `json:"where,omitempty"`
+}
+
+func (client *Client) UpdateManySubscribers(params SubscriberUpdateManyParams) *BatchPayloadExec {
+	exec := client.Client.UpdateMany(
+		prisma.UpdateParams{
+			Data:  params.Data,
+			Where: params.Where,
+		},
+		[2]string{"SubscriberUpdateManyMutationInput!", "SubscriberWhereInput"},
+		"updateManySubscribers")
+	return &BatchPayloadExec{exec}
+}
+
+type SubscriberUpsertParams struct {
+	Where  SubscriberWhereUniqueInput `json:"where"`
+	Create SubscriberCreateInput      `json:"create"`
+	Update SubscriberUpdateInput      `json:"update"`
+}
+
+func (client *Client) UpsertSubscriber(params SubscriberUpsertParams) *SubscriberExec {
+	uparams := &prisma.UpsertParams{
+		Where:  params.Where,
+		Create: params.Create,
+		Update: params.Update,
+	}
+	ret := client.Client.Upsert(
+		uparams,
+		[4]string{"SubscriberWhereUniqueInput!", "SubscriberCreateInput!", "SubscriberUpdateInput!", "Subscriber"},
+		"upsertSubscriber",
+		[]string{"id", "email", "name", "confirmed"})
+
+	return &SubscriberExec{ret}
+}
+
+func (client *Client) DeleteSubscriber(params SubscriberWhereUniqueInput) *SubscriberExec {
+	ret := client.Client.Delete(
+		params,
+		[2]string{"SubscriberWhereUniqueInput!", "Subscriber"},
+		"deleteSubscriber",
+		[]string{"id", "email", "name", "confirmed"})
+
+	return &SubscriberExec{ret}
+}
+
+func (client *Client) DeleteManySubscribers(params *SubscriberWhereInput) *BatchPayloadExec {
+	exec := client.Client.DeleteMany(params, "SubscriberWhereInput", "deleteManySubscribers")
+	return &BatchPayloadExec{exec}
+}
+
 func (client *Client) CreateUser(params UserCreateInput) *UserExec {
 	ret := client.Client.Create(
 		params,
@@ -907,14 +1319,6 @@ const (
 	BlogPostOrderByInputTagsDesc      BlogPostOrderByInput = "tags_DESC"
 )
 
-type MutationType string
-
-const (
-	MutationTypeCreated MutationType = "CREATED"
-	MutationTypeUpdated MutationType = "UPDATED"
-	MutationTypeDeleted MutationType = "DELETED"
-)
-
 type BookOrderByInput string
 
 const (
@@ -984,6 +1388,27 @@ const (
 	SessionOrderByInputCreatedAtDesc SessionOrderByInput = "createdAt_DESC"
 )
 
+type SubscriberOrderByInput string
+
+const (
+	SubscriberOrderByInputIDAsc         SubscriberOrderByInput = "id_ASC"
+	SubscriberOrderByInputIDDesc        SubscriberOrderByInput = "id_DESC"
+	SubscriberOrderByInputEmailAsc      SubscriberOrderByInput = "email_ASC"
+	SubscriberOrderByInputEmailDesc     SubscriberOrderByInput = "email_DESC"
+	SubscriberOrderByInputNameAsc       SubscriberOrderByInput = "name_ASC"
+	SubscriberOrderByInputNameDesc      SubscriberOrderByInput = "name_DESC"
+	SubscriberOrderByInputConfirmedAsc  SubscriberOrderByInput = "confirmed_ASC"
+	SubscriberOrderByInputConfirmedDesc SubscriberOrderByInput = "confirmed_DESC"
+)
+
+type MutationType string
+
+const (
+	MutationTypeCreated MutationType = "CREATED"
+	MutationTypeUpdated MutationType = "UPDATED"
+	MutationTypeDeleted MutationType = "DELETED"
+)
+
 type UserOrderByInput string
 
 const (
@@ -1003,83 +1428,21 @@ const (
 	UserOrderByInputPasswordHashDesc UserOrderByInput = "passwordHash_DESC"
 )
 
-type FavoriteThingWhereInput struct {
-	ID                       *string                   `json:"id,omitempty"`
-	IDNot                    *string                   `json:"id_not,omitempty"`
-	IDIn                     []string                  `json:"id_in,omitempty"`
-	IDNotIn                  []string                  `json:"id_not_in,omitempty"`
-	IDLt                     *string                   `json:"id_lt,omitempty"`
-	IDLte                    *string                   `json:"id_lte,omitempty"`
-	IDGt                     *string                   `json:"id_gt,omitempty"`
-	IDGte                    *string                   `json:"id_gte,omitempty"`
-	IDContains               *string                   `json:"id_contains,omitempty"`
-	IDNotContains            *string                   `json:"id_not_contains,omitempty"`
-	IDStartsWith             *string                   `json:"id_starts_with,omitempty"`
-	IDNotStartsWith          *string                   `json:"id_not_starts_with,omitempty"`
-	IDEndsWith               *string                   `json:"id_ends_with,omitempty"`
-	IDNotEndsWith            *string                   `json:"id_not_ends_with,omitempty"`
-	Priority                 *int32                    `json:"priority,omitempty"`
-	PriorityNot              *int32                    `json:"priority_not,omitempty"`
-	PriorityIn               []int32                   `json:"priority_in,omitempty"`
-	PriorityNotIn            []int32                   `json:"priority_not_in,omitempty"`
-	PriorityLt               *int32                    `json:"priority_lt,omitempty"`
-	PriorityLte              *int32                    `json:"priority_lte,omitempty"`
-	PriorityGt               *int32                    `json:"priority_gt,omitempty"`
-	PriorityGte              *int32                    `json:"priority_gte,omitempty"`
-	Name                     *string                   `json:"name,omitempty"`
-	NameNot                  *string                   `json:"name_not,omitempty"`
-	NameIn                   []string                  `json:"name_in,omitempty"`
-	NameNotIn                []string                  `json:"name_not_in,omitempty"`
-	NameLt                   *string                   `json:"name_lt,omitempty"`
-	NameLte                  *string                   `json:"name_lte,omitempty"`
-	NameGt                   *string                   `json:"name_gt,omitempty"`
-	NameGte                  *string                   `json:"name_gte,omitempty"`
-	NameContains             *string                   `json:"name_contains,omitempty"`
-	NameNotContains          *string                   `json:"name_not_contains,omitempty"`
-	NameStartsWith           *string                   `json:"name_starts_with,omitempty"`
-	NameNotStartsWith        *string                   `json:"name_not_starts_with,omitempty"`
-	NameEndsWith             *string                   `json:"name_ends_with,omitempty"`
-	NameNotEndsWith          *string                   `json:"name_not_ends_with,omitempty"`
-	Link                     *string                   `json:"link,omitempty"`
-	LinkNot                  *string                   `json:"link_not,omitempty"`
-	LinkIn                   []string                  `json:"link_in,omitempty"`
-	LinkNotIn                []string                  `json:"link_not_in,omitempty"`
-	LinkLt                   *string                   `json:"link_lt,omitempty"`
-	LinkLte                  *string                   `json:"link_lte,omitempty"`
-	LinkGt                   *string                   `json:"link_gt,omitempty"`
-	LinkGte                  *string                   `json:"link_gte,omitempty"`
-	LinkContains             *string                   `json:"link_contains,omitempty"`
-	LinkNotContains          *string                   `json:"link_not_contains,omitempty"`
-	LinkStartsWith           *string                   `json:"link_starts_with,omitempty"`
-	LinkNotStartsWith        *string                   `json:"link_not_starts_with,omitempty"`
-	LinkEndsWith             *string                   `json:"link_ends_with,omitempty"`
-	LinkNotEndsWith          *string                   `json:"link_not_ends_with,omitempty"`
-	Description              *string                   `json:"description,omitempty"`
-	DescriptionNot           *string                   `json:"description_not,omitempty"`
-	DescriptionIn            []string                  `json:"description_in,omitempty"`
-	DescriptionNotIn         []string                  `json:"description_not_in,omitempty"`
-	DescriptionLt            *string                   `json:"description_lt,omitempty"`
-	DescriptionLte           *string                   `json:"description_lte,omitempty"`
-	DescriptionGt            *string                   `json:"description_gt,omitempty"`
-	DescriptionGte           *string                   `json:"description_gte,omitempty"`
-	DescriptionContains      *string                   `json:"description_contains,omitempty"`
-	DescriptionNotContains   *string                   `json:"description_not_contains,omitempty"`
-	DescriptionStartsWith    *string                   `json:"description_starts_with,omitempty"`
-	DescriptionNotStartsWith *string                   `json:"description_not_starts_with,omitempty"`
-	DescriptionEndsWith      *string                   `json:"description_ends_with,omitempty"`
-	DescriptionNotEndsWith   *string                   `json:"description_not_ends_with,omitempty"`
-	And                      []FavoriteThingWhereInput `json:"AND,omitempty"`
-	Or                       []FavoriteThingWhereInput `json:"OR,omitempty"`
-	Not                      []FavoriteThingWhereInput `json:"NOT,omitempty"`
-}
-
 type BlogPostWhereUniqueInput struct {
 	ID   *string `json:"id,omitempty"`
 	Slug *string `json:"slug,omitempty"`
 }
 
-type ProjectWhereUniqueInput struct {
-	ID *string `json:"id,omitempty"`
+type BlogPostCreateInput struct {
+	ID        *string            `json:"id,omitempty"`
+	Slug      string             `json:"slug"`
+	Published bool               `json:"published"`
+	Image     string             `json:"image"`
+	Title     string             `json:"title"`
+	Date      string             `json:"date"`
+	Author    UserCreateOneInput `json:"author"`
+	Content   string             `json:"content"`
+	Tags      string             `json:"tags"`
 }
 
 type UserWhereInput struct {
@@ -1164,160 +1527,62 @@ type UserWhereInput struct {
 	Not                       []UserWhereInput `json:"NOT,omitempty"`
 }
 
-type BookUpdateInput struct {
-	Title  *string `json:"title,omitempty"`
-	Author *string `json:"author,omitempty"`
-	Rank   *int32  `json:"rank,omitempty"`
-	Link   *string `json:"link,omitempty"`
-}
-
-type UserUpdateManyMutationInput struct {
-	Type         *UserType `json:"type,omitempty"`
-	Email        *string   `json:"email,omitempty"`
-	Name         *string   `json:"name,omitempty"`
-	PasswordHash *string   `json:"passwordHash,omitempty"`
-}
-
-type ProjectWhereInput struct {
-	ID                       *string             `json:"id,omitempty"`
-	IDNot                    *string             `json:"id_not,omitempty"`
-	IDIn                     []string            `json:"id_in,omitempty"`
-	IDNotIn                  []string            `json:"id_not_in,omitempty"`
-	IDLt                     *string             `json:"id_lt,omitempty"`
-	IDLte                    *string             `json:"id_lte,omitempty"`
-	IDGt                     *string             `json:"id_gt,omitempty"`
-	IDGte                    *string             `json:"id_gte,omitempty"`
-	IDContains               *string             `json:"id_contains,omitempty"`
-	IDNotContains            *string             `json:"id_not_contains,omitempty"`
-	IDStartsWith             *string             `json:"id_starts_with,omitempty"`
-	IDNotStartsWith          *string             `json:"id_not_starts_with,omitempty"`
-	IDEndsWith               *string             `json:"id_ends_with,omitempty"`
-	IDNotEndsWith            *string             `json:"id_not_ends_with,omitempty"`
-	Priority                 *int32              `json:"priority,omitempty"`
-	PriorityNot              *int32              `json:"priority_not,omitempty"`
-	PriorityIn               []int32             `json:"priority_in,omitempty"`
-	PriorityNotIn            []int32             `json:"priority_not_in,omitempty"`
-	PriorityLt               *int32              `json:"priority_lt,omitempty"`
-	PriorityLte              *int32              `json:"priority_lte,omitempty"`
-	PriorityGt               *int32              `json:"priority_gt,omitempty"`
-	PriorityGte              *int32              `json:"priority_gte,omitempty"`
-	Name                     *string             `json:"name,omitempty"`
-	NameNot                  *string             `json:"name_not,omitempty"`
-	NameIn                   []string            `json:"name_in,omitempty"`
-	NameNotIn                []string            `json:"name_not_in,omitempty"`
-	NameLt                   *string             `json:"name_lt,omitempty"`
-	NameLte                  *string             `json:"name_lte,omitempty"`
-	NameGt                   *string             `json:"name_gt,omitempty"`
-	NameGte                  *string             `json:"name_gte,omitempty"`
-	NameContains             *string             `json:"name_contains,omitempty"`
-	NameNotContains          *string             `json:"name_not_contains,omitempty"`
-	NameStartsWith           *string             `json:"name_starts_with,omitempty"`
-	NameNotStartsWith        *string             `json:"name_not_starts_with,omitempty"`
-	NameEndsWith             *string             `json:"name_ends_with,omitempty"`
-	NameNotEndsWith          *string             `json:"name_not_ends_with,omitempty"`
-	Link                     *string             `json:"link,omitempty"`
-	LinkNot                  *string             `json:"link_not,omitempty"`
-	LinkIn                   []string            `json:"link_in,omitempty"`
-	LinkNotIn                []string            `json:"link_not_in,omitempty"`
-	LinkLt                   *string             `json:"link_lt,omitempty"`
-	LinkLte                  *string             `json:"link_lte,omitempty"`
-	LinkGt                   *string             `json:"link_gt,omitempty"`
-	LinkGte                  *string             `json:"link_gte,omitempty"`
-	LinkContains             *string             `json:"link_contains,omitempty"`
-	LinkNotContains          *string             `json:"link_not_contains,omitempty"`
-	LinkStartsWith           *string             `json:"link_starts_with,omitempty"`
-	LinkNotStartsWith        *string             `json:"link_not_starts_with,omitempty"`
-	LinkEndsWith             *string             `json:"link_ends_with,omitempty"`
-	LinkNotEndsWith          *string             `json:"link_not_ends_with,omitempty"`
-	Icon                     *string             `json:"icon,omitempty"`
-	IconNot                  *string             `json:"icon_not,omitempty"`
-	IconIn                   []string            `json:"icon_in,omitempty"`
-	IconNotIn                []string            `json:"icon_not_in,omitempty"`
-	IconLt                   *string             `json:"icon_lt,omitempty"`
-	IconLte                  *string             `json:"icon_lte,omitempty"`
-	IconGt                   *string             `json:"icon_gt,omitempty"`
-	IconGte                  *string             `json:"icon_gte,omitempty"`
-	IconContains             *string             `json:"icon_contains,omitempty"`
-	IconNotContains          *string             `json:"icon_not_contains,omitempty"`
-	IconStartsWith           *string             `json:"icon_starts_with,omitempty"`
-	IconNotStartsWith        *string             `json:"icon_not_starts_with,omitempty"`
-	IconEndsWith             *string             `json:"icon_ends_with,omitempty"`
-	IconNotEndsWith          *string             `json:"icon_not_ends_with,omitempty"`
-	Description              *string             `json:"description,omitempty"`
-	DescriptionNot           *string             `json:"description_not,omitempty"`
-	DescriptionIn            []string            `json:"description_in,omitempty"`
-	DescriptionNotIn         []string            `json:"description_not_in,omitempty"`
-	DescriptionLt            *string             `json:"description_lt,omitempty"`
-	DescriptionLte           *string             `json:"description_lte,omitempty"`
-	DescriptionGt            *string             `json:"description_gt,omitempty"`
-	DescriptionGte           *string             `json:"description_gte,omitempty"`
-	DescriptionContains      *string             `json:"description_contains,omitempty"`
-	DescriptionNotContains   *string             `json:"description_not_contains,omitempty"`
-	DescriptionStartsWith    *string             `json:"description_starts_with,omitempty"`
-	DescriptionNotStartsWith *string             `json:"description_not_starts_with,omitempty"`
-	DescriptionEndsWith      *string             `json:"description_ends_with,omitempty"`
-	DescriptionNotEndsWith   *string             `json:"description_not_ends_with,omitempty"`
-	Retired                  *bool               `json:"retired,omitempty"`
-	RetiredNot               *bool               `json:"retired_not,omitempty"`
-	Revenue                  *string             `json:"revenue,omitempty"`
-	RevenueNot               *string             `json:"revenue_not,omitempty"`
-	RevenueIn                []string            `json:"revenue_in,omitempty"`
-	RevenueNotIn             []string            `json:"revenue_not_in,omitempty"`
-	RevenueLt                *string             `json:"revenue_lt,omitempty"`
-	RevenueLte               *string             `json:"revenue_lte,omitempty"`
-	RevenueGt                *string             `json:"revenue_gt,omitempty"`
-	RevenueGte               *string             `json:"revenue_gte,omitempty"`
-	RevenueContains          *string             `json:"revenue_contains,omitempty"`
-	RevenueNotContains       *string             `json:"revenue_not_contains,omitempty"`
-	RevenueStartsWith        *string             `json:"revenue_starts_with,omitempty"`
-	RevenueNotStartsWith     *string             `json:"revenue_not_starts_with,omitempty"`
-	RevenueEndsWith          *string             `json:"revenue_ends_with,omitempty"`
-	RevenueNotEndsWith       *string             `json:"revenue_not_ends_with,omitempty"`
-	Reason                   *string             `json:"reason,omitempty"`
-	ReasonNot                *string             `json:"reason_not,omitempty"`
-	ReasonIn                 []string            `json:"reason_in,omitempty"`
-	ReasonNotIn              []string            `json:"reason_not_in,omitempty"`
-	ReasonLt                 *string             `json:"reason_lt,omitempty"`
-	ReasonLte                *string             `json:"reason_lte,omitempty"`
-	ReasonGt                 *string             `json:"reason_gt,omitempty"`
-	ReasonGte                *string             `json:"reason_gte,omitempty"`
-	ReasonContains           *string             `json:"reason_contains,omitempty"`
-	ReasonNotContains        *string             `json:"reason_not_contains,omitempty"`
-	ReasonStartsWith         *string             `json:"reason_starts_with,omitempty"`
-	ReasonNotStartsWith      *string             `json:"reason_not_starts_with,omitempty"`
-	ReasonEndsWith           *string             `json:"reason_ends_with,omitempty"`
-	ReasonNotEndsWith        *string             `json:"reason_not_ends_with,omitempty"`
-	And                      []ProjectWhereInput `json:"AND,omitempty"`
-	Or                       []ProjectWhereInput `json:"OR,omitempty"`
-	Not                      []ProjectWhereInput `json:"NOT,omitempty"`
-}
-
-type SessionUpdateInput struct {
-	User *UserUpdateOneRequiredInput `json:"user,omitempty"`
-}
-
-type FavoriteThingSubscriptionWhereInput struct {
-	MutationIn                 []MutationType                        `json:"mutation_in,omitempty"`
-	UpdatedFieldsContains      *string                               `json:"updatedFields_contains,omitempty"`
-	UpdatedFieldsContainsEvery []string                              `json:"updatedFields_contains_every,omitempty"`
-	UpdatedFieldsContainsSome  []string                              `json:"updatedFields_contains_some,omitempty"`
-	Node                       *FavoriteThingWhereInput              `json:"node,omitempty"`
-	And                        []FavoriteThingSubscriptionWhereInput `json:"AND,omitempty"`
-	Or                         []FavoriteThingSubscriptionWhereInput `json:"OR,omitempty"`
-	Not                        []FavoriteThingSubscriptionWhereInput `json:"NOT,omitempty"`
-}
-
 type SessionCreateInput struct {
 	ID   *string            `json:"id,omitempty"`
 	User UserCreateOneInput `json:"user"`
 }
 
-type BookCreateInput struct {
-	ID     *string `json:"id,omitempty"`
-	Title  string  `json:"title"`
-	Author string  `json:"author"`
-	Rank   *int32  `json:"rank,omitempty"`
-	Link   *string `json:"link,omitempty"`
+type UserCreateOneInput struct {
+	Create  *UserCreateInput      `json:"create,omitempty"`
+	Connect *UserWhereUniqueInput `json:"connect,omitempty"`
+}
+
+type ProjectUpdateManyMutationInput struct {
+	Priority    *int32  `json:"priority,omitempty"`
+	Name        *string `json:"name,omitempty"`
+	Link        *string `json:"link,omitempty"`
+	Icon        *string `json:"icon,omitempty"`
+	Description *string `json:"description,omitempty"`
+	Retired     *bool   `json:"retired,omitempty"`
+	Revenue     *string `json:"revenue,omitempty"`
+	Reason      *string `json:"reason,omitempty"`
+}
+
+type SubscriberSubscriptionWhereInput struct {
+	MutationIn                 []MutationType                     `json:"mutation_in,omitempty"`
+	UpdatedFieldsContains      *string                            `json:"updatedFields_contains,omitempty"`
+	UpdatedFieldsContainsEvery []string                           `json:"updatedFields_contains_every,omitempty"`
+	UpdatedFieldsContainsSome  []string                           `json:"updatedFields_contains_some,omitempty"`
+	Node                       *SubscriberWhereInput              `json:"node,omitempty"`
+	And                        []SubscriberSubscriptionWhereInput `json:"AND,omitempty"`
+	Or                         []SubscriberSubscriptionWhereInput `json:"OR,omitempty"`
+	Not                        []SubscriberSubscriptionWhereInput `json:"NOT,omitempty"`
+}
+
+type ProjectUpdateInput struct {
+	Priority    *int32  `json:"priority,omitempty"`
+	Name        *string `json:"name,omitempty"`
+	Link        *string `json:"link,omitempty"`
+	Icon        *string `json:"icon,omitempty"`
+	Description *string `json:"description,omitempty"`
+	Retired     *bool   `json:"retired,omitempty"`
+	Revenue     *string `json:"revenue,omitempty"`
+	Reason      *string `json:"reason,omitempty"`
+}
+
+type SessionSubscriptionWhereInput struct {
+	MutationIn                 []MutationType                  `json:"mutation_in,omitempty"`
+	UpdatedFieldsContains      *string                         `json:"updatedFields_contains,omitempty"`
+	UpdatedFieldsContainsEvery []string                        `json:"updatedFields_contains_every,omitempty"`
+	UpdatedFieldsContainsSome  []string                        `json:"updatedFields_contains_some,omitempty"`
+	Node                       *SessionWhereInput              `json:"node,omitempty"`
+	And                        []SessionSubscriptionWhereInput `json:"AND,omitempty"`
+	Or                         []SessionSubscriptionWhereInput `json:"OR,omitempty"`
+	Not                        []SessionSubscriptionWhereInput `json:"NOT,omitempty"`
+}
+
+type SessionWhereUniqueInput struct {
+	ID *string `json:"id,omitempty"`
 }
 
 type BlogPostWhereInput struct {
@@ -1437,63 +1702,27 @@ type BlogPostWhereInput struct {
 	Not                  []BlogPostWhereInput `json:"NOT,omitempty"`
 }
 
-type BlogPostUpdateManyMutationInput struct {
-	Slug      *string `json:"slug,omitempty"`
-	Published *bool   `json:"published,omitempty"`
-	Image     *string `json:"image,omitempty"`
-	Title     *string `json:"title,omitempty"`
-	Date      *string `json:"date,omitempty"`
-	Content   *string `json:"content,omitempty"`
-	Tags      *string `json:"tags,omitempty"`
-}
-
-type ProjectUpdateInput struct {
-	Priority    *int32  `json:"priority,omitempty"`
-	Name        *string `json:"name,omitempty"`
-	Link        *string `json:"link,omitempty"`
-	Icon        *string `json:"icon,omitempty"`
-	Description *string `json:"description,omitempty"`
-	Retired     *bool   `json:"retired,omitempty"`
-	Revenue     *string `json:"revenue,omitempty"`
+type ProjectCreateInput struct {
+	ID          *string `json:"id,omitempty"`
+	Priority    int32   `json:"priority"`
+	Name        string  `json:"name"`
+	Link        string  `json:"link"`
+	Icon        string  `json:"icon"`
+	Description string  `json:"description"`
+	Retired     bool    `json:"retired"`
+	Revenue     string  `json:"revenue"`
 	Reason      *string `json:"reason,omitempty"`
 }
 
-type UserUpsertNestedInput struct {
-	Update UserUpdateDataInput `json:"update"`
-	Create UserCreateInput     `json:"create"`
-}
-
-type FavoriteThingWhereUniqueInput struct {
-	ID *string `json:"id,omitempty"`
-}
-
-type SessionWhereUniqueInput struct {
-	ID *string `json:"id,omitempty"`
-}
-
-type UserSubscriptionWhereInput struct {
-	MutationIn                 []MutationType               `json:"mutation_in,omitempty"`
-	UpdatedFieldsContains      *string                      `json:"updatedFields_contains,omitempty"`
-	UpdatedFieldsContainsEvery []string                     `json:"updatedFields_contains_every,omitempty"`
-	UpdatedFieldsContainsSome  []string                     `json:"updatedFields_contains_some,omitempty"`
-	Node                       *UserWhereInput              `json:"node,omitempty"`
-	And                        []UserSubscriptionWhereInput `json:"AND,omitempty"`
-	Or                         []UserSubscriptionWhereInput `json:"OR,omitempty"`
-	Not                        []UserSubscriptionWhereInput `json:"NOT,omitempty"`
-}
-
-type UserUpdateDataInput struct {
-	Type         *UserType `json:"type,omitempty"`
-	Email        *string   `json:"email,omitempty"`
-	Name         *string   `json:"name,omitempty"`
-	PasswordHash *string   `json:"passwordHash,omitempty"`
-}
-
-type FavoriteThingUpdateInput struct {
-	Priority    *int32  `json:"priority,omitempty"`
-	Name        *string `json:"name,omitempty"`
-	Link        *string `json:"link,omitempty"`
-	Description *string `json:"description,omitempty"`
+type FavoriteThingSubscriptionWhereInput struct {
+	MutationIn                 []MutationType                        `json:"mutation_in,omitempty"`
+	UpdatedFieldsContains      *string                               `json:"updatedFields_contains,omitempty"`
+	UpdatedFieldsContainsEvery []string                              `json:"updatedFields_contains_every,omitempty"`
+	UpdatedFieldsContainsSome  []string                              `json:"updatedFields_contains_some,omitempty"`
+	Node                       *FavoriteThingWhereInput              `json:"node,omitempty"`
+	And                        []FavoriteThingSubscriptionWhereInput `json:"AND,omitempty"`
+	Or                         []FavoriteThingSubscriptionWhereInput `json:"OR,omitempty"`
+	Not                        []FavoriteThingSubscriptionWhereInput `json:"NOT,omitempty"`
 }
 
 type SessionWhereInput struct {
@@ -1525,11 +1754,197 @@ type SessionWhereInput struct {
 	Not             []SessionWhereInput `json:"NOT,omitempty"`
 }
 
+type FavoriteThingWhereUniqueInput struct {
+	ID *string `json:"id,omitempty"`
+}
+
+type FavoriteThingUpdateManyMutationInput struct {
+	Priority    *int32  `json:"priority,omitempty"`
+	Name        *string `json:"name,omitempty"`
+	Link        *string `json:"link,omitempty"`
+	Description *string `json:"description,omitempty"`
+}
+
+type FavoriteThingWhereInput struct {
+	ID                       *string                   `json:"id,omitempty"`
+	IDNot                    *string                   `json:"id_not,omitempty"`
+	IDIn                     []string                  `json:"id_in,omitempty"`
+	IDNotIn                  []string                  `json:"id_not_in,omitempty"`
+	IDLt                     *string                   `json:"id_lt,omitempty"`
+	IDLte                    *string                   `json:"id_lte,omitempty"`
+	IDGt                     *string                   `json:"id_gt,omitempty"`
+	IDGte                    *string                   `json:"id_gte,omitempty"`
+	IDContains               *string                   `json:"id_contains,omitempty"`
+	IDNotContains            *string                   `json:"id_not_contains,omitempty"`
+	IDStartsWith             *string                   `json:"id_starts_with,omitempty"`
+	IDNotStartsWith          *string                   `json:"id_not_starts_with,omitempty"`
+	IDEndsWith               *string                   `json:"id_ends_with,omitempty"`
+	IDNotEndsWith            *string                   `json:"id_not_ends_with,omitempty"`
+	Priority                 *int32                    `json:"priority,omitempty"`
+	PriorityNot              *int32                    `json:"priority_not,omitempty"`
+	PriorityIn               []int32                   `json:"priority_in,omitempty"`
+	PriorityNotIn            []int32                   `json:"priority_not_in,omitempty"`
+	PriorityLt               *int32                    `json:"priority_lt,omitempty"`
+	PriorityLte              *int32                    `json:"priority_lte,omitempty"`
+	PriorityGt               *int32                    `json:"priority_gt,omitempty"`
+	PriorityGte              *int32                    `json:"priority_gte,omitempty"`
+	Name                     *string                   `json:"name,omitempty"`
+	NameNot                  *string                   `json:"name_not,omitempty"`
+	NameIn                   []string                  `json:"name_in,omitempty"`
+	NameNotIn                []string                  `json:"name_not_in,omitempty"`
+	NameLt                   *string                   `json:"name_lt,omitempty"`
+	NameLte                  *string                   `json:"name_lte,omitempty"`
+	NameGt                   *string                   `json:"name_gt,omitempty"`
+	NameGte                  *string                   `json:"name_gte,omitempty"`
+	NameContains             *string                   `json:"name_contains,omitempty"`
+	NameNotContains          *string                   `json:"name_not_contains,omitempty"`
+	NameStartsWith           *string                   `json:"name_starts_with,omitempty"`
+	NameNotStartsWith        *string                   `json:"name_not_starts_with,omitempty"`
+	NameEndsWith             *string                   `json:"name_ends_with,omitempty"`
+	NameNotEndsWith          *string                   `json:"name_not_ends_with,omitempty"`
+	Link                     *string                   `json:"link,omitempty"`
+	LinkNot                  *string                   `json:"link_not,omitempty"`
+	LinkIn                   []string                  `json:"link_in,omitempty"`
+	LinkNotIn                []string                  `json:"link_not_in,omitempty"`
+	LinkLt                   *string                   `json:"link_lt,omitempty"`
+	LinkLte                  *string                   `json:"link_lte,omitempty"`
+	LinkGt                   *string                   `json:"link_gt,omitempty"`
+	LinkGte                  *string                   `json:"link_gte,omitempty"`
+	LinkContains             *string                   `json:"link_contains,omitempty"`
+	LinkNotContains          *string                   `json:"link_not_contains,omitempty"`
+	LinkStartsWith           *string                   `json:"link_starts_with,omitempty"`
+	LinkNotStartsWith        *string                   `json:"link_not_starts_with,omitempty"`
+	LinkEndsWith             *string                   `json:"link_ends_with,omitempty"`
+	LinkNotEndsWith          *string                   `json:"link_not_ends_with,omitempty"`
+	Description              *string                   `json:"description,omitempty"`
+	DescriptionNot           *string                   `json:"description_not,omitempty"`
+	DescriptionIn            []string                  `json:"description_in,omitempty"`
+	DescriptionNotIn         []string                  `json:"description_not_in,omitempty"`
+	DescriptionLt            *string                   `json:"description_lt,omitempty"`
+	DescriptionLte           *string                   `json:"description_lte,omitempty"`
+	DescriptionGt            *string                   `json:"description_gt,omitempty"`
+	DescriptionGte           *string                   `json:"description_gte,omitempty"`
+	DescriptionContains      *string                   `json:"description_contains,omitempty"`
+	DescriptionNotContains   *string                   `json:"description_not_contains,omitempty"`
+	DescriptionStartsWith    *string                   `json:"description_starts_with,omitempty"`
+	DescriptionNotStartsWith *string                   `json:"description_not_starts_with,omitempty"`
+	DescriptionEndsWith      *string                   `json:"description_ends_with,omitempty"`
+	DescriptionNotEndsWith   *string                   `json:"description_not_ends_with,omitempty"`
+	And                      []FavoriteThingWhereInput `json:"AND,omitempty"`
+	Or                       []FavoriteThingWhereInput `json:"OR,omitempty"`
+	Not                      []FavoriteThingWhereInput `json:"NOT,omitempty"`
+}
+
+type FavoriteThingUpdateInput struct {
+	Priority    *int32  `json:"priority,omitempty"`
+	Name        *string `json:"name,omitempty"`
+	Link        *string `json:"link,omitempty"`
+	Description *string `json:"description,omitempty"`
+}
+
+type UserUpdateInput struct {
+	Type         *UserType `json:"type,omitempty"`
+	Email        *string   `json:"email,omitempty"`
+	Name         *string   `json:"name,omitempty"`
+	PasswordHash *string   `json:"passwordHash,omitempty"`
+}
+
+type FavoriteThingCreateInput struct {
+	ID          *string `json:"id,omitempty"`
+	Priority    int32   `json:"priority"`
+	Name        string  `json:"name"`
+	Link        string  `json:"link"`
+	Description string  `json:"description"`
+}
+
+type SubscriberUpdateInput struct {
+	Email     *string `json:"email,omitempty"`
+	Name      *string `json:"name,omitempty"`
+	Confirmed *bool   `json:"confirmed,omitempty"`
+}
+
 type BookUpdateManyMutationInput struct {
 	Title  *string `json:"title,omitempty"`
 	Author *string `json:"author,omitempty"`
 	Rank   *int32  `json:"rank,omitempty"`
 	Link   *string `json:"link,omitempty"`
+}
+
+type SubscriberCreateInput struct {
+	ID        *string `json:"id,omitempty"`
+	Email     string  `json:"email"`
+	Name      string  `json:"name"`
+	Confirmed bool    `json:"confirmed"`
+}
+
+type SubscriberWhereUniqueInput struct {
+	ID    *string `json:"id,omitempty"`
+	Email *string `json:"email,omitempty"`
+}
+
+type SessionUpdateInput struct {
+	User *UserUpdateOneRequiredInput `json:"user,omitempty"`
+}
+
+type BookUpdateInput struct {
+	Title  *string `json:"title,omitempty"`
+	Author *string `json:"author,omitempty"`
+	Rank   *int32  `json:"rank,omitempty"`
+	Link   *string `json:"link,omitempty"`
+}
+
+type BookWhereUniqueInput struct {
+	ID *string `json:"id,omitempty"`
+}
+
+type SubscriberWhereInput struct {
+	ID                 *string                `json:"id,omitempty"`
+	IDNot              *string                `json:"id_not,omitempty"`
+	IDIn               []string               `json:"id_in,omitempty"`
+	IDNotIn            []string               `json:"id_not_in,omitempty"`
+	IDLt               *string                `json:"id_lt,omitempty"`
+	IDLte              *string                `json:"id_lte,omitempty"`
+	IDGt               *string                `json:"id_gt,omitempty"`
+	IDGte              *string                `json:"id_gte,omitempty"`
+	IDContains         *string                `json:"id_contains,omitempty"`
+	IDNotContains      *string                `json:"id_not_contains,omitempty"`
+	IDStartsWith       *string                `json:"id_starts_with,omitempty"`
+	IDNotStartsWith    *string                `json:"id_not_starts_with,omitempty"`
+	IDEndsWith         *string                `json:"id_ends_with,omitempty"`
+	IDNotEndsWith      *string                `json:"id_not_ends_with,omitempty"`
+	Email              *string                `json:"email,omitempty"`
+	EmailNot           *string                `json:"email_not,omitempty"`
+	EmailIn            []string               `json:"email_in,omitempty"`
+	EmailNotIn         []string               `json:"email_not_in,omitempty"`
+	EmailLt            *string                `json:"email_lt,omitempty"`
+	EmailLte           *string                `json:"email_lte,omitempty"`
+	EmailGt            *string                `json:"email_gt,omitempty"`
+	EmailGte           *string                `json:"email_gte,omitempty"`
+	EmailContains      *string                `json:"email_contains,omitempty"`
+	EmailNotContains   *string                `json:"email_not_contains,omitempty"`
+	EmailStartsWith    *string                `json:"email_starts_with,omitempty"`
+	EmailNotStartsWith *string                `json:"email_not_starts_with,omitempty"`
+	EmailEndsWith      *string                `json:"email_ends_with,omitempty"`
+	EmailNotEndsWith   *string                `json:"email_not_ends_with,omitempty"`
+	Name               *string                `json:"name,omitempty"`
+	NameNot            *string                `json:"name_not,omitempty"`
+	NameIn             []string               `json:"name_in,omitempty"`
+	NameNotIn          []string               `json:"name_not_in,omitempty"`
+	NameLt             *string                `json:"name_lt,omitempty"`
+	NameLte            *string                `json:"name_lte,omitempty"`
+	NameGt             *string                `json:"name_gt,omitempty"`
+	NameGte            *string                `json:"name_gte,omitempty"`
+	NameContains       *string                `json:"name_contains,omitempty"`
+	NameNotContains    *string                `json:"name_not_contains,omitempty"`
+	NameStartsWith     *string                `json:"name_starts_with,omitempty"`
+	NameNotStartsWith  *string                `json:"name_not_starts_with,omitempty"`
+	NameEndsWith       *string                `json:"name_ends_with,omitempty"`
+	NameNotEndsWith    *string                `json:"name_not_ends_with,omitempty"`
+	Confirmed          *bool                  `json:"confirmed,omitempty"`
+	ConfirmedNot       *bool                  `json:"confirmed_not,omitempty"`
+	And                []SubscriberWhereInput `json:"AND,omitempty"`
+	Or                 []SubscriberWhereInput `json:"OR,omitempty"`
+	Not                []SubscriberWhereInput `json:"NOT,omitempty"`
 }
 
 type ProjectSubscriptionWhereInput struct {
@@ -1543,18 +1958,165 @@ type ProjectSubscriptionWhereInput struct {
 	Not                        []ProjectSubscriptionWhereInput `json:"NOT,omitempty"`
 }
 
-type UserUpdateInput struct {
+type BookCreateInput struct {
+	ID     *string `json:"id,omitempty"`
+	Title  string  `json:"title"`
+	Author string  `json:"author"`
+	Rank   *int32  `json:"rank,omitempty"`
+	Link   *string `json:"link,omitempty"`
+}
+
+type BlogPostSubscriptionWhereInput struct {
+	MutationIn                 []MutationType                   `json:"mutation_in,omitempty"`
+	UpdatedFieldsContains      *string                          `json:"updatedFields_contains,omitempty"`
+	UpdatedFieldsContainsEvery []string                         `json:"updatedFields_contains_every,omitempty"`
+	UpdatedFieldsContainsSome  []string                         `json:"updatedFields_contains_some,omitempty"`
+	Node                       *BlogPostWhereInput              `json:"node,omitempty"`
+	And                        []BlogPostSubscriptionWhereInput `json:"AND,omitempty"`
+	Or                         []BlogPostSubscriptionWhereInput `json:"OR,omitempty"`
+	Not                        []BlogPostSubscriptionWhereInput `json:"NOT,omitempty"`
+}
+
+type BlogPostUpdateManyMutationInput struct {
+	Slug      *string `json:"slug,omitempty"`
+	Published *bool   `json:"published,omitempty"`
+	Image     *string `json:"image,omitempty"`
+	Title     *string `json:"title,omitempty"`
+	Date      *string `json:"date,omitempty"`
+	Content   *string `json:"content,omitempty"`
+	Tags      *string `json:"tags,omitempty"`
+}
+
+type SubscriberUpdateManyMutationInput struct {
+	Email     *string `json:"email,omitempty"`
+	Name      *string `json:"name,omitempty"`
+	Confirmed *bool   `json:"confirmed,omitempty"`
+}
+
+type UserUpsertNestedInput struct {
+	Update UserUpdateDataInput `json:"update"`
+	Create UserCreateInput     `json:"create"`
+}
+
+type ProjectWhereInput struct {
+	ID                       *string             `json:"id,omitempty"`
+	IDNot                    *string             `json:"id_not,omitempty"`
+	IDIn                     []string            `json:"id_in,omitempty"`
+	IDNotIn                  []string            `json:"id_not_in,omitempty"`
+	IDLt                     *string             `json:"id_lt,omitempty"`
+	IDLte                    *string             `json:"id_lte,omitempty"`
+	IDGt                     *string             `json:"id_gt,omitempty"`
+	IDGte                    *string             `json:"id_gte,omitempty"`
+	IDContains               *string             `json:"id_contains,omitempty"`
+	IDNotContains            *string             `json:"id_not_contains,omitempty"`
+	IDStartsWith             *string             `json:"id_starts_with,omitempty"`
+	IDNotStartsWith          *string             `json:"id_not_starts_with,omitempty"`
+	IDEndsWith               *string             `json:"id_ends_with,omitempty"`
+	IDNotEndsWith            *string             `json:"id_not_ends_with,omitempty"`
+	Priority                 *int32              `json:"priority,omitempty"`
+	PriorityNot              *int32              `json:"priority_not,omitempty"`
+	PriorityIn               []int32             `json:"priority_in,omitempty"`
+	PriorityNotIn            []int32             `json:"priority_not_in,omitempty"`
+	PriorityLt               *int32              `json:"priority_lt,omitempty"`
+	PriorityLte              *int32              `json:"priority_lte,omitempty"`
+	PriorityGt               *int32              `json:"priority_gt,omitempty"`
+	PriorityGte              *int32              `json:"priority_gte,omitempty"`
+	Name                     *string             `json:"name,omitempty"`
+	NameNot                  *string             `json:"name_not,omitempty"`
+	NameIn                   []string            `json:"name_in,omitempty"`
+	NameNotIn                []string            `json:"name_not_in,omitempty"`
+	NameLt                   *string             `json:"name_lt,omitempty"`
+	NameLte                  *string             `json:"name_lte,omitempty"`
+	NameGt                   *string             `json:"name_gt,omitempty"`
+	NameGte                  *string             `json:"name_gte,omitempty"`
+	NameContains             *string             `json:"name_contains,omitempty"`
+	NameNotContains          *string             `json:"name_not_contains,omitempty"`
+	NameStartsWith           *string             `json:"name_starts_with,omitempty"`
+	NameNotStartsWith        *string             `json:"name_not_starts_with,omitempty"`
+	NameEndsWith             *string             `json:"name_ends_with,omitempty"`
+	NameNotEndsWith          *string             `json:"name_not_ends_with,omitempty"`
+	Link                     *string             `json:"link,omitempty"`
+	LinkNot                  *string             `json:"link_not,omitempty"`
+	LinkIn                   []string            `json:"link_in,omitempty"`
+	LinkNotIn                []string            `json:"link_not_in,omitempty"`
+	LinkLt                   *string             `json:"link_lt,omitempty"`
+	LinkLte                  *string             `json:"link_lte,omitempty"`
+	LinkGt                   *string             `json:"link_gt,omitempty"`
+	LinkGte                  *string             `json:"link_gte,omitempty"`
+	LinkContains             *string             `json:"link_contains,omitempty"`
+	LinkNotContains          *string             `json:"link_not_contains,omitempty"`
+	LinkStartsWith           *string             `json:"link_starts_with,omitempty"`
+	LinkNotStartsWith        *string             `json:"link_not_starts_with,omitempty"`
+	LinkEndsWith             *string             `json:"link_ends_with,omitempty"`
+	LinkNotEndsWith          *string             `json:"link_not_ends_with,omitempty"`
+	Icon                     *string             `json:"icon,omitempty"`
+	IconNot                  *string             `json:"icon_not,omitempty"`
+	IconIn                   []string            `json:"icon_in,omitempty"`
+	IconNotIn                []string            `json:"icon_not_in,omitempty"`
+	IconLt                   *string             `json:"icon_lt,omitempty"`
+	IconLte                  *string             `json:"icon_lte,omitempty"`
+	IconGt                   *string             `json:"icon_gt,omitempty"`
+	IconGte                  *string             `json:"icon_gte,omitempty"`
+	IconContains             *string             `json:"icon_contains,omitempty"`
+	IconNotContains          *string             `json:"icon_not_contains,omitempty"`
+	IconStartsWith           *string             `json:"icon_starts_with,omitempty"`
+	IconNotStartsWith        *string             `json:"icon_not_starts_with,omitempty"`
+	IconEndsWith             *string             `json:"icon_ends_with,omitempty"`
+	IconNotEndsWith          *string             `json:"icon_not_ends_with,omitempty"`
+	Description              *string             `json:"description,omitempty"`
+	DescriptionNot           *string             `json:"description_not,omitempty"`
+	DescriptionIn            []string            `json:"description_in,omitempty"`
+	DescriptionNotIn         []string            `json:"description_not_in,omitempty"`
+	DescriptionLt            *string             `json:"description_lt,omitempty"`
+	DescriptionLte           *string             `json:"description_lte,omitempty"`
+	DescriptionGt            *string             `json:"description_gt,omitempty"`
+	DescriptionGte           *string             `json:"description_gte,omitempty"`
+	DescriptionContains      *string             `json:"description_contains,omitempty"`
+	DescriptionNotContains   *string             `json:"description_not_contains,omitempty"`
+	DescriptionStartsWith    *string             `json:"description_starts_with,omitempty"`
+	DescriptionNotStartsWith *string             `json:"description_not_starts_with,omitempty"`
+	DescriptionEndsWith      *string             `json:"description_ends_with,omitempty"`
+	DescriptionNotEndsWith   *string             `json:"description_not_ends_with,omitempty"`
+	Retired                  *bool               `json:"retired,omitempty"`
+	RetiredNot               *bool               `json:"retired_not,omitempty"`
+	Revenue                  *string             `json:"revenue,omitempty"`
+	RevenueNot               *string             `json:"revenue_not,omitempty"`
+	RevenueIn                []string            `json:"revenue_in,omitempty"`
+	RevenueNotIn             []string            `json:"revenue_not_in,omitempty"`
+	RevenueLt                *string             `json:"revenue_lt,omitempty"`
+	RevenueLte               *string             `json:"revenue_lte,omitempty"`
+	RevenueGt                *string             `json:"revenue_gt,omitempty"`
+	RevenueGte               *string             `json:"revenue_gte,omitempty"`
+	RevenueContains          *string             `json:"revenue_contains,omitempty"`
+	RevenueNotContains       *string             `json:"revenue_not_contains,omitempty"`
+	RevenueStartsWith        *string             `json:"revenue_starts_with,omitempty"`
+	RevenueNotStartsWith     *string             `json:"revenue_not_starts_with,omitempty"`
+	RevenueEndsWith          *string             `json:"revenue_ends_with,omitempty"`
+	RevenueNotEndsWith       *string             `json:"revenue_not_ends_with,omitempty"`
+	Reason                   *string             `json:"reason,omitempty"`
+	ReasonNot                *string             `json:"reason_not,omitempty"`
+	ReasonIn                 []string            `json:"reason_in,omitempty"`
+	ReasonNotIn              []string            `json:"reason_not_in,omitempty"`
+	ReasonLt                 *string             `json:"reason_lt,omitempty"`
+	ReasonLte                *string             `json:"reason_lte,omitempty"`
+	ReasonGt                 *string             `json:"reason_gt,omitempty"`
+	ReasonGte                *string             `json:"reason_gte,omitempty"`
+	ReasonContains           *string             `json:"reason_contains,omitempty"`
+	ReasonNotContains        *string             `json:"reason_not_contains,omitempty"`
+	ReasonStartsWith         *string             `json:"reason_starts_with,omitempty"`
+	ReasonNotStartsWith      *string             `json:"reason_not_starts_with,omitempty"`
+	ReasonEndsWith           *string             `json:"reason_ends_with,omitempty"`
+	ReasonNotEndsWith        *string             `json:"reason_not_ends_with,omitempty"`
+	And                      []ProjectWhereInput `json:"AND,omitempty"`
+	Or                       []ProjectWhereInput `json:"OR,omitempty"`
+	Not                      []ProjectWhereInput `json:"NOT,omitempty"`
+}
+
+type UserUpdateDataInput struct {
 	Type         *UserType `json:"type,omitempty"`
 	Email        *string   `json:"email,omitempty"`
 	Name         *string   `json:"name,omitempty"`
 	PasswordHash *string   `json:"passwordHash,omitempty"`
-}
-
-type UserUpdateOneRequiredInput struct {
-	Create  *UserCreateInput       `json:"create,omitempty"`
-	Update  *UserUpdateDataInput   `json:"update,omitempty"`
-	Upsert  *UserUpsertNestedInput `json:"upsert,omitempty"`
-	Connect *UserWhereUniqueInput  `json:"connect,omitempty"`
 }
 
 type BookWhereInput struct {
@@ -1627,6 +2189,14 @@ type BookWhereInput struct {
 	Not                 []BookWhereInput `json:"NOT,omitempty"`
 }
 
+type UserCreateInput struct {
+	ID           *string   `json:"id,omitempty"`
+	Type         *UserType `json:"type,omitempty"`
+	Email        string    `json:"email"`
+	Name         string    `json:"name"`
+	PasswordHash string    `json:"passwordHash"`
+}
+
 type BlogPostUpdateInput struct {
 	Slug      *string                     `json:"slug,omitempty"`
 	Published *bool                       `json:"published,omitempty"`
@@ -1638,24 +2208,16 @@ type BlogPostUpdateInput struct {
 	Tags      *string                     `json:"tags,omitempty"`
 }
 
-type ProjectCreateInput struct {
-	ID          *string `json:"id,omitempty"`
-	Priority    int32   `json:"priority"`
-	Name        string  `json:"name"`
-	Link        string  `json:"link"`
-	Icon        string  `json:"icon"`
-	Description string  `json:"description"`
-	Retired     bool    `json:"retired"`
-	Revenue     string  `json:"revenue"`
-	Reason      *string `json:"reason,omitempty"`
+type UserUpdateOneRequiredInput struct {
+	Create  *UserCreateInput       `json:"create,omitempty"`
+	Update  *UserUpdateDataInput   `json:"update,omitempty"`
+	Upsert  *UserUpsertNestedInput `json:"upsert,omitempty"`
+	Connect *UserWhereUniqueInput  `json:"connect,omitempty"`
 }
 
-type UserCreateInput struct {
-	ID           *string   `json:"id,omitempty"`
-	Type         *UserType `json:"type,omitempty"`
-	Email        string    `json:"email"`
-	Name         string    `json:"name"`
-	PasswordHash string    `json:"passwordHash"`
+type UserWhereUniqueInput struct {
+	ID    *string `json:"id,omitempty"`
+	Email *string `json:"email,omitempty"`
 }
 
 type BookSubscriptionWhereInput struct {
@@ -1669,146 +2231,26 @@ type BookSubscriptionWhereInput struct {
 	Not                        []BookSubscriptionWhereInput `json:"NOT,omitempty"`
 }
 
-type BlogPostCreateInput struct {
-	ID        *string            `json:"id,omitempty"`
-	Slug      string             `json:"slug"`
-	Published bool               `json:"published"`
-	Image     string             `json:"image"`
-	Title     string             `json:"title"`
-	Date      string             `json:"date"`
-	Author    UserCreateOneInput `json:"author"`
-	Content   string             `json:"content"`
-	Tags      string             `json:"tags"`
+type UserSubscriptionWhereInput struct {
+	MutationIn                 []MutationType               `json:"mutation_in,omitempty"`
+	UpdatedFieldsContains      *string                      `json:"updatedFields_contains,omitempty"`
+	UpdatedFieldsContainsEvery []string                     `json:"updatedFields_contains_every,omitempty"`
+	UpdatedFieldsContainsSome  []string                     `json:"updatedFields_contains_some,omitempty"`
+	Node                       *UserWhereInput              `json:"node,omitempty"`
+	And                        []UserSubscriptionWhereInput `json:"AND,omitempty"`
+	Or                         []UserSubscriptionWhereInput `json:"OR,omitempty"`
+	Not                        []UserSubscriptionWhereInput `json:"NOT,omitempty"`
 }
 
-type UserCreateOneInput struct {
-	Create  *UserCreateInput      `json:"create,omitempty"`
-	Connect *UserWhereUniqueInput `json:"connect,omitempty"`
-}
-
-type SessionSubscriptionWhereInput struct {
-	MutationIn                 []MutationType                  `json:"mutation_in,omitempty"`
-	UpdatedFieldsContains      *string                         `json:"updatedFields_contains,omitempty"`
-	UpdatedFieldsContainsEvery []string                        `json:"updatedFields_contains_every,omitempty"`
-	UpdatedFieldsContainsSome  []string                        `json:"updatedFields_contains_some,omitempty"`
-	Node                       *SessionWhereInput              `json:"node,omitempty"`
-	And                        []SessionSubscriptionWhereInput `json:"AND,omitempty"`
-	Or                         []SessionSubscriptionWhereInput `json:"OR,omitempty"`
-	Not                        []SessionSubscriptionWhereInput `json:"NOT,omitempty"`
-}
-
-type UserWhereUniqueInput struct {
-	ID    *string `json:"id,omitempty"`
-	Email *string `json:"email,omitempty"`
-}
-
-type FavoriteThingCreateInput struct {
-	ID          *string `json:"id,omitempty"`
-	Priority    int32   `json:"priority"`
-	Name        string  `json:"name"`
-	Link        string  `json:"link"`
-	Description string  `json:"description"`
-}
-
-type FavoriteThingUpdateManyMutationInput struct {
-	Priority    *int32  `json:"priority,omitempty"`
-	Name        *string `json:"name,omitempty"`
-	Link        *string `json:"link,omitempty"`
-	Description *string `json:"description,omitempty"`
-}
-
-type ProjectUpdateManyMutationInput struct {
-	Priority    *int32  `json:"priority,omitempty"`
-	Name        *string `json:"name,omitempty"`
-	Link        *string `json:"link,omitempty"`
-	Icon        *string `json:"icon,omitempty"`
-	Description *string `json:"description,omitempty"`
-	Retired     *bool   `json:"retired,omitempty"`
-	Revenue     *string `json:"revenue,omitempty"`
-	Reason      *string `json:"reason,omitempty"`
-}
-
-type BookWhereUniqueInput struct {
+type ProjectWhereUniqueInput struct {
 	ID *string `json:"id,omitempty"`
 }
 
-type BlogPostSubscriptionWhereInput struct {
-	MutationIn                 []MutationType                   `json:"mutation_in,omitempty"`
-	UpdatedFieldsContains      *string                          `json:"updatedFields_contains,omitempty"`
-	UpdatedFieldsContainsEvery []string                         `json:"updatedFields_contains_every,omitempty"`
-	UpdatedFieldsContainsSome  []string                         `json:"updatedFields_contains_some,omitempty"`
-	Node                       *BlogPostWhereInput              `json:"node,omitempty"`
-	And                        []BlogPostSubscriptionWhereInput `json:"AND,omitempty"`
-	Or                         []BlogPostSubscriptionWhereInput `json:"OR,omitempty"`
-	Not                        []BlogPostSubscriptionWhereInput `json:"NOT,omitempty"`
-}
-
-type UserConnectionExec struct {
-	exec *prisma.Exec
-}
-
-func (instance *UserConnectionExec) PageInfo() *PageInfoExec {
-	ret := instance.exec.Client.GetOne(
-		instance.exec,
-		nil,
-		[2]string{"", "PageInfo"},
-		"pageInfo",
-		[]string{"hasNextPage", "hasPreviousPage", "startCursor", "endCursor"})
-
-	return &PageInfoExec{ret}
-}
-
-func (instance *UserConnectionExec) Edges() *UserEdgeExec {
-	ret := instance.exec.Client.GetOne(
-		instance.exec,
-		nil,
-		[2]string{"", "UserEdge"},
-		"edges",
-		[]string{"cursor"})
-
-	return &UserEdgeExec{ret}
-}
-
-func (instance *UserConnectionExec) Aggregate(ctx context.Context) (Aggregate, error) {
-	ret := instance.exec.Client.GetOne(
-		instance.exec,
-		nil,
-		[2]string{"", "AggregateUser"},
-		"aggregate",
-		[]string{"count"})
-
-	var v Aggregate
-	_, err := ret.Exec(ctx, &v)
-	return v, err
-}
-
-func (instance UserConnectionExec) Exec(ctx context.Context) (*UserConnection, error) {
-	var v UserConnection
-	ok, err := instance.exec.Exec(ctx, &v)
-	if err != nil {
-		return nil, err
-	}
-	if !ok {
-		return nil, ErrNoResult
-	}
-	return &v, nil
-}
-
-func (instance UserConnectionExec) Exists(ctx context.Context) (bool, error) {
-	return instance.exec.Exists(ctx)
-}
-
-type UserConnectionExecArray struct {
-	exec *prisma.Exec
-}
-
-func (instance UserConnectionExecArray) Exec(ctx context.Context) ([]UserConnection, error) {
-	var v []UserConnection
-	err := instance.exec.ExecArray(ctx, &v)
-	return v, err
-}
-
-type UserConnection struct {
+type UserUpdateManyMutationInput struct {
+	Type         *UserType `json:"type,omitempty"`
+	Email        *string   `json:"email,omitempty"`
+	Name         *string   `json:"name,omitempty"`
+	PasswordHash *string   `json:"passwordHash,omitempty"`
 }
 
 type UserPreviousValuesExec struct {
@@ -1841,6 +2283,8 @@ func (instance UserPreviousValuesExecArray) Exec(ctx context.Context) ([]UserPre
 	return v, err
 }
 
+var UserPreviousValuesFields = []string{"id", "type", "createdAt", "updatedAt", "email", "name", "passwordHash"}
+
 type UserPreviousValues struct {
 	ID           string   `json:"id"`
 	Type         UserType `json:"type"`
@@ -1851,23 +2295,23 @@ type UserPreviousValues struct {
 	PasswordHash string   `json:"passwordHash"`
 }
 
-type BlogPostEdgeExec struct {
+type FavoriteThingEdgeExec struct {
 	exec *prisma.Exec
 }
 
-func (instance *BlogPostEdgeExec) Node() *BlogPostExec {
+func (instance *FavoriteThingEdgeExec) Node() *FavoriteThingExec {
 	ret := instance.exec.Client.GetOne(
 		instance.exec,
 		nil,
-		[2]string{"", "BlogPost"},
+		[2]string{"", "FavoriteThing"},
 		"node",
-		[]string{"id", "createdAt", "updatedAt", "slug", "published", "image", "title", "date", "content", "tags"})
+		[]string{"id", "priority", "name", "link", "description"})
 
-	return &BlogPostExec{ret}
+	return &FavoriteThingExec{ret}
 }
 
-func (instance BlogPostEdgeExec) Exec(ctx context.Context) (*BlogPostEdge, error) {
-	var v BlogPostEdge
+func (instance FavoriteThingEdgeExec) Exec(ctx context.Context) (*FavoriteThingEdge, error) {
+	var v FavoriteThingEdge
 	ok, err := instance.exec.Exec(ctx, &v)
 	if err != nil {
 		return nil, err
@@ -1878,22 +2322,235 @@ func (instance BlogPostEdgeExec) Exec(ctx context.Context) (*BlogPostEdge, error
 	return &v, nil
 }
 
-func (instance BlogPostEdgeExec) Exists(ctx context.Context) (bool, error) {
+func (instance FavoriteThingEdgeExec) Exists(ctx context.Context) (bool, error) {
 	return instance.exec.Exists(ctx)
 }
 
-type BlogPostEdgeExecArray struct {
+type FavoriteThingEdgeExecArray struct {
 	exec *prisma.Exec
 }
 
-func (instance BlogPostEdgeExecArray) Exec(ctx context.Context) ([]BlogPostEdge, error) {
-	var v []BlogPostEdge
+func (instance FavoriteThingEdgeExecArray) Exec(ctx context.Context) ([]FavoriteThingEdge, error) {
+	var v []FavoriteThingEdge
 	err := instance.exec.ExecArray(ctx, &v)
 	return v, err
 }
 
-type BlogPostEdge struct {
-	Cursor string `json:"cursor"`
+var FavoriteThingEdgeFields = []string{"cursor"}
+
+type FavoriteThingEdge struct {
+	Node   FavoriteThing `json:"node"`
+	Cursor string        `json:"cursor"`
+}
+
+type BlogPostConnectionExec struct {
+	exec *prisma.Exec
+}
+
+func (instance *BlogPostConnectionExec) PageInfo() *PageInfoExec {
+	ret := instance.exec.Client.GetOne(
+		instance.exec,
+		nil,
+		[2]string{"", "PageInfo"},
+		"pageInfo",
+		[]string{"hasNextPage", "hasPreviousPage", "startCursor", "endCursor"})
+
+	return &PageInfoExec{ret}
+}
+
+func (instance *BlogPostConnectionExec) Edges() *BlogPostEdgeExecArray {
+	edges := instance.exec.Client.GetMany(
+		instance.exec,
+		nil,
+		[3]string{"BlogPostWhereInput", "BlogPostOrderByInput", "BlogPostEdge"},
+		"edges",
+		[]string{"cursor"})
+
+	nodes := edges.Client.GetOne(
+		edges,
+		nil,
+		[2]string{"", "BlogPost"},
+		"node",
+		BlogPostFields)
+
+	return &BlogPostEdgeExecArray{nodes}
+}
+
+func (instance *BlogPostConnectionExec) Aggregate(ctx context.Context) (*Aggregate, error) {
+	ret := instance.exec.Client.GetOne(
+		instance.exec,
+		nil,
+		[2]string{"", "AggregateBlogPost"},
+		"aggregate",
+		[]string{"count"})
+
+	var v Aggregate
+	_, err := ret.Exec(ctx, &v)
+	return &v, err
+}
+
+func (instance BlogPostConnectionExec) Exec(ctx context.Context) (*BlogPostConnection, error) {
+	edges, err := instance.Edges().Exec(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	pageInfo, err := instance.PageInfo().Exec(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	return &BlogPostConnection{
+		Edges:    edges,
+		PageInfo: *pageInfo,
+	}, nil
+}
+
+func (instance BlogPostConnectionExec) Exists(ctx context.Context) (bool, error) {
+	return instance.exec.Exists(ctx)
+}
+
+type BlogPostConnectionExecArray struct {
+	exec *prisma.Exec
+}
+
+func (instance BlogPostConnectionExecArray) Exec(ctx context.Context) ([]BlogPostConnection, error) {
+	var v []BlogPostConnection
+	err := instance.exec.ExecArray(ctx, &v)
+	return v, err
+}
+
+var BlogPostConnectionFields = []string{}
+
+type BlogPostConnection struct {
+	PageInfo PageInfo       `json:"pageInfo"`
+	Edges    []BlogPostEdge `json:"edges"`
+}
+
+type FavoriteThingConnectionExec struct {
+	exec *prisma.Exec
+}
+
+func (instance *FavoriteThingConnectionExec) PageInfo() *PageInfoExec {
+	ret := instance.exec.Client.GetOne(
+		instance.exec,
+		nil,
+		[2]string{"", "PageInfo"},
+		"pageInfo",
+		[]string{"hasNextPage", "hasPreviousPage", "startCursor", "endCursor"})
+
+	return &PageInfoExec{ret}
+}
+
+func (instance *FavoriteThingConnectionExec) Edges() *FavoriteThingEdgeExecArray {
+	edges := instance.exec.Client.GetMany(
+		instance.exec,
+		nil,
+		[3]string{"FavoriteThingWhereInput", "FavoriteThingOrderByInput", "FavoriteThingEdge"},
+		"edges",
+		[]string{"cursor"})
+
+	nodes := edges.Client.GetOne(
+		edges,
+		nil,
+		[2]string{"", "FavoriteThing"},
+		"node",
+		FavoriteThingFields)
+
+	return &FavoriteThingEdgeExecArray{nodes}
+}
+
+func (instance *FavoriteThingConnectionExec) Aggregate(ctx context.Context) (*Aggregate, error) {
+	ret := instance.exec.Client.GetOne(
+		instance.exec,
+		nil,
+		[2]string{"", "AggregateFavoriteThing"},
+		"aggregate",
+		[]string{"count"})
+
+	var v Aggregate
+	_, err := ret.Exec(ctx, &v)
+	return &v, err
+}
+
+func (instance FavoriteThingConnectionExec) Exec(ctx context.Context) (*FavoriteThingConnection, error) {
+	edges, err := instance.Edges().Exec(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	pageInfo, err := instance.PageInfo().Exec(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	return &FavoriteThingConnection{
+		Edges:    edges,
+		PageInfo: *pageInfo,
+	}, nil
+}
+
+func (instance FavoriteThingConnectionExec) Exists(ctx context.Context) (bool, error) {
+	return instance.exec.Exists(ctx)
+}
+
+type FavoriteThingConnectionExecArray struct {
+	exec *prisma.Exec
+}
+
+func (instance FavoriteThingConnectionExecArray) Exec(ctx context.Context) ([]FavoriteThingConnection, error) {
+	var v []FavoriteThingConnection
+	err := instance.exec.ExecArray(ctx, &v)
+	return v, err
+}
+
+var FavoriteThingConnectionFields = []string{}
+
+type FavoriteThingConnection struct {
+	PageInfo PageInfo            `json:"pageInfo"`
+	Edges    []FavoriteThingEdge `json:"edges"`
+}
+
+type UserExec struct {
+	exec *prisma.Exec
+}
+
+func (instance UserExec) Exec(ctx context.Context) (*User, error) {
+	var v User
+	ok, err := instance.exec.Exec(ctx, &v)
+	if err != nil {
+		return nil, err
+	}
+	if !ok {
+		return nil, ErrNoResult
+	}
+	return &v, nil
+}
+
+func (instance UserExec) Exists(ctx context.Context) (bool, error) {
+	return instance.exec.Exists(ctx)
+}
+
+type UserExecArray struct {
+	exec *prisma.Exec
+}
+
+func (instance UserExecArray) Exec(ctx context.Context) ([]User, error) {
+	var v []User
+	err := instance.exec.ExecArray(ctx, &v)
+	return v, err
+}
+
+var UserFields = []string{"id", "type", "createdAt", "updatedAt", "email", "name", "passwordHash"}
+
+type User struct {
+	ID           string   `json:"id"`
+	Type         UserType `json:"type"`
+	CreatedAt    string   `json:"createdAt"`
+	UpdatedAt    string   `json:"updatedAt"`
+	Email        string   `json:"email"`
+	Name         string   `json:"name"`
+	PasswordHash string   `json:"passwordHash"`
 }
 
 type PageInfoExec struct {
@@ -1926,6 +2583,8 @@ func (instance PageInfoExecArray) Exec(ctx context.Context) ([]PageInfo, error) 
 	return v, err
 }
 
+var PageInfoFields = []string{"hasNextPage", "hasPreviousPage", "startCursor", "endCursor"}
+
 type PageInfo struct {
 	HasNextPage     bool    `json:"hasNextPage"`
 	HasPreviousPage bool    `json:"hasPreviousPage"`
@@ -1933,23 +2592,12 @@ type PageInfo struct {
 	EndCursor       *string `json:"endCursor,omitempty"`
 }
 
-type SessionEdgeExec struct {
+type FavoriteThingExec struct {
 	exec *prisma.Exec
 }
 
-func (instance *SessionEdgeExec) Node() *SessionExec {
-	ret := instance.exec.Client.GetOne(
-		instance.exec,
-		nil,
-		[2]string{"", "Session"},
-		"node",
-		[]string{"id", "createdAt"})
-
-	return &SessionExec{ret}
-}
-
-func (instance SessionEdgeExec) Exec(ctx context.Context) (*SessionEdge, error) {
-	var v SessionEdge
+func (instance FavoriteThingExec) Exec(ctx context.Context) (*FavoriteThing, error) {
+	var v FavoriteThing
 	ok, err := instance.exec.Exec(ctx, &v)
 	if err != nil {
 		return nil, err
@@ -1960,29 +2608,35 @@ func (instance SessionEdgeExec) Exec(ctx context.Context) (*SessionEdge, error) 
 	return &v, nil
 }
 
-func (instance SessionEdgeExec) Exists(ctx context.Context) (bool, error) {
+func (instance FavoriteThingExec) Exists(ctx context.Context) (bool, error) {
 	return instance.exec.Exists(ctx)
 }
 
-type SessionEdgeExecArray struct {
+type FavoriteThingExecArray struct {
 	exec *prisma.Exec
 }
 
-func (instance SessionEdgeExecArray) Exec(ctx context.Context) ([]SessionEdge, error) {
-	var v []SessionEdge
+func (instance FavoriteThingExecArray) Exec(ctx context.Context) ([]FavoriteThing, error) {
+	var v []FavoriteThing
 	err := instance.exec.ExecArray(ctx, &v)
 	return v, err
 }
 
-type SessionEdge struct {
-	Cursor string `json:"cursor"`
+var FavoriteThingFields = []string{"id", "priority", "name", "link", "description"}
+
+type FavoriteThing struct {
+	ID          string `json:"id"`
+	Priority    int32  `json:"priority"`
+	Name        string `json:"name"`
+	Link        string `json:"link"`
+	Description string `json:"description"`
 }
 
-type BlogPostConnectionExec struct {
+type UserConnectionExec struct {
 	exec *prisma.Exec
 }
 
-func (instance *BlogPostConnectionExec) PageInfo() *PageInfoExec {
+func (instance *UserConnectionExec) PageInfo() *PageInfoExec {
 	ret := instance.exec.Client.GetOne(
 		instance.exec,
 		nil,
@@ -1993,277 +2647,80 @@ func (instance *BlogPostConnectionExec) PageInfo() *PageInfoExec {
 	return &PageInfoExec{ret}
 }
 
-func (instance *BlogPostConnectionExec) Edges() *BlogPostEdgeExec {
-	ret := instance.exec.Client.GetOne(
+func (instance *UserConnectionExec) Edges() *UserEdgeExecArray {
+	edges := instance.exec.Client.GetMany(
 		instance.exec,
 		nil,
-		[2]string{"", "BlogPostEdge"},
+		[3]string{"UserWhereInput", "UserOrderByInput", "UserEdge"},
 		"edges",
 		[]string{"cursor"})
 
-	return &BlogPostEdgeExec{ret}
-}
-
-func (instance *BlogPostConnectionExec) Aggregate(ctx context.Context) (Aggregate, error) {
-	ret := instance.exec.Client.GetOne(
-		instance.exec,
-		nil,
-		[2]string{"", "AggregateBlogPost"},
-		"aggregate",
-		[]string{"count"})
-
-	var v Aggregate
-	_, err := ret.Exec(ctx, &v)
-	return v, err
-}
-
-func (instance BlogPostConnectionExec) Exec(ctx context.Context) (*BlogPostConnection, error) {
-	var v BlogPostConnection
-	ok, err := instance.exec.Exec(ctx, &v)
-	if err != nil {
-		return nil, err
-	}
-	if !ok {
-		return nil, ErrNoResult
-	}
-	return &v, nil
-}
-
-func (instance BlogPostConnectionExec) Exists(ctx context.Context) (bool, error) {
-	return instance.exec.Exists(ctx)
-}
-
-type BlogPostConnectionExecArray struct {
-	exec *prisma.Exec
-}
-
-func (instance BlogPostConnectionExecArray) Exec(ctx context.Context) ([]BlogPostConnection, error) {
-	var v []BlogPostConnection
-	err := instance.exec.ExecArray(ctx, &v)
-	return v, err
-}
-
-type BlogPostConnection struct {
-}
-
-type SessionExec struct {
-	exec *prisma.Exec
-}
-
-func (instance *SessionExec) User() *UserExec {
-	ret := instance.exec.Client.GetOne(
-		instance.exec,
+	nodes := edges.Client.GetOne(
+		edges,
 		nil,
 		[2]string{"", "User"},
-		"user",
-		[]string{"id", "type", "createdAt", "updatedAt", "email", "name", "passwordHash"})
-
-	return &UserExec{ret}
-}
-
-func (instance SessionExec) Exec(ctx context.Context) (*Session, error) {
-	var v Session
-	ok, err := instance.exec.Exec(ctx, &v)
-	if err != nil {
-		return nil, err
-	}
-	if !ok {
-		return nil, ErrNoResult
-	}
-	return &v, nil
-}
-
-func (instance SessionExec) Exists(ctx context.Context) (bool, error) {
-	return instance.exec.Exists(ctx)
-}
-
-type SessionExecArray struct {
-	exec *prisma.Exec
-}
-
-func (instance SessionExecArray) Exec(ctx context.Context) ([]Session, error) {
-	var v []Session
-	err := instance.exec.ExecArray(ctx, &v)
-	return v, err
-}
-
-type Session struct {
-	ID        string `json:"id"`
-	CreatedAt string `json:"createdAt"`
-}
-
-type SessionConnectionExec struct {
-	exec *prisma.Exec
-}
-
-func (instance *SessionConnectionExec) PageInfo() *PageInfoExec {
-	ret := instance.exec.Client.GetOne(
-		instance.exec,
-		nil,
-		[2]string{"", "PageInfo"},
-		"pageInfo",
-		[]string{"hasNextPage", "hasPreviousPage", "startCursor", "endCursor"})
-
-	return &PageInfoExec{ret}
-}
-
-func (instance *SessionConnectionExec) Edges() *SessionEdgeExec {
-	ret := instance.exec.Client.GetOne(
-		instance.exec,
-		nil,
-		[2]string{"", "SessionEdge"},
-		"edges",
-		[]string{"cursor"})
-
-	return &SessionEdgeExec{ret}
-}
-
-func (instance *SessionConnectionExec) Aggregate(ctx context.Context) (Aggregate, error) {
-	ret := instance.exec.Client.GetOne(
-		instance.exec,
-		nil,
-		[2]string{"", "AggregateSession"},
-		"aggregate",
-		[]string{"count"})
-
-	var v Aggregate
-	_, err := ret.Exec(ctx, &v)
-	return v, err
-}
-
-func (instance SessionConnectionExec) Exec(ctx context.Context) (*SessionConnection, error) {
-	var v SessionConnection
-	ok, err := instance.exec.Exec(ctx, &v)
-	if err != nil {
-		return nil, err
-	}
-	if !ok {
-		return nil, ErrNoResult
-	}
-	return &v, nil
-}
-
-func (instance SessionConnectionExec) Exists(ctx context.Context) (bool, error) {
-	return instance.exec.Exists(ctx)
-}
-
-type SessionConnectionExecArray struct {
-	exec *prisma.Exec
-}
-
-func (instance SessionConnectionExecArray) Exec(ctx context.Context) ([]SessionConnection, error) {
-	var v []SessionConnection
-	err := instance.exec.ExecArray(ctx, &v)
-	return v, err
-}
-
-type SessionConnection struct {
-}
-
-type BlogPostExec struct {
-	exec *prisma.Exec
-}
-
-func (instance *BlogPostExec) Author() *UserExec {
-	ret := instance.exec.Client.GetOne(
-		instance.exec,
-		nil,
-		[2]string{"", "User"},
-		"author",
-		[]string{"id", "type", "createdAt", "updatedAt", "email", "name", "passwordHash"})
-
-	return &UserExec{ret}
-}
-
-func (instance BlogPostExec) Exec(ctx context.Context) (*BlogPost, error) {
-	var v BlogPost
-	ok, err := instance.exec.Exec(ctx, &v)
-	if err != nil {
-		return nil, err
-	}
-	if !ok {
-		return nil, ErrNoResult
-	}
-	return &v, nil
-}
-
-func (instance BlogPostExec) Exists(ctx context.Context) (bool, error) {
-	return instance.exec.Exists(ctx)
-}
-
-type BlogPostExecArray struct {
-	exec *prisma.Exec
-}
-
-func (instance BlogPostExecArray) Exec(ctx context.Context) ([]BlogPost, error) {
-	var v []BlogPost
-	err := instance.exec.ExecArray(ctx, &v)
-	return v, err
-}
-
-type BlogPost struct {
-	ID        string `json:"id"`
-	CreatedAt string `json:"createdAt"`
-	UpdatedAt string `json:"updatedAt"`
-	Slug      string `json:"slug"`
-	Published bool   `json:"published"`
-	Image     string `json:"image"`
-	Title     string `json:"title"`
-	Date      string `json:"date"`
-	Content   string `json:"content"`
-	Tags      string `json:"tags"`
-}
-
-type ProjectEdgeExec struct {
-	exec *prisma.Exec
-}
-
-func (instance *ProjectEdgeExec) Node() *ProjectExec {
-	ret := instance.exec.Client.GetOne(
-		instance.exec,
-		nil,
-		[2]string{"", "Project"},
 		"node",
-		[]string{"id", "priority", "name", "link", "icon", "description", "retired", "revenue", "reason"})
+		UserFields)
 
-	return &ProjectExec{ret}
+	return &UserEdgeExecArray{nodes}
 }
 
-func (instance ProjectEdgeExec) Exec(ctx context.Context) (*ProjectEdge, error) {
-	var v ProjectEdge
-	ok, err := instance.exec.Exec(ctx, &v)
+func (instance *UserConnectionExec) Aggregate(ctx context.Context) (*Aggregate, error) {
+	ret := instance.exec.Client.GetOne(
+		instance.exec,
+		nil,
+		[2]string{"", "AggregateUser"},
+		"aggregate",
+		[]string{"count"})
+
+	var v Aggregate
+	_, err := ret.Exec(ctx, &v)
+	return &v, err
+}
+
+func (instance UserConnectionExec) Exec(ctx context.Context) (*UserConnection, error) {
+	edges, err := instance.Edges().Exec(ctx)
 	if err != nil {
 		return nil, err
 	}
-	if !ok {
-		return nil, ErrNoResult
+
+	pageInfo, err := instance.PageInfo().Exec(ctx)
+	if err != nil {
+		return nil, err
 	}
-	return &v, nil
+
+	return &UserConnection{
+		Edges:    edges,
+		PageInfo: *pageInfo,
+	}, nil
 }
 
-func (instance ProjectEdgeExec) Exists(ctx context.Context) (bool, error) {
+func (instance UserConnectionExec) Exists(ctx context.Context) (bool, error) {
 	return instance.exec.Exists(ctx)
 }
 
-type ProjectEdgeExecArray struct {
+type UserConnectionExecArray struct {
 	exec *prisma.Exec
 }
 
-func (instance ProjectEdgeExecArray) Exec(ctx context.Context) ([]ProjectEdge, error) {
-	var v []ProjectEdge
+func (instance UserConnectionExecArray) Exec(ctx context.Context) ([]UserConnection, error) {
+	var v []UserConnection
 	err := instance.exec.ExecArray(ctx, &v)
 	return v, err
 }
 
-type ProjectEdge struct {
-	Cursor string `json:"cursor"`
+var UserConnectionFields = []string{}
+
+type UserConnection struct {
+	PageInfo PageInfo   `json:"pageInfo"`
+	Edges    []UserEdge `json:"edges"`
 }
 
-type ProjectConnectionExec struct {
+type SubscriberConnectionExec struct {
 	exec *prisma.Exec
 }
 
-func (instance *ProjectConnectionExec) PageInfo() *PageInfoExec {
+func (instance *SubscriberConnectionExec) PageInfo() *PageInfoExec {
 	ret := instance.exec.Client.GetOne(
 		instance.exec,
 		nil,
@@ -2274,32 +2731,92 @@ func (instance *ProjectConnectionExec) PageInfo() *PageInfoExec {
 	return &PageInfoExec{ret}
 }
 
-func (instance *ProjectConnectionExec) Edges() *ProjectEdgeExec {
-	ret := instance.exec.Client.GetOne(
+func (instance *SubscriberConnectionExec) Edges() *SubscriberEdgeExecArray {
+	edges := instance.exec.Client.GetMany(
 		instance.exec,
 		nil,
-		[2]string{"", "ProjectEdge"},
+		[3]string{"SubscriberWhereInput", "SubscriberOrderByInput", "SubscriberEdge"},
 		"edges",
 		[]string{"cursor"})
 
-	return &ProjectEdgeExec{ret}
+	nodes := edges.Client.GetOne(
+		edges,
+		nil,
+		[2]string{"", "Subscriber"},
+		"node",
+		SubscriberFields)
+
+	return &SubscriberEdgeExecArray{nodes}
 }
 
-func (instance *ProjectConnectionExec) Aggregate(ctx context.Context) (Aggregate, error) {
+func (instance *SubscriberConnectionExec) Aggregate(ctx context.Context) (*Aggregate, error) {
 	ret := instance.exec.Client.GetOne(
 		instance.exec,
 		nil,
-		[2]string{"", "AggregateProject"},
+		[2]string{"", "AggregateSubscriber"},
 		"aggregate",
 		[]string{"count"})
 
 	var v Aggregate
 	_, err := ret.Exec(ctx, &v)
+	return &v, err
+}
+
+func (instance SubscriberConnectionExec) Exec(ctx context.Context) (*SubscriberConnection, error) {
+	edges, err := instance.Edges().Exec(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	pageInfo, err := instance.PageInfo().Exec(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	return &SubscriberConnection{
+		Edges:    edges,
+		PageInfo: *pageInfo,
+	}, nil
+}
+
+func (instance SubscriberConnectionExec) Exists(ctx context.Context) (bool, error) {
+	return instance.exec.Exists(ctx)
+}
+
+type SubscriberConnectionExecArray struct {
+	exec *prisma.Exec
+}
+
+func (instance SubscriberConnectionExecArray) Exec(ctx context.Context) ([]SubscriberConnection, error) {
+	var v []SubscriberConnection
+	err := instance.exec.ExecArray(ctx, &v)
 	return v, err
 }
 
-func (instance ProjectConnectionExec) Exec(ctx context.Context) (*ProjectConnection, error) {
-	var v ProjectConnection
+var SubscriberConnectionFields = []string{}
+
+type SubscriberConnection struct {
+	PageInfo PageInfo         `json:"pageInfo"`
+	Edges    []SubscriberEdge `json:"edges"`
+}
+
+type SubscriberEdgeExec struct {
+	exec *prisma.Exec
+}
+
+func (instance *SubscriberEdgeExec) Node() *SubscriberExec {
+	ret := instance.exec.Client.GetOne(
+		instance.exec,
+		nil,
+		[2]string{"", "Subscriber"},
+		"node",
+		[]string{"id", "email", "name", "confirmed"})
+
+	return &SubscriberExec{ret}
+}
+
+func (instance SubscriberEdgeExec) Exec(ctx context.Context) (*SubscriberEdge, error) {
+	var v SubscriberEdge
 	ok, err := instance.exec.Exec(ctx, &v)
 	if err != nil {
 		return nil, err
@@ -2310,21 +2827,25 @@ func (instance ProjectConnectionExec) Exec(ctx context.Context) (*ProjectConnect
 	return &v, nil
 }
 
-func (instance ProjectConnectionExec) Exists(ctx context.Context) (bool, error) {
+func (instance SubscriberEdgeExec) Exists(ctx context.Context) (bool, error) {
 	return instance.exec.Exists(ctx)
 }
 
-type ProjectConnectionExecArray struct {
+type SubscriberEdgeExecArray struct {
 	exec *prisma.Exec
 }
 
-func (instance ProjectConnectionExecArray) Exec(ctx context.Context) ([]ProjectConnection, error) {
-	var v []ProjectConnection
+func (instance SubscriberEdgeExecArray) Exec(ctx context.Context) ([]SubscriberEdge, error) {
+	var v []SubscriberEdge
 	err := instance.exec.ExecArray(ctx, &v)
 	return v, err
 }
 
-type ProjectConnection struct {
+var SubscriberEdgeFields = []string{"cursor"}
+
+type SubscriberEdge struct {
+	Node   Subscriber `json:"node"`
+	Cursor string     `json:"cursor"`
 }
 
 type BlogPostSubscriptionPayloadExec struct {
@@ -2379,9 +2900,68 @@ func (instance BlogPostSubscriptionPayloadExecArray) Exec(ctx context.Context) (
 	return v, err
 }
 
+var BlogPostSubscriptionPayloadFields = []string{"mutation", "updatedFields"}
+
 type BlogPostSubscriptionPayload struct {
 	Mutation      MutationType `json:"mutation"`
+	Node          *BlogPost    `json:"node,omitempty"`
 	UpdatedFields []string     `json:"updatedFields,omitempty"`
+}
+
+type BlogPostExec struct {
+	exec *prisma.Exec
+}
+
+func (instance *BlogPostExec) Author() *UserExec {
+	ret := instance.exec.Client.GetOne(
+		instance.exec,
+		nil,
+		[2]string{"", "User"},
+		"author",
+		[]string{"id", "type", "createdAt", "updatedAt", "email", "name", "passwordHash"})
+
+	return &UserExec{ret}
+}
+
+func (instance BlogPostExec) Exec(ctx context.Context) (*BlogPost, error) {
+	var v BlogPost
+	ok, err := instance.exec.Exec(ctx, &v)
+	if err != nil {
+		return nil, err
+	}
+	if !ok {
+		return nil, ErrNoResult
+	}
+	return &v, nil
+}
+
+func (instance BlogPostExec) Exists(ctx context.Context) (bool, error) {
+	return instance.exec.Exists(ctx)
+}
+
+type BlogPostExecArray struct {
+	exec *prisma.Exec
+}
+
+func (instance BlogPostExecArray) Exec(ctx context.Context) ([]BlogPost, error) {
+	var v []BlogPost
+	err := instance.exec.ExecArray(ctx, &v)
+	return v, err
+}
+
+var BlogPostFields = []string{"id", "createdAt", "updatedAt", "slug", "published", "image", "title", "date", "content", "tags"}
+
+type BlogPost struct {
+	ID        string `json:"id"`
+	CreatedAt string `json:"createdAt"`
+	UpdatedAt string `json:"updatedAt"`
+	Slug      string `json:"slug"`
+	Published bool   `json:"published"`
+	Image     string `json:"image"`
+	Title     string `json:"title"`
+	Date      string `json:"date"`
+	Content   string `json:"content"`
+	Tags      string `json:"tags"`
 }
 
 type BlogPostPreviousValuesExec struct {
@@ -2414,6 +2994,8 @@ func (instance BlogPostPreviousValuesExecArray) Exec(ctx context.Context) ([]Blo
 	return v, err
 }
 
+var BlogPostPreviousValuesFields = []string{"id", "createdAt", "updatedAt", "slug", "published", "image", "title", "date", "content", "tags"}
+
 type BlogPostPreviousValues struct {
 	ID        string `json:"id"`
 	CreatedAt string `json:"createdAt"`
@@ -2427,11 +3009,11 @@ type BlogPostPreviousValues struct {
 	Tags      string `json:"tags"`
 }
 
-type FavoriteThingConnectionExec struct {
+type SessionConnectionExec struct {
 	exec *prisma.Exec
 }
 
-func (instance *FavoriteThingConnectionExec) PageInfo() *PageInfoExec {
+func (instance *SessionConnectionExec) PageInfo() *PageInfoExec {
 	ret := instance.exec.Client.GetOne(
 		instance.exec,
 		nil,
@@ -2442,32 +3024,92 @@ func (instance *FavoriteThingConnectionExec) PageInfo() *PageInfoExec {
 	return &PageInfoExec{ret}
 }
 
-func (instance *FavoriteThingConnectionExec) Edges() *FavoriteThingEdgeExec {
-	ret := instance.exec.Client.GetOne(
+func (instance *SessionConnectionExec) Edges() *SessionEdgeExecArray {
+	edges := instance.exec.Client.GetMany(
 		instance.exec,
 		nil,
-		[2]string{"", "FavoriteThingEdge"},
+		[3]string{"SessionWhereInput", "SessionOrderByInput", "SessionEdge"},
 		"edges",
 		[]string{"cursor"})
 
-	return &FavoriteThingEdgeExec{ret}
+	nodes := edges.Client.GetOne(
+		edges,
+		nil,
+		[2]string{"", "Session"},
+		"node",
+		SessionFields)
+
+	return &SessionEdgeExecArray{nodes}
 }
 
-func (instance *FavoriteThingConnectionExec) Aggregate(ctx context.Context) (Aggregate, error) {
+func (instance *SessionConnectionExec) Aggregate(ctx context.Context) (*Aggregate, error) {
 	ret := instance.exec.Client.GetOne(
 		instance.exec,
 		nil,
-		[2]string{"", "AggregateFavoriteThing"},
+		[2]string{"", "AggregateSession"},
 		"aggregate",
 		[]string{"count"})
 
 	var v Aggregate
 	_, err := ret.Exec(ctx, &v)
+	return &v, err
+}
+
+func (instance SessionConnectionExec) Exec(ctx context.Context) (*SessionConnection, error) {
+	edges, err := instance.Edges().Exec(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	pageInfo, err := instance.PageInfo().Exec(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	return &SessionConnection{
+		Edges:    edges,
+		PageInfo: *pageInfo,
+	}, nil
+}
+
+func (instance SessionConnectionExec) Exists(ctx context.Context) (bool, error) {
+	return instance.exec.Exists(ctx)
+}
+
+type SessionConnectionExecArray struct {
+	exec *prisma.Exec
+}
+
+func (instance SessionConnectionExecArray) Exec(ctx context.Context) ([]SessionConnection, error) {
+	var v []SessionConnection
+	err := instance.exec.ExecArray(ctx, &v)
 	return v, err
 }
 
-func (instance FavoriteThingConnectionExec) Exec(ctx context.Context) (*FavoriteThingConnection, error) {
-	var v FavoriteThingConnection
+var SessionConnectionFields = []string{}
+
+type SessionConnection struct {
+	PageInfo PageInfo      `json:"pageInfo"`
+	Edges    []SessionEdge `json:"edges"`
+}
+
+type SessionExec struct {
+	exec *prisma.Exec
+}
+
+func (instance *SessionExec) User() *UserExec {
+	ret := instance.exec.Client.GetOne(
+		instance.exec,
+		nil,
+		[2]string{"", "User"},
+		"user",
+		[]string{"id", "type", "createdAt", "updatedAt", "email", "name", "passwordHash"})
+
+	return &UserExec{ret}
+}
+
+func (instance SessionExec) Exec(ctx context.Context) (*Session, error) {
+	var v Session
 	ok, err := instance.exec.Exec(ctx, &v)
 	if err != nil {
 		return nil, err
@@ -2478,61 +3120,25 @@ func (instance FavoriteThingConnectionExec) Exec(ctx context.Context) (*Favorite
 	return &v, nil
 }
 
-func (instance FavoriteThingConnectionExec) Exists(ctx context.Context) (bool, error) {
+func (instance SessionExec) Exists(ctx context.Context) (bool, error) {
 	return instance.exec.Exists(ctx)
 }
 
-type FavoriteThingConnectionExecArray struct {
+type SessionExecArray struct {
 	exec *prisma.Exec
 }
 
-func (instance FavoriteThingConnectionExecArray) Exec(ctx context.Context) ([]FavoriteThingConnection, error) {
-	var v []FavoriteThingConnection
+func (instance SessionExecArray) Exec(ctx context.Context) ([]Session, error) {
+	var v []Session
 	err := instance.exec.ExecArray(ctx, &v)
 	return v, err
 }
 
-type FavoriteThingConnection struct {
-}
+var SessionFields = []string{"id", "createdAt"}
 
-type UserExec struct {
-	exec *prisma.Exec
-}
-
-func (instance UserExec) Exec(ctx context.Context) (*User, error) {
-	var v User
-	ok, err := instance.exec.Exec(ctx, &v)
-	if err != nil {
-		return nil, err
-	}
-	if !ok {
-		return nil, ErrNoResult
-	}
-	return &v, nil
-}
-
-func (instance UserExec) Exists(ctx context.Context) (bool, error) {
-	return instance.exec.Exists(ctx)
-}
-
-type UserExecArray struct {
-	exec *prisma.Exec
-}
-
-func (instance UserExecArray) Exec(ctx context.Context) ([]User, error) {
-	var v []User
-	err := instance.exec.ExecArray(ctx, &v)
-	return v, err
-}
-
-type User struct {
-	ID           string   `json:"id"`
-	Type         UserType `json:"type"`
-	CreatedAt    string   `json:"createdAt"`
-	UpdatedAt    string   `json:"updatedAt"`
-	Email        string   `json:"email"`
-	Name         string   `json:"name"`
-	PasswordHash string   `json:"passwordHash"`
+type Session struct {
+	ID        string `json:"id"`
+	CreatedAt string `json:"createdAt"`
 }
 
 type BookSubscriptionPayloadExec struct {
@@ -2587,52 +3193,31 @@ func (instance BookSubscriptionPayloadExecArray) Exec(ctx context.Context) ([]Bo
 	return v, err
 }
 
+var BookSubscriptionPayloadFields = []string{"mutation", "updatedFields"}
+
 type BookSubscriptionPayload struct {
 	Mutation      MutationType `json:"mutation"`
+	Node          *Book        `json:"node,omitempty"`
 	UpdatedFields []string     `json:"updatedFields,omitempty"`
 }
 
-type BookConnectionExec struct {
+type ProjectEdgeExec struct {
 	exec *prisma.Exec
 }
 
-func (instance *BookConnectionExec) PageInfo() *PageInfoExec {
+func (instance *ProjectEdgeExec) Node() *ProjectExec {
 	ret := instance.exec.Client.GetOne(
 		instance.exec,
 		nil,
-		[2]string{"", "PageInfo"},
-		"pageInfo",
-		[]string{"hasNextPage", "hasPreviousPage", "startCursor", "endCursor"})
+		[2]string{"", "Project"},
+		"node",
+		[]string{"id", "priority", "name", "link", "icon", "description", "retired", "revenue", "reason"})
 
-	return &PageInfoExec{ret}
+	return &ProjectExec{ret}
 }
 
-func (instance *BookConnectionExec) Edges() *BookEdgeExec {
-	ret := instance.exec.Client.GetOne(
-		instance.exec,
-		nil,
-		[2]string{"", "BookEdge"},
-		"edges",
-		[]string{"cursor"})
-
-	return &BookEdgeExec{ret}
-}
-
-func (instance *BookConnectionExec) Aggregate(ctx context.Context) (Aggregate, error) {
-	ret := instance.exec.Client.GetOne(
-		instance.exec,
-		nil,
-		[2]string{"", "AggregateBook"},
-		"aggregate",
-		[]string{"count"})
-
-	var v Aggregate
-	_, err := ret.Exec(ctx, &v)
-	return v, err
-}
-
-func (instance BookConnectionExec) Exec(ctx context.Context) (*BookConnection, error) {
-	var v BookConnection
+func (instance ProjectEdgeExec) Exec(ctx context.Context) (*ProjectEdge, error) {
+	var v ProjectEdge
 	ok, err := instance.exec.Exec(ctx, &v)
 	if err != nil {
 		return nil, err
@@ -2643,21 +3228,25 @@ func (instance BookConnectionExec) Exec(ctx context.Context) (*BookConnection, e
 	return &v, nil
 }
 
-func (instance BookConnectionExec) Exists(ctx context.Context) (bool, error) {
+func (instance ProjectEdgeExec) Exists(ctx context.Context) (bool, error) {
 	return instance.exec.Exists(ctx)
 }
 
-type BookConnectionExecArray struct {
+type ProjectEdgeExecArray struct {
 	exec *prisma.Exec
 }
 
-func (instance BookConnectionExecArray) Exec(ctx context.Context) ([]BookConnection, error) {
-	var v []BookConnection
+func (instance ProjectEdgeExecArray) Exec(ctx context.Context) ([]ProjectEdge, error) {
+	var v []ProjectEdge
 	err := instance.exec.ExecArray(ctx, &v)
 	return v, err
 }
 
-type BookConnection struct {
+var ProjectEdgeFields = []string{"cursor"}
+
+type ProjectEdge struct {
+	Node   Project `json:"node"`
+	Cursor string  `json:"cursor"`
 }
 
 type BookPreviousValuesExec struct {
@@ -2690,6 +3279,8 @@ func (instance BookPreviousValuesExecArray) Exec(ctx context.Context) ([]BookPre
 	return v, err
 }
 
+var BookPreviousValuesFields = []string{"id", "title", "author", "rank", "link"}
+
 type BookPreviousValues struct {
 	ID     string  `json:"id"`
 	Title  string  `json:"title"`
@@ -2698,23 +3289,23 @@ type BookPreviousValues struct {
 	Link   *string `json:"link,omitempty"`
 }
 
-type UserEdgeExec struct {
+type BlogPostEdgeExec struct {
 	exec *prisma.Exec
 }
 
-func (instance *UserEdgeExec) Node() *UserExec {
+func (instance *BlogPostEdgeExec) Node() *BlogPostExec {
 	ret := instance.exec.Client.GetOne(
 		instance.exec,
 		nil,
-		[2]string{"", "User"},
+		[2]string{"", "BlogPost"},
 		"node",
-		[]string{"id", "type", "createdAt", "updatedAt", "email", "name", "passwordHash"})
+		[]string{"id", "createdAt", "updatedAt", "slug", "published", "image", "title", "date", "content", "tags"})
 
-	return &UserExec{ret}
+	return &BlogPostExec{ret}
 }
 
-func (instance UserEdgeExec) Exec(ctx context.Context) (*UserEdge, error) {
-	var v UserEdge
+func (instance BlogPostEdgeExec) Exec(ctx context.Context) (*BlogPostEdge, error) {
+	var v BlogPostEdge
 	ok, err := instance.exec.Exec(ctx, &v)
 	if err != nil {
 		return nil, err
@@ -2725,114 +3316,73 @@ func (instance UserEdgeExec) Exec(ctx context.Context) (*UserEdge, error) {
 	return &v, nil
 }
 
-func (instance UserEdgeExec) Exists(ctx context.Context) (bool, error) {
+func (instance BlogPostEdgeExec) Exists(ctx context.Context) (bool, error) {
 	return instance.exec.Exists(ctx)
 }
 
-type UserEdgeExecArray struct {
+type BlogPostEdgeExecArray struct {
 	exec *prisma.Exec
 }
 
-func (instance UserEdgeExecArray) Exec(ctx context.Context) ([]UserEdge, error) {
-	var v []UserEdge
+func (instance BlogPostEdgeExecArray) Exec(ctx context.Context) ([]BlogPostEdge, error) {
+	var v []BlogPostEdge
 	err := instance.exec.ExecArray(ctx, &v)
 	return v, err
 }
 
-type UserEdge struct {
+var BlogPostEdgeFields = []string{"cursor"}
+
+type BlogPostEdge struct {
+	Node   BlogPost `json:"node"`
+	Cursor string   `json:"cursor"`
+}
+
+type BookEdgeExec struct {
+	exec *prisma.Exec
+}
+
+func (instance *BookEdgeExec) Node() *BookExec {
+	ret := instance.exec.Client.GetOne(
+		instance.exec,
+		nil,
+		[2]string{"", "Book"},
+		"node",
+		[]string{"id", "title", "author", "rank", "link"})
+
+	return &BookExec{ret}
+}
+
+func (instance BookEdgeExec) Exec(ctx context.Context) (*BookEdge, error) {
+	var v BookEdge
+	ok, err := instance.exec.Exec(ctx, &v)
+	if err != nil {
+		return nil, err
+	}
+	if !ok {
+		return nil, ErrNoResult
+	}
+	return &v, nil
+}
+
+func (instance BookEdgeExec) Exists(ctx context.Context) (bool, error) {
+	return instance.exec.Exists(ctx)
+}
+
+type BookEdgeExecArray struct {
+	exec *prisma.Exec
+}
+
+func (instance BookEdgeExecArray) Exec(ctx context.Context) ([]BookEdge, error) {
+	var v []BookEdge
+	err := instance.exec.ExecArray(ctx, &v)
+	return v, err
+}
+
+var BookEdgeFields = []string{"cursor"}
+
+type BookEdge struct {
+	Node   Book   `json:"node"`
 	Cursor string `json:"cursor"`
-}
-
-type SessionPreviousValuesExec struct {
-	exec *prisma.Exec
-}
-
-func (instance SessionPreviousValuesExec) Exec(ctx context.Context) (*SessionPreviousValues, error) {
-	var v SessionPreviousValues
-	ok, err := instance.exec.Exec(ctx, &v)
-	if err != nil {
-		return nil, err
-	}
-	if !ok {
-		return nil, ErrNoResult
-	}
-	return &v, nil
-}
-
-func (instance SessionPreviousValuesExec) Exists(ctx context.Context) (bool, error) {
-	return instance.exec.Exists(ctx)
-}
-
-type SessionPreviousValuesExecArray struct {
-	exec *prisma.Exec
-}
-
-func (instance SessionPreviousValuesExecArray) Exec(ctx context.Context) ([]SessionPreviousValues, error) {
-	var v []SessionPreviousValues
-	err := instance.exec.ExecArray(ctx, &v)
-	return v, err
-}
-
-type SessionPreviousValues struct {
-	ID        string `json:"id"`
-	CreatedAt string `json:"createdAt"`
-}
-
-type UserSubscriptionPayloadExec struct {
-	exec *prisma.Exec
-}
-
-func (instance *UserSubscriptionPayloadExec) Node() *UserExec {
-	ret := instance.exec.Client.GetOne(
-		instance.exec,
-		nil,
-		[2]string{"", "User"},
-		"node",
-		[]string{"id", "type", "createdAt", "updatedAt", "email", "name", "passwordHash"})
-
-	return &UserExec{ret}
-}
-
-func (instance *UserSubscriptionPayloadExec) PreviousValues() *UserPreviousValuesExec {
-	ret := instance.exec.Client.GetOne(
-		instance.exec,
-		nil,
-		[2]string{"", "UserPreviousValues"},
-		"previousValues",
-		[]string{"id", "type", "createdAt", "updatedAt", "email", "name", "passwordHash"})
-
-	return &UserPreviousValuesExec{ret}
-}
-
-func (instance UserSubscriptionPayloadExec) Exec(ctx context.Context) (*UserSubscriptionPayload, error) {
-	var v UserSubscriptionPayload
-	ok, err := instance.exec.Exec(ctx, &v)
-	if err != nil {
-		return nil, err
-	}
-	if !ok {
-		return nil, ErrNoResult
-	}
-	return &v, nil
-}
-
-func (instance UserSubscriptionPayloadExec) Exists(ctx context.Context) (bool, error) {
-	return instance.exec.Exists(ctx)
-}
-
-type UserSubscriptionPayloadExecArray struct {
-	exec *prisma.Exec
-}
-
-func (instance UserSubscriptionPayloadExecArray) Exec(ctx context.Context) ([]UserSubscriptionPayload, error) {
-	var v []UserSubscriptionPayload
-	err := instance.exec.ExecArray(ctx, &v)
-	return v, err
-}
-
-type UserSubscriptionPayload struct {
-	Mutation      MutationType `json:"mutation"`
-	UpdatedFields []string     `json:"updatedFields,omitempty"`
 }
 
 type FavoriteThingSubscriptionPayloadExec struct {
@@ -2887,28 +3437,31 @@ func (instance FavoriteThingSubscriptionPayloadExecArray) Exec(ctx context.Conte
 	return v, err
 }
 
+var FavoriteThingSubscriptionPayloadFields = []string{"mutation", "updatedFields"}
+
 type FavoriteThingSubscriptionPayload struct {
-	Mutation      MutationType `json:"mutation"`
-	UpdatedFields []string     `json:"updatedFields,omitempty"`
+	Mutation      MutationType   `json:"mutation"`
+	Node          *FavoriteThing `json:"node,omitempty"`
+	UpdatedFields []string       `json:"updatedFields,omitempty"`
 }
 
-type FavoriteThingEdgeExec struct {
+type UserEdgeExec struct {
 	exec *prisma.Exec
 }
 
-func (instance *FavoriteThingEdgeExec) Node() *FavoriteThingExec {
+func (instance *UserEdgeExec) Node() *UserExec {
 	ret := instance.exec.Client.GetOne(
 		instance.exec,
 		nil,
-		[2]string{"", "FavoriteThing"},
+		[2]string{"", "User"},
 		"node",
-		[]string{"id", "priority", "name", "link", "description"})
+		[]string{"id", "type", "createdAt", "updatedAt", "email", "name", "passwordHash"})
 
-	return &FavoriteThingExec{ret}
+	return &UserExec{ret}
 }
 
-func (instance FavoriteThingEdgeExec) Exec(ctx context.Context) (*FavoriteThingEdge, error) {
-	var v FavoriteThingEdge
+func (instance UserEdgeExec) Exec(ctx context.Context) (*UserEdge, error) {
+	var v UserEdge
 	ok, err := instance.exec.Exec(ctx, &v)
 	if err != nil {
 		return nil, err
@@ -2919,41 +3472,218 @@ func (instance FavoriteThingEdgeExec) Exec(ctx context.Context) (*FavoriteThingE
 	return &v, nil
 }
 
-func (instance FavoriteThingEdgeExec) Exists(ctx context.Context) (bool, error) {
+func (instance UserEdgeExec) Exists(ctx context.Context) (bool, error) {
 	return instance.exec.Exists(ctx)
 }
 
-type FavoriteThingEdgeExecArray struct {
+type UserEdgeExecArray struct {
 	exec *prisma.Exec
 }
 
-func (instance FavoriteThingEdgeExecArray) Exec(ctx context.Context) ([]FavoriteThingEdge, error) {
-	var v []FavoriteThingEdge
+func (instance UserEdgeExecArray) Exec(ctx context.Context) ([]UserEdge, error) {
+	var v []UserEdge
 	err := instance.exec.ExecArray(ctx, &v)
 	return v, err
 }
 
-type FavoriteThingEdge struct {
+var UserEdgeFields = []string{"cursor"}
+
+type UserEdge struct {
+	Node   User   `json:"node"`
 	Cursor string `json:"cursor"`
 }
 
-type BookEdgeExec struct {
+type FavoriteThingPreviousValuesExec struct {
 	exec *prisma.Exec
 }
 
-func (instance *BookEdgeExec) Node() *BookExec {
+func (instance FavoriteThingPreviousValuesExec) Exec(ctx context.Context) (*FavoriteThingPreviousValues, error) {
+	var v FavoriteThingPreviousValues
+	ok, err := instance.exec.Exec(ctx, &v)
+	if err != nil {
+		return nil, err
+	}
+	if !ok {
+		return nil, ErrNoResult
+	}
+	return &v, nil
+}
+
+func (instance FavoriteThingPreviousValuesExec) Exists(ctx context.Context) (bool, error) {
+	return instance.exec.Exists(ctx)
+}
+
+type FavoriteThingPreviousValuesExecArray struct {
+	exec *prisma.Exec
+}
+
+func (instance FavoriteThingPreviousValuesExecArray) Exec(ctx context.Context) ([]FavoriteThingPreviousValues, error) {
+	var v []FavoriteThingPreviousValues
+	err := instance.exec.ExecArray(ctx, &v)
+	return v, err
+}
+
+var FavoriteThingPreviousValuesFields = []string{"id", "priority", "name", "link", "description"}
+
+type FavoriteThingPreviousValues struct {
+	ID          string `json:"id"`
+	Priority    int32  `json:"priority"`
+	Name        string `json:"name"`
+	Link        string `json:"link"`
+	Description string `json:"description"`
+}
+
+type SubscriberExec struct {
+	exec *prisma.Exec
+}
+
+func (instance SubscriberExec) Exec(ctx context.Context) (*Subscriber, error) {
+	var v Subscriber
+	ok, err := instance.exec.Exec(ctx, &v)
+	if err != nil {
+		return nil, err
+	}
+	if !ok {
+		return nil, ErrNoResult
+	}
+	return &v, nil
+}
+
+func (instance SubscriberExec) Exists(ctx context.Context) (bool, error) {
+	return instance.exec.Exists(ctx)
+}
+
+type SubscriberExecArray struct {
+	exec *prisma.Exec
+}
+
+func (instance SubscriberExecArray) Exec(ctx context.Context) ([]Subscriber, error) {
+	var v []Subscriber
+	err := instance.exec.ExecArray(ctx, &v)
+	return v, err
+}
+
+var SubscriberFields = []string{"id", "email", "name", "confirmed"}
+
+type Subscriber struct {
+	ID        string `json:"id"`
+	Email     string `json:"email"`
+	Name      string `json:"name"`
+	Confirmed bool   `json:"confirmed"`
+}
+
+type BookConnectionExec struct {
+	exec *prisma.Exec
+}
+
+func (instance *BookConnectionExec) PageInfo() *PageInfoExec {
 	ret := instance.exec.Client.GetOne(
 		instance.exec,
+		nil,
+		[2]string{"", "PageInfo"},
+		"pageInfo",
+		[]string{"hasNextPage", "hasPreviousPage", "startCursor", "endCursor"})
+
+	return &PageInfoExec{ret}
+}
+
+func (instance *BookConnectionExec) Edges() *BookEdgeExecArray {
+	edges := instance.exec.Client.GetMany(
+		instance.exec,
+		nil,
+		[3]string{"BookWhereInput", "BookOrderByInput", "BookEdge"},
+		"edges",
+		[]string{"cursor"})
+
+	nodes := edges.Client.GetOne(
+		edges,
 		nil,
 		[2]string{"", "Book"},
 		"node",
-		[]string{"id", "title", "author", "rank", "link"})
+		BookFields)
 
-	return &BookExec{ret}
+	return &BookEdgeExecArray{nodes}
 }
 
-func (instance BookEdgeExec) Exec(ctx context.Context) (*BookEdge, error) {
-	var v BookEdge
+func (instance *BookConnectionExec) Aggregate(ctx context.Context) (*Aggregate, error) {
+	ret := instance.exec.Client.GetOne(
+		instance.exec,
+		nil,
+		[2]string{"", "AggregateBook"},
+		"aggregate",
+		[]string{"count"})
+
+	var v Aggregate
+	_, err := ret.Exec(ctx, &v)
+	return &v, err
+}
+
+func (instance BookConnectionExec) Exec(ctx context.Context) (*BookConnection, error) {
+	edges, err := instance.Edges().Exec(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	pageInfo, err := instance.PageInfo().Exec(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	return &BookConnection{
+		Edges:    edges,
+		PageInfo: *pageInfo,
+	}, nil
+}
+
+func (instance BookConnectionExec) Exists(ctx context.Context) (bool, error) {
+	return instance.exec.Exists(ctx)
+}
+
+type BookConnectionExecArray struct {
+	exec *prisma.Exec
+}
+
+func (instance BookConnectionExecArray) Exec(ctx context.Context) ([]BookConnection, error) {
+	var v []BookConnection
+	err := instance.exec.ExecArray(ctx, &v)
+	return v, err
+}
+
+var BookConnectionFields = []string{}
+
+type BookConnection struct {
+	PageInfo PageInfo   `json:"pageInfo"`
+	Edges    []BookEdge `json:"edges"`
+}
+
+type UserSubscriptionPayloadExec struct {
+	exec *prisma.Exec
+}
+
+func (instance *UserSubscriptionPayloadExec) Node() *UserExec {
+	ret := instance.exec.Client.GetOne(
+		instance.exec,
+		nil,
+		[2]string{"", "User"},
+		"node",
+		[]string{"id", "type", "createdAt", "updatedAt", "email", "name", "passwordHash"})
+
+	return &UserExec{ret}
+}
+
+func (instance *UserSubscriptionPayloadExec) PreviousValues() *UserPreviousValuesExec {
+	ret := instance.exec.Client.GetOne(
+		instance.exec,
+		nil,
+		[2]string{"", "UserPreviousValues"},
+		"previousValues",
+		[]string{"id", "type", "createdAt", "updatedAt", "email", "name", "passwordHash"})
+
+	return &UserPreviousValuesExec{ret}
+}
+
+func (instance UserSubscriptionPayloadExec) Exec(ctx context.Context) (*UserSubscriptionPayload, error) {
+	var v UserSubscriptionPayload
 	ok, err := instance.exec.Exec(ctx, &v)
 	if err != nil {
 		return nil, err
@@ -2964,64 +3694,26 @@ func (instance BookEdgeExec) Exec(ctx context.Context) (*BookEdge, error) {
 	return &v, nil
 }
 
-func (instance BookEdgeExec) Exists(ctx context.Context) (bool, error) {
+func (instance UserSubscriptionPayloadExec) Exists(ctx context.Context) (bool, error) {
 	return instance.exec.Exists(ctx)
 }
 
-type BookEdgeExecArray struct {
+type UserSubscriptionPayloadExecArray struct {
 	exec *prisma.Exec
 }
 
-func (instance BookEdgeExecArray) Exec(ctx context.Context) ([]BookEdge, error) {
-	var v []BookEdge
+func (instance UserSubscriptionPayloadExecArray) Exec(ctx context.Context) ([]UserSubscriptionPayload, error) {
+	var v []UserSubscriptionPayload
 	err := instance.exec.ExecArray(ctx, &v)
 	return v, err
 }
 
-type BookEdge struct {
-	Cursor string `json:"cursor"`
-}
+var UserSubscriptionPayloadFields = []string{"mutation", "updatedFields"}
 
-type ProjectPreviousValuesExec struct {
-	exec *prisma.Exec
-}
-
-func (instance ProjectPreviousValuesExec) Exec(ctx context.Context) (*ProjectPreviousValues, error) {
-	var v ProjectPreviousValues
-	ok, err := instance.exec.Exec(ctx, &v)
-	if err != nil {
-		return nil, err
-	}
-	if !ok {
-		return nil, ErrNoResult
-	}
-	return &v, nil
-}
-
-func (instance ProjectPreviousValuesExec) Exists(ctx context.Context) (bool, error) {
-	return instance.exec.Exists(ctx)
-}
-
-type ProjectPreviousValuesExecArray struct {
-	exec *prisma.Exec
-}
-
-func (instance ProjectPreviousValuesExecArray) Exec(ctx context.Context) ([]ProjectPreviousValues, error) {
-	var v []ProjectPreviousValues
-	err := instance.exec.ExecArray(ctx, &v)
-	return v, err
-}
-
-type ProjectPreviousValues struct {
-	ID          string  `json:"id"`
-	Priority    int32   `json:"priority"`
-	Name        string  `json:"name"`
-	Link        string  `json:"link"`
-	Icon        string  `json:"icon"`
-	Description string  `json:"description"`
-	Retired     bool    `json:"retired"`
-	Revenue     string  `json:"revenue"`
-	Reason      *string `json:"reason,omitempty"`
+type UserSubscriptionPayload struct {
+	Mutation      MutationType `json:"mutation"`
+	Node          *User        `json:"node,omitempty"`
+	UpdatedFields []string     `json:"updatedFields,omitempty"`
 }
 
 type ProjectSubscriptionPayloadExec struct {
@@ -3076,9 +3768,172 @@ func (instance ProjectSubscriptionPayloadExecArray) Exec(ctx context.Context) ([
 	return v, err
 }
 
+var ProjectSubscriptionPayloadFields = []string{"mutation", "updatedFields"}
+
 type ProjectSubscriptionPayload struct {
 	Mutation      MutationType `json:"mutation"`
+	Node          *Project     `json:"node,omitempty"`
 	UpdatedFields []string     `json:"updatedFields,omitempty"`
+}
+
+type ProjectConnectionExec struct {
+	exec *prisma.Exec
+}
+
+func (instance *ProjectConnectionExec) PageInfo() *PageInfoExec {
+	ret := instance.exec.Client.GetOne(
+		instance.exec,
+		nil,
+		[2]string{"", "PageInfo"},
+		"pageInfo",
+		[]string{"hasNextPage", "hasPreviousPage", "startCursor", "endCursor"})
+
+	return &PageInfoExec{ret}
+}
+
+func (instance *ProjectConnectionExec) Edges() *ProjectEdgeExecArray {
+	edges := instance.exec.Client.GetMany(
+		instance.exec,
+		nil,
+		[3]string{"ProjectWhereInput", "ProjectOrderByInput", "ProjectEdge"},
+		"edges",
+		[]string{"cursor"})
+
+	nodes := edges.Client.GetOne(
+		edges,
+		nil,
+		[2]string{"", "Project"},
+		"node",
+		ProjectFields)
+
+	return &ProjectEdgeExecArray{nodes}
+}
+
+func (instance *ProjectConnectionExec) Aggregate(ctx context.Context) (*Aggregate, error) {
+	ret := instance.exec.Client.GetOne(
+		instance.exec,
+		nil,
+		[2]string{"", "AggregateProject"},
+		"aggregate",
+		[]string{"count"})
+
+	var v Aggregate
+	_, err := ret.Exec(ctx, &v)
+	return &v, err
+}
+
+func (instance ProjectConnectionExec) Exec(ctx context.Context) (*ProjectConnection, error) {
+	edges, err := instance.Edges().Exec(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	pageInfo, err := instance.PageInfo().Exec(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	return &ProjectConnection{
+		Edges:    edges,
+		PageInfo: *pageInfo,
+	}, nil
+}
+
+func (instance ProjectConnectionExec) Exists(ctx context.Context) (bool, error) {
+	return instance.exec.Exists(ctx)
+}
+
+type ProjectConnectionExecArray struct {
+	exec *prisma.Exec
+}
+
+func (instance ProjectConnectionExecArray) Exec(ctx context.Context) ([]ProjectConnection, error) {
+	var v []ProjectConnection
+	err := instance.exec.ExecArray(ctx, &v)
+	return v, err
+}
+
+var ProjectConnectionFields = []string{}
+
+type ProjectConnection struct {
+	PageInfo PageInfo      `json:"pageInfo"`
+	Edges    []ProjectEdge `json:"edges"`
+}
+
+type SubscriberPreviousValuesExec struct {
+	exec *prisma.Exec
+}
+
+func (instance SubscriberPreviousValuesExec) Exec(ctx context.Context) (*SubscriberPreviousValues, error) {
+	var v SubscriberPreviousValues
+	ok, err := instance.exec.Exec(ctx, &v)
+	if err != nil {
+		return nil, err
+	}
+	if !ok {
+		return nil, ErrNoResult
+	}
+	return &v, nil
+}
+
+func (instance SubscriberPreviousValuesExec) Exists(ctx context.Context) (bool, error) {
+	return instance.exec.Exists(ctx)
+}
+
+type SubscriberPreviousValuesExecArray struct {
+	exec *prisma.Exec
+}
+
+func (instance SubscriberPreviousValuesExecArray) Exec(ctx context.Context) ([]SubscriberPreviousValues, error) {
+	var v []SubscriberPreviousValues
+	err := instance.exec.ExecArray(ctx, &v)
+	return v, err
+}
+
+var SubscriberPreviousValuesFields = []string{"id", "email", "name", "confirmed"}
+
+type SubscriberPreviousValues struct {
+	ID        string `json:"id"`
+	Email     string `json:"email"`
+	Name      string `json:"name"`
+	Confirmed bool   `json:"confirmed"`
+}
+
+type SessionPreviousValuesExec struct {
+	exec *prisma.Exec
+}
+
+func (instance SessionPreviousValuesExec) Exec(ctx context.Context) (*SessionPreviousValues, error) {
+	var v SessionPreviousValues
+	ok, err := instance.exec.Exec(ctx, &v)
+	if err != nil {
+		return nil, err
+	}
+	if !ok {
+		return nil, ErrNoResult
+	}
+	return &v, nil
+}
+
+func (instance SessionPreviousValuesExec) Exists(ctx context.Context) (bool, error) {
+	return instance.exec.Exists(ctx)
+}
+
+type SessionPreviousValuesExecArray struct {
+	exec *prisma.Exec
+}
+
+func (instance SessionPreviousValuesExecArray) Exec(ctx context.Context) ([]SessionPreviousValues, error) {
+	var v []SessionPreviousValues
+	err := instance.exec.ExecArray(ctx, &v)
+	return v, err
+}
+
+var SessionPreviousValuesFields = []string{"id", "createdAt"}
+
+type SessionPreviousValues struct {
+	ID        string `json:"id"`
+	CreatedAt string `json:"createdAt"`
 }
 
 type SessionSubscriptionPayloadExec struct {
@@ -3133,47 +3988,12 @@ func (instance SessionSubscriptionPayloadExecArray) Exec(ctx context.Context) ([
 	return v, err
 }
 
+var SessionSubscriptionPayloadFields = []string{"mutation", "updatedFields"}
+
 type SessionSubscriptionPayload struct {
 	Mutation      MutationType `json:"mutation"`
+	Node          *Session     `json:"node,omitempty"`
 	UpdatedFields []string     `json:"updatedFields,omitempty"`
-}
-
-type FavoriteThingPreviousValuesExec struct {
-	exec *prisma.Exec
-}
-
-func (instance FavoriteThingPreviousValuesExec) Exec(ctx context.Context) (*FavoriteThingPreviousValues, error) {
-	var v FavoriteThingPreviousValues
-	ok, err := instance.exec.Exec(ctx, &v)
-	if err != nil {
-		return nil, err
-	}
-	if !ok {
-		return nil, ErrNoResult
-	}
-	return &v, nil
-}
-
-func (instance FavoriteThingPreviousValuesExec) Exists(ctx context.Context) (bool, error) {
-	return instance.exec.Exists(ctx)
-}
-
-type FavoriteThingPreviousValuesExecArray struct {
-	exec *prisma.Exec
-}
-
-func (instance FavoriteThingPreviousValuesExecArray) Exec(ctx context.Context) ([]FavoriteThingPreviousValues, error) {
-	var v []FavoriteThingPreviousValues
-	err := instance.exec.ExecArray(ctx, &v)
-	return v, err
-}
-
-type FavoriteThingPreviousValues struct {
-	ID          string `json:"id"`
-	Priority    int32  `json:"priority"`
-	Name        string `json:"name"`
-	Link        string `json:"link"`
-	Description string `json:"description"`
 }
 
 type BookExec struct {
@@ -3206,6 +4026,8 @@ func (instance BookExecArray) Exec(ctx context.Context) ([]Book, error) {
 	return v, err
 }
 
+var BookFields = []string{"id", "title", "author", "rank", "link"}
+
 type Book struct {
 	ID     string  `json:"id"`
 	Title  string  `json:"title"`
@@ -3214,12 +4036,12 @@ type Book struct {
 	Link   *string `json:"link,omitempty"`
 }
 
-type FavoriteThingExec struct {
+type ProjectPreviousValuesExec struct {
 	exec *prisma.Exec
 }
 
-func (instance FavoriteThingExec) Exec(ctx context.Context) (*FavoriteThing, error) {
-	var v FavoriteThing
+func (instance ProjectPreviousValuesExec) Exec(ctx context.Context) (*ProjectPreviousValues, error) {
+	var v ProjectPreviousValues
 	ok, err := instance.exec.Exec(ctx, &v)
 	if err != nil {
 		return nil, err
@@ -3230,26 +4052,92 @@ func (instance FavoriteThingExec) Exec(ctx context.Context) (*FavoriteThing, err
 	return &v, nil
 }
 
-func (instance FavoriteThingExec) Exists(ctx context.Context) (bool, error) {
+func (instance ProjectPreviousValuesExec) Exists(ctx context.Context) (bool, error) {
 	return instance.exec.Exists(ctx)
 }
 
-type FavoriteThingExecArray struct {
+type ProjectPreviousValuesExecArray struct {
 	exec *prisma.Exec
 }
 
-func (instance FavoriteThingExecArray) Exec(ctx context.Context) ([]FavoriteThing, error) {
-	var v []FavoriteThing
+func (instance ProjectPreviousValuesExecArray) Exec(ctx context.Context) ([]ProjectPreviousValues, error) {
+	var v []ProjectPreviousValues
 	err := instance.exec.ExecArray(ctx, &v)
 	return v, err
 }
 
-type FavoriteThing struct {
-	ID          string `json:"id"`
-	Priority    int32  `json:"priority"`
-	Name        string `json:"name"`
-	Link        string `json:"link"`
-	Description string `json:"description"`
+var ProjectPreviousValuesFields = []string{"id", "priority", "name", "link", "icon", "description", "retired", "revenue", "reason"}
+
+type ProjectPreviousValues struct {
+	ID          string  `json:"id"`
+	Priority    int32   `json:"priority"`
+	Name        string  `json:"name"`
+	Link        string  `json:"link"`
+	Icon        string  `json:"icon"`
+	Description string  `json:"description"`
+	Retired     bool    `json:"retired"`
+	Revenue     string  `json:"revenue"`
+	Reason      *string `json:"reason,omitempty"`
+}
+
+type SubscriberSubscriptionPayloadExec struct {
+	exec *prisma.Exec
+}
+
+func (instance *SubscriberSubscriptionPayloadExec) Node() *SubscriberExec {
+	ret := instance.exec.Client.GetOne(
+		instance.exec,
+		nil,
+		[2]string{"", "Subscriber"},
+		"node",
+		[]string{"id", "email", "name", "confirmed"})
+
+	return &SubscriberExec{ret}
+}
+
+func (instance *SubscriberSubscriptionPayloadExec) PreviousValues() *SubscriberPreviousValuesExec {
+	ret := instance.exec.Client.GetOne(
+		instance.exec,
+		nil,
+		[2]string{"", "SubscriberPreviousValues"},
+		"previousValues",
+		[]string{"id", "email", "name", "confirmed"})
+
+	return &SubscriberPreviousValuesExec{ret}
+}
+
+func (instance SubscriberSubscriptionPayloadExec) Exec(ctx context.Context) (*SubscriberSubscriptionPayload, error) {
+	var v SubscriberSubscriptionPayload
+	ok, err := instance.exec.Exec(ctx, &v)
+	if err != nil {
+		return nil, err
+	}
+	if !ok {
+		return nil, ErrNoResult
+	}
+	return &v, nil
+}
+
+func (instance SubscriberSubscriptionPayloadExec) Exists(ctx context.Context) (bool, error) {
+	return instance.exec.Exists(ctx)
+}
+
+type SubscriberSubscriptionPayloadExecArray struct {
+	exec *prisma.Exec
+}
+
+func (instance SubscriberSubscriptionPayloadExecArray) Exec(ctx context.Context) ([]SubscriberSubscriptionPayload, error) {
+	var v []SubscriberSubscriptionPayload
+	err := instance.exec.ExecArray(ctx, &v)
+	return v, err
+}
+
+var SubscriberSubscriptionPayloadFields = []string{"mutation", "updatedFields"}
+
+type SubscriberSubscriptionPayload struct {
+	Mutation      MutationType `json:"mutation"`
+	Node          *Subscriber  `json:"node,omitempty"`
+	UpdatedFields []string     `json:"updatedFields,omitempty"`
 }
 
 type ProjectExec struct {
@@ -3282,6 +4170,8 @@ func (instance ProjectExecArray) Exec(ctx context.Context) ([]Project, error) {
 	return v, err
 }
 
+var ProjectFields = []string{"id", "priority", "name", "link", "icon", "description", "retired", "revenue", "reason"}
+
 type Project struct {
 	ID          string  `json:"id"`
 	Priority    int32   `json:"priority"`
@@ -3292,4 +4182,52 @@ type Project struct {
 	Retired     bool    `json:"retired"`
 	Revenue     string  `json:"revenue"`
 	Reason      *string `json:"reason,omitempty"`
+}
+
+type SessionEdgeExec struct {
+	exec *prisma.Exec
+}
+
+func (instance *SessionEdgeExec) Node() *SessionExec {
+	ret := instance.exec.Client.GetOne(
+		instance.exec,
+		nil,
+		[2]string{"", "Session"},
+		"node",
+		[]string{"id", "createdAt"})
+
+	return &SessionExec{ret}
+}
+
+func (instance SessionEdgeExec) Exec(ctx context.Context) (*SessionEdge, error) {
+	var v SessionEdge
+	ok, err := instance.exec.Exec(ctx, &v)
+	if err != nil {
+		return nil, err
+	}
+	if !ok {
+		return nil, ErrNoResult
+	}
+	return &v, nil
+}
+
+func (instance SessionEdgeExec) Exists(ctx context.Context) (bool, error) {
+	return instance.exec.Exists(ctx)
+}
+
+type SessionEdgeExecArray struct {
+	exec *prisma.Exec
+}
+
+func (instance SessionEdgeExecArray) Exec(ctx context.Context) ([]SessionEdge, error) {
+	var v []SessionEdge
+	err := instance.exec.ExecArray(ctx, &v)
+	return v, err
+}
+
+var SessionEdgeFields = []string{"cursor"}
+
+type SessionEdge struct {
+	Node   Session `json:"node"`
+	Cursor string  `json:"cursor"`
 }

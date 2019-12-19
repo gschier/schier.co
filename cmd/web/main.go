@@ -36,6 +36,7 @@ func setupRouter(client *prisma.Client) *mux.Router {
 	web.BlogRoutes(router)
 	web.BooksRoutes(router)
 	web.PagesRoutes(router)
+	web.NewsletterRoutes(router)
 	web.StaticRoutes(router)
 
 	return router

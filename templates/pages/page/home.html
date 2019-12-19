@@ -4,9 +4,9 @@
   <div class="content blog-post">
     <h1>Hey there, I'm Greg!</h1>
     <p>
-      I'm an independent software developer from Canada. Web development is my primary focus,
+      I'm an independent software developer from Canada 🇨🇦. Web development is my primary focus,
       but I also like to dabble with mobile apps, games, and design. Check out some of the
-      <a href="/projects">Projects I'm working on 🧰</a>
+      <strong><a href="/projects">Projects I'm working on 🧰</a></strong>
     </p>
     <p>
       The best way to reach out to me is on Twitter <a href="https://twitter.com/GregorySchier" rel="noopener">
@@ -15,11 +15,11 @@
     <img
             src="{{ staticUrl }}/build/images/me.jpg"
             class="avatar"
-            alt="Greg Schier bust"
+            alt="Greg Schier headshot"
             style="height:200px;box-shadow:1px 1px 0.7rem rgba(0,0,0,0.2)"
     />
 
-    <h2>Recent Posts 📝</h2>
+    <h2>Recent Writing ✍🏻</h2>
     <p>Here are some things I've written about recently on the <a href="/blog">Blog</a>.</p>
     <ul>
       {% for post in blogPosts %}
@@ -31,8 +31,11 @@
 
     <hr>
 
-    <h2>Top 10 Books 📚</h2>
-    <p>I only started reading a couple years ago. Here are my favorites so far.</p>
+    <h2>Favorite Books 📚</h2>
+    <p>
+      I read mostly non-fiction books as a way to learn new things.
+      Here is my top-10 list.
+    </p>
     <ol>
       {% for book in books %}
         <li>
