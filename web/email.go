@@ -1,36 +1,48 @@
 package web
 
 import (
-	"context"
+	"encoding/base64"
 	"github.com/mailjet/mailjet-apiv3-go"
+	"log"
 	"os"
 )
 
-var mj = mailjet.NewMailjetClient(os.Getenv("MAILJET_PUB_KEY"), os.Getenv("MAILJET_PRV_KEY"))
+var mj = mailjet.NewMailjetClient(
+	os.Getenv("MAILJET_PUB_KEY"),
+	os.Getenv("MAILJET_PRV_KEY"),
+)
 
-func SendSubscriberMessage(ctx context.Context) error {
+func SendSubscriberMessage(name, email string) error {
 	messages := &mailjet.MessagesV31{
-		Info: []mailjet.InfoMessagesV31{
-			{
-				From: &mailjet.RecipientV31{
-					Email: "greg@schier.co",
-					Name:  "Greg Schier",
-				},
-				To: &mailjet.RecipientsV31{{
-					Email: "gschier1990@gmail.com",
-				}},
-				Subject:                  "Test Subject",
-				TrackClicks:              "",
-				TrackOpens:               "",
-				CustomID:                 "",
-				Variables:                nil,
-				EventPayload:             "",
-				TemplateID:               "",
-				TemplateLanguage:         false,
+		SandBoxMode: false,
+		Info: []mailjet.InfoMessagesV31{{
+			From: &mailjet.RecipientV31{
+				Name:  "Greg Schier",
+				Email: "mail@schier.co",
 			},
-		},
-		SandBoxMode: true,
+			To: &mailjet.RecipientsV31{{
+				Name:  name,
+				Email: email,
+			}},
+			Variables: map[string]interface{}{
+				"confirmation_url": os.Getenv("BASE_URL") + "/newsletter/confirm/" +
+					base64.StdEncoding.EncodeToString([]byte(email)),
+			},
+			TemplateErrorDeliver: true,
+			TemplateErrorReporting: &mailjet.RecipientV31{
+				Email: "greg@schier.co",
+				Name:  "Gregory Schier",
+			},
+			Subject:          "Confirm Subscription",
+			TemplateLanguage: true,
+			TemplateID:       1147903,
+		}},
 	}
 	_, err := mj.SendMailV31(messages)
-	return err
+	if err != nil {
+		log.Println("Failed to send email:", err.Error())
+		return err
+	}
+
+	return nil
 }
