@@ -177,12 +177,6 @@ func renderTemplate(w http.ResponseWriter, r *http.Request, template *pongo2.Tem
 		newContext = newContext.Update(*context)
 	}
 
-	// Minify slightly
-	template.Options = &pongo2.Options{
-		TrimBlocks:   true,
-		LStripBlocks: true,
-	}
-
 	err := template.ExecuteWriter(newContext, w)
 	if err != nil {
 		log.Println("Failed to render template", err)
