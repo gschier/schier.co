@@ -167,7 +167,7 @@ form input:invalid {
   @apply flex flex-wrap;
 }
 
-.blog-post-continue a:last-child {
+.blog-post-continue > a:last-child {
   @apply ml-auto text-sm;
 }
 
