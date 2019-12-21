@@ -356,6 +356,16 @@ pre.chroma-chroma {
   @apply text-secondary no-underline;
 }
 
+.bottom-footer .subscription-form {
+  @apply text-sm mt-10 mx-auto;
+  max-width: 20rem;
+}
+
+.bottom-footer .subscription-form .btn,
+.bottom-footer .subscription-form input {
+  @apply py-2;
+}
+
 /*********************/
 /* SUBSCRIPTION FORM */
 /*********************/
@@ -379,7 +389,6 @@ pre.chroma-chroma {
 .subscription-form .btn {
   @apply w-auto text-center text-xs rounded-l-none;
 }
-
 
 /********/
 /* TAGS */
