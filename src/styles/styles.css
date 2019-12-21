@@ -269,8 +269,8 @@ form input:invalid {
 }
 
 .blog-post-footer__inner {
-  @apply text-center mx-auto py-10;
-  max-width: 20rem;
+  @apply text-center mx-auto py-10 px-4;
+  max-width: 27rem;
 }
 
 /***********************/
@@ -464,6 +464,23 @@ pre.chroma-chroma {
   font-family: Monaco, monospace !important;
   font-size: 0.8rem;
   line-height: 1.2rem;
+}
+
+.CodeMirror .cm-typo {
+  background: rgba(255, 137, 0, 0.1) !important;
+  border-bottom: 2px dotted #ff5f00;
+}
+
+body .CodeMirror .cm-link {
+  @apply text-syntax1;
+}
+
+body .CodeMirror .cm-url {
+  @apply text-syntax2;
+}
+
+body .CodeMirror .cm-comment {
+  @apply text-syntax4;
 }
 
 /***********/

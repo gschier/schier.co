@@ -1,9 +1,7 @@
 import CodeMirror from "codemirror";
-import "codemirror/mode/markdown/markdown";
+import "codemirror/mode/gfm/gfm";
 import "codemirror/addon/mode/overlay";
 import "codemirror/lib/codemirror.css";
-import "codemirror/theme/idea.css";
-import "codemirror/theme/neat.css";
 
 import "codemirror/addon/dialog/dialog";
 import "codemirror/addon/dialog/dialog.css";
@@ -39,9 +37,7 @@ export function setupEditor(textareaEl, containerEl) {
     },
     {
       value: textareaEl.value,
-      theme: "neat",
-      mode: "spell-checker",
-      backdrop: "markdown",
+      mode: "gfm",
       placeholder: "Start Typing...",
       height: "auto",
       foldGutter: true,
