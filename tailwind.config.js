@@ -4,11 +4,12 @@ module.exports = {
   important: true,
   theme: {
     colors: {
-      primary: colors.blue,
+      primary: { ...colors.blue, '50': '#f5fbff' },
       background: colors.white,
       foreground: colors.gray['800'],
       danger: colors.red,
       gray: colors.gray,
+      transparent: 'transparent',
     },
     textColor: {
       inverted: colors.gray['200'],

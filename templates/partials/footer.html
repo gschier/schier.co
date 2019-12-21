@@ -18,24 +18,14 @@
         <a href="{{ rssUrl }}" type="application/rss+xml" target="_blank">
           RSS
         </a>
-        {% if loggedIn %}
-          <p>
-            {{ user.Email }}
-            <a href="/logout">Logout</a>
-          </p>
-        {% else %}
-          <p>
+        <p>
+          {% if loggedIn %}
+            {{ user.Email }} <a href="/logout">Logout</a>
+          {% else %}
             Thanks for visiting!
-          </p>
-        {% endif %}
+          {% endif %}
+        </p>
       </div>
     </div>
-    <form action="/forms/newsletter/subscribe" method="post">
-      {{ csrfField | safe }}
-      <div>
-        <input name="email" type="email" placeholder="me@example.com">
-        <button class="btn">Subscribe</button>
-      </div>
-    </form>
   </div>
 </footer>

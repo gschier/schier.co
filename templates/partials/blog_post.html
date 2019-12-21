@@ -7,14 +7,26 @@
   </h1>
 
   {% if loggedIn %}
-    <a href="/blog/{{ blogPost.Slug }}/edit">Edit</a> |
-    {% include './publish_link.html' %} |
-    {% include './delete_link.html' %}
+    <div>
+      <a href="/blog/{{ blogPost.Slug }}/edit">Edit</a> |
+      {% include './publish_link.html' %} |
+      {% include './delete_link.html' %}
+    </div>
   {% endif %}
 
   {{ blogPost.Content | markdown }}
 
-  <footer>
-    {% include './blog_post_tag.html' with tags=blogPost.Tags %}
+  {% include './blog_post_tag.html' with tags=blogPost.Tags %}
+
+  <hr class="hr--spaced">
+  <footer class="blog-post-footer">
+    <div class="blog-post-footer__inner">
+      <p>
+        <strong>Hey there, I'm Greg! 🇨🇦🌲👨🏼‍💻</strong> Interested in more stuff like this?
+        Feel free to subscribe to my newsletter.
+      </p>
+
+      {% include './subscription-form.html' %}
+    </div>
   </footer>
 </article>

@@ -49,6 +49,10 @@ p {
   @apply mb-8 leading-relaxed;
 }
 
+small {
+  @apply text-sm;
+}
+
 h1 {
   @apply text-3xl;
 }
@@ -64,6 +68,14 @@ h6 {
 
 .btn {
   @apply bg-primary-600 text-gray-100 font-bold py-2 px-4 rounded flex;
+}
+
+.btn svg {
+  @apply h-4 w-auto;
+}
+
+.btn path {
+  @apply fill-current;
 }
 
 .btn:hover {
@@ -125,7 +137,7 @@ form label {
 .CodeMirror,
 form input,
 form textarea {
-  @apply appearance-none border border-gray-300 rounded w-full py-2 px-3 text-gray-700 leading-tight;
+  @apply appearance-none bg-gray-100 border border-gray-400 rounded w-full py-2 px-3 text-gray-700 leading-tight;
 }
 
 textarea::placeholder,
@@ -135,12 +147,12 @@ input::placeholder {
 
 .CodeMirror-focused,
 form input:focus {
-  @apply outline-none border border-primary-400;
+  @apply bg-background outline-none border border-primary-400;
 }
 
 form textarea:invalid,
 form input:invalid {
-  box-shadow: 0 0 3px rgba(255, 50, 50, 0.4);
+  @apply border-danger-500;
 }
 
 /*****************/
@@ -212,8 +224,8 @@ form input:invalid {
   @apply text-gray-100 border-0 border-b my-8;
 }
 
-.content footer {
-  @apply mt-8;
+.content .hr--spaced {
+  @apply my-16;
 }
 
 /**************/
@@ -234,6 +246,30 @@ form input:invalid {
 
 .pagination-right {
   @apply w-20 text-center;
+}
+
+/*************/
+/* BLOG POST */
+/*************/
+
+.blog-post-footer {
+  @apply border border-dashed border-primary-400 bg-primary-50 rounded mt-10;
+}
+
+.blog-post-footer small {
+  @apply text-xs italic text-gray-600;
+}
+
+.blog-post-footer p {
+  @apply mb-4;
+}
+
+.blog-post-footer input {
+  @apply border-primary-300;
+}
+
+.blog-post-footer__inner {
+  @apply text-center mx-auto py-10 px-20;
 }
 
 /***********************/
@@ -311,23 +347,6 @@ pre.chroma-chroma {
   @apply mt-2 mb-0;
 }
 
-.bottom-footer form {
-  @apply mx-auto px-4 pt-12;
-  max-width: 24rem;
-}
-
-.bottom-footer form div {
-  @apply flex;
-}
-
-.bottom-footer form input {
-  @apply rounded-r-none border-r-0;
-}
-
-.bottom-footer form .btn {
-  @apply w-auto text-center text-xs rounded-l-none;
-}
-
 .bottom-footer img {
   @apply mx-auto;
   width: 7rem;
@@ -336,6 +355,31 @@ pre.chroma-chroma {
 .bottom-footer a i {
   @apply text-secondary no-underline;
 }
+
+/*********************/
+/* SUBSCRIPTION FORM */
+/*********************/
+
+.subscription-form label {
+  @apply mb-0 hidden;
+}
+
+.subscription-form div {
+  @apply flex;
+}
+
+.subscription-form input {
+  @apply rounded-r-none border-r-0;
+}
+
+.subscription-form input:focus {
+  @apply border-r-0;
+}
+
+.subscription-form .btn {
+  @apply w-auto text-center text-xs rounded-l-none;
+}
+
 
 /********/
 /* TAGS */
@@ -351,7 +395,7 @@ pre.chroma-chroma {
 
 .tag {
   @apply mr-2 rounded-full border-primary-400 border uppercase inline-block leading-relaxed;
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   padding: 0.08rem 0.6rem;
 }
 

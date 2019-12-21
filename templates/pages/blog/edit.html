@@ -10,7 +10,7 @@
 {% endblock %}
 
 {% block content %}
-  <div id="editor-app">
+  <div class="container" id="editor-app">
     <h1 style="margin-bottom:1rem;">
       {{ blogPost | yesno:'Edit,Create' }}
       Post {% if blogPost and blogPost.Published %}(Published){% else %}(Draft){% endif %}
@@ -36,7 +36,7 @@
             Full Screen
           </a>
         </div>
-        <textarea name="content" id="content" rows="10" @input="onContentChange">{{ blogPost.Content }}</textarea>
+        <textarea name="content" id="content" rows="20" @input="onContentChange">{{ blogPost.Content }}</textarea>
       </div>
 
       <!-- Blog Post Editor -->
