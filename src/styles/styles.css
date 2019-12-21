@@ -269,7 +269,8 @@ form input:invalid {
 }
 
 .blog-post-footer__inner {
-  @apply text-center mx-auto py-10 px-20;
+  @apply text-center mx-auto py-10;
+  max-width: 20rem;
 }
 
 /***********************/
