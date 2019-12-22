@@ -98,11 +98,12 @@ func routeBlogRender(w http.ResponseWriter, r *http.Request) {
 
 	content := r.Form.Get("content")
 
-	// Replace Windows line ending because Blackfriday doesn't handle them
+	// Replace Windows line ending because BlackFriday doesn't handle them
 	slug := r.Form.Get("slug")
 	title := r.Form.Get("title")
 	partial := r.Form.Get("partial") == "true"
 	date := r.Form.Get("date")
+	tags := r.Form.Get("tags")
 
 	if date == "" {
 		date = time.Now().Format(time.RFC3339)
@@ -125,6 +126,7 @@ func routeBlogRender(w http.ResponseWriter, r *http.Request) {
 			Title:     title,
 			Date:      date,
 			Content:   content,
+			Tags:      tags,
 		},
 	})
 }
