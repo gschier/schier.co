@@ -14,31 +14,21 @@
         <p>
           You can view the most recent posts below, or <a href="/blog/tags">Browse Tags</a>.
         </p>
+        {% if loggedIn or post.Published %}
+          <ul>
+            {% for blogPost in blogPostDrafts %}
+              <li>
+                <a href="/blog/{{ blogPost.Slug }}">
+                  {{ blogPost.Title }}
+                </a>
+              </li>
+            {% endfor %}
+          </ul>
+        {% endif %}
       {% endif %}
     </div>
     <hr>
     <ul>
-      {% if loggedIn or post.Published %}
-        {% for blogPost in blogPostDrafts %}
-          <li class="content blog-post-preview">
-            <h2>
-              <a href="/blog/{{ blogPost.Slug }}">
-                📝 {{ blogPost.Title }}
-              </a>
-              {% include '../../partials/blog_post_meta.html' %}
-            </h2>
-            <div>
-              {{ blogPost.Content | summary }}
-            </div>
-            <div class="blog-post-continue">
-              {% include '../../partials/blog_post_tag.html' with tags=blogPost.Tags %}
-              <a href="/blog/{{ blogPost.Slug }}">
-                Continue Reading &raquo;
-              </a>
-            </div>
-          </li>
-        {% endfor %}
-      {% endif %}
       {% for blogPost in blogPosts %}
         <li class="content blog-post-preview">
           <h2>
