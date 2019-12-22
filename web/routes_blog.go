@@ -10,6 +10,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"regexp"
 	"sort"
 	"strconv"
 	"strings"
@@ -301,7 +302,7 @@ func routeBlogPost(w http.ResponseWriter, r *http.Request) {
 	renderTemplate(w, r, blogPostTemplate(), &pongo2.Context{
 		"pageTitle":       blogPosts[0].Title,
 		"pageImage":       blogPosts[0].Image,
-		"pageDescription": summary(blogPosts[0].Content),
+		"pageDescription": Summary(blogPosts[0].Content),
 		"blogPost":        blogPosts[0],
 		"words":           words,
 	})
@@ -465,7 +466,8 @@ func wordCount(md string) int {
 	return strings.Count(stripmd.Strip(md), " ")
 }
 
-func summary(md string) string {
+var reNewlines = regexp.MustCompile(`\n+`)
+func Summary(md string) string {
 	md = strings.Replace(md, "\r\n", "\n", -1)
 
 	var summaryMD string
@@ -476,7 +478,14 @@ func summary(md string) string {
 		summaryMD = strings.Split(md, "\n\n")[0]
 	}
 
-	return stripmd.Strip(summaryMD)
+	summary := stripmd.Strip(summaryMD)
+
+	// Replace some other things
+	summary = reNewlines.ReplaceAllString(summary, " ")
+	summary = strings.Replace(summary, "--", "–", -1)
+	summary = strings.Replace(summary, "---", "—", -1)
+
+	return strings.TrimSpace(summary)
 }
 
 type postTag struct {

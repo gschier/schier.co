@@ -33,6 +33,8 @@ github.com/alecthomas/chroma/lexers/x
 github.com/alecthomas/chroma/lexers/y
 # github.com/danwakefield/fnmatch v0.0.0-20160403171240-cbb64ac3d964
 github.com/danwakefield/fnmatch
+# github.com/davecgh/go-spew v1.1.1
+github.com/davecgh/go-spew/spew
 # github.com/dgrijalva/jwt-go v3.2.0+incompatible
 github.com/dgrijalva/jwt-go
 # github.com/dlclark/regexp2 v1.1.6
@@ -64,6 +66,8 @@ github.com/mailjet/mailjet-apiv3-go/resources
 github.com/mitchellh/mapstructure
 # github.com/pkg/errors v0.8.1
 github.com/pkg/errors
+# github.com/pmezard/go-difflib v1.0.0
+github.com/pmezard/go-difflib/difflib
 # github.com/prisma/prisma-client-lib-go v0.0.0-20181017161110-68a1f9908416
 github.com/prisma/prisma-client-lib-go
 # github.com/rainycape/unidecode v0.0.0-20150907023854-cb7f23ec59be
@@ -72,6 +76,8 @@ github.com/rainycape/unidecode
 github.com/russross/blackfriday/v2
 # github.com/shurcooL/sanitized_anchor_name v1.0.0
 github.com/shurcooL/sanitized_anchor_name
+# github.com/stretchr/testify v1.2.2
+github.com/stretchr/testify/assert
 # github.com/writeas/go-strip-markdown v2.0.1+incompatible
 github.com/writeas/go-strip-markdown
 # golang.org/x/crypto v0.0.0-20191111213947-16651526fdb4
