@@ -1,10 +1,8 @@
 <article class="content blog-post">
-  <h1>
-    {{ blogPost.Published | yesno:",📝 " }}{{ blogPost.Title }}
-    <time datetime{{ blogPost.Date }}>
-      {{ blogPost.Date | isoformat }} &SmallCircle; {{ words | readtime }} min read
-    </time>
-  </h1>
+  <header>
+    <h1>{{ blogPost.Title }}</h1>
+    {% include './blog_post_meta.html' %}
+  </header>
 
   {% if loggedIn %}
     <div>

@@ -130,14 +130,25 @@ func init() {
 	}
 
 	err = pongo2.RegisterFilter(
-		"Summary",
+		"summary",
 		func(in *pongo2.Value, param *pongo2.Value) (*pongo2.Value, *pongo2.Error) {
 			return pongo2.AsValue(Summary(in.String())), nil
 		},
 	)
 
 	if err != nil {
-		panic("failed to register Summary filter: " + err.Error())
+		panic("failed to register summary filter: " + err.Error())
+	}
+
+	err = pongo2.RegisterFilter(
+		"words",
+		func(in *pongo2.Value, param *pongo2.Value) (*pongo2.Value, *pongo2.Error) {
+			return pongo2.AsValue(wordCount(in.String())), nil
+		},
+	)
+
+	if err != nil {
+		panic("failed to register words filter: " + err.Error())
 	}
 }
 

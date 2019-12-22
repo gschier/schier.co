@@ -1,0 +1,7 @@
+<div class="meta">
+  <time datetime{{ blogPost.Date }}>{{ blogPost.Date | isoformat }}</time>
+  &bull; {{ blogPost.Content | words | readtime }} min read
+  {% if not blogPort.Published %}
+    &bull; Draft
+  {% endif %}
+</div>

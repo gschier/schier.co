@@ -119,7 +119,6 @@ func routeBlogRender(w http.ResponseWriter, r *http.Request) {
 
 	renderTemplate(w, r, template, &pongo2.Context{
 		"loggedIn":  false,
-		"words":     wordCount(content),
 		"pageTitle": title,
 		"blogPost": prisma.BlogPost{
 			Published: true,
@@ -298,7 +297,6 @@ func routeBlogPost(w http.ResponseWriter, r *http.Request) {
 		"pageImage":       blogPosts[0].Image,
 		"pageDescription": Summary(blogPosts[0].Content),
 		"blogPost":        blogPosts[0],
-		"words":           wordCount(blogPosts[0].Content),
 	})
 }
 

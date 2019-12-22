@@ -19,44 +19,40 @@
     <hr>
     <ul>
       {% if loggedIn or post.Published %}
-        {% for post in blogPostDrafts %}
+        {% for blogPost in blogPostDrafts %}
           <li class="content blog-post-preview">
             <h2>
-              <a href="/blog/{{ post.Slug }}">
-                📝 {{ post.Title }}
+              <a href="/blog/{{ blogPost.Slug }}">
+                📝 {{ blogPost.Title }}
               </a>
-              <time datetime{{ blogPost.Date }}>
-                {{ post.Date | isoformat }}
-              </time>
+              {% include '../../partials/blog_post_meta.html' %}
             </h2>
             <div>
-              {{ post.Content | summary }}
+              {{ blogPost.Content | summary }}
             </div>
             <div class="blog-post-continue">
-              {% include '../../partials/blog_post_tag.html' with tags=post.Tags %}
-              <a href="/blog/{{ post.Slug }}">
+              {% include '../../partials/blog_post_tag.html' with tags=blogPost.Tags %}
+              <a href="/blog/{{ blogPost.Slug }}">
                 Continue Reading &raquo;
               </a>
             </div>
           </li>
         {% endfor %}
       {% endif %}
-      {% for post in blogPosts %}
+      {% for blogPost in blogPosts %}
         <li class="content blog-post-preview">
           <h2>
-            <a href="/blog/{{ post.Slug }}">
-              {{ post.Title }}
+            <a href="/blog/{{ blogPost.Slug }}">
+              {{ blogPost.Title }}
             </a>
-            <time datetime{{ blogPost.Date }}>
-              {{ post.Date | isoformat }}
-            </time>
+            {% include '../../partials/blog_post_meta.html' %}
           </h2>
           <div>
-            {{ post.Content | summary }}
+            {{ blogPost.Content | summary }}
           </div>
           <div class="blog-post-continue">
-            {% include '../../partials/blog_post_tag.html' with tags=post.Tags %}
-            <a href="/blog/{{ post.Slug }}">
+            {% include '../../partials/blog_post_tag.html' with tags=blogPost.Tags %}
+            <a href="/blog/{{ blogPost.Slug }}">
               Continue Reading &raquo;
             </a>
           </div>
