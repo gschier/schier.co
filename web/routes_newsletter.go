@@ -10,6 +10,7 @@ import (
 )
 
 func NewsletterRoutes(router *mux.Router) {
+	router.HandleFunc("/newsletter", routeNewsletter).Methods(http.MethodGet)
 	router.HandleFunc("/newsletter/thanks", routeThankSubscriber).Methods(http.MethodGet)
 	router.HandleFunc("/newsletter/confirm/{emailHash}", routeSubscribeConfirm).Methods(http.MethodGet)
 	router.HandleFunc("/newsletter/confirmed", routeSubscribeConfirmed).Methods(http.MethodGet)
@@ -17,9 +18,14 @@ func NewsletterRoutes(router *mux.Router) {
 	router.HandleFunc("/forms/newsletter/subscribe", routeSubscribe).Methods(http.MethodPost)
 }
 
+var newsletterTemplate = pageTemplate("page/newsletter.html")
 var newsletterThanksTemplate = pageTemplate("page/thanks.html")
 var newsletterConfirmedTemplate = pageTemplate("page/confirmed.html")
 var newsletterUnsubscribeTemplate = pageTemplate("page/unsubscribe.html")
+
+func routeNewsletter(w http.ResponseWriter, r *http.Request) {
+	renderTemplate(w, r, newsletterTemplate(), nil)
+}
 
 func routeThankSubscriber(w http.ResponseWriter, r *http.Request) {
 	renderTemplate(w, r, newsletterThanksTemplate(), nil)
