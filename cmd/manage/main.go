@@ -16,13 +16,11 @@ func main() {
 	flag.Parse()
 	name := flag.Args()[0]
 
-	if name == "send-newsletter-test" {
-		sendNewsletter(flag.Args()[1:])
-	}
-
 	if name == "send-newsletter" {
 		sendNewsletter(flag.Args()[1:])
 	}
+
+	log.Panicln("invalid command", name)
 }
 
 func sendNewsletterTest(args []string) {
