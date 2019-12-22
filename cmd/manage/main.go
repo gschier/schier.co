@@ -9,25 +9,56 @@ import (
 	"github.com/gschier/schier.dev/web"
 	"log"
 	"os"
+	"time"
 )
 
 func main() {
 	flag.Parse()
 	name := flag.Args()[0]
 
+	if name == "send-newsletter-test" {
+		sendNewsletter(flag.Args()[1:])
+	}
+
 	if name == "send-newsletter" {
-		sendNewsletter()
+		sendNewsletter(flag.Args()[1:])
 	}
 }
 
-func sendNewsletter() {
-	slug := flag.Args()[1]
+func sendNewsletterTest(args []string) {
+	slug := args[0]
+	email := args[1]
+
+	if slug == "" {
+		log.Println("No slug specified")
+		os.Exit(1)
+	}
+
+	if email == "" {
+		log.Println("No email specified")
+		os.Exit(1)
+	}
+}
+
+func sendNewsletter(args []string) {
+	slug := args[0]
+
+	if slug == "" {
+		log.Println("No slug specified")
+		os.Exit(1)
+	}
+
+	var email *string = nil
+	if len(args) == 2 {
+		email = prisma.Str(args[1])
+	}
 
 	client := schier.NewPrismaClient()
 	subscribers, err := client.Subscribers(&prisma.SubscribersParams{
 		Where: &prisma.SubscriberWhereInput{
-			UnsubscribedNot: prisma.Bool(true),
-			Confirmed:       prisma.Bool(true),
+			Email:        email,
+			Confirmed:    prisma.Bool(true),
+			Unsubscribed: prisma.Bool(false),
 		},
 	}).Exec(context.Background())
 	if err != nil {
@@ -40,6 +71,9 @@ func sendNewsletter() {
 	}
 
 	newsletterKey := blogPost.ID
+	if email != nil {
+		newsletterKey = fmt.Sprintf("TEST:%s:%d:%s", *email, time.Now().Unix(), newsletterKey)
+	}
 	newsletter, err := client.NewsletterSend(prisma.NewsletterSendWhereUniqueInput{
 		Key: &newsletterKey,
 	}).Exec(context.Background())

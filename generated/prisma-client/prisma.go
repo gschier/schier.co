@@ -658,7 +658,7 @@ func (client *Client) Subscriber(params SubscriberWhereUniqueInput) *SubscriberE
 		params,
 		[2]string{"SubscriberWhereUniqueInput!", "Subscriber"},
 		"subscriber",
-		[]string{"id", "email", "name", "confirmed", "unsubscribed"})
+		[]string{"id", "createdAt", "updatedAt", "email", "name", "confirmed", "unsubscribed"})
 
 	return &SubscriberExec{ret}
 }
@@ -692,7 +692,7 @@ func (client *Client) Subscribers(params *SubscribersParams) *SubscriberExecArra
 		wparams,
 		[3]string{"SubscriberWhereInput", "SubscriberOrderByInput", "Subscriber"},
 		"subscribers",
-		[]string{"id", "email", "name", "confirmed", "unsubscribed"})
+		[]string{"id", "createdAt", "updatedAt", "email", "name", "confirmed", "unsubscribed"})
 
 	return &SubscriberExecArray{ret}
 }
@@ -1317,7 +1317,7 @@ func (client *Client) CreateSubscriber(params SubscriberCreateInput) *Subscriber
 		params,
 		[2]string{"SubscriberCreateInput!", "Subscriber"},
 		"createSubscriber",
-		[]string{"id", "email", "name", "confirmed", "unsubscribed"})
+		[]string{"id", "createdAt", "updatedAt", "email", "name", "confirmed", "unsubscribed"})
 
 	return &SubscriberExec{ret}
 }
@@ -1335,7 +1335,7 @@ func (client *Client) UpdateSubscriber(params SubscriberUpdateParams) *Subscribe
 		},
 		[3]string{"SubscriberUpdateInput!", "SubscriberWhereUniqueInput!", "Subscriber"},
 		"updateSubscriber",
-		[]string{"id", "email", "name", "confirmed", "unsubscribed"})
+		[]string{"id", "createdAt", "updatedAt", "email", "name", "confirmed", "unsubscribed"})
 
 	return &SubscriberExec{ret}
 }
@@ -1372,7 +1372,7 @@ func (client *Client) UpsertSubscriber(params SubscriberUpsertParams) *Subscribe
 		uparams,
 		[4]string{"SubscriberWhereUniqueInput!", "SubscriberCreateInput!", "SubscriberUpdateInput!", "Subscriber"},
 		"upsertSubscriber",
-		[]string{"id", "email", "name", "confirmed", "unsubscribed"})
+		[]string{"id", "createdAt", "updatedAt", "email", "name", "confirmed", "unsubscribed"})
 
 	return &SubscriberExec{ret}
 }
@@ -1382,7 +1382,7 @@ func (client *Client) DeleteSubscriber(params SubscriberWhereUniqueInput) *Subsc
 		params,
 		[2]string{"SubscriberWhereUniqueInput!", "Subscriber"},
 		"deleteSubscriber",
-		[]string{"id", "email", "name", "confirmed", "unsubscribed"})
+		[]string{"id", "createdAt", "updatedAt", "email", "name", "confirmed", "unsubscribed"})
 
 	return &SubscriberExec{ret}
 }
@@ -1586,6 +1586,10 @@ type SubscriberOrderByInput string
 const (
 	SubscriberOrderByInputIDAsc            SubscriberOrderByInput = "id_ASC"
 	SubscriberOrderByInputIDDesc           SubscriberOrderByInput = "id_DESC"
+	SubscriberOrderByInputCreatedAtAsc     SubscriberOrderByInput = "createdAt_ASC"
+	SubscriberOrderByInputCreatedAtDesc    SubscriberOrderByInput = "createdAt_DESC"
+	SubscriberOrderByInputUpdatedAtAsc     SubscriberOrderByInput = "updatedAt_ASC"
+	SubscriberOrderByInputUpdatedAtDesc    SubscriberOrderByInput = "updatedAt_DESC"
 	SubscriberOrderByInputEmailAsc         SubscriberOrderByInput = "email_ASC"
 	SubscriberOrderByInputEmailDesc        SubscriberOrderByInput = "email_DESC"
 	SubscriberOrderByInputNameAsc          SubscriberOrderByInput = "name_ASC"
@@ -2320,6 +2324,22 @@ type SubscriberWhereInput struct {
 	IDNotStartsWith    *string                `json:"id_not_starts_with,omitempty"`
 	IDEndsWith         *string                `json:"id_ends_with,omitempty"`
 	IDNotEndsWith      *string                `json:"id_not_ends_with,omitempty"`
+	CreatedAt          *string                `json:"createdAt,omitempty"`
+	CreatedAtNot       *string                `json:"createdAt_not,omitempty"`
+	CreatedAtIn        []string               `json:"createdAt_in,omitempty"`
+	CreatedAtNotIn     []string               `json:"createdAt_not_in,omitempty"`
+	CreatedAtLt        *string                `json:"createdAt_lt,omitempty"`
+	CreatedAtLte       *string                `json:"createdAt_lte,omitempty"`
+	CreatedAtGt        *string                `json:"createdAt_gt,omitempty"`
+	CreatedAtGte       *string                `json:"createdAt_gte,omitempty"`
+	UpdatedAt          *string                `json:"updatedAt,omitempty"`
+	UpdatedAtNot       *string                `json:"updatedAt_not,omitempty"`
+	UpdatedAtIn        []string               `json:"updatedAt_in,omitempty"`
+	UpdatedAtNotIn     []string               `json:"updatedAt_not_in,omitempty"`
+	UpdatedAtLt        *string                `json:"updatedAt_lt,omitempty"`
+	UpdatedAtLte       *string                `json:"updatedAt_lte,omitempty"`
+	UpdatedAtGt        *string                `json:"updatedAt_gt,omitempty"`
+	UpdatedAtGte       *string                `json:"updatedAt_gte,omitempty"`
 	Email              *string                `json:"email,omitempty"`
 	EmailNot           *string                `json:"email_not,omitempty"`
 	EmailIn            []string               `json:"email_in,omitempty"`
@@ -3124,7 +3144,7 @@ func (instance *SubscriberSubscriptionPayloadExec) Node() *SubscriberExec {
 		nil,
 		[2]string{"", "Subscriber"},
 		"node",
-		[]string{"id", "email", "name", "confirmed", "unsubscribed"})
+		[]string{"id", "createdAt", "updatedAt", "email", "name", "confirmed", "unsubscribed"})
 
 	return &SubscriberExec{ret}
 }
@@ -3135,7 +3155,7 @@ func (instance *SubscriberSubscriptionPayloadExec) PreviousValues() *SubscriberP
 		nil,
 		[2]string{"", "SubscriberPreviousValues"},
 		"previousValues",
-		[]string{"id", "email", "name", "confirmed", "unsubscribed"})
+		[]string{"id", "createdAt", "updatedAt", "email", "name", "confirmed", "unsubscribed"})
 
 	return &SubscriberPreviousValuesExec{ret}
 }
@@ -3204,10 +3224,12 @@ func (instance SubscriberExecArray) Exec(ctx context.Context) ([]Subscriber, err
 	return v, err
 }
 
-var SubscriberFields = []string{"id", "email", "name", "confirmed", "unsubscribed"}
+var SubscriberFields = []string{"id", "createdAt", "updatedAt", "email", "name", "confirmed", "unsubscribed"}
 
 type Subscriber struct {
 	ID           string `json:"id"`
+	CreatedAt    string `json:"createdAt"`
+	UpdatedAt    string `json:"updatedAt"`
 	Email        string `json:"email"`
 	Name         string `json:"name"`
 	Confirmed    bool   `json:"confirmed"`
@@ -3882,7 +3904,7 @@ func (instance *SubscriberEdgeExec) Node() *SubscriberExec {
 		nil,
 		[2]string{"", "Subscriber"},
 		"node",
-		[]string{"id", "email", "name", "confirmed", "unsubscribed"})
+		[]string{"id", "createdAt", "updatedAt", "email", "name", "confirmed", "unsubscribed"})
 
 	return &SubscriberExec{ret}
 }
@@ -4795,10 +4817,12 @@ func (instance SubscriberPreviousValuesExecArray) Exec(ctx context.Context) ([]S
 	return v, err
 }
 
-var SubscriberPreviousValuesFields = []string{"id", "email", "name", "confirmed", "unsubscribed"}
+var SubscriberPreviousValuesFields = []string{"id", "createdAt", "updatedAt", "email", "name", "confirmed", "unsubscribed"}
 
 type SubscriberPreviousValues struct {
 	ID           string `json:"id"`
+	CreatedAt    string `json:"createdAt"`
+	UpdatedAt    string `json:"updatedAt"`
 	Email        string `json:"email"`
 	Name         string `json:"name"`
 	Confirmed    bool   `json:"confirmed"`

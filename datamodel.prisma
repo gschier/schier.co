@@ -63,6 +63,8 @@ type Book {
 
 type Subscriber {
     id: ID! @id
+    createdAt: DateTime! @createdAt
+    updatedAt: DateTime! @updatedAt
     email: String! @unique
     name: String!
     confirmed: Boolean!
