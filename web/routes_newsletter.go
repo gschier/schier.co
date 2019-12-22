@@ -91,6 +91,11 @@ func routeSubscribe(w http.ResponseWriter, r *http.Request) {
 	email := r.Form.Get("email")
 	name := r.Form.Get("name")
 
+	if email == "" {
+		http.Error(w, "Email address required", http.StatusBadRequest)
+		return
+	}
+
 	client := ctxPrismaClient(r)
 
 	sub, err := client.UpsertSubscriber(prisma.SubscriberUpsertParams{
