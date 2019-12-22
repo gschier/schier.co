@@ -18,9 +18,9 @@ func main() {
 
 	if name == "send-newsletter" {
 		sendNewsletter(flag.Args()[1:])
+	} else {
+		log.Panicln("invalid command", name)
 	}
-
-	log.Panicln("invalid command", name)
 }
 
 func sendNewsletter(args []string) {
