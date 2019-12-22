@@ -9,7 +9,8 @@
     "frontend:build": "rm -rf ./static/build && parcel build --global schier --no-source-maps --out-dir ./static/build ./src/editor.js ./src/index.js",
     "fixtures": "docker-compose run web go run github.com/gschier/schier.dev/cmd/fixtures",
     "deploy": "primsa deploy --force",
-    "format-code": "prettier --write src/**/*.js src/**/*.css"
+    "format-code": "prettier --write src/**/*.js src/**/*.css",
+    "manage": "docker-compose run web go run github.com/gschier/schier.dev/cmd/manage"
   },
   "husky": {
     "hooks": {

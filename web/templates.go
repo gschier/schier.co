@@ -10,7 +10,6 @@ import (
 	"github.com/russross/blackfriday/v2"
 	"io/ioutil"
 	"log"
-	"math"
 	"net/http"
 	"os"
 	"strings"
@@ -66,9 +65,7 @@ func init() {
 	err = pongo2.RegisterFilter(
 		"readtime",
 		func(in *pongo2.Value, param *pongo2.Value) (*pongo2.Value, *pongo2.Error) {
-			minutes := int(math.Ceil(in.Float() / 200))
-
-			return pongo2.AsValue(minutes), nil
+			return pongo2.AsValue(ReadTime(in.Integer())), nil
 		},
 	)
 
@@ -143,7 +140,7 @@ func init() {
 	err = pongo2.RegisterFilter(
 		"words",
 		func(in *pongo2.Value, param *pongo2.Value) (*pongo2.Value, *pongo2.Error) {
-			return pongo2.AsValue(wordCount(in.String())), nil
+			return pongo2.AsValue(WordCount(in.String())), nil
 		},
 	)
 

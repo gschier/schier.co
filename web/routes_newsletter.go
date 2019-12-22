@@ -2,6 +2,7 @@ package web
 
 import (
 	"encoding/base64"
+	"github.com/flosch/pongo2"
 	"github.com/gorilla/mux"
 	"github.com/gschier/schier.dev/generated/prisma-client"
 	"log"
@@ -12,14 +13,43 @@ func NewsletterRoutes(router *mux.Router) {
 	router.HandleFunc("/newsletter/thanks", routeThankSubscriber).Methods(http.MethodGet)
 	router.HandleFunc("/newsletter/confirm/{emailHash}", routeSubscribeConfirm).Methods(http.MethodGet)
 	router.HandleFunc("/newsletter/confirmed", routeSubscribeConfirmed).Methods(http.MethodGet)
+	router.HandleFunc("/newsletter/unsubscribe/{id}", routeUnsubscribe).Methods(http.MethodGet)
 	router.HandleFunc("/forms/newsletter/subscribe", routeSubscribe).Methods(http.MethodPost)
 }
 
 var newsletterThanksTemplate = pageTemplate("page/thanks.html")
 var newsletterConfirmedTemplate = pageTemplate("page/confirmed.html")
+var newsletterUnsubscribeTemplate = pageTemplate("page/unsubscribe.html")
 
 func routeThankSubscriber(w http.ResponseWriter, r *http.Request) {
 	renderTemplate(w, r, newsletterThanksTemplate(), nil)
+}
+
+func routeUnsubscribe(w http.ResponseWriter, r *http.Request) {
+	id := mux.Vars(r)["id"]
+
+	client := ctxPrismaClient(r)
+
+	sub, err := client.Subscriber(prisma.SubscriberWhereUniqueInput{ID: &id}).Exec(r.Context())
+	if err != nil {
+		log.Println("Failed to get subscriber", err.Error())
+		http.Error(w, "Failed to unsubscribe", http.StatusInternalServerError)
+		return
+	}
+
+	_, err = client.UpdateSubscriber(prisma.SubscriberUpdateParams{
+		Where: prisma.SubscriberWhereUniqueInput{ID: &id},
+		Data:  prisma.SubscriberUpdateInput{Unsubscribed: prisma.Bool(true)},
+	}).Exec(r.Context())
+	if err != nil {
+		log.Println("Failed to update subscriber for unsub", err.Error())
+		http.Error(w, "Failed to unsubscribe", http.StatusInternalServerError)
+		return
+	}
+
+	renderTemplate(w, r, newsletterUnsubscribeTemplate(), &pongo2.Context{
+		"email": sub.Email,
+	})
 }
 
 func routeSubscribeConfirmed(w http.ResponseWriter, r *http.Request) {
@@ -63,7 +93,7 @@ func routeSubscribe(w http.ResponseWriter, r *http.Request) {
 
 	client := ctxPrismaClient(r)
 
-	_, err := client.UpsertSubscriber(prisma.SubscriberUpsertParams{
+	sub, err := client.UpsertSubscriber(prisma.SubscriberUpsertParams{
 		Where: prisma.SubscriberWhereUniqueInput{Email: &email},
 		Create: prisma.SubscriberCreateInput{
 			Email:     email,
@@ -80,7 +110,7 @@ func routeSubscribe(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = SendSubscriberMessage(name, email)
+	err = SendSubscriberTemplate(sub)
 	if err != nil {
 		log.Println("Failed to send subscription confirmation:", err.Error())
 		http.Error(w, "Failed to send email", http.StatusInternalServerError)

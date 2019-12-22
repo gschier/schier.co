@@ -8,6 +8,7 @@ import (
 	"github.com/gschier/schier.dev/generated/prisma-client"
 	stripmd "github.com/writeas/go-strip-markdown"
 	"log"
+	"math"
 	"net/http"
 	"os"
 	"regexp"
@@ -454,8 +455,12 @@ func stringToTags(tags string) []string {
 	return allTags
 }
 
-func wordCount(md string) int {
+func WordCount(md string) int {
 	return strings.Count(stripmd.Strip(md), " ")
+}
+
+func ReadTime(words int) int {
+	return int(math.Ceil(float64(words) / 200))
 }
 
 var reNewlines = regexp.MustCompile(`\n+`)

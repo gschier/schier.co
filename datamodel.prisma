@@ -66,4 +66,13 @@ type Subscriber {
     email: String! @unique
     name: String!
     confirmed: Boolean!
+    unsubscribed: Boolean!
+}
+
+type NewsletterSend {
+    id: ID! @id
+    key: String! @unique
+    createdAt: DateTime! @createdAt
+    recipients: Int!
+    description: String!
 }
