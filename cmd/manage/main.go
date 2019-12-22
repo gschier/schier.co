@@ -25,7 +25,10 @@ func sendNewsletter() {
 
 	client := schier.NewPrismaClient()
 	subscribers, err := client.Subscribers(&prisma.SubscribersParams{
-		Where: &prisma.SubscriberWhereInput{UnsubscribedNot: prisma.Bool(true)},
+		Where: &prisma.SubscriberWhereInput{
+			UnsubscribedNot: prisma.Bool(true),
+			Confirmed:       prisma.Bool(true),
+		},
 	}).Exec(context.Background())
 	if err != nil {
 		log.Panicln("failed to query subscribers", err.Error())
@@ -54,8 +57,8 @@ func sendNewsletter() {
 	}
 
 	send, err := client.CreateNewsletterSend(prisma.NewsletterSendCreateInput{
-		Key:        newsletterKey,
-		Recipients: int32(len(subscribers)),
+		Key:         newsletterKey,
+		Recipients:  int32(len(subscribers)),
 		Description: fmt.Sprintf("Blog Post: %s", blogPost.Title),
 	}).Exec(context.Background())
 	if err != nil {
