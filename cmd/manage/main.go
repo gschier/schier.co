@@ -23,21 +23,6 @@ func main() {
 	log.Panicln("invalid command", name)
 }
 
-func sendNewsletterTest(args []string) {
-	slug := args[0]
-	email := args[1]
-
-	if slug == "" {
-		log.Println("No slug specified")
-		os.Exit(1)
-	}
-
-	if email == "" {
-		log.Println("No email specified")
-		os.Exit(1)
-	}
-}
-
 func sendNewsletter(args []string) {
 	slug := args[0]
 
@@ -63,10 +48,20 @@ func sendNewsletter(args []string) {
 		log.Panicln("failed to query subscribers", err.Error())
 	}
 
-	blogPost, err := client.BlogPost(prisma.BlogPostWhereUniqueInput{Slug: &slug}).Exec(context.Background())
+	blogPosts, err := client.BlogPosts(&prisma.BlogPostsParams{
+		Where: &prisma.BlogPostWhereInput{
+			Slug: &slug,
+			Published: prisma.Bool(true),
+		},
+	}).Exec(context.Background())
 	if err != nil {
 		log.Panicln("Failed to query blog post", slug, err.Error())
 	}
+	if len(blogPosts) == 0 {
+		log.Panicln("Blog post no found", slug)
+	}
+
+	blogPost := &blogPosts[0]
 
 	newsletterKey := blogPost.ID
 	if email != nil {
