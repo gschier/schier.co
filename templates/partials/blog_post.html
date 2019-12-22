@@ -2,7 +2,7 @@
   <h1>
     {{ blogPost.Published | yesno:",📝 " }}{{ blogPost.Title }}
     <time datetime{{ blogPost.Date }}>
-      {{ blogPost.Date | isoformat }} ({{ words }} words)
+      {{ blogPost.Date | isoformat }} &SmallCircle; {{ words | readtime }} min read
     </time>
   </h1>
 

@@ -10,6 +10,7 @@ import (
 	"github.com/russross/blackfriday/v2"
 	"io/ioutil"
 	"log"
+	"math"
 	"net/http"
 	"os"
 	"strings"
@@ -49,7 +50,25 @@ func init() {
 				return nil, &pongo2.Error{OrigError: err}
 			}
 
-			return pongo2.AsValue(t.Format("January _2, 2006")), nil
+			dateStr := t.Format("Jan _2, 2006")
+			if t.Year() == time.Now().Year() {
+				dateStr = t.Format("Jan _2")
+			}
+
+			return pongo2.AsValue(dateStr), nil
+		},
+	)
+
+	if err != nil {
+		panic("failed to register isoformat filter: " + err.Error())
+	}
+
+	err = pongo2.RegisterFilter(
+		"readtime",
+		func(in *pongo2.Value, param *pongo2.Value) (*pongo2.Value, *pongo2.Error) {
+			minutes := int(math.Ceil(in.Float() / 200))
+
+			return pongo2.AsValue(minutes), nil
 		},
 	)
 

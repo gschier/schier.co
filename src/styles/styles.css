@@ -177,7 +177,7 @@ form input:invalid {
 
 .blog-post-preview time,
 .blog-post time {
-  @apply uppercase block text-sm text-gray-500;
+  @apply block text-sm text-gray-500 font-normal;
 }
 
 .blog-post-preview h2 {

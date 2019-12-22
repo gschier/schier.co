@@ -275,7 +275,6 @@ func routeBlogPost(w http.ResponseWriter, r *http.Request) {
 	slug := mux.Vars(r)["slug"]
 
 	client := ctxPrismaClient(r)
-	loggedIn := ctxGetLoggedIn(r)
 
 	blogPostWhere := &prisma.BlogPostWhereInput{Slug: &slug}
 
@@ -293,18 +292,13 @@ func routeBlogPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	words := 0
-	if loggedIn {
-		words = wordCount(blogPosts[0].Content)
-	}
-
 	// Render template
 	renderTemplate(w, r, blogPostTemplate(), &pongo2.Context{
 		"pageTitle":       blogPosts[0].Title,
 		"pageImage":       blogPosts[0].Image,
 		"pageDescription": Summary(blogPosts[0].Content),
 		"blogPost":        blogPosts[0],
-		"words":           words,
+		"words":           wordCount(blogPosts[0].Content),
 	})
 }
 
