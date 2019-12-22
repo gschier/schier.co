@@ -273,10 +273,13 @@ func routeBlogPostSuffix(w http.ResponseWriter, r *http.Request) {
 func routeBlogPost(w http.ResponseWriter, r *http.Request) {
 	slug := mux.Vars(r)["slug"]
 
+	client := ctxPrismaClient(r)
+	loggedIn := ctxGetLoggedIn(r)
+
 	blogPostWhere := &prisma.BlogPostWhereInput{Slug: &slug}
 
 	// Fetch post
-	blogPosts, err := ctxPrismaClient(r).BlogPosts(
+	blogPosts, err := client.BlogPosts(
 		&prisma.BlogPostsParams{Where: blogPostWhere},
 	).Exec(r.Context())
 	if err != nil {
@@ -289,13 +292,18 @@ func routeBlogPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	words := 0
+	if loggedIn {
+		words = wordCount(blogPosts[0].Content)
+	}
+
 	// Render template
 	renderTemplate(w, r, blogPostTemplate(), &pongo2.Context{
 		"pageTitle":       blogPosts[0].Title,
 		"pageImage":       blogPosts[0].Image,
 		"pageDescription": summary(blogPosts[0].Content),
 		"blogPost":        blogPosts[0],
-		"words":           wordCount(blogPosts[0].Content),
+		"words":           words,
 	})
 }
 
