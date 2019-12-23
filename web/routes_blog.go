@@ -482,8 +482,8 @@ func Summary(md string) string {
 
 	// Replace some other things
 	summary = reNewlines.ReplaceAllString(summary, " ")
-	summary = strings.Replace(summary, "--", "–", -1)
 	summary = strings.Replace(summary, "---", "—", -1)
+	summary = strings.Replace(summary, "--", "–", -1)
 
 	return strings.TrimSpace(summary)
 }
