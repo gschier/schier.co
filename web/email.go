@@ -22,6 +22,7 @@ func SendNewPostTemplate(post *prisma.BlogPost, sub *prisma.Subscriber) error {
 	return SendTemplate(templateNewPost, sub, map[string]interface{}{
 		"post_title": post.Title,
 		"post_readtime": ReadTime(WordCount(post.Content)),
+		"post_summary": Summary(post.Content),
 		"post_href": u,
 		"unsubscribe_url": unsub,
 	})
