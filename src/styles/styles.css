@@ -404,9 +404,9 @@ pre.chroma-chroma {
 }
 
 .tag {
-  @apply mr-2 rounded-full border-primary-400 border uppercase inline-block leading-relaxed;
-  font-size: 0.7rem;
-  padding: 0.08rem 0.6rem;
+  @apply mr-2 rounded-full border-primary-400 border uppercase inline-block;
+  font-size: 0.7em;
+  padding: 0 0.6em;
 }
 
 /********************/
