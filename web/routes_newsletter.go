@@ -1,7 +1,6 @@
 package web
 
 import (
-	"encoding/base64"
 	"github.com/flosch/pongo2"
 	"github.com/gorilla/mux"
 	"github.com/gschier/schier.dev/generated/prisma-client"
@@ -12,8 +11,7 @@ import (
 func NewsletterRoutes(router *mux.Router) {
 	router.HandleFunc("/newsletter", routeNewsletter).Methods(http.MethodGet)
 	router.HandleFunc("/newsletter/thanks", routeThankSubscriber).Methods(http.MethodGet)
-	router.HandleFunc("/newsletter/confirm/{emailHash}", routeSubscribeConfirm).Methods(http.MethodGet)
-	router.HandleFunc("/newsletter/confirmed", routeSubscribeConfirmed).Methods(http.MethodGet)
+	router.HandleFunc("/newsletter/confirm/{id}", routeSubscribeConfirm).Methods(http.MethodGet)
 	router.HandleFunc("/newsletter/unsubscribe/{id}", routeUnsubscribe).Methods(http.MethodGet)
 	router.HandleFunc("/forms/newsletter/subscribe", routeSubscribe).Methods(http.MethodPost)
 }
@@ -58,28 +56,16 @@ func routeUnsubscribe(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-func routeSubscribeConfirmed(w http.ResponseWriter, r *http.Request) {
-	renderTemplate(w, r, newsletterConfirmedTemplate(), nil)
-}
-
 func routeSubscribeConfirm(w http.ResponseWriter, r *http.Request) {
-	emailHash := mux.Vars(r)["emailHash"]
-
-	emailBytes, err := base64.StdEncoding.DecodeString(emailHash)
-	if err != nil {
-		http.Error(w, "Failed to subscribe", http.StatusBadRequest)
-		return
-	}
-
-	email := string(emailBytes)
+	id := mux.Vars(r)["id"]
 
 	client := ctxPrismaClient(r)
-	_, err = client.UpdateSubscriber(prisma.SubscriberUpdateParams{
+	_, err := client.UpdateSubscriber(prisma.SubscriberUpdateParams{
 		Data: prisma.SubscriberUpdateInput{
 			Confirmed: prisma.Bool(true),
 		},
 		Where: prisma.SubscriberWhereUniqueInput{
-			Email: &email,
+			ID: &id,
 		},
 	}).Exec(r.Context())
 	if err != nil {
@@ -88,7 +74,7 @@ func routeSubscribeConfirm(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	http.Redirect(w, r, "/newsletter/confirmed", http.StatusSeeOther)
+	renderTemplate(w, r, newsletterConfirmedTemplate(), nil)
 }
 
 func routeSubscribe(w http.ResponseWriter, r *http.Request) {

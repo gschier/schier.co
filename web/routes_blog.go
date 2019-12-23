@@ -25,7 +25,7 @@ func BlogRoutes(router *mux.Router) {
 
 	// Blog Static
 	router.HandleFunc("/blog", routeBlogList).Methods(http.MethodGet)
-	router.HandleFunc("/blog/new", routeBlogPostEdit).Methods(http.MethodGet)
+	router.HandleFunc("/blog/new", Admin(routeBlogPostEdit)).Methods(http.MethodGet)
 	router.HandleFunc("/blog/render", routeBlogRender).Methods(http.MethodPost)
 
 	// Tags
@@ -40,9 +40,9 @@ func BlogRoutes(router *mux.Router) {
 	router.HandleFunc("/blog/{slug}/edit", routeBlogPostEdit).Methods(http.MethodGet)
 
 	// Forms
-	router.HandleFunc("/forms/blog/upsert", routeBlogPostCreateOrUpdate).Methods(http.MethodPost)
-	router.HandleFunc("/forms/blog/publish", routeBlogPostPublish).Methods(http.MethodPost)
-	router.HandleFunc("/forms/blog/delete", routeBlogPostDelete).Methods(http.MethodPost)
+	router.HandleFunc("/forms/blog/upsert", Admin(routeBlogPostCreateOrUpdate)).Methods(http.MethodPost)
+	router.HandleFunc("/forms/blog/publish", Admin(routeBlogPostPublish)).Methods(http.MethodPost)
+	router.HandleFunc("/forms/blog/delete", Admin(routeBlogPostDelete)).Methods(http.MethodPost)
 }
 
 var blogEditTemplate = pageTemplate("blog/edit.html")
@@ -138,7 +138,9 @@ func routeBlogPostDelete(w http.ResponseWriter, r *http.Request) {
 	id := r.Form.Get("id")
 
 	client := ctxPrismaClient(r)
-	_, err := client.DeleteBlogPost(prisma.BlogPostWhereUniqueInput{ID: &id}).Exec(r.Context())
+	_, err := client.DeleteBlogPost(prisma.BlogPostWhereUniqueInput{
+		ID: &id,
+	}).Exec(r.Context())
 	if err != nil {
 		log.Println("Failed to delete Post", err)
 		http.Error(w, "Failed to delete Post", http.StatusInternalServerError)
@@ -464,6 +466,7 @@ func ReadTime(words int) int {
 }
 
 var reNewlines = regexp.MustCompile(`\n+`)
+
 func Summary(md string) string {
 	md = strings.Replace(md, "\r\n", "\n", -1)
 

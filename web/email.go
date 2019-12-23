@@ -1,7 +1,6 @@
 package web
 
 import (
-	"encoding/base64"
 	"fmt"
 	"github.com/gschier/schier.dev/generated/prisma-client"
 	"github.com/mailjet/mailjet-apiv3-go"
@@ -29,8 +28,7 @@ func SendNewPostTemplate(post *prisma.BlogPost, sub *prisma.Subscriber) error {
 }
 
 func SendSubscriberTemplate(sub *prisma.Subscriber) error {
-	e := base64.StdEncoding.EncodeToString([]byte(sub.Email))
-	u := fmt.Sprintf("%s/newsletter/confirm/%s", os.Getenv("BASE_URL"), e)
+	u := fmt.Sprintf("%s/newsletter/confirm/%s", os.Getenv("BASE_URL"), sub.ID)
 	return SendTemplate(templateConfirmSubscription, sub, map[string]interface{}{
 		"confirmation_url": u,
 	})
