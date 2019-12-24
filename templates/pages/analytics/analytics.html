@@ -18,7 +18,13 @@
       <tbody>
       {% for p in topPaths %}
         <tr>
-          <td>{{ p.Name }}</td>
+          <td>
+            <a href="{{ p.Name }}" target="_blank">
+              <code>
+                {{ p.Name | truncatechars:"60" }}
+              </code>
+            </a>
+          </td>
           <td>{{ p.Count }}</td>
         </tr>
       {% endfor %}

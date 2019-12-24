@@ -72,10 +72,14 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 		users = append(users, len(userCounters[i]))
 	}
 
+	if len(topPaths) > 20 {
+		topPaths = topPaths[0:20]
+	}
+
 	renderTemplate(w, r, analyticsTemplate(), &pongo2.Context{
 		"pageViews": pageViews,
 		"users":     users,
-		"topPaths":  topPaths[0:20],
+		"topPaths":  topPaths,
 	})
 }
 
