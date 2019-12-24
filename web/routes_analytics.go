@@ -11,6 +11,7 @@ import (
 	"net/http"
 	"sort"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -73,6 +74,11 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 
 		userAgent := ua.Parse(view.UserAgent)
 		if userAgent.Bot {
+			continue
+		}
+
+		// Skip this one because it's weird
+		if strings.HasPrefix(view.Path, "/analytics") {
 			continue
 		}
 
