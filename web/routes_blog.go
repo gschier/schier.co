@@ -38,7 +38,7 @@ func BlogRoutes(router *mux.Router) {
 	router.HandleFunc("/blog/{slug}.html", routeBlogPostSuffix).Methods(http.MethodGet)
 	router.HandleFunc("/blog/{slug}", routeBlogPost).Methods(http.MethodGet)
 	router.HandleFunc("/blog/{year}/{month}/{day}/{slug}", routeBlogPostYMD).Methods(http.MethodGet)
-	router.HandleFunc("/blog/{slug}/edit", routeBlogPostEdit).Methods(http.MethodGet)
+	router.HandleFunc("/blog/{slug}/edit", Admin(routeBlogPostEdit)).Methods(http.MethodGet)
 
 	// Forms
 	router.HandleFunc("/forms/blog/upsert", Admin(routeBlogPostCreateOrUpdate)).Methods(http.MethodPost)
