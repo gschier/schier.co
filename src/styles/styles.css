@@ -212,6 +212,10 @@ form input:invalid {
   @apply my-6;
 }
 
+.content canvas {
+  @apply block w-full rounded-sm my-8;
+}
+
 .content p > img {
   @apply block mx-auto rounded-sm my-8;
 }

@@ -1,0 +1,42 @@
+{% extends '../../layouts/base.html' %}
+
+{% block extraStyles %}
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.css">
+{% endblock %}
+
+{% block content %}
+  <div class="content container">
+    <h1>Analytics 📈</h1>
+    <canvas id="page-views"></canvas>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+  <script>
+    const ctx2 = document.getElementById('page-views').getContext('2d');
+    const days = [];
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    for (let i = 0; i < 7; i++) {
+      const d = new Date(Date.now() - 1000 * 3600 * 24 * (7 - i - 1));
+      days.push(months[d.getMonth()] + ' ' + d.getDate());
+    }
+
+    const data = [{{ stats | join:', ' }}];
+    const myLineChart = new Chart(ctx2, {
+      type: 'line',
+      data: {
+        labels: days,
+        datasets: [{
+          label: '# of Page Views',
+          data: data,
+          backgroundColor: [
+            'rgba(54, 162, 235, 0.2)',
+          ],
+          borderColor: [
+            'rgba(54, 162, 235, 1)',
+          ],
+          borderWidth: 1
+        }],
+      },
+    });
+  </script>
+{% endblock %}
