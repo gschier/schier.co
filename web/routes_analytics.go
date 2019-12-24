@@ -72,6 +72,9 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 		day := int(now.Sub(t).Hours() / 24)
 
 		userAgent := ua.Parse(view.UserAgent)
+		if userAgent.Bot {
+			continue
+		}
 
 		// Increment page view
 		pageViewCounters[day] += 1
@@ -171,9 +174,16 @@ func routeTrack(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	q := r.URL.Query()
+	userAgent := r.Header.Get("User-Agent")
+	parsedUA := ua.Parse(userAgent)
 
-	ua := r.Header.Get("User-Agent")
+	// Don't track bots
+	if parsedUA.Bot {
+		w.WriteHeader(http.StatusNoContent)
+		return
+	}
+
+	q := r.URL.Query()
 	path := q.Get("path")
 	search := q.Get("search")
 	ref := q.Get("ref")
@@ -186,7 +196,7 @@ func routeTrack(w http.ResponseWriter, r *http.Request) {
 	go func() {
 		client := ctxPrismaClient(r)
 		_, err := client.CreateAnalyticsPageView(prisma.AnalyticsPageViewCreateInput{
-			UserAgent: ua,
+			UserAgent: userAgent,
 			Path:      path,
 			Search:    search,
 			Referrer:  ref,
