@@ -2,6 +2,11 @@
 
 {% block extraStyles %}
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.css">
+  <style>
+    .container {
+      max-width: 60rem;
+    }
+  </style>
 {% endblock %}
 
 {% block content %}
@@ -12,9 +17,9 @@
         <span id="live-users">...</span> live users
       </div>
     </header>
-    <canvas id="page-views"></canvas>
-    <div style="display:flex;">
-      <canvas id="top-platforms" style="max-width:50%"></canvas>
+    <canvas id="page-views" style="height:15rem"></canvas>
+    <div style="display:flex;flex-wrap:wrap;">
+      <canvas id="top-platforms" style="max-width:50%;"></canvas>
       <canvas id="top-browsers" style="max-width:50%"></canvas>
     </div>
     <table>
@@ -94,6 +99,7 @@
 
     new Chart(document.querySelector('#top-browsers').getContext('2d'), {
       type: 'doughnut',
+      options: { aspectRatio: 1.5 },
       data: {
         labels: [{% for e in topBrowsers %}'{{ e.Name }}', {% endfor %}],
         datasets: [{
@@ -106,6 +112,7 @@
 
     new Chart(document.querySelector('#top-platforms').getContext('2d'), {
       type: 'doughnut',
+      options: { aspectRatio: 1.5 },
       data: {
         labels: [{% for e in topPlatforms %}'{{ e.Name }}', {% endfor %}],
         datasets: [{

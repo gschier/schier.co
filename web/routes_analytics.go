@@ -122,12 +122,12 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 		topPaths = topPaths[0:20]
 	}
 
-	if len(topBrowsers) > 20 {
-		topBrowsers = topBrowsers[0:20]
+	if len(topBrowsers) > 5 {
+		topBrowsers = topBrowsers[0:5]
 	}
 
-	if len(topPlatforms) > 20 {
-		topPlatforms = topPlatforms[0:20]
+	if len(topPlatforms) > 5 {
+		topPlatforms = topPlatforms[0:5]
 	}
 
 	renderTemplate(w, r, analyticsTemplate(), &pongo2.Context{
