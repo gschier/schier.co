@@ -99,6 +99,12 @@ func (c counters) Swap(i, j int) {
 }
 
 func routeTrack(w http.ResponseWriter, r *http.Request) {
+	// Don't track admins
+	if ctxGetLoggedIn(r) {
+		w.WriteHeader(http.StatusNoContent)
+		return
+	}
+
 	q := r.URL.Query()
 
 	ua := r.Header.Get("User-Agent")
