@@ -175,8 +175,7 @@ form input:invalid {
   display: none;
 }
 
-.blog-post-preview .meta,
-.blog-post .meta {
+.meta {
   @apply block text-sm text-gray-500 font-normal;
 }
 

@@ -2,6 +2,7 @@ package web
 
 import (
 	"context"
+	"encoding/json"
 	"github.com/flosch/pongo2"
 	"github.com/gorilla/mux"
 	"github.com/gschier/schier.dev/generated/prisma-client"
@@ -15,22 +16,45 @@ import (
 func AnalyticsRoutes(router *mux.Router) {
 	router.HandleFunc("/t", routeTrack).Methods(http.MethodGet)
 	router.HandleFunc("/analytics", Admin(routeAnalytics)).Methods(http.MethodGet)
+	router.HandleFunc("/analytics/live", Admin(routeAnalyticsLive)).Methods(http.MethodGet)
 }
 
 var analyticsTemplate = pageTemplate("analytics/analytics.html")
+
+func routeAnalyticsLive(w http.ResponseWriter, r *http.Request) {
+	client := ctxPrismaClient(r)
+	now := time.Now()
+	fiveMinutesAgo := now.Add(-time.Minute * 5).Format(time.RFC3339)
+	views, err := client.AnalyticsPageViews(&prisma.AnalyticsPageViewsParams{
+		Where: &prisma.AnalyticsPageViewWhereInput{
+			TimeGte: &fiveMinutesAgo,
+		},
+	}).Exec(r.Context())
+	if err != nil {
+		http.Error(w, "Failed to query analytics", http.StatusInternalServerError)
+		return
+	}
+
+	userMap := make(map[string]int)
+	for _, view := range views {
+		userMap[view.User] += 1
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	j, _ := json.Marshal(struct{ Live int `json:"count"` }{Live: len(userMap)})
+	_, _ = w.Write(j)
+}
 
 func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 	client := ctxPrismaClient(r)
 
 	now := time.Now()
 	sevenDaysAgo := now.Add(-time.Hour * 24 * 7).Format(time.RFC3339)
-	orderBy := prisma.AnalyticsPageViewOrderByInputTimeDesc
 
 	views, err := client.AnalyticsPageViews(&prisma.AnalyticsPageViewsParams{
 		Where: &prisma.AnalyticsPageViewWhereInput{
 			TimeGte: &sevenDaysAgo,
 		},
-		OrderBy: &orderBy,
 	}).Exec(r.Context())
 	if err != nil {
 		http.Error(w, "Failed to query analytics", http.StatusInternalServerError)
