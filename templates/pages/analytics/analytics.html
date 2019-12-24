@@ -13,9 +13,10 @@
       </div>
     </header>
     <canvas id="page-views" style="height:15rem"></canvas>
-    <div style="display:flex;flex-wrap:wrap;">
-      <canvas id="top-platforms" style="max-width:50%;"></canvas>
-      <canvas id="top-browsers" style="max-width:50%"></canvas>
+    <hr>
+    <div style="display:flex;flex-wrap:wrap;justify-content:space-around">
+      <canvas id="top-platforms" style="max-width:15rem;"></canvas>
+      <canvas id="top-browsers" style="max-width:15rem;"></canvas>
     </div>
     <table>
       <thead>
@@ -61,6 +62,7 @@
     }
 
     const colors = {
+      pink: '#f687b3',
       red: '#fc8181',
       orange: '#f6ad55',
       yellow: '#f6e05e',
@@ -69,7 +71,6 @@
       blue: '#63b3ed',
       indigo: '#7f9cf5',
       purple: '#b794f4',
-      pink: '#f687b3',
     };
 
     const pageViews = [{{ pageViews | join:', ' }}];
@@ -94,20 +95,20 @@
 
     new Chart(document.querySelector('#top-browsers').getContext('2d'), {
       type: 'doughnut',
-      options: { aspectRatio: 1.5 },
+      options: { aspectRatio: 0.75 },
       data: {
         labels: [{% for e in topBrowsers %}'{{ e.Name }}', {% endfor %}],
         datasets: [{
           label: 'Browsers',
           data: [{% for e in topBrowsers %}'{{ e.Count }}', {% endfor %}],
-          backgroundColor: Object.values(colors),
+          backgroundColor: Object.values(colors).reverse(),
         }],
       },
     });
 
     new Chart(document.querySelector('#top-platforms').getContext('2d'), {
       type: 'doughnut',
-      options: { aspectRatio: 1.5 },
+      options: { aspectRatio: 0.75 },
       data: {
         labels: [{% for e in topPlatforms %}'{{ e.Name }}', {% endfor %}],
         datasets: [{
