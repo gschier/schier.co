@@ -36,20 +36,32 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	stats := make(map[int]int)
+	pageViewCounters := make(map[int]int)
+	userCounters := make(map[int]map[string]int)
 	for _, view := range views {
 		t, _ := time.Parse(time.RFC3339, view.Time)
 		day := int(now.Sub(t).Hours() / 24)
-		stats[day] += 1
+
+		// Increment page view
+		pageViewCounters[day] += 1
+
+		// Add user ID
+		if _, ok := userCounters[day]; !ok {
+			userCounters[day] = make(map[string]int)
+		}
+		userCounters[day][view.User] += 1
 	}
 
-	statsList := make([]int, 0)
+	users := make([]int, 0)
+	pageViews := make([]int, 0)
 	for i := 6; i >= 0; i-- {
-		statsList = append(statsList, stats[i])
+		pageViews = append(pageViews, pageViewCounters[i])
+		users = append(users, len(userCounters[i]))
 	}
 
 	renderTemplate(w, r, analyticsTemplate(), &pongo2.Context{
-		"stats": statsList,
+		"pageViews": pageViews,
+		"users": users,
 	})
 }
 

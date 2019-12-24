@@ -20,20 +20,26 @@
       days.push(months[d.getMonth()] + ' ' + d.getDate());
     }
 
-    const data = [{{ stats | join:', ' }}];
+    const colors = {
+      blue: 'rgb(139,209,255)',
+      purple: 'rgb(177,144,255)',
+    };
+
+    const pageViews = [{{ pageViews | join:', ' }}];
+    const users = [{{ users | join:', ' }}];
     const myLineChart = new Chart(ctx2, {
       type: 'line',
       data: {
         labels: days,
         datasets: [{
-          label: '# of Page Views',
-          data: data,
-          backgroundColor: [
-            'rgba(54, 162, 235, 0.2)',
-          ],
-          borderColor: [
-            'rgba(54, 162, 235, 1)',
-          ],
+          label: 'Users',
+          data: users,
+          backgroundColor: colors.purple,
+          borderWidth: 1
+        }, {
+          label: 'Views',
+          data: pageViews,
+          backgroundColor: colors.blue,
           borderWidth: 1
         }],
       },
