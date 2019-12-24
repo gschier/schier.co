@@ -119,6 +119,10 @@ func (c counters) Len() int {
 }
 
 func (c counters) Less(i, j int) bool {
+	if c[i].Count == c[j].Count {
+		return c[i].Name < c[j].Name
+	}
+
 	return c[i].Count > c[j].Count
 }
 
