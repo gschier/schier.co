@@ -104,6 +104,8 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 		"pageViews": pageViews,
 		"users":     users,
 		"topPaths":  topPaths,
+		"pageTitle": "Analytics",
+		"pageDescription": "Public analytics for schier.co",
 	})
 }
 
