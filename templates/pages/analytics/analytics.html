@@ -58,12 +58,15 @@
     }
 
     const colors = {
-      red: a => `rgba(255, 99, 132, ${a})`,
-      blue: a => `rgba(54, 162, 235, ${a})`,
-      yellow: a => `rgba(255, 206, 86, ${a})`,
-      green: a => `rgba(75, 192, 192, ${a})`,
-      purple: a => `rgba(153, 102, 255, ${a})`,
-      orange: a => `rgba(255, 159, 64, ${a})`,
+      red: '#fc8181',
+      orange: '#f6ad55',
+      yellow: '#f6e05e',
+      green: '#68d391',
+      teal: '#4fd1c5',
+      blue: '#63b3ed',
+      indigo: '#7f9cf5',
+      purple: '#b794f4',
+      pink: '#f687b3',
     };
 
     const pageViews = [{{ pageViews | join:', ' }}];
@@ -75,12 +78,12 @@
         datasets: [{
           label: 'Users',
           data: users,
-          backgroundColor: colors.purple(1),
+          backgroundColor: colors.purple,
           borderWidth: 1
         }, {
           label: 'Views',
           data: pageViews,
-          backgroundColor: colors.blue(1),
+          backgroundColor: colors.blue,
           borderWidth: 1
         }],
       },
