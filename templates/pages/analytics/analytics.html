@@ -7,12 +7,16 @@
 {% block content %}
   <div class="content container">
     <header>
-      <h1>Analytics 📈</h1>
+      <h1>🚀 Website Analytics</h1>
       <div class="meta">
         <span id="live-users">...</span> live users
       </div>
     </header>
     <canvas id="page-views"></canvas>
+    <div style="display:flex;">
+      <canvas id="top-platforms" style="max-width:50%"></canvas>
+      <canvas id="top-browsers" style="max-width:50%"></canvas>
+    </div>
     <table>
       <thead>
       <tr>
@@ -49,7 +53,6 @@
     next();
   </script>
   <script>
-    const ctx2 = document.getElementById('page-views').getContext('2d');
     const days = [];
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     for (let i = 0; i < 7; i++) {
@@ -71,7 +74,7 @@
 
     const pageViews = [{{ pageViews | join:', ' }}];
     const users = [{{ users | join:', ' }}];
-    const myLineChart = new Chart(ctx2, {
+    new Chart(document.querySelector('#page-views').getContext('2d'), {
       type: 'line',
       data: {
         labels: days,
@@ -85,6 +88,30 @@
           data: pageViews,
           backgroundColor: colors.blue,
           borderWidth: 1
+        }],
+      },
+    });
+
+    new Chart(document.querySelector('#top-browsers').getContext('2d'), {
+      type: 'doughnut',
+      data: {
+        labels: [{% for e in topBrowsers %}'{{ e.Name }}', {% endfor %}],
+        datasets: [{
+          label: 'Browsers',
+          data: [{% for e in topBrowsers %}'{{ e.Count }}', {% endfor %}],
+          backgroundColor: Object.values(colors),
+        }],
+      },
+    });
+
+    new Chart(document.querySelector('#top-platforms').getContext('2d'), {
+      type: 'doughnut',
+      data: {
+        labels: [{% for e in topPlatforms %}'{{ e.Name }}', {% endfor %}],
+        datasets: [{
+          label: 'Operating Systems',
+          data: [{% for e in topPlatforms %}'{{ e.Count }}', {% endfor %}],
+          backgroundColor: Object.values(colors),
         }],
       },
     });

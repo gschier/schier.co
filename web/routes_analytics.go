@@ -6,6 +6,7 @@ import (
 	"github.com/flosch/pongo2"
 	"github.com/gorilla/mux"
 	"github.com/gschier/schier.dev/generated/prisma-client"
+	"github.com/mileusna/useragent"
 	"log"
 	"net/http"
 	"sort"
@@ -62,11 +63,15 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 	}
 
 	topPathCounters := make(map[string]int)
+	topPlatformCounters := make(map[string]int)
+	topBrowserCounters := make(map[string]int)
 	pageViewCounters := make(map[int]int)
 	userCounters := make(map[int]map[string]int)
 	for _, view := range views {
 		t, _ := time.Parse(time.RFC3339, view.Time)
 		day := int(now.Sub(t).Hours() / 24)
+
+		userAgent := ua.Parse(view.UserAgent)
 
 		// Increment page view
 		pageViewCounters[day] += 1
@@ -76,6 +81,9 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 			userCounters[day] = make(map[string]int)
 		}
 		userCounters[day][view.User] += 1
+
+		topPlatformCounters[userAgent.OS] += 1
+		topBrowserCounters[userAgent.Name] += 1
 
 		// Add paths
 		topPathCounters[view.Path] += 1
@@ -87,7 +95,21 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 		topPaths = append(topPaths, c)
 	}
 
+	topBrowsers := make(counters, 0)
+	for path, count := range topBrowserCounters {
+		c := counter{Name: path, Count: count}
+		topBrowsers = append(topBrowsers, c)
+	}
+
+	topPlatforms := make(counters, 0)
+	for path, count := range topPlatformCounters {
+		c := counter{Name: path, Count: count}
+		topPlatforms = append(topPlatforms, c)
+	}
+
 	sort.Sort(topPaths)
+	sort.Sort(topPlatforms)
+	sort.Sort(topBrowsers)
 
 	users := make([]int, 0)
 	pageViews := make([]int, 0)
@@ -100,11 +122,21 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 		topPaths = topPaths[0:20]
 	}
 
+	if len(topBrowsers) > 20 {
+		topBrowsers = topBrowsers[0:20]
+	}
+
+	if len(topPlatforms) > 20 {
+		topPlatforms = topPlatforms[0:20]
+	}
+
 	renderTemplate(w, r, analyticsTemplate(), &pongo2.Context{
-		"pageViews": pageViews,
-		"users":     users,
-		"topPaths":  topPaths,
-		"pageTitle": "Analytics",
+		"pageViews":       pageViews,
+		"users":           users,
+		"topPaths":        topPaths,
+		"topPlatforms":    topPlatforms,
+		"topBrowsers":     topBrowsers,
+		"pageTitle":       "Analytics",
 		"pageDescription": "Public analytics for schier.co",
 	})
 }

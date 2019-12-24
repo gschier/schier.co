@@ -16,12 +16,14 @@ require (
 	github.com/machinebox/graphql v0.2.2
 	github.com/mailgun/mailgun-go/v3 v3.6.3 // indirect
 	github.com/mailjet/mailjet-apiv3-go v0.0.0-20190724151621-55e56f74078c
+	github.com/mileusna/useragent v0.0.0-20190129205925-3e331f0949a5
 	github.com/mitchellh/mapstructure v1.1.2 // indirect
 	github.com/prisma/prisma-client-lib-go v0.0.0-20181017161110-68a1f9908416
 	github.com/russross/blackfriday v2.0.0+incompatible // indirect
 	github.com/russross/blackfriday/v2 v2.0.1
 	github.com/satori/go.uuid v1.2.0 // indirect
 	github.com/stretchr/testify v1.2.2
+	github.com/ua-parser/uap-go v0.0.0-20190826212731-daf92ba38329 // indirect
 	github.com/writeas/go-strip-markdown v2.0.1+incompatible
 	golang.org/x/crypto v0.0.0-20191111213947-16651526fdb4
 	gopkg.in/yaml.v2 v2.2.2
