@@ -1,6 +1,7 @@
 package web
 
 import (
+	"context"
 	"github.com/flosch/pongo2"
 	"github.com/gorilla/feeds"
 	"github.com/gorilla/mux"
@@ -294,13 +295,29 @@ func routeBlogPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	post := blogPosts[0]
+
 	// Render template
 	renderTemplate(w, r, blogPostTemplate(), &pongo2.Context{
-		"pageTitle":       blogPosts[0].Title,
-		"pageImage":       blogPosts[0].Image,
-		"pageDescription": Summary(blogPosts[0].Content),
-		"blogPost":        blogPosts[0],
+		"pageTitle":       post.Title,
+		"pageImage":       post.Image,
+		"pageDescription": Summary(post.Content),
+		"blogPost":        post,
 	})
+
+	go func() {
+		_, err := client.UpdateBlogPost(prisma.BlogPostUpdateParams{
+			Where: prisma.BlogPostWhereUniqueInput{
+				ID: &post.ID,
+			},
+			Data: prisma.BlogPostUpdateInput{
+				Views: prisma.Int32(post.Views + 1),
+			},
+		}).Exec(context.Background())
+		if err != nil {
+			log.Println("Failed to update blog post views", err.Error())
+		}
+	}()
 }
 
 func routeBlogRSS(w http.ResponseWriter, r *http.Request) {

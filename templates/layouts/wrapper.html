@@ -72,5 +72,34 @@
 {% else %}
   <!-- Google Analytics Disabled -->
 {% endif %}
+<script>
+  const e = encodeURIComponent;
+  let sess;
+  if (localStorage.schier) {
+    sess = JSON.parse(localStorage.schier);
+  } else {
+    sess = {
+      start: Date.now(),
+      last: Date.now(),
+      user: (Math.random() + '').replace('0.', ''),
+      id: (Math.random() + '').replace('0.', '')
+    };
+  }
+
+  if (Date.now() - sess.last > 20 * 60 * 1000) {
+    sess.id = (Math.random() + '').replace('0.', '');
+  }
+
+  sess.last = Date.now();
+  localStorage.schier = JSON.stringify(sess);
+
+  fetch('/t?t=page&' + [
+    `path=${e(location.pathname)}`,
+    `search=${e(location.search)}`,
+    `ref=${e(document.referrer)}`,
+    `user=${e(sess.user)}`,
+    `sess=${e(sess.id)}`
+  ].join('&'));
+</script>
 </body>
 </html>
