@@ -232,6 +232,23 @@ form input:invalid {
   @apply my-16;
 }
 
+.content table th {
+  @apply w-full;
+}
+
+.content table th {
+  @apply text-left;
+}
+
+.content table th,
+.content table td {
+  @apply border border-gray-300 px-2;
+}
+
+.content table thead tr {
+  @apply bg-gray-200;
+}
+
 /**************/
 /* PAGINATION */
 /**************/

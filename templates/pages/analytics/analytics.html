@@ -8,6 +8,22 @@
   <div class="content container">
     <h1>Analytics 📈</h1>
     <canvas id="page-views"></canvas>
+    <table>
+      <thead>
+      <tr>
+        <th>Page</th>
+        <th>Views</th>
+      </tr>
+      </thead>
+      <tbody>
+      {% for p in topPaths %}
+        <tr>
+          <td>{{ p.Name }}</td>
+          <td>{{ p.Count }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
@@ -21,8 +37,12 @@
     }
 
     const colors = {
-      blue: 'rgb(139,209,255)',
-      purple: 'rgb(177,144,255)',
+      red: a => `rgba(255, 99, 132, ${a})`,
+      blue: a => `rgba(54, 162, 235, ${a})`,
+      yellow: a => `rgba(255, 206, 86, ${a})`,
+      green: a => `rgba(75, 192, 192, ${a})`,
+      purple: a => `rgba(153, 102, 255, ${a})`,
+      orange: a => `rgba(255, 159, 64, ${a})`,
     };
 
     const pageViews = [{{ pageViews | join:', ' }}];
@@ -34,12 +54,12 @@
         datasets: [{
           label: 'Users',
           data: users,
-          backgroundColor: colors.purple,
+          backgroundColor: colors.purple(1),
           borderWidth: 1
         }, {
           label: 'Views',
           data: pageViews,
-          backgroundColor: colors.blue,
+          backgroundColor: colors.blue(1),
           borderWidth: 1
         }],
       },

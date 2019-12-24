@@ -7,6 +7,7 @@ import (
 	"github.com/gschier/schier.dev/generated/prisma-client"
 	"log"
 	"net/http"
+	"sort"
 	"strconv"
 	"time"
 )
@@ -36,6 +37,7 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	topPathCounters := make(map[string]int)
 	pageViewCounters := make(map[int]int)
 	userCounters := make(map[int]map[string]int)
 	for _, view := range views {
@@ -50,7 +52,18 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 			userCounters[day] = make(map[string]int)
 		}
 		userCounters[day][view.User] += 1
+
+		// Add paths
+		topPathCounters[view.Path] += 1
 	}
+
+	topPaths := make(counters, 0)
+	for path, count := range topPathCounters {
+		c := counter{Name: path, Count: count}
+		topPaths = append(topPaths, c)
+	}
+
+	sort.Sort(topPaths)
 
 	users := make([]int, 0)
 	pageViews := make([]int, 0)
@@ -61,8 +74,28 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 
 	renderTemplate(w, r, analyticsTemplate(), &pongo2.Context{
 		"pageViews": pageViews,
-		"users": users,
+		"users":     users,
+		"topPaths":  topPaths[0:20],
 	})
+}
+
+type counter struct {
+	Name  string
+	Count int
+}
+
+type counters []counter
+
+func (c counters) Len() int {
+	return len(c)
+}
+
+func (c counters) Less(i, j int) bool {
+	return c[i].Count > c[j].Count
+}
+
+func (c counters) Swap(i, j int) {
+	c[i], c[j] = c[j], c[i]
 }
 
 func routeTrack(w http.ResponseWriter, r *http.Request) {
