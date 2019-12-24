@@ -15,8 +15,8 @@ import (
 
 func AnalyticsRoutes(router *mux.Router) {
 	router.HandleFunc("/t", routeTrack).Methods(http.MethodGet)
-	router.HandleFunc("/analytics", Admin(routeAnalytics)).Methods(http.MethodGet)
-	router.HandleFunc("/analytics/live", Admin(routeAnalyticsLive)).Methods(http.MethodGet)
+	router.HandleFunc("/analytics", routeAnalytics).Methods(http.MethodGet)
+	router.HandleFunc("/analytics/live", routeAnalyticsLive).Methods(http.MethodGet)
 }
 
 var analyticsTemplate = pageTemplate("analytics/analytics.html")
