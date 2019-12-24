@@ -70,7 +70,7 @@ func (client *Client) AnalyticsPageView(params AnalyticsPageViewWhereUniqueInput
 		params,
 		[2]string{"AnalyticsPageViewWhereUniqueInput!", "AnalyticsPageView"},
 		"analyticsPageView",
-		[]string{"id", "time", "sess", "user", "userAgent", "path", "search", "referrer"})
+		[]string{"id", "time", "sess", "user", "userAgent", "path", "search", "referrer", "age"})
 
 	return &AnalyticsPageViewExec{ret}
 }
@@ -104,7 +104,7 @@ func (client *Client) AnalyticsPageViews(params *AnalyticsPageViewsParams) *Anal
 		wparams,
 		[3]string{"AnalyticsPageViewWhereInput", "AnalyticsPageViewOrderByInput", "AnalyticsPageView"},
 		"analyticsPageViews",
-		[]string{"id", "time", "sess", "user", "userAgent", "path", "search", "referrer"})
+		[]string{"id", "time", "sess", "user", "userAgent", "path", "search", "referrer", "age"})
 
 	return &AnalyticsPageViewExecArray{ret}
 }
@@ -951,7 +951,7 @@ func (client *Client) CreateAnalyticsPageView(params AnalyticsPageViewCreateInpu
 		params,
 		[2]string{"AnalyticsPageViewCreateInput!", "AnalyticsPageView"},
 		"createAnalyticsPageView",
-		[]string{"id", "time", "sess", "user", "userAgent", "path", "search", "referrer"})
+		[]string{"id", "time", "sess", "user", "userAgent", "path", "search", "referrer", "age"})
 
 	return &AnalyticsPageViewExec{ret}
 }
@@ -969,7 +969,7 @@ func (client *Client) UpdateAnalyticsPageView(params AnalyticsPageViewUpdatePara
 		},
 		[3]string{"AnalyticsPageViewUpdateInput!", "AnalyticsPageViewWhereUniqueInput!", "AnalyticsPageView"},
 		"updateAnalyticsPageView",
-		[]string{"id", "time", "sess", "user", "userAgent", "path", "search", "referrer"})
+		[]string{"id", "time", "sess", "user", "userAgent", "path", "search", "referrer", "age"})
 
 	return &AnalyticsPageViewExec{ret}
 }
@@ -1006,7 +1006,7 @@ func (client *Client) UpsertAnalyticsPageView(params AnalyticsPageViewUpsertPara
 		uparams,
 		[4]string{"AnalyticsPageViewWhereUniqueInput!", "AnalyticsPageViewCreateInput!", "AnalyticsPageViewUpdateInput!", "AnalyticsPageView"},
 		"upsertAnalyticsPageView",
-		[]string{"id", "time", "sess", "user", "userAgent", "path", "search", "referrer"})
+		[]string{"id", "time", "sess", "user", "userAgent", "path", "search", "referrer", "age"})
 
 	return &AnalyticsPageViewExec{ret}
 }
@@ -1016,7 +1016,7 @@ func (client *Client) DeleteAnalyticsPageView(params AnalyticsPageViewWhereUniqu
 		params,
 		[2]string{"AnalyticsPageViewWhereUniqueInput!", "AnalyticsPageView"},
 		"deleteAnalyticsPageView",
-		[]string{"id", "time", "sess", "user", "userAgent", "path", "search", "referrer"})
+		[]string{"id", "time", "sess", "user", "userAgent", "path", "search", "referrer", "age"})
 
 	return &AnalyticsPageViewExec{ret}
 }
@@ -1650,27 +1650,27 @@ func (client *Client) DeleteManyUsers(params *UserWhereInput) *BatchPayloadExec 
 	return &BatchPayloadExec{exec}
 }
 
-type ProjectOrderByInput string
+type AnalyticsPageViewOrderByInput string
 
 const (
-	ProjectOrderByInputIDAsc           ProjectOrderByInput = "id_ASC"
-	ProjectOrderByInputIDDesc          ProjectOrderByInput = "id_DESC"
-	ProjectOrderByInputPriorityAsc     ProjectOrderByInput = "priority_ASC"
-	ProjectOrderByInputPriorityDesc    ProjectOrderByInput = "priority_DESC"
-	ProjectOrderByInputNameAsc         ProjectOrderByInput = "name_ASC"
-	ProjectOrderByInputNameDesc        ProjectOrderByInput = "name_DESC"
-	ProjectOrderByInputLinkAsc         ProjectOrderByInput = "link_ASC"
-	ProjectOrderByInputLinkDesc        ProjectOrderByInput = "link_DESC"
-	ProjectOrderByInputIconAsc         ProjectOrderByInput = "icon_ASC"
-	ProjectOrderByInputIconDesc        ProjectOrderByInput = "icon_DESC"
-	ProjectOrderByInputDescriptionAsc  ProjectOrderByInput = "description_ASC"
-	ProjectOrderByInputDescriptionDesc ProjectOrderByInput = "description_DESC"
-	ProjectOrderByInputRetiredAsc      ProjectOrderByInput = "retired_ASC"
-	ProjectOrderByInputRetiredDesc     ProjectOrderByInput = "retired_DESC"
-	ProjectOrderByInputRevenueAsc      ProjectOrderByInput = "revenue_ASC"
-	ProjectOrderByInputRevenueDesc     ProjectOrderByInput = "revenue_DESC"
-	ProjectOrderByInputReasonAsc       ProjectOrderByInput = "reason_ASC"
-	ProjectOrderByInputReasonDesc      ProjectOrderByInput = "reason_DESC"
+	AnalyticsPageViewOrderByInputIDAsc         AnalyticsPageViewOrderByInput = "id_ASC"
+	AnalyticsPageViewOrderByInputIDDesc        AnalyticsPageViewOrderByInput = "id_DESC"
+	AnalyticsPageViewOrderByInputTimeAsc       AnalyticsPageViewOrderByInput = "time_ASC"
+	AnalyticsPageViewOrderByInputTimeDesc      AnalyticsPageViewOrderByInput = "time_DESC"
+	AnalyticsPageViewOrderByInputSessAsc       AnalyticsPageViewOrderByInput = "sess_ASC"
+	AnalyticsPageViewOrderByInputSessDesc      AnalyticsPageViewOrderByInput = "sess_DESC"
+	AnalyticsPageViewOrderByInputUserAsc       AnalyticsPageViewOrderByInput = "user_ASC"
+	AnalyticsPageViewOrderByInputUserDesc      AnalyticsPageViewOrderByInput = "user_DESC"
+	AnalyticsPageViewOrderByInputUserAgentAsc  AnalyticsPageViewOrderByInput = "userAgent_ASC"
+	AnalyticsPageViewOrderByInputUserAgentDesc AnalyticsPageViewOrderByInput = "userAgent_DESC"
+	AnalyticsPageViewOrderByInputPathAsc       AnalyticsPageViewOrderByInput = "path_ASC"
+	AnalyticsPageViewOrderByInputPathDesc      AnalyticsPageViewOrderByInput = "path_DESC"
+	AnalyticsPageViewOrderByInputSearchAsc     AnalyticsPageViewOrderByInput = "search_ASC"
+	AnalyticsPageViewOrderByInputSearchDesc    AnalyticsPageViewOrderByInput = "search_DESC"
+	AnalyticsPageViewOrderByInputReferrerAsc   AnalyticsPageViewOrderByInput = "referrer_ASC"
+	AnalyticsPageViewOrderByInputReferrerDesc  AnalyticsPageViewOrderByInput = "referrer_DESC"
+	AnalyticsPageViewOrderByInputAgeAsc        AnalyticsPageViewOrderByInput = "age_ASC"
+	AnalyticsPageViewOrderByInputAgeDesc       AnalyticsPageViewOrderByInput = "age_DESC"
 )
 
 type UserType string
@@ -1760,25 +1760,27 @@ const (
 	MutationTypeDeleted MutationType = "DELETED"
 )
 
-type AnalyticsPageViewOrderByInput string
+type ProjectOrderByInput string
 
 const (
-	AnalyticsPageViewOrderByInputIDAsc         AnalyticsPageViewOrderByInput = "id_ASC"
-	AnalyticsPageViewOrderByInputIDDesc        AnalyticsPageViewOrderByInput = "id_DESC"
-	AnalyticsPageViewOrderByInputTimeAsc       AnalyticsPageViewOrderByInput = "time_ASC"
-	AnalyticsPageViewOrderByInputTimeDesc      AnalyticsPageViewOrderByInput = "time_DESC"
-	AnalyticsPageViewOrderByInputSessAsc       AnalyticsPageViewOrderByInput = "sess_ASC"
-	AnalyticsPageViewOrderByInputSessDesc      AnalyticsPageViewOrderByInput = "sess_DESC"
-	AnalyticsPageViewOrderByInputUserAsc       AnalyticsPageViewOrderByInput = "user_ASC"
-	AnalyticsPageViewOrderByInputUserDesc      AnalyticsPageViewOrderByInput = "user_DESC"
-	AnalyticsPageViewOrderByInputUserAgentAsc  AnalyticsPageViewOrderByInput = "userAgent_ASC"
-	AnalyticsPageViewOrderByInputUserAgentDesc AnalyticsPageViewOrderByInput = "userAgent_DESC"
-	AnalyticsPageViewOrderByInputPathAsc       AnalyticsPageViewOrderByInput = "path_ASC"
-	AnalyticsPageViewOrderByInputPathDesc      AnalyticsPageViewOrderByInput = "path_DESC"
-	AnalyticsPageViewOrderByInputSearchAsc     AnalyticsPageViewOrderByInput = "search_ASC"
-	AnalyticsPageViewOrderByInputSearchDesc    AnalyticsPageViewOrderByInput = "search_DESC"
-	AnalyticsPageViewOrderByInputReferrerAsc   AnalyticsPageViewOrderByInput = "referrer_ASC"
-	AnalyticsPageViewOrderByInputReferrerDesc  AnalyticsPageViewOrderByInput = "referrer_DESC"
+	ProjectOrderByInputIDAsc           ProjectOrderByInput = "id_ASC"
+	ProjectOrderByInputIDDesc          ProjectOrderByInput = "id_DESC"
+	ProjectOrderByInputPriorityAsc     ProjectOrderByInput = "priority_ASC"
+	ProjectOrderByInputPriorityDesc    ProjectOrderByInput = "priority_DESC"
+	ProjectOrderByInputNameAsc         ProjectOrderByInput = "name_ASC"
+	ProjectOrderByInputNameDesc        ProjectOrderByInput = "name_DESC"
+	ProjectOrderByInputLinkAsc         ProjectOrderByInput = "link_ASC"
+	ProjectOrderByInputLinkDesc        ProjectOrderByInput = "link_DESC"
+	ProjectOrderByInputIconAsc         ProjectOrderByInput = "icon_ASC"
+	ProjectOrderByInputIconDesc        ProjectOrderByInput = "icon_DESC"
+	ProjectOrderByInputDescriptionAsc  ProjectOrderByInput = "description_ASC"
+	ProjectOrderByInputDescriptionDesc ProjectOrderByInput = "description_DESC"
+	ProjectOrderByInputRetiredAsc      ProjectOrderByInput = "retired_ASC"
+	ProjectOrderByInputRetiredDesc     ProjectOrderByInput = "retired_DESC"
+	ProjectOrderByInputRevenueAsc      ProjectOrderByInput = "revenue_ASC"
+	ProjectOrderByInputRevenueDesc     ProjectOrderByInput = "revenue_DESC"
+	ProjectOrderByInputReasonAsc       ProjectOrderByInput = "reason_ASC"
+	ProjectOrderByInputReasonDesc      ProjectOrderByInput = "reason_DESC"
 )
 
 type SessionOrderByInput string
@@ -1844,6 +1846,7 @@ type AnalyticsPageViewUpdateInput struct {
 	Path      *string `json:"path,omitempty"`
 	Search    *string `json:"search,omitempty"`
 	Referrer  *string `json:"referrer,omitempty"`
+	Age       *int32  `json:"age,omitempty"`
 }
 
 type BlogPostWhereUniqueInput struct {
@@ -1870,6 +1873,7 @@ type AnalyticsPageViewUpdateManyMutationInput struct {
 	Path      *string `json:"path,omitempty"`
 	Search    *string `json:"search,omitempty"`
 	Referrer  *string `json:"referrer,omitempty"`
+	Age       *int32  `json:"age,omitempty"`
 }
 
 type ProjectWhereUniqueInput struct {
@@ -2100,196 +2104,6 @@ type ProjectSubscriptionWhereInput struct {
 	Not                        []ProjectSubscriptionWhereInput `json:"NOT,omitempty"`
 }
 
-type NewsletterSendUpdateInput struct {
-	Key         *string `json:"key,omitempty"`
-	Recipients  *int32  `json:"recipients,omitempty"`
-	Description *string `json:"description,omitempty"`
-}
-
-type NewsletterSendSubscriptionWhereInput struct {
-	MutationIn                 []MutationType                         `json:"mutation_in,omitempty"`
-	UpdatedFieldsContains      *string                                `json:"updatedFields_contains,omitempty"`
-	UpdatedFieldsContainsEvery []string                               `json:"updatedFields_contains_every,omitempty"`
-	UpdatedFieldsContainsSome  []string                               `json:"updatedFields_contains_some,omitempty"`
-	Node                       *NewsletterSendWhereInput              `json:"node,omitempty"`
-	And                        []NewsletterSendSubscriptionWhereInput `json:"AND,omitempty"`
-	Or                         []NewsletterSendSubscriptionWhereInput `json:"OR,omitempty"`
-	Not                        []NewsletterSendSubscriptionWhereInput `json:"NOT,omitempty"`
-}
-
-type NewsletterSendCreateInput struct {
-	ID          *string `json:"id,omitempty"`
-	Key         string  `json:"key"`
-	Recipients  int32   `json:"recipients"`
-	Description string  `json:"description"`
-}
-
-type FavoriteThingSubscriptionWhereInput struct {
-	MutationIn                 []MutationType                        `json:"mutation_in,omitempty"`
-	UpdatedFieldsContains      *string                               `json:"updatedFields_contains,omitempty"`
-	UpdatedFieldsContainsEvery []string                              `json:"updatedFields_contains_every,omitempty"`
-	UpdatedFieldsContainsSome  []string                              `json:"updatedFields_contains_some,omitempty"`
-	Node                       *FavoriteThingWhereInput              `json:"node,omitempty"`
-	And                        []FavoriteThingSubscriptionWhereInput `json:"AND,omitempty"`
-	Or                         []FavoriteThingSubscriptionWhereInput `json:"OR,omitempty"`
-	Not                        []FavoriteThingSubscriptionWhereInput `json:"NOT,omitempty"`
-}
-
-type FavoriteThingUpdateManyMutationInput struct {
-	Priority    *int32  `json:"priority,omitempty"`
-	Name        *string `json:"name,omitempty"`
-	Link        *string `json:"link,omitempty"`
-	Description *string `json:"description,omitempty"`
-}
-
-type BlogPostSubscriptionWhereInput struct {
-	MutationIn                 []MutationType                   `json:"mutation_in,omitempty"`
-	UpdatedFieldsContains      *string                          `json:"updatedFields_contains,omitempty"`
-	UpdatedFieldsContainsEvery []string                         `json:"updatedFields_contains_every,omitempty"`
-	UpdatedFieldsContainsSome  []string                         `json:"updatedFields_contains_some,omitempty"`
-	Node                       *BlogPostWhereInput              `json:"node,omitempty"`
-	And                        []BlogPostSubscriptionWhereInput `json:"AND,omitempty"`
-	Or                         []BlogPostSubscriptionWhereInput `json:"OR,omitempty"`
-	Not                        []BlogPostSubscriptionWhereInput `json:"NOT,omitempty"`
-}
-
-type FavoriteThingUpdateInput struct {
-	Priority    *int32  `json:"priority,omitempty"`
-	Name        *string `json:"name,omitempty"`
-	Link        *string `json:"link,omitempty"`
-	Description *string `json:"description,omitempty"`
-}
-
-type FavoriteThingWhereUniqueInput struct {
-	ID *string `json:"id,omitempty"`
-}
-
-type SessionWhereUniqueInput struct {
-	ID *string `json:"id,omitempty"`
-}
-
-type FavoriteThingWhereInput struct {
-	ID                       *string                   `json:"id,omitempty"`
-	IDNot                    *string                   `json:"id_not,omitempty"`
-	IDIn                     []string                  `json:"id_in,omitempty"`
-	IDNotIn                  []string                  `json:"id_not_in,omitempty"`
-	IDLt                     *string                   `json:"id_lt,omitempty"`
-	IDLte                    *string                   `json:"id_lte,omitempty"`
-	IDGt                     *string                   `json:"id_gt,omitempty"`
-	IDGte                    *string                   `json:"id_gte,omitempty"`
-	IDContains               *string                   `json:"id_contains,omitempty"`
-	IDNotContains            *string                   `json:"id_not_contains,omitempty"`
-	IDStartsWith             *string                   `json:"id_starts_with,omitempty"`
-	IDNotStartsWith          *string                   `json:"id_not_starts_with,omitempty"`
-	IDEndsWith               *string                   `json:"id_ends_with,omitempty"`
-	IDNotEndsWith            *string                   `json:"id_not_ends_with,omitempty"`
-	Priority                 *int32                    `json:"priority,omitempty"`
-	PriorityNot              *int32                    `json:"priority_not,omitempty"`
-	PriorityIn               []int32                   `json:"priority_in,omitempty"`
-	PriorityNotIn            []int32                   `json:"priority_not_in,omitempty"`
-	PriorityLt               *int32                    `json:"priority_lt,omitempty"`
-	PriorityLte              *int32                    `json:"priority_lte,omitempty"`
-	PriorityGt               *int32                    `json:"priority_gt,omitempty"`
-	PriorityGte              *int32                    `json:"priority_gte,omitempty"`
-	Name                     *string                   `json:"name,omitempty"`
-	NameNot                  *string                   `json:"name_not,omitempty"`
-	NameIn                   []string                  `json:"name_in,omitempty"`
-	NameNotIn                []string                  `json:"name_not_in,omitempty"`
-	NameLt                   *string                   `json:"name_lt,omitempty"`
-	NameLte                  *string                   `json:"name_lte,omitempty"`
-	NameGt                   *string                   `json:"name_gt,omitempty"`
-	NameGte                  *string                   `json:"name_gte,omitempty"`
-	NameContains             *string                   `json:"name_contains,omitempty"`
-	NameNotContains          *string                   `json:"name_not_contains,omitempty"`
-	NameStartsWith           *string                   `json:"name_starts_with,omitempty"`
-	NameNotStartsWith        *string                   `json:"name_not_starts_with,omitempty"`
-	NameEndsWith             *string                   `json:"name_ends_with,omitempty"`
-	NameNotEndsWith          *string                   `json:"name_not_ends_with,omitempty"`
-	Link                     *string                   `json:"link,omitempty"`
-	LinkNot                  *string                   `json:"link_not,omitempty"`
-	LinkIn                   []string                  `json:"link_in,omitempty"`
-	LinkNotIn                []string                  `json:"link_not_in,omitempty"`
-	LinkLt                   *string                   `json:"link_lt,omitempty"`
-	LinkLte                  *string                   `json:"link_lte,omitempty"`
-	LinkGt                   *string                   `json:"link_gt,omitempty"`
-	LinkGte                  *string                   `json:"link_gte,omitempty"`
-	LinkContains             *string                   `json:"link_contains,omitempty"`
-	LinkNotContains          *string                   `json:"link_not_contains,omitempty"`
-	LinkStartsWith           *string                   `json:"link_starts_with,omitempty"`
-	LinkNotStartsWith        *string                   `json:"link_not_starts_with,omitempty"`
-	LinkEndsWith             *string                   `json:"link_ends_with,omitempty"`
-	LinkNotEndsWith          *string                   `json:"link_not_ends_with,omitempty"`
-	Description              *string                   `json:"description,omitempty"`
-	DescriptionNot           *string                   `json:"description_not,omitempty"`
-	DescriptionIn            []string                  `json:"description_in,omitempty"`
-	DescriptionNotIn         []string                  `json:"description_not_in,omitempty"`
-	DescriptionLt            *string                   `json:"description_lt,omitempty"`
-	DescriptionLte           *string                   `json:"description_lte,omitempty"`
-	DescriptionGt            *string                   `json:"description_gt,omitempty"`
-	DescriptionGte           *string                   `json:"description_gte,omitempty"`
-	DescriptionContains      *string                   `json:"description_contains,omitempty"`
-	DescriptionNotContains   *string                   `json:"description_not_contains,omitempty"`
-	DescriptionStartsWith    *string                   `json:"description_starts_with,omitempty"`
-	DescriptionNotStartsWith *string                   `json:"description_not_starts_with,omitempty"`
-	DescriptionEndsWith      *string                   `json:"description_ends_with,omitempty"`
-	DescriptionNotEndsWith   *string                   `json:"description_not_ends_with,omitempty"`
-	And                      []FavoriteThingWhereInput `json:"AND,omitempty"`
-	Or                       []FavoriteThingWhereInput `json:"OR,omitempty"`
-	Not                      []FavoriteThingWhereInput `json:"NOT,omitempty"`
-}
-
-type FavoriteThingCreateInput struct {
-	ID          *string `json:"id,omitempty"`
-	Priority    int32   `json:"priority"`
-	Name        string  `json:"name"`
-	Link        string  `json:"link"`
-	Description string  `json:"description"`
-}
-
-type SubscriberUpdateManyMutationInput struct {
-	Email        *string `json:"email,omitempty"`
-	Name         *string `json:"name,omitempty"`
-	Confirmed    *bool   `json:"confirmed,omitempty"`
-	Unsubscribed *bool   `json:"unsubscribed,omitempty"`
-}
-
-type SessionWhereInput struct {
-	ID              *string             `json:"id,omitempty"`
-	IDNot           *string             `json:"id_not,omitempty"`
-	IDIn            []string            `json:"id_in,omitempty"`
-	IDNotIn         []string            `json:"id_not_in,omitempty"`
-	IDLt            *string             `json:"id_lt,omitempty"`
-	IDLte           *string             `json:"id_lte,omitempty"`
-	IDGt            *string             `json:"id_gt,omitempty"`
-	IDGte           *string             `json:"id_gte,omitempty"`
-	IDContains      *string             `json:"id_contains,omitempty"`
-	IDNotContains   *string             `json:"id_not_contains,omitempty"`
-	IDStartsWith    *string             `json:"id_starts_with,omitempty"`
-	IDNotStartsWith *string             `json:"id_not_starts_with,omitempty"`
-	IDEndsWith      *string             `json:"id_ends_with,omitempty"`
-	IDNotEndsWith   *string             `json:"id_not_ends_with,omitempty"`
-	CreatedAt       *string             `json:"createdAt,omitempty"`
-	CreatedAtNot    *string             `json:"createdAt_not,omitempty"`
-	CreatedAtIn     []string            `json:"createdAt_in,omitempty"`
-	CreatedAtNotIn  []string            `json:"createdAt_not_in,omitempty"`
-	CreatedAtLt     *string             `json:"createdAt_lt,omitempty"`
-	CreatedAtLte    *string             `json:"createdAt_lte,omitempty"`
-	CreatedAtGt     *string             `json:"createdAt_gt,omitempty"`
-	CreatedAtGte    *string             `json:"createdAt_gte,omitempty"`
-	User            *UserWhereInput     `json:"user,omitempty"`
-	And             []SessionWhereInput `json:"AND,omitempty"`
-	Or              []SessionWhereInput `json:"OR,omitempty"`
-	Not             []SessionWhereInput `json:"NOT,omitempty"`
-}
-
-type SubscriberCreateInput struct {
-	ID           *string `json:"id,omitempty"`
-	Email        string  `json:"email"`
-	Name         string  `json:"name"`
-	Confirmed    bool    `json:"confirmed"`
-	Unsubscribed bool    `json:"unsubscribed"`
-}
-
 type AnalyticsPageViewWhereInput struct {
 	ID                     *string                       `json:"id,omitempty"`
 	IDNot                  *string                       `json:"id_not,omitempty"`
@@ -2397,9 +2211,207 @@ type AnalyticsPageViewWhereInput struct {
 	ReferrerNotStartsWith  *string                       `json:"referrer_not_starts_with,omitempty"`
 	ReferrerEndsWith       *string                       `json:"referrer_ends_with,omitempty"`
 	ReferrerNotEndsWith    *string                       `json:"referrer_not_ends_with,omitempty"`
+	Age                    *int32                        `json:"age,omitempty"`
+	AgeNot                 *int32                        `json:"age_not,omitempty"`
+	AgeIn                  []int32                       `json:"age_in,omitempty"`
+	AgeNotIn               []int32                       `json:"age_not_in,omitempty"`
+	AgeLt                  *int32                        `json:"age_lt,omitempty"`
+	AgeLte                 *int32                        `json:"age_lte,omitempty"`
+	AgeGt                  *int32                        `json:"age_gt,omitempty"`
+	AgeGte                 *int32                        `json:"age_gte,omitempty"`
 	And                    []AnalyticsPageViewWhereInput `json:"AND,omitempty"`
 	Or                     []AnalyticsPageViewWhereInput `json:"OR,omitempty"`
 	Not                    []AnalyticsPageViewWhereInput `json:"NOT,omitempty"`
+}
+
+type NewsletterSendSubscriptionWhereInput struct {
+	MutationIn                 []MutationType                         `json:"mutation_in,omitempty"`
+	UpdatedFieldsContains      *string                                `json:"updatedFields_contains,omitempty"`
+	UpdatedFieldsContainsEvery []string                               `json:"updatedFields_contains_every,omitempty"`
+	UpdatedFieldsContainsSome  []string                               `json:"updatedFields_contains_some,omitempty"`
+	Node                       *NewsletterSendWhereInput              `json:"node,omitempty"`
+	And                        []NewsletterSendSubscriptionWhereInput `json:"AND,omitempty"`
+	Or                         []NewsletterSendSubscriptionWhereInput `json:"OR,omitempty"`
+	Not                        []NewsletterSendSubscriptionWhereInput `json:"NOT,omitempty"`
+}
+
+type NewsletterSendUpdateInput struct {
+	Key         *string `json:"key,omitempty"`
+	Recipients  *int32  `json:"recipients,omitempty"`
+	Description *string `json:"description,omitempty"`
+}
+
+type FavoriteThingSubscriptionWhereInput struct {
+	MutationIn                 []MutationType                        `json:"mutation_in,omitempty"`
+	UpdatedFieldsContains      *string                               `json:"updatedFields_contains,omitempty"`
+	UpdatedFieldsContainsEvery []string                              `json:"updatedFields_contains_every,omitempty"`
+	UpdatedFieldsContainsSome  []string                              `json:"updatedFields_contains_some,omitempty"`
+	Node                       *FavoriteThingWhereInput              `json:"node,omitempty"`
+	And                        []FavoriteThingSubscriptionWhereInput `json:"AND,omitempty"`
+	Or                         []FavoriteThingSubscriptionWhereInput `json:"OR,omitempty"`
+	Not                        []FavoriteThingSubscriptionWhereInput `json:"NOT,omitempty"`
+}
+
+type NewsletterSendCreateInput struct {
+	ID          *string `json:"id,omitempty"`
+	Key         string  `json:"key"`
+	Recipients  int32   `json:"recipients"`
+	Description string  `json:"description"`
+}
+
+type BlogPostSubscriptionWhereInput struct {
+	MutationIn                 []MutationType                   `json:"mutation_in,omitempty"`
+	UpdatedFieldsContains      *string                          `json:"updatedFields_contains,omitempty"`
+	UpdatedFieldsContainsEvery []string                         `json:"updatedFields_contains_every,omitempty"`
+	UpdatedFieldsContainsSome  []string                         `json:"updatedFields_contains_some,omitempty"`
+	Node                       *BlogPostWhereInput              `json:"node,omitempty"`
+	And                        []BlogPostSubscriptionWhereInput `json:"AND,omitempty"`
+	Or                         []BlogPostSubscriptionWhereInput `json:"OR,omitempty"`
+	Not                        []BlogPostSubscriptionWhereInput `json:"NOT,omitempty"`
+}
+
+type FavoriteThingUpdateManyMutationInput struct {
+	Priority    *int32  `json:"priority,omitempty"`
+	Name        *string `json:"name,omitempty"`
+	Link        *string `json:"link,omitempty"`
+	Description *string `json:"description,omitempty"`
+}
+
+type FavoriteThingWhereUniqueInput struct {
+	ID *string `json:"id,omitempty"`
+}
+
+type SessionWhereUniqueInput struct {
+	ID *string `json:"id,omitempty"`
+}
+
+type FavoriteThingWhereInput struct {
+	ID                       *string                   `json:"id,omitempty"`
+	IDNot                    *string                   `json:"id_not,omitempty"`
+	IDIn                     []string                  `json:"id_in,omitempty"`
+	IDNotIn                  []string                  `json:"id_not_in,omitempty"`
+	IDLt                     *string                   `json:"id_lt,omitempty"`
+	IDLte                    *string                   `json:"id_lte,omitempty"`
+	IDGt                     *string                   `json:"id_gt,omitempty"`
+	IDGte                    *string                   `json:"id_gte,omitempty"`
+	IDContains               *string                   `json:"id_contains,omitempty"`
+	IDNotContains            *string                   `json:"id_not_contains,omitempty"`
+	IDStartsWith             *string                   `json:"id_starts_with,omitempty"`
+	IDNotStartsWith          *string                   `json:"id_not_starts_with,omitempty"`
+	IDEndsWith               *string                   `json:"id_ends_with,omitempty"`
+	IDNotEndsWith            *string                   `json:"id_not_ends_with,omitempty"`
+	Priority                 *int32                    `json:"priority,omitempty"`
+	PriorityNot              *int32                    `json:"priority_not,omitempty"`
+	PriorityIn               []int32                   `json:"priority_in,omitempty"`
+	PriorityNotIn            []int32                   `json:"priority_not_in,omitempty"`
+	PriorityLt               *int32                    `json:"priority_lt,omitempty"`
+	PriorityLte              *int32                    `json:"priority_lte,omitempty"`
+	PriorityGt               *int32                    `json:"priority_gt,omitempty"`
+	PriorityGte              *int32                    `json:"priority_gte,omitempty"`
+	Name                     *string                   `json:"name,omitempty"`
+	NameNot                  *string                   `json:"name_not,omitempty"`
+	NameIn                   []string                  `json:"name_in,omitempty"`
+	NameNotIn                []string                  `json:"name_not_in,omitempty"`
+	NameLt                   *string                   `json:"name_lt,omitempty"`
+	NameLte                  *string                   `json:"name_lte,omitempty"`
+	NameGt                   *string                   `json:"name_gt,omitempty"`
+	NameGte                  *string                   `json:"name_gte,omitempty"`
+	NameContains             *string                   `json:"name_contains,omitempty"`
+	NameNotContains          *string                   `json:"name_not_contains,omitempty"`
+	NameStartsWith           *string                   `json:"name_starts_with,omitempty"`
+	NameNotStartsWith        *string                   `json:"name_not_starts_with,omitempty"`
+	NameEndsWith             *string                   `json:"name_ends_with,omitempty"`
+	NameNotEndsWith          *string                   `json:"name_not_ends_with,omitempty"`
+	Link                     *string                   `json:"link,omitempty"`
+	LinkNot                  *string                   `json:"link_not,omitempty"`
+	LinkIn                   []string                  `json:"link_in,omitempty"`
+	LinkNotIn                []string                  `json:"link_not_in,omitempty"`
+	LinkLt                   *string                   `json:"link_lt,omitempty"`
+	LinkLte                  *string                   `json:"link_lte,omitempty"`
+	LinkGt                   *string                   `json:"link_gt,omitempty"`
+	LinkGte                  *string                   `json:"link_gte,omitempty"`
+	LinkContains             *string                   `json:"link_contains,omitempty"`
+	LinkNotContains          *string                   `json:"link_not_contains,omitempty"`
+	LinkStartsWith           *string                   `json:"link_starts_with,omitempty"`
+	LinkNotStartsWith        *string                   `json:"link_not_starts_with,omitempty"`
+	LinkEndsWith             *string                   `json:"link_ends_with,omitempty"`
+	LinkNotEndsWith          *string                   `json:"link_not_ends_with,omitempty"`
+	Description              *string                   `json:"description,omitempty"`
+	DescriptionNot           *string                   `json:"description_not,omitempty"`
+	DescriptionIn            []string                  `json:"description_in,omitempty"`
+	DescriptionNotIn         []string                  `json:"description_not_in,omitempty"`
+	DescriptionLt            *string                   `json:"description_lt,omitempty"`
+	DescriptionLte           *string                   `json:"description_lte,omitempty"`
+	DescriptionGt            *string                   `json:"description_gt,omitempty"`
+	DescriptionGte           *string                   `json:"description_gte,omitempty"`
+	DescriptionContains      *string                   `json:"description_contains,omitempty"`
+	DescriptionNotContains   *string                   `json:"description_not_contains,omitempty"`
+	DescriptionStartsWith    *string                   `json:"description_starts_with,omitempty"`
+	DescriptionNotStartsWith *string                   `json:"description_not_starts_with,omitempty"`
+	DescriptionEndsWith      *string                   `json:"description_ends_with,omitempty"`
+	DescriptionNotEndsWith   *string                   `json:"description_not_ends_with,omitempty"`
+	And                      []FavoriteThingWhereInput `json:"AND,omitempty"`
+	Or                       []FavoriteThingWhereInput `json:"OR,omitempty"`
+	Not                      []FavoriteThingWhereInput `json:"NOT,omitempty"`
+}
+
+type FavoriteThingUpdateInput struct {
+	Priority    *int32  `json:"priority,omitempty"`
+	Name        *string `json:"name,omitempty"`
+	Link        *string `json:"link,omitempty"`
+	Description *string `json:"description,omitempty"`
+}
+
+type SubscriberUpdateManyMutationInput struct {
+	Email        *string `json:"email,omitempty"`
+	Name         *string `json:"name,omitempty"`
+	Confirmed    *bool   `json:"confirmed,omitempty"`
+	Unsubscribed *bool   `json:"unsubscribed,omitempty"`
+}
+
+type SessionWhereInput struct {
+	ID              *string             `json:"id,omitempty"`
+	IDNot           *string             `json:"id_not,omitempty"`
+	IDIn            []string            `json:"id_in,omitempty"`
+	IDNotIn         []string            `json:"id_not_in,omitempty"`
+	IDLt            *string             `json:"id_lt,omitempty"`
+	IDLte           *string             `json:"id_lte,omitempty"`
+	IDGt            *string             `json:"id_gt,omitempty"`
+	IDGte           *string             `json:"id_gte,omitempty"`
+	IDContains      *string             `json:"id_contains,omitempty"`
+	IDNotContains   *string             `json:"id_not_contains,omitempty"`
+	IDStartsWith    *string             `json:"id_starts_with,omitempty"`
+	IDNotStartsWith *string             `json:"id_not_starts_with,omitempty"`
+	IDEndsWith      *string             `json:"id_ends_with,omitempty"`
+	IDNotEndsWith   *string             `json:"id_not_ends_with,omitempty"`
+	CreatedAt       *string             `json:"createdAt,omitempty"`
+	CreatedAtNot    *string             `json:"createdAt_not,omitempty"`
+	CreatedAtIn     []string            `json:"createdAt_in,omitempty"`
+	CreatedAtNotIn  []string            `json:"createdAt_not_in,omitempty"`
+	CreatedAtLt     *string             `json:"createdAt_lt,omitempty"`
+	CreatedAtLte    *string             `json:"createdAt_lte,omitempty"`
+	CreatedAtGt     *string             `json:"createdAt_gt,omitempty"`
+	CreatedAtGte    *string             `json:"createdAt_gte,omitempty"`
+	User            *UserWhereInput     `json:"user,omitempty"`
+	And             []SessionWhereInput `json:"AND,omitempty"`
+	Or              []SessionWhereInput `json:"OR,omitempty"`
+	Not             []SessionWhereInput `json:"NOT,omitempty"`
+}
+
+type SubscriberCreateInput struct {
+	ID           *string `json:"id,omitempty"`
+	Email        string  `json:"email"`
+	Name         string  `json:"name"`
+	Confirmed    bool    `json:"confirmed"`
+	Unsubscribed bool    `json:"unsubscribed"`
+}
+
+type FavoriteThingCreateInput struct {
+	ID          *string `json:"id,omitempty"`
+	Priority    int32   `json:"priority"`
+	Name        string  `json:"name"`
+	Link        string  `json:"link"`
+	Description string  `json:"description"`
 }
 
 type SessionUpdateInput struct {
@@ -2866,6 +2878,7 @@ type AnalyticsPageViewCreateInput struct {
 	Path      string  `json:"path"`
 	Search    string  `json:"search"`
 	Referrer  string  `json:"referrer"`
+	Age       int32   `json:"age"`
 }
 
 type BlogPostCreateInput struct {
@@ -3273,7 +3286,7 @@ func (instance AnalyticsPageViewExecArray) Exec(ctx context.Context) ([]Analytic
 	return v, err
 }
 
-var AnalyticsPageViewFields = []string{"id", "time", "sess", "user", "userAgent", "path", "search", "referrer"}
+var AnalyticsPageViewFields = []string{"id", "time", "sess", "user", "userAgent", "path", "search", "referrer", "age"}
 
 type AnalyticsPageView struct {
 	ID        string `json:"id"`
@@ -3284,6 +3297,7 @@ type AnalyticsPageView struct {
 	Path      string `json:"path"`
 	Search    string `json:"search"`
 	Referrer  string `json:"referrer"`
+	Age       int32  `json:"age"`
 }
 
 type UserConnectionExec struct {
@@ -3380,7 +3394,7 @@ func (instance *AnalyticsPageViewSubscriptionPayloadExec) Node() *AnalyticsPageV
 		nil,
 		[2]string{"", "AnalyticsPageView"},
 		"node",
-		[]string{"id", "time", "sess", "user", "userAgent", "path", "search", "referrer"})
+		[]string{"id", "time", "sess", "user", "userAgent", "path", "search", "referrer", "age"})
 
 	return &AnalyticsPageViewExec{ret}
 }
@@ -3391,7 +3405,7 @@ func (instance *AnalyticsPageViewSubscriptionPayloadExec) PreviousValues() *Anal
 		nil,
 		[2]string{"", "AnalyticsPageViewPreviousValues"},
 		"previousValues",
-		[]string{"id", "time", "sess", "user", "userAgent", "path", "search", "referrer"})
+		[]string{"id", "time", "sess", "user", "userAgent", "path", "search", "referrer", "age"})
 
 	return &AnalyticsPageViewPreviousValuesExec{ret}
 }
@@ -3676,7 +3690,7 @@ func (instance AnalyticsPageViewPreviousValuesExecArray) Exec(ctx context.Contex
 	return v, err
 }
 
-var AnalyticsPageViewPreviousValuesFields = []string{"id", "time", "sess", "user", "userAgent", "path", "search", "referrer"}
+var AnalyticsPageViewPreviousValuesFields = []string{"id", "time", "sess", "user", "userAgent", "path", "search", "referrer", "age"}
 
 type AnalyticsPageViewPreviousValues struct {
 	ID        string `json:"id"`
@@ -3687,6 +3701,7 @@ type AnalyticsPageViewPreviousValues struct {
 	Path      string `json:"path"`
 	Search    string `json:"search"`
 	Referrer  string `json:"referrer"`
+	Age       int32  `json:"age"`
 }
 
 type SubscriberExec struct {
@@ -3827,23 +3842,34 @@ type BookEdge struct {
 	Cursor string `json:"cursor"`
 }
 
-type SessionExec struct {
+type UserSubscriptionPayloadExec struct {
 	exec *prisma.Exec
 }
 
-func (instance *SessionExec) User() *UserExec {
+func (instance *UserSubscriptionPayloadExec) Node() *UserExec {
 	ret := instance.exec.Client.GetOne(
 		instance.exec,
 		nil,
 		[2]string{"", "User"},
-		"user",
+		"node",
 		[]string{"id", "type", "createdAt", "updatedAt", "email", "name", "passwordHash"})
 
 	return &UserExec{ret}
 }
 
-func (instance SessionExec) Exec(ctx context.Context) (*Session, error) {
-	var v Session
+func (instance *UserSubscriptionPayloadExec) PreviousValues() *UserPreviousValuesExec {
+	ret := instance.exec.Client.GetOne(
+		instance.exec,
+		nil,
+		[2]string{"", "UserPreviousValues"},
+		"previousValues",
+		[]string{"id", "type", "createdAt", "updatedAt", "email", "name", "passwordHash"})
+
+	return &UserPreviousValuesExec{ret}
+}
+
+func (instance UserSubscriptionPayloadExec) Exec(ctx context.Context) (*UserSubscriptionPayload, error) {
+	var v UserSubscriptionPayload
 	ok, err := instance.exec.Exec(ctx, &v)
 	if err != nil {
 		return nil, err
@@ -3854,25 +3880,26 @@ func (instance SessionExec) Exec(ctx context.Context) (*Session, error) {
 	return &v, nil
 }
 
-func (instance SessionExec) Exists(ctx context.Context) (bool, error) {
+func (instance UserSubscriptionPayloadExec) Exists(ctx context.Context) (bool, error) {
 	return instance.exec.Exists(ctx)
 }
 
-type SessionExecArray struct {
+type UserSubscriptionPayloadExecArray struct {
 	exec *prisma.Exec
 }
 
-func (instance SessionExecArray) Exec(ctx context.Context) ([]Session, error) {
-	var v []Session
+func (instance UserSubscriptionPayloadExecArray) Exec(ctx context.Context) ([]UserSubscriptionPayload, error) {
+	var v []UserSubscriptionPayload
 	err := instance.exec.ExecArray(ctx, &v)
 	return v, err
 }
 
-var SessionFields = []string{"id", "createdAt"}
+var UserSubscriptionPayloadFields = []string{"mutation", "updatedFields"}
 
-type Session struct {
-	ID        string `json:"id"`
-	CreatedAt string `json:"createdAt"`
+type UserSubscriptionPayload struct {
+	Mutation      MutationType `json:"mutation"`
+	Node          *User        `json:"node,omitempty"`
+	UpdatedFields []string     `json:"updatedFields,omitempty"`
 }
 
 type BlogPostSubscriptionPayloadExec struct {
@@ -3935,54 +3962,6 @@ type BlogPostSubscriptionPayload struct {
 	UpdatedFields []string     `json:"updatedFields,omitempty"`
 }
 
-type ProjectEdgeExec struct {
-	exec *prisma.Exec
-}
-
-func (instance *ProjectEdgeExec) Node() *ProjectExec {
-	ret := instance.exec.Client.GetOne(
-		instance.exec,
-		nil,
-		[2]string{"", "Project"},
-		"node",
-		[]string{"id", "priority", "name", "link", "icon", "description", "retired", "revenue", "reason"})
-
-	return &ProjectExec{ret}
-}
-
-func (instance ProjectEdgeExec) Exec(ctx context.Context) (*ProjectEdge, error) {
-	var v ProjectEdge
-	ok, err := instance.exec.Exec(ctx, &v)
-	if err != nil {
-		return nil, err
-	}
-	if !ok {
-		return nil, ErrNoResult
-	}
-	return &v, nil
-}
-
-func (instance ProjectEdgeExec) Exists(ctx context.Context) (bool, error) {
-	return instance.exec.Exists(ctx)
-}
-
-type ProjectEdgeExecArray struct {
-	exec *prisma.Exec
-}
-
-func (instance ProjectEdgeExecArray) Exec(ctx context.Context) ([]ProjectEdge, error) {
-	var v []ProjectEdge
-	err := instance.exec.ExecArray(ctx, &v)
-	return v, err
-}
-
-var ProjectEdgeFields = []string{"cursor"}
-
-type ProjectEdge struct {
-	Node   Project `json:"node"`
-	Cursor string  `json:"cursor"`
-}
-
 type BlogPostPreviousValuesExec struct {
 	exec *prisma.Exec
 }
@@ -4029,64 +4008,88 @@ type BlogPostPreviousValues struct {
 	Views     int32  `json:"views"`
 }
 
-type UserSubscriptionPayloadExec struct {
+type ProjectConnectionExec struct {
 	exec *prisma.Exec
 }
 
-func (instance *UserSubscriptionPayloadExec) Node() *UserExec {
+func (instance *ProjectConnectionExec) PageInfo() *PageInfoExec {
 	ret := instance.exec.Client.GetOne(
 		instance.exec,
 		nil,
-		[2]string{"", "User"},
+		[2]string{"", "PageInfo"},
+		"pageInfo",
+		[]string{"hasNextPage", "hasPreviousPage", "startCursor", "endCursor"})
+
+	return &PageInfoExec{ret}
+}
+
+func (instance *ProjectConnectionExec) Edges() *ProjectEdgeExecArray {
+	edges := instance.exec.Client.GetMany(
+		instance.exec,
+		nil,
+		[3]string{"ProjectWhereInput", "ProjectOrderByInput", "ProjectEdge"},
+		"edges",
+		[]string{"cursor"})
+
+	nodes := edges.Client.GetOne(
+		edges,
+		nil,
+		[2]string{"", "Project"},
 		"node",
-		[]string{"id", "type", "createdAt", "updatedAt", "email", "name", "passwordHash"})
+		ProjectFields)
 
-	return &UserExec{ret}
+	return &ProjectEdgeExecArray{nodes}
 }
 
-func (instance *UserSubscriptionPayloadExec) PreviousValues() *UserPreviousValuesExec {
+func (instance *ProjectConnectionExec) Aggregate(ctx context.Context) (*Aggregate, error) {
 	ret := instance.exec.Client.GetOne(
 		instance.exec,
 		nil,
-		[2]string{"", "UserPreviousValues"},
-		"previousValues",
-		[]string{"id", "type", "createdAt", "updatedAt", "email", "name", "passwordHash"})
+		[2]string{"", "AggregateProject"},
+		"aggregate",
+		[]string{"count"})
 
-	return &UserPreviousValuesExec{ret}
+	var v Aggregate
+	_, err := ret.Exec(ctx, &v)
+	return &v, err
 }
 
-func (instance UserSubscriptionPayloadExec) Exec(ctx context.Context) (*UserSubscriptionPayload, error) {
-	var v UserSubscriptionPayload
-	ok, err := instance.exec.Exec(ctx, &v)
+func (instance ProjectConnectionExec) Exec(ctx context.Context) (*ProjectConnection, error) {
+	edges, err := instance.Edges().Exec(ctx)
 	if err != nil {
 		return nil, err
 	}
-	if !ok {
-		return nil, ErrNoResult
+
+	pageInfo, err := instance.PageInfo().Exec(ctx)
+	if err != nil {
+		return nil, err
 	}
-	return &v, nil
+
+	return &ProjectConnection{
+		Edges:    edges,
+		PageInfo: *pageInfo,
+	}, nil
 }
 
-func (instance UserSubscriptionPayloadExec) Exists(ctx context.Context) (bool, error) {
+func (instance ProjectConnectionExec) Exists(ctx context.Context) (bool, error) {
 	return instance.exec.Exists(ctx)
 }
 
-type UserSubscriptionPayloadExecArray struct {
+type ProjectConnectionExecArray struct {
 	exec *prisma.Exec
 }
 
-func (instance UserSubscriptionPayloadExecArray) Exec(ctx context.Context) ([]UserSubscriptionPayload, error) {
-	var v []UserSubscriptionPayload
+func (instance ProjectConnectionExecArray) Exec(ctx context.Context) ([]ProjectConnection, error) {
+	var v []ProjectConnection
 	err := instance.exec.ExecArray(ctx, &v)
 	return v, err
 }
 
-var UserSubscriptionPayloadFields = []string{"mutation", "updatedFields"}
+var ProjectConnectionFields = []string{}
 
-type UserSubscriptionPayload struct {
-	Mutation      MutationType `json:"mutation"`
-	Node          *User        `json:"node,omitempty"`
-	UpdatedFields []string     `json:"updatedFields,omitempty"`
+type ProjectConnection struct {
+	PageInfo PageInfo      `json:"pageInfo"`
+	Edges    []ProjectEdge `json:"edges"`
 }
 
 type BookConnectionExec struct {
@@ -4831,88 +4834,52 @@ type NewsletterSendSubscriptionPayload struct {
 	UpdatedFields []string        `json:"updatedFields,omitempty"`
 }
 
-type ProjectConnectionExec struct {
+type ProjectEdgeExec struct {
 	exec *prisma.Exec
 }
 
-func (instance *ProjectConnectionExec) PageInfo() *PageInfoExec {
+func (instance *ProjectEdgeExec) Node() *ProjectExec {
 	ret := instance.exec.Client.GetOne(
 		instance.exec,
-		nil,
-		[2]string{"", "PageInfo"},
-		"pageInfo",
-		[]string{"hasNextPage", "hasPreviousPage", "startCursor", "endCursor"})
-
-	return &PageInfoExec{ret}
-}
-
-func (instance *ProjectConnectionExec) Edges() *ProjectEdgeExecArray {
-	edges := instance.exec.Client.GetMany(
-		instance.exec,
-		nil,
-		[3]string{"ProjectWhereInput", "ProjectOrderByInput", "ProjectEdge"},
-		"edges",
-		[]string{"cursor"})
-
-	nodes := edges.Client.GetOne(
-		edges,
 		nil,
 		[2]string{"", "Project"},
 		"node",
-		ProjectFields)
+		[]string{"id", "priority", "name", "link", "icon", "description", "retired", "revenue", "reason"})
 
-	return &ProjectEdgeExecArray{nodes}
+	return &ProjectExec{ret}
 }
 
-func (instance *ProjectConnectionExec) Aggregate(ctx context.Context) (*Aggregate, error) {
-	ret := instance.exec.Client.GetOne(
-		instance.exec,
-		nil,
-		[2]string{"", "AggregateProject"},
-		"aggregate",
-		[]string{"count"})
-
-	var v Aggregate
-	_, err := ret.Exec(ctx, &v)
-	return &v, err
-}
-
-func (instance ProjectConnectionExec) Exec(ctx context.Context) (*ProjectConnection, error) {
-	edges, err := instance.Edges().Exec(ctx)
+func (instance ProjectEdgeExec) Exec(ctx context.Context) (*ProjectEdge, error) {
+	var v ProjectEdge
+	ok, err := instance.exec.Exec(ctx, &v)
 	if err != nil {
 		return nil, err
 	}
-
-	pageInfo, err := instance.PageInfo().Exec(ctx)
-	if err != nil {
-		return nil, err
+	if !ok {
+		return nil, ErrNoResult
 	}
-
-	return &ProjectConnection{
-		Edges:    edges,
-		PageInfo: *pageInfo,
-	}, nil
+	return &v, nil
 }
 
-func (instance ProjectConnectionExec) Exists(ctx context.Context) (bool, error) {
+func (instance ProjectEdgeExec) Exists(ctx context.Context) (bool, error) {
 	return instance.exec.Exists(ctx)
 }
 
-type ProjectConnectionExecArray struct {
+type ProjectEdgeExecArray struct {
 	exec *prisma.Exec
 }
 
-func (instance ProjectConnectionExecArray) Exec(ctx context.Context) ([]ProjectConnection, error) {
-	var v []ProjectConnection
+func (instance ProjectEdgeExecArray) Exec(ctx context.Context) ([]ProjectEdge, error) {
+	var v []ProjectEdge
 	err := instance.exec.ExecArray(ctx, &v)
 	return v, err
 }
 
-var ProjectConnectionFields = []string{}
+var ProjectEdgeFields = []string{"cursor"}
 
-type ProjectConnection struct {
-	PageInfo PageInfo      `json:"pageInfo"`
-	Edges    []ProjectEdge `json:"edges"`
+type ProjectEdge struct {
+	Node   Project `json:"node"`
+	Cursor string  `json:"cursor"`
 }
 
 type NewsletterSendPreviousValuesExec struct {
@@ -5073,7 +5040,7 @@ func (instance *AnalyticsPageViewEdgeExec) Node() *AnalyticsPageViewExec {
 		nil,
 		[2]string{"", "AnalyticsPageView"},
 		"node",
-		[]string{"id", "time", "sess", "user", "userAgent", "path", "search", "referrer"})
+		[]string{"id", "time", "sess", "user", "userAgent", "path", "search", "referrer", "age"})
 
 	return &AnalyticsPageViewExec{ret}
 }
@@ -5109,6 +5076,54 @@ var AnalyticsPageViewEdgeFields = []string{"cursor"}
 type AnalyticsPageViewEdge struct {
 	Node   AnalyticsPageView `json:"node"`
 	Cursor string            `json:"cursor"`
+}
+
+type SessionExec struct {
+	exec *prisma.Exec
+}
+
+func (instance *SessionExec) User() *UserExec {
+	ret := instance.exec.Client.GetOne(
+		instance.exec,
+		nil,
+		[2]string{"", "User"},
+		"user",
+		[]string{"id", "type", "createdAt", "updatedAt", "email", "name", "passwordHash"})
+
+	return &UserExec{ret}
+}
+
+func (instance SessionExec) Exec(ctx context.Context) (*Session, error) {
+	var v Session
+	ok, err := instance.exec.Exec(ctx, &v)
+	if err != nil {
+		return nil, err
+	}
+	if !ok {
+		return nil, ErrNoResult
+	}
+	return &v, nil
+}
+
+func (instance SessionExec) Exists(ctx context.Context) (bool, error) {
+	return instance.exec.Exists(ctx)
+}
+
+type SessionExecArray struct {
+	exec *prisma.Exec
+}
+
+func (instance SessionExecArray) Exec(ctx context.Context) ([]Session, error) {
+	var v []Session
+	err := instance.exec.ExecArray(ctx, &v)
+	return v, err
+}
+
+var SessionFields = []string{"id", "createdAt"}
+
+type Session struct {
+	ID        string `json:"id"`
+	CreatedAt string `json:"createdAt"`
 }
 
 type SessionPreviousValuesExec struct {

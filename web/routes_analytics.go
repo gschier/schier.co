@@ -6,6 +6,7 @@ import (
 	"github.com/gschier/schier.dev/generated/prisma-client"
 	"log"
 	"net/http"
+	"strconv"
 )
 
 func AnalyticsRoutes(router *mux.Router) {
@@ -21,6 +22,9 @@ func routeTrack(w http.ResponseWriter, r *http.Request) {
 	ref := q.Get("ref")
 	sess := q.Get("sess")
 	user := q.Get("user")
+	ageStr := q.Get("age")
+
+	age, _ := strconv.Atoi(ageStr)
 
 	go func() {
 		client := ctxPrismaClient(r)
@@ -31,6 +35,7 @@ func routeTrack(w http.ResponseWriter, r *http.Request) {
 			Referrer:  ref,
 			Sess:      sess,
 			User:      user,
+			Age:       int32(age),
 		}).Exec(context.Background())
 		if err != nil {
 			log.Println("Failed to update analytics", err.Error())
