@@ -54,13 +54,6 @@
     next();
   </script>
   <script>
-    const days = [];
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    for (let i = 0; i < 7; i++) {
-      const d = new Date(Date.now() - 1000 * 3600 * 24 * (7 - i - 1));
-      days.push(months[d.getMonth()] + ' ' + d.getDate());
-    }
-
     const colors = {
       pink: '#f687b3',
       red: '#fc8181',
@@ -75,6 +68,14 @@
 
     const pageViews = [{{ pageViews | join:', ' }}];
     const users = [{{ users | join:', ' }}];
+
+    const days = [];
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    for (let i = 0; i < pageViews.length; i++) {
+      const d = new Date(Date.now() - 1000 * 3600 * 24 * (pageViews.length - i - 1));
+      days.push(months[d.getMonth()] + ' ' + d.getDate());
+    }
+
     new Chart(document.querySelector('#page-views').getContext('2d'), {
       type: 'line',
       data: {
@@ -83,12 +84,13 @@
           label: 'Users',
           data: users,
           backgroundColor: colors.purple,
-          borderWidth: 1
+          borderWidth: 1,
+          borderColor: '#fff',
         }, {
           label: 'Views',
           data: pageViews,
           backgroundColor: colors.blue,
-          borderWidth: 1
+          borderWidth: 0,
         }],
       },
     });

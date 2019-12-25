@@ -51,11 +51,12 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 	client := ctxPrismaClient(r)
 
 	now := time.Now()
-	sevenDaysAgo := now.Add(-time.Hour * 24 * 7).Format(time.RFC3339)
+	dateRange := time.Hour * 24 * 7
+	dateBucketSize := time.Hour
 
 	views, err := client.AnalyticsPageViews(&prisma.AnalyticsPageViewsParams{
 		Where: &prisma.AnalyticsPageViewWhereInput{
-			TimeGte: &sevenDaysAgo,
+			TimeGte: prisma.Str(now.Add(dateRange * -1).Format(time.RFC3339)),
 		},
 	}).Exec(r.Context())
 	if err != nil {
@@ -68,9 +69,15 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 	topBrowserCounters := make(map[string]int)
 	pageViewCounters := make(map[int]int)
 	userCounters := make(map[int]map[string]int)
+
+	numBuckets := 0
 	for _, view := range views {
 		t, _ := time.Parse(time.RFC3339, view.Time)
-		day := int(now.Sub(t).Hours() / 24)
+		bucketIndex := int(now.Sub(t) / dateBucketSize)
+
+		if bucketIndex > numBuckets {
+			numBuckets = bucketIndex
+		}
 
 		userAgent := ua.Parse(view.UserAgent)
 		if userAgent.Bot {
@@ -83,13 +90,13 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// Increment page view
-		pageViewCounters[day] += 1
+		pageViewCounters[bucketIndex] += 1
 
 		// Add user ID
-		if _, ok := userCounters[day]; !ok {
-			userCounters[day] = make(map[string]int)
+		if _, ok := userCounters[bucketIndex]; !ok {
+			userCounters[bucketIndex] = make(map[string]int)
 		}
-		userCounters[day][view.User] += 1
+		userCounters[bucketIndex][view.User] += 1
 
 		topPlatformCounters[userAgent.OS] += 1
 		topBrowserCounters[userAgent.Name] += 1
@@ -120,23 +127,23 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 	sort.Sort(topPlatforms)
 	sort.Sort(topBrowsers)
 
-	users := make([]int, 0)
-	pageViews := make([]int, 0)
-	for i := 6; i >= 0; i-- {
-		pageViews = append(pageViews, pageViewCounters[i])
-		users = append(users, len(userCounters[i]))
+	users := make([]int, numBuckets)
+	pageViews := make([]int, numBuckets)
+	for i := 0; i < numBuckets; i++ {
+		pageViews[i] = pageViewCounters[numBuckets - i - 1]
+		users[i] = len(userCounters[numBuckets - i - 1])
 	}
 
-	if len(topPaths) > 20 {
-		topPaths = topPaths[0:20]
+	if len(topPaths) > 30 {
+		topPaths = topPaths[0:30]
 	}
 
-	if len(topBrowsers) > 5 {
-		topBrowsers = topBrowsers[0:5]
+	if len(topBrowsers) > 4 {
+		topBrowsers = topBrowsers[0:4]
 	}
 
-	if len(topPlatforms) > 5 {
-		topPlatforms = topPlatforms[0:5]
+	if len(topPlatforms) > 6 {
+		topPlatforms = topPlatforms[0:6]
 	}
 
 	renderTemplate(w, r, analyticsTemplate(), &pongo2.Context{
