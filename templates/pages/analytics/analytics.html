@@ -71,8 +71,9 @@
 
     const days = [];
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const bucketSize = 1000 * 60 * 60; // hour
     for (let i = 0; i < pageViews.length; i++) {
-      const d = new Date(Date.now() - 1000 * 3600 * 24 * (pageViews.length - i - 1));
+      const d = new Date(Date.now() - bucketSize * (pageViews.length - i - 1));
       days.push(months[d.getMonth()] + ' ' + d.getDate());
     }
 
