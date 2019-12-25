@@ -98,6 +98,15 @@
           borderColor: '#fff',
         }],
       },
+      options: {
+        scales: {
+          yAxes: [{
+            ticks: {
+              maxTicksLimit: 7,
+            }
+          }]
+        }
+      }
     });
 
     new Chart(document.querySelector('#top-browsers').getContext('2d'), {
