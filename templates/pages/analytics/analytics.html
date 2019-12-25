@@ -53,7 +53,10 @@
     setInterval(next, 5000);
     next();
   </script>
+  <div id="data" data-bucket-size-seconds="{{ bucketSizeSeconds }}"></div>
   <script>
+    const data = document.querySelector('#data');
+
     const colors = {
       pink: '#f687b3',
       red: '#fc8181',
@@ -66,13 +69,12 @@
       purple: '#b794f4',
     };
 
+    const bucketSize = parseInt(data.getAttribute('data-bucket-size-seconds'));
     const pageViews = [{{ pageViews | join:', ' }}];
     const users = [{{ users | join:', ' }}];
 
     const days = [];
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    const bucketSize = 1000 * {{ bucketSizeSec
-    onds }};
     for (let i = 0; i < pageViews.length; i++) {
       const d = new Date(Date.now() - bucketSize * (pageViews.length - i - 1));
       days.push(months[d.getMonth()] + ' ' + d.getDate());
