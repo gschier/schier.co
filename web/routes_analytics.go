@@ -130,8 +130,8 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 	users := make([]int, numBuckets)
 	pageViews := make([]int, numBuckets)
 	for i := 0; i < numBuckets; i++ {
-		pageViews[i] = pageViewCounters[numBuckets - i - 1]
-		users[i] = len(userCounters[numBuckets - i - 1])
+		pageViews[i] = pageViewCounters[numBuckets-i-1]
+		users[i] = len(userCounters[numBuckets-i-1])
 	}
 
 	if len(topPaths) > 30 {
@@ -147,13 +147,14 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 	}
 
 	renderTemplate(w, r, analyticsTemplate(), &pongo2.Context{
-		"pageViews":       pageViews,
-		"users":           users,
-		"topPaths":        topPaths,
-		"topPlatforms":    topPlatforms,
-		"topBrowsers":     topBrowsers,
-		"pageTitle":       "Analytics",
-		"pageDescription": "Public analytics for schier.co",
+		"pageViews":         pageViews,
+		"users":             users,
+		"topPaths":          topPaths,
+		"topPlatforms":      topPlatforms,
+		"topBrowsers":       topBrowsers,
+		"bucketSizeSeconds": dateBucketSize / time.Second,
+		"pageTitle":         "Analytics",
+		"pageDescription":   "Public analytics for schier.co",
 	})
 }
 
