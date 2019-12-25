@@ -52,7 +52,7 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 
 	now := time.Now()
 	dateRange := time.Hour * 24 * 7
-	dateBucketSize := time.Hour
+	dateBucketSize := time.Hour * 24
 
 	views, err := client.AnalyticsPageViews(&prisma.AnalyticsPageViewsParams{
 		Where: &prisma.AnalyticsPageViewWhereInput{
