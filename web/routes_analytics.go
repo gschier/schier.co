@@ -53,6 +53,7 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 	now := time.Now()
 	dateRange := time.Hour * 24 * 7
 	dateBucketSize := time.Hour * 24
+	numBuckets := int(dateRange / dateBucketSize)
 
 	views, err := client.AnalyticsPageViews(&prisma.AnalyticsPageViewsParams{
 		Where: &prisma.AnalyticsPageViewWhereInput{
@@ -70,14 +71,9 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 	pageViewCounters := make(map[int]int)
 	userCounters := make(map[int]map[string]int)
 
-	numBuckets := 0
 	for _, view := range views {
 		t, _ := time.Parse(time.RFC3339, view.Time)
 		bucketIndex := int(now.Sub(t) / dateBucketSize)
-
-		if bucketIndex + 1 > numBuckets {
-			numBuckets = bucketIndex + 1
-		}
 
 		userAgent := ua.Parse(view.UserAgent)
 		if userAgent.Bot {
