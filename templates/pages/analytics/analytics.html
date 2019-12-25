@@ -76,7 +76,7 @@
     const days = [];
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     for (let i = 0; i < pageViews.length; i++) {
-      const d = new Date(Date.now() - bucketSize * (pageViews.length - i - 1));
+      const d = new Date(Date.now() - bucketSize * (pageViews.length - i));
       days.push(`${months[d.getMonth()]} ${d.getDate()}`);
     }
 
