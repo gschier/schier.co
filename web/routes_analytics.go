@@ -74,6 +74,7 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 	for _, view := range views {
 		t, _ := time.Parse(time.RFC3339, view.Time)
 		bucketIndex := int(now.Sub(t) / dateBucketSize)
+		log.Println("BUCKET", bucketIndex, t)
 
 		if bucketIndex > numBuckets {
 			numBuckets = bucketIndex
@@ -145,6 +146,8 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 	if len(topPlatforms) > 6 {
 		topPlatforms = topPlatforms[0:6]
 	}
+
+	log.Println("DONE", pageViews, len(views))
 
 	renderTemplate(w, r, analyticsTemplate(), &pongo2.Context{
 		"pageViews":         pageViews,
