@@ -56,7 +56,7 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 
 	views, err := client.AnalyticsPageViews(&prisma.AnalyticsPageViewsParams{
 		Where: &prisma.AnalyticsPageViewWhereInput{
-			TimeGte: prisma.Str(now.Add(dateRange * -1).Format(time.RFC3339)),
+			TimeGte: prisma.Str(now.Add(-dateRange).Format(time.RFC3339)),
 		},
 	}).Exec(r.Context())
 	if err != nil {
