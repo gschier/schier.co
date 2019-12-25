@@ -74,10 +74,9 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 	for _, view := range views {
 		t, _ := time.Parse(time.RFC3339, view.Time)
 		bucketIndex := int(now.Sub(t) / dateBucketSize)
-		log.Println("BUCKET", bucketIndex, t)
 
-		if bucketIndex > numBuckets {
-			numBuckets = bucketIndex
+		if bucketIndex + 1 > numBuckets {
+			numBuckets = bucketIndex + 1
 		}
 
 		userAgent := ua.Parse(view.UserAgent)
