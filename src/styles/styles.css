@@ -575,6 +575,12 @@ body .CodeMirror .cm-comment {
   @apply inline;
 }
 
+@media only screen and (max-width: 600px) {
+  .hidden-mobile {
+    @apply hidden;
+  }
+}
+
 /************************/
 /* MUST BE APPLIED LAST */
 /************************/

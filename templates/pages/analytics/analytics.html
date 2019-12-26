@@ -6,7 +6,7 @@
 
 {% block content %}
   <div class="content container">
-    <h1>🚀 Website Analytics</h1>
+    <h1 class="hidden-mobile">🚀 Website Analytics</h1>
     <div class="cards">
       <div class="card">
         <div class="card__title">
@@ -27,7 +27,7 @@
         <div class="card__body">{{ avgBounceRate }}</div>
       </div>
     </div>
-    <canvas id="page-views" style="height:15rem"></canvas>
+    <canvas id="page-views" style="height:15rem;"></canvas>
     <hr>
     <div style="display:flex;flex-wrap:wrap;justify-content:space-around">
       <canvas id="top-platforms" style="max-width:15rem;"></canvas>

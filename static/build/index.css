@@ -1427,6 +1427,12 @@ body .CodeMirror .cm-comment {
   display: inline;
 }
 
+@media only screen and (max-width: 600px) {
+  .hidden-mobile {
+    display: none;
+  }
+}
+
 /************************/
 
 /* MUST BE APPLIED LAST */
