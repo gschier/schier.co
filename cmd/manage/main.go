@@ -40,7 +40,6 @@ func sendNewsletter(args []string) {
 	subscribers, err := client.Subscribers(&prisma.SubscribersParams{
 		Where: &prisma.SubscriberWhereInput{
 			Email:        email,
-			Confirmed:    prisma.Bool(true),
 			Unsubscribed: prisma.Bool(false),
 		},
 	}).Exec(context.Background())

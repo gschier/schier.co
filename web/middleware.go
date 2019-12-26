@@ -94,6 +94,7 @@ func CacheHeadersMiddleware(next http.Handler) http.Handler {
 func CSRFMiddleware(next http.Handler) http.Handler {
 	return csrf.Protect(
 		[]byte(os.Getenv("CSRF_KEY")),
+		csrf.MaxAge(3600 * 24 * 7),
 		csrf.Secure(false),
 		csrf.HttpOnly(true),
 		csrf.Path("/"),

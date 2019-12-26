@@ -68,7 +68,6 @@ type Subscriber {
     updatedAt: DateTime! @updatedAt
     email: String! @unique
     name: String!
-    confirmed: Boolean!
     unsubscribed: Boolean!
 }
 

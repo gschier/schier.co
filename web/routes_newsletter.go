@@ -56,27 +56,6 @@ func routeUnsubscribe(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-func routeSubscribeConfirm(w http.ResponseWriter, r *http.Request) {
-	id := mux.Vars(r)["id"]
-
-	client := ctxPrismaClient(r)
-	_, err := client.UpdateSubscriber(prisma.SubscriberUpdateParams{
-		Data: prisma.SubscriberUpdateInput{
-			Confirmed: prisma.Bool(true),
-		},
-		Where: prisma.SubscriberWhereUniqueInput{
-			ID: &id,
-		},
-	}).Exec(r.Context())
-	if err != nil {
-		log.Println("Failed to update subscriber:", err.Error())
-		http.Error(w, "Failed to update subscription", http.StatusInternalServerError)
-		return
-	}
-
-	renderTemplate(w, r, newsletterConfirmedTemplate(), nil)
-}
-
 func routeSubscribe(w http.ResponseWriter, r *http.Request) {
 	_ = r.ParseForm()
 
@@ -93,12 +72,13 @@ func routeSubscribe(w http.ResponseWriter, r *http.Request) {
 	sub, err := client.UpsertSubscriber(prisma.SubscriberUpsertParams{
 		Where: prisma.SubscriberWhereUniqueInput{Email: &email},
 		Create: prisma.SubscriberCreateInput{
-			Email:     email,
-			Name:      name,
-			Confirmed: false,
+			Email:        email,
+			Name:         name,
+			Confirmed:    false,
+			Unsubscribed: false,
 		},
 		Update: prisma.SubscriberUpdateInput{
-			Confirmed: prisma.Bool(false),
+			Unsubscribed: prisma.Bool(false),
 		},
 	}).Exec(r.Context())
 	if err != nil {

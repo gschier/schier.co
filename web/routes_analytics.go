@@ -168,7 +168,6 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 	subscribers, err := client.Subscribers(&prisma.SubscribersParams{
 		Where: &prisma.SubscriberWhereInput{
 			Unsubscribed: prisma.Bool(false),
-			Confirmed:    prisma.Bool(true),
 		},
 	}).Exec(r.Context())
 	if err != nil {

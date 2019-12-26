@@ -29,9 +29,9 @@ func SendNewPostTemplate(post *prisma.BlogPost, sub *prisma.Subscriber) error {
 }
 
 func SendSubscriberTemplate(sub *prisma.Subscriber) error {
-	u := fmt.Sprintf("%s/newsletter/confirm/%s", os.Getenv("BASE_URL"), sub.ID)
+	unsub := fmt.Sprintf("%s/newsletter/unsubscribe/%s", os.Getenv("BASE_URL"), sub.ID)
 	return SendTemplate(templateConfirmSubscription, sub, map[string]interface{}{
-		"confirmation_url": u,
+		"unsubscribe_url": unsub,
 	})
 }
 
