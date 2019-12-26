@@ -549,6 +549,16 @@ body .CodeMirror .cm-comment {
   @apply text-4xl font-thin;
 }
 
+@media only screen and (max-width: 600px) {
+  .cards {
+    @apply flex-wrap;
+  }
+
+  .card__body {
+    @apply text-2xl;
+  }
+}
+
 /**********/
 /* AVATAR */
 /**********/

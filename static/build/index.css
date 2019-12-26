@@ -1392,6 +1392,16 @@ body .CodeMirror .cm-comment {
   font-weight: 200;
 }
 
+@media only screen and (max-width: 600px) {
+  .cards {
+    flex-wrap: wrap;
+  }
+
+  .card__body {
+    font-size: 1.5rem;
+  }
+}
+
 /**********/
 
 /* AVATAR */
