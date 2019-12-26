@@ -113,7 +113,7 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 		topPathCounters[view.Path] += 1
 
 		// Add session stuff
-		latestSessionViews[view.Search] = view
+		latestSessionViews[view.Sess] = view
 	}
 
 	topPaths := make(counters, 0)
