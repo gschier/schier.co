@@ -142,10 +142,10 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 		topPaths = topPaths[0:30]
 	}
 
-	if len(topBrowsers) > 5 {
-		topBrowsers = topBrowsers[0:5]
+	if len(topBrowsers) > 4 {
+		topBrowsers = topBrowsers[0:4]
 		other := counter{Name: "Other"}
-		for _, v := range topBrowsers[5:] {
+		for _, v := range topBrowsers[4:] {
 			other.Count += v.Count
 		}
 
