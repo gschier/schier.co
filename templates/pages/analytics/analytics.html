@@ -119,9 +119,22 @@
       }
     });
 
+    const pieOptions = {
+      aspectRatio: 0.75,
+      tooltips: {
+        callbacks: {
+          label: function (tooltipItem, data) {
+            const rawValue = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
+            const label = data.labels[tooltipItem.index];
+            return ` ${label}: ${(rawValue * 100).toFixed(1)}%`;
+          }
+        }
+      },
+    };
+
     new Chart(document.querySelector('#top-browsers').getContext('2d'), {
       type: 'doughnut',
-      options: { aspectRatio: 0.75 },
+      options: pieOptions,
       data: {
         labels: [{% for e in topBrowsers %}'{{ e.Name }}', {% endfor %}],
         datasets: [{
@@ -134,7 +147,7 @@
 
     new Chart(document.querySelector('#top-platforms').getContext('2d'), {
       type: 'doughnut',
-      options: { aspectRatio: 0.75 },
+      options: pieOptions,
       data: {
         labels: [{% for e in topPlatforms %}'{{ e.Name }}', {% endfor %}],
         datasets: [{
