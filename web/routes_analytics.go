@@ -166,29 +166,6 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-type counter struct {
-	Name  string
-	Count int
-}
-
-type counters []counter
-
-func (c counters) Len() int {
-	return len(c)
-}
-
-func (c counters) Less(i, j int) bool {
-	if c[i].Count == c[j].Count {
-		return c[i].Name < c[j].Name
-	}
-
-	return c[i].Count > c[j].Count
-}
-
-func (c counters) Swap(i, j int) {
-	c[i], c[j] = c[j], c[i]
-}
-
 func routeTrack(w http.ResponseWriter, r *http.Request) {
 	// Don't track admins
 	if ctxGetLoggedIn(r) {
@@ -235,4 +212,27 @@ func routeTrack(w http.ResponseWriter, r *http.Request) {
 	}()
 
 	w.WriteHeader(http.StatusNoContent)
+}
+
+type counter struct {
+	Name  string
+	Count int
+}
+
+type counters []counter
+
+func (c counters) Len() int {
+	return len(c)
+}
+
+func (c counters) Less(i, j int) bool {
+	if c[i].Count == c[j].Count {
+		return c[i].Name < c[j].Name
+	}
+
+	return c[i].Count > c[j].Count
+}
+
+func (c counters) Swap(i, j int) {
+	c[i], c[j] = c[j], c[i]
 }
