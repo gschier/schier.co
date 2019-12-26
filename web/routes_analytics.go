@@ -13,6 +13,7 @@ import (
 	"net/url"
 	"sort"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -123,6 +124,12 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 			if err != nil {
 				continue
 			}
+
+			h := u.Hostname()
+			if strings.HasPrefix(h, "schier.") {
+				continue
+			}
+
 			topRefCounters[u.Hostname()] += 1
 		}
 	}
