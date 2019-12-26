@@ -7,6 +7,7 @@ require (
 	github.com/Depado/bfchroma v1.2.0
 	github.com/alecthomas/chroma v0.6.0
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible // indirect
+	github.com/dlclark/regexp2 v1.1.6
 	github.com/flosch/pongo2 v0.0.0-20190707114632-bbf5a6c351f4
 	github.com/gorilla/csrf v1.6.1
 	github.com/gorilla/feeds v1.1.1

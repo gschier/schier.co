@@ -10,10 +10,26 @@
       <h1>🚀 Website Analytics</h1>
       <div class="meta">
         <span id="live-users">...</span> live users
-        &bull;
-        {{ numSubscribers }} Subscribers
       </div>
     </header>
+    <div class="cards">
+      <div class="card">
+        <div class="card__title">Time on Site</div>
+        <div class="card__body">{{ avgSessionDuration }}</div>
+      </div>
+      <div class="card">
+        <div class="card__title">Pages / Session</div>
+        <div class="card__body">{{ avgPagesPerSession }}</div>
+      </div>
+      <div class="card">
+        <div class="card__title">Bounce Rate</div>
+        <div class="card__body">{{ avgBounceRate }}</div>
+      </div>
+      <div class="card">
+        <div class="card__title">Newsletter</div>
+        <div class="card__body">{{ numSubscribers }}</div>
+      </div>
+    </div>
     <canvas id="page-views" style="height:15rem"></canvas>
     <hr>
     <div style="display:flex;flex-wrap:wrap;justify-content:space-around">

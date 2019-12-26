@@ -3,6 +3,7 @@ package web
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"github.com/flosch/pongo2"
 	"github.com/gorilla/mux"
 	"github.com/gschier/schier.dev/generated/prisma-client"
@@ -60,7 +61,10 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 	dateBucketSize := time.Hour * 24
 	numBuckets := int(dateRange / dateBucketSize)
 
+	// Order from oldest to newest so we can get latest sessions last
+	orderBy := prisma.AnalyticsPageViewOrderByInputTimeAsc
 	views, err := client.AnalyticsPageViews(&prisma.AnalyticsPageViewsParams{
+		OrderBy: &orderBy,
 		Where: &prisma.AnalyticsPageViewWhereInput{
 			TimeGte: prisma.Str(start.Add(-dateRange).Format(time.RFC3339)),
 		},
@@ -76,6 +80,8 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 	pageViewCounters := make(map[int]int)
 	userCounters := make(map[int]map[string]int)
 	sessionCounters := make(map[int]map[string]int)
+
+	latestSessionViews := make(map[string]prisma.AnalyticsPageView)
 
 	for _, view := range views {
 		t, _ := time.Parse(time.RFC3339, view.Time)
@@ -105,6 +111,9 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 
 		// Add paths
 		topPathCounters[view.Path] += 1
+
+		// Add session stuff
+		latestSessionViews[view.Search] = view
 	}
 
 	topPaths := make(counters, 0)
@@ -129,13 +138,13 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 	sort.Sort(topPlatforms)
 	sort.Sort(topBrowsers)
 
-	users := make([]int, numBuckets)
-	sessions := make([]int, numBuckets)
 	pageViews := make([]int, numBuckets)
+	sessions := make([]int, numBuckets)
+	users := make([]int, numBuckets)
 	for i := 0; i < numBuckets; i++ {
 		pageViews[i] = pageViewCounters[numBuckets-i-1]
-		users[i] = len(userCounters[numBuckets-i-1])
 		sessions[i] = len(sessionCounters[numBuckets-i-1])
+		users[i] = len(userCounters[numBuckets-i-1])
 	}
 
 	if len(topPaths) > 30 {
@@ -165,6 +174,20 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+	totalSessionPages := 0.0
+	totalSessionAge := 0.0
+	bouncedSessions := 0.0
+	for _, v := range latestSessionViews {
+		totalSessionAge += float64(v.Age)
+		totalSessionPages += float64(v.Page)
+		if v.Page == 1 {
+			bouncedSessions += 1
+		}
+	}
+	avgSessionDuration := totalSessionAge / float64(len(latestSessionViews))
+	avgBounceRate := bouncedSessions / float64(len(latestSessionViews))
+	avgPagesPerSession := totalSessionPages / float64(len(latestSessionViews))
+
 	subscribers, err := client.Subscribers(&prisma.SubscribersParams{
 		Where: &prisma.SubscriberWhereInput{
 			Unsubscribed: prisma.Bool(false),
@@ -176,16 +199,19 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 	}
 
 	renderTemplate(w, r, analyticsTemplate(), &pongo2.Context{
-		"pageViews":         pageViews,
-		"users":             users,
-		"sessions":          sessions,
-		"topPaths":          topPaths,
-		"topPlatforms":      topPlatforms,
-		"topBrowsers":       topBrowsers,
-		"bucketSizeSeconds": dateBucketSize / time.Second,
-		"numSubscribers":    len(subscribers),
-		"pageTitle":         "Analytics",
-		"pageDescription":   "Public analytics for schier.co",
+		"avgSessionDuration": FormatTime(avgSessionDuration),
+		"avgBounceRate":      fmt.Sprintf("%.0f%%", avgBounceRate),
+		"avgPagesPerSession": fmt.Sprintf("%.0f", avgPagesPerSession),
+		"pageViews":          pageViews,
+		"users":              users,
+		"sessions":           sessions,
+		"topPaths":           topPaths,
+		"topPlatforms":       topPlatforms,
+		"topBrowsers":        topBrowsers,
+		"bucketSizeSeconds":  dateBucketSize / time.Second,
+		"numSubscribers":     len(subscribers),
+		"pageTitle":          "Analytics",
+		"pageDescription":    "Public analytics for schier.co",
 	})
 }
 

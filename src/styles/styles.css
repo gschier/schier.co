@@ -531,6 +531,28 @@ body .CodeMirror .cm-comment {
   @apply text-sm text-gray-600 italic;
 }
 
+/* CARDS */
+
+.cards {
+  @apply flex flex-1 py-6;
+}
+
+.card {
+  @apply border border-dashed border-gray-400 rounded w-full px-4 py-2 ml-4;
+}
+
+.card:first-child {
+  @apply ml-0;
+}
+
+.card__title {
+  @apply text-xs text-gray-500 whitespace-no-wrap;
+}
+
+.card__body {
+  @apply text-4xl font-thin;
+}
+
 /**********/
 /* AVATAR */
 /**********/
