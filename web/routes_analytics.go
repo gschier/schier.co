@@ -160,6 +160,8 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 
 	sort.Sort(topPaths)
 	sort.Sort(topRefs)
+	sort.Sort(topBrowsers)
+	sort.Sort(topPlatforms)
 
 	pageViews := make([]int, numBuckets)
 	sessions := make([]int, numBuckets)
