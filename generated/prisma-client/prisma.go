@@ -70,7 +70,7 @@ func (client *Client) AnalyticsPageView(params AnalyticsPageViewWhereUniqueInput
 		params,
 		[2]string{"AnalyticsPageViewWhereUniqueInput!", "AnalyticsPageView"},
 		"analyticsPageView",
-		[]string{"id", "time", "sess", "user", "userAgent", "path", "search", "referrer", "age"})
+		[]string{"id", "time", "sess", "user", "userAgent", "path", "search", "referrer", "age", "page"})
 
 	return &AnalyticsPageViewExec{ret}
 }
@@ -104,7 +104,7 @@ func (client *Client) AnalyticsPageViews(params *AnalyticsPageViewsParams) *Anal
 		wparams,
 		[3]string{"AnalyticsPageViewWhereInput", "AnalyticsPageViewOrderByInput", "AnalyticsPageView"},
 		"analyticsPageViews",
-		[]string{"id", "time", "sess", "user", "userAgent", "path", "search", "referrer", "age"})
+		[]string{"id", "time", "sess", "user", "userAgent", "path", "search", "referrer", "age", "page"})
 
 	return &AnalyticsPageViewExecArray{ret}
 }
@@ -951,7 +951,7 @@ func (client *Client) CreateAnalyticsPageView(params AnalyticsPageViewCreateInpu
 		params,
 		[2]string{"AnalyticsPageViewCreateInput!", "AnalyticsPageView"},
 		"createAnalyticsPageView",
-		[]string{"id", "time", "sess", "user", "userAgent", "path", "search", "referrer", "age"})
+		[]string{"id", "time", "sess", "user", "userAgent", "path", "search", "referrer", "age", "page"})
 
 	return &AnalyticsPageViewExec{ret}
 }
@@ -969,7 +969,7 @@ func (client *Client) UpdateAnalyticsPageView(params AnalyticsPageViewUpdatePara
 		},
 		[3]string{"AnalyticsPageViewUpdateInput!", "AnalyticsPageViewWhereUniqueInput!", "AnalyticsPageView"},
 		"updateAnalyticsPageView",
-		[]string{"id", "time", "sess", "user", "userAgent", "path", "search", "referrer", "age"})
+		[]string{"id", "time", "sess", "user", "userAgent", "path", "search", "referrer", "age", "page"})
 
 	return &AnalyticsPageViewExec{ret}
 }
@@ -1006,7 +1006,7 @@ func (client *Client) UpsertAnalyticsPageView(params AnalyticsPageViewUpsertPara
 		uparams,
 		[4]string{"AnalyticsPageViewWhereUniqueInput!", "AnalyticsPageViewCreateInput!", "AnalyticsPageViewUpdateInput!", "AnalyticsPageView"},
 		"upsertAnalyticsPageView",
-		[]string{"id", "time", "sess", "user", "userAgent", "path", "search", "referrer", "age"})
+		[]string{"id", "time", "sess", "user", "userAgent", "path", "search", "referrer", "age", "page"})
 
 	return &AnalyticsPageViewExec{ret}
 }
@@ -1016,7 +1016,7 @@ func (client *Client) DeleteAnalyticsPageView(params AnalyticsPageViewWhereUniqu
 		params,
 		[2]string{"AnalyticsPageViewWhereUniqueInput!", "AnalyticsPageView"},
 		"deleteAnalyticsPageView",
-		[]string{"id", "time", "sess", "user", "userAgent", "path", "search", "referrer", "age"})
+		[]string{"id", "time", "sess", "user", "userAgent", "path", "search", "referrer", "age", "page"})
 
 	return &AnalyticsPageViewExec{ret}
 }
@@ -1671,6 +1671,8 @@ const (
 	AnalyticsPageViewOrderByInputReferrerDesc  AnalyticsPageViewOrderByInput = "referrer_DESC"
 	AnalyticsPageViewOrderByInputAgeAsc        AnalyticsPageViewOrderByInput = "age_ASC"
 	AnalyticsPageViewOrderByInputAgeDesc       AnalyticsPageViewOrderByInput = "age_DESC"
+	AnalyticsPageViewOrderByInputPageAsc       AnalyticsPageViewOrderByInput = "page_ASC"
+	AnalyticsPageViewOrderByInputPageDesc      AnalyticsPageViewOrderByInput = "page_DESC"
 )
 
 type UserType string
@@ -1847,6 +1849,7 @@ type AnalyticsPageViewUpdateInput struct {
 	Search    *string `json:"search,omitempty"`
 	Referrer  *string `json:"referrer,omitempty"`
 	Age       *int32  `json:"age,omitempty"`
+	Page      *int32  `json:"page,omitempty"`
 }
 
 type BlogPostWhereUniqueInput struct {
@@ -1874,6 +1877,7 @@ type AnalyticsPageViewUpdateManyMutationInput struct {
 	Search    *string `json:"search,omitempty"`
 	Referrer  *string `json:"referrer,omitempty"`
 	Age       *int32  `json:"age,omitempty"`
+	Page      *int32  `json:"page,omitempty"`
 }
 
 type ProjectWhereUniqueInput struct {
@@ -2219,6 +2223,14 @@ type AnalyticsPageViewWhereInput struct {
 	AgeLte                 *int32                        `json:"age_lte,omitempty"`
 	AgeGt                  *int32                        `json:"age_gt,omitempty"`
 	AgeGte                 *int32                        `json:"age_gte,omitempty"`
+	Page                   *int32                        `json:"page,omitempty"`
+	PageNot                *int32                        `json:"page_not,omitempty"`
+	PageIn                 []int32                       `json:"page_in,omitempty"`
+	PageNotIn              []int32                       `json:"page_not_in,omitempty"`
+	PageLt                 *int32                        `json:"page_lt,omitempty"`
+	PageLte                *int32                        `json:"page_lte,omitempty"`
+	PageGt                 *int32                        `json:"page_gt,omitempty"`
+	PageGte                *int32                        `json:"page_gte,omitempty"`
 	And                    []AnalyticsPageViewWhereInput `json:"AND,omitempty"`
 	Or                     []AnalyticsPageViewWhereInput `json:"OR,omitempty"`
 	Not                    []AnalyticsPageViewWhereInput `json:"NOT,omitempty"`
@@ -2879,6 +2891,7 @@ type AnalyticsPageViewCreateInput struct {
 	Search    string  `json:"search"`
 	Referrer  string  `json:"referrer"`
 	Age       int32   `json:"age"`
+	Page      int32   `json:"page"`
 }
 
 type BlogPostCreateInput struct {
@@ -3286,7 +3299,7 @@ func (instance AnalyticsPageViewExecArray) Exec(ctx context.Context) ([]Analytic
 	return v, err
 }
 
-var AnalyticsPageViewFields = []string{"id", "time", "sess", "user", "userAgent", "path", "search", "referrer", "age"}
+var AnalyticsPageViewFields = []string{"id", "time", "sess", "user", "userAgent", "path", "search", "referrer", "age", "page"}
 
 type AnalyticsPageView struct {
 	ID        string `json:"id"`
@@ -3298,6 +3311,7 @@ type AnalyticsPageView struct {
 	Search    string `json:"search"`
 	Referrer  string `json:"referrer"`
 	Age       int32  `json:"age"`
+	Page      int32  `json:"page"`
 }
 
 type UserConnectionExec struct {
@@ -3394,7 +3408,7 @@ func (instance *AnalyticsPageViewSubscriptionPayloadExec) Node() *AnalyticsPageV
 		nil,
 		[2]string{"", "AnalyticsPageView"},
 		"node",
-		[]string{"id", "time", "sess", "user", "userAgent", "path", "search", "referrer", "age"})
+		[]string{"id", "time", "sess", "user", "userAgent", "path", "search", "referrer", "age", "page"})
 
 	return &AnalyticsPageViewExec{ret}
 }
@@ -3405,7 +3419,7 @@ func (instance *AnalyticsPageViewSubscriptionPayloadExec) PreviousValues() *Anal
 		nil,
 		[2]string{"", "AnalyticsPageViewPreviousValues"},
 		"previousValues",
-		[]string{"id", "time", "sess", "user", "userAgent", "path", "search", "referrer", "age"})
+		[]string{"id", "time", "sess", "user", "userAgent", "path", "search", "referrer", "age", "page"})
 
 	return &AnalyticsPageViewPreviousValuesExec{ret}
 }
@@ -3690,7 +3704,7 @@ func (instance AnalyticsPageViewPreviousValuesExecArray) Exec(ctx context.Contex
 	return v, err
 }
 
-var AnalyticsPageViewPreviousValuesFields = []string{"id", "time", "sess", "user", "userAgent", "path", "search", "referrer", "age"}
+var AnalyticsPageViewPreviousValuesFields = []string{"id", "time", "sess", "user", "userAgent", "path", "search", "referrer", "age", "page"}
 
 type AnalyticsPageViewPreviousValues struct {
 	ID        string `json:"id"`
@@ -3702,6 +3716,7 @@ type AnalyticsPageViewPreviousValues struct {
 	Search    string `json:"search"`
 	Referrer  string `json:"referrer"`
 	Age       int32  `json:"age"`
+	Page      int32  `json:"page"`
 }
 
 type SubscriberExec struct {
@@ -5040,7 +5055,7 @@ func (instance *AnalyticsPageViewEdgeExec) Node() *AnalyticsPageViewExec {
 		nil,
 		[2]string{"", "AnalyticsPageView"},
 		"node",
-		[]string{"id", "time", "sess", "user", "userAgent", "path", "search", "referrer", "age"})
+		[]string{"id", "time", "sess", "user", "userAgent", "path", "search", "referrer", "age", "page"})
 
 	return &AnalyticsPageViewExec{ret}
 }

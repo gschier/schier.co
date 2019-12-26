@@ -142,7 +142,16 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 		topPlatforms = topPlatforms[0:6]
 	}
 
-	log.Println("DONE", pageViews, len(views))
+	subscribers, err := client.Subscribers(&prisma.SubscribersParams{
+		Where: &prisma.SubscriberWhereInput{
+			Unsubscribed: prisma.Bool(false),
+			Confirmed:    prisma.Bool(true),
+		},
+	}).Exec(r.Context())
+	if err != nil {
+		http.Error(w, "Failed to query subscribers", http.StatusInternalServerError)
+		return
+	}
 
 	renderTemplate(w, r, analyticsTemplate(), &pongo2.Context{
 		"pageViews":         pageViews,
@@ -151,6 +160,7 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 		"topPlatforms":      topPlatforms,
 		"topBrowsers":       topBrowsers,
 		"bucketSizeSeconds": dateBucketSize / time.Second,
+		"numSubscribers":    len(subscribers),
 		"pageTitle":         "Analytics",
 		"pageDescription":   "Public analytics for schier.co",
 	})
@@ -202,8 +212,10 @@ func routeTrack(w http.ResponseWriter, r *http.Request) {
 	sess := q.Get("sess")
 	user := q.Get("user")
 	ageStr := q.Get("age")
+	pageStr := q.Get("page")
 
 	age, _ := strconv.Atoi(ageStr)
+	page, _ := strconv.Atoi(pageStr)
 
 	go func() {
 		client := ctxPrismaClient(r)
@@ -215,6 +227,7 @@ func routeTrack(w http.ResponseWriter, r *http.Request) {
 			Sess:      sess,
 			User:      user,
 			Age:       int32(age),
+			Page:      int32(page),
 		}).Exec(context.Background())
 		if err != nil {
 			log.Println("Failed to update analytics", err.Error())

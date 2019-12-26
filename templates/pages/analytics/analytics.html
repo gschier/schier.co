@@ -10,6 +10,8 @@
       <h1>🚀 Website Analytics</h1>
       <div class="meta">
         <span id="live-users">...</span> live users
+        &bull;
+        {{ numSubscribers }} Subscriber
       </div>
     </header>
     <canvas id="page-views" style="height:15rem"></canvas>
@@ -76,7 +78,8 @@
     const days = [];
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     for (let i = 0; i < pageViews.length; i++) {
-      const d = new Date(Date.now() - bucketSize * (pageViews.length - i));
+      const ago = bucketSize * (pageViews.length - i - 1);
+      const d = new Date(Date.now() - ago);
       days.push(`${months[d.getMonth()]} ${d.getDate()}`);
     }
 
