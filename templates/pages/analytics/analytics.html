@@ -74,6 +74,7 @@
     const bucketSize = parseInt(data.getAttribute('data-bucket-size-seconds')) * 1000;
     const pageViews = [{{ pageViews | join:', ' }}];
     const users = [{{ users | join:', ' }}];
+    const sessions = [{{ sessions | join:', ' }}];
 
     const days = [];
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -90,13 +91,19 @@
         datasets: [{
           label: 'Users',
           data: users,
+          backgroundColor: colors.blue,
+          borderWidth: 1,
+          borderColor: '#fff',
+        }, {
+          label: 'Sessions',
+          data: sessions,
           backgroundColor: colors.purple,
           borderWidth: 1,
           borderColor: '#fff',
         }, {
           label: 'Views',
           data: pageViews,
-          backgroundColor: colors.blue,
+          backgroundColor: colors.green,
           borderWidth: 1,
           borderColor: '#fff',
         }],

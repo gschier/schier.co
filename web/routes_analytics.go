@@ -74,6 +74,7 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 	topBrowserCounters := make(map[string]int)
 	pageViewCounters := make(map[int]int)
 	userCounters := make(map[int]map[string]int)
+	sessionCounters := make(map[int]map[string]int)
 
 	for _, view := range views {
 		t, _ := time.Parse(time.RFC3339, view.Time)
@@ -89,17 +90,22 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 			continue
 		}
 
-		// Increment page view
+		// Increment simple counters
 		pageViewCounters[bucketIndex] += 1
+		topPlatformCounters[userAgent.OS] += 1
+		topBrowserCounters[userAgent.Name] += 1
 
-		// Add user ID
+		// Increment users
 		if _, ok := userCounters[bucketIndex]; !ok {
 			userCounters[bucketIndex] = make(map[string]int)
 		}
 		userCounters[bucketIndex][view.User] += 1
 
-		topPlatformCounters[userAgent.OS] += 1
-		topBrowserCounters[userAgent.Name] += 1
+		// Increment sessions
+		if _, ok := sessionCounters[bucketIndex]; !ok {
+			sessionCounters[bucketIndex] = make(map[string]int)
+		}
+		sessionCounters[bucketIndex][view.Sess] += 1
 
 		// Add paths
 		topPathCounters[view.Path] += 1
@@ -107,19 +113,19 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 
 	topPaths := make(counters, 0)
 	for path, count := range topPathCounters {
-		c := counter{Name: path, Count: count}
+		c := counter{Name: path, Count: float64(count)}
 		topPaths = append(topPaths, c)
 	}
 
 	topBrowsers := make(counters, 0)
 	for path, count := range topBrowserCounters {
-		c := counter{Name: path, Count: count}
+		c := counter{Name: path, Count: float64(count) / float64(len(views))}
 		topBrowsers = append(topBrowsers, c)
 	}
 
 	topPlatforms := make(counters, 0)
 	for path, count := range topPlatformCounters {
-		c := counter{Name: path, Count: count}
+		c := counter{Name: path, Count: float64(count) / float64(len(views))}
 		topPlatforms = append(topPlatforms, c)
 	}
 
@@ -128,10 +134,12 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 	sort.Sort(topBrowsers)
 
 	users := make([]int, numBuckets)
+	sessions := make([]int, numBuckets)
 	pageViews := make([]int, numBuckets)
 	for i := 0; i < numBuckets; i++ {
 		pageViews[i] = pageViewCounters[numBuckets-i-1]
 		users[i] = len(userCounters[numBuckets-i-1])
+		sessions[i] = len(sessionCounters[numBuckets-i-1])
 	}
 
 	if len(topPaths) > 30 {
@@ -160,6 +168,7 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 	renderTemplate(w, r, analyticsTemplate(), &pongo2.Context{
 		"pageViews":         pageViews,
 		"users":             users,
+		"sessions":          sessions,
 		"topPaths":          topPaths,
 		"topPlatforms":      topPlatforms,
 		"topBrowsers":       topBrowsers,
@@ -220,7 +229,7 @@ func routeTrack(w http.ResponseWriter, r *http.Request) {
 
 type counter struct {
 	Name  string
-	Count int
+	Count float64
 }
 
 type counters []counter
