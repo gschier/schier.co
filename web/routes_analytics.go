@@ -146,13 +146,16 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 		topPaths = topPaths[0:30]
 	}
 
-	if len(topBrowsers) > 4 {
-		topBrowsers = topBrowsers[0:4]
+	if len(topBrowsers) > 5 {
+		topBrowsers = topBrowsers[0:5]
 		other := counter{Name: "Other"}
-		for _, v := range topBrowsers[4:] {
+		for _, v := range topBrowsers[5:] {
 			other.Count += v.Count
 		}
-		topBrowsers = append(topBrowsers, other)
+
+		if other.Count > 0.01 {
+			topBrowsers = append(topBrowsers, other)
+		}
 	}
 
 	if len(topPlatforms) > 6 {
@@ -161,7 +164,9 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 		for _, v := range topBrowsers[6:] {
 			other.Count += v.Count
 		}
-		topBrowsers = append(topBrowsers, other)
+		if other.Count > 0.01 {
+			topPlatforms = append(topPlatforms, other)
+		}
 	}
 
 	subscribers, err := client.Subscribers(&prisma.SubscribersParams{
