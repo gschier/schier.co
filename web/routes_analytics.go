@@ -194,7 +194,7 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 	avgBounceRate := bouncedSessions / totalSessions
 	avgPagesPerSession := totalSessionPages / totalSessions
 
-	fmt.Println("NUM UNIQUE SESSIONS", len(latestSessionViews))
+	fmt.Println("NUM UNIQUE SESSIONS", totalSessions)
 	fmt.Println("TOTAL SESSION AGE  ", totalSessionAge / 60)
 	fmt.Println("TOTAL SESSION PAGES", totalSessionPages)
 	fmt.Println("TOTAL BOUNCES      ", bouncedSessions)
