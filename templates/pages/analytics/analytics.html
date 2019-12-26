@@ -44,11 +44,9 @@
       {% for p in topRefs %}
         <tr>
           <td>
-            <a href="{{ p.Name }}" target="_blank">
-              <code style="word-break:break-all">
-                {{ p.Name | truncatechars:"70" }}
-              </code>
-            </a>
+            <code style="word-break:break-all">
+              {{ p.Name | truncatechars:"70" }}
+            </code>
           </td>
           <td>{{ p.Count | integer }}</td>
         </tr>
