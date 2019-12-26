@@ -11,14 +11,12 @@ import (
 func NewsletterRoutes(router *mux.Router) {
 	router.HandleFunc("/newsletter", routeNewsletter).Methods(http.MethodGet)
 	router.HandleFunc("/newsletter/thanks", routeThankSubscriber).Methods(http.MethodGet)
-	router.HandleFunc("/newsletter/confirm/{id}", routeSubscribeConfirm).Methods(http.MethodGet)
 	router.HandleFunc("/newsletter/unsubscribe/{id}", routeUnsubscribe).Methods(http.MethodGet)
 	router.HandleFunc("/forms/newsletter/subscribe", routeSubscribe).Methods(http.MethodPost)
 }
 
 var newsletterTemplate = pageTemplate("page/newsletter.html")
 var newsletterThanksTemplate = pageTemplate("page/thanks.html")
-var newsletterConfirmedTemplate = pageTemplate("page/confirmed.html")
 var newsletterUnsubscribeTemplate = pageTemplate("page/unsubscribe.html")
 
 func routeNewsletter(w http.ResponseWriter, r *http.Request) {
@@ -74,7 +72,6 @@ func routeSubscribe(w http.ResponseWriter, r *http.Request) {
 		Create: prisma.SubscriberCreateInput{
 			Email:        email,
 			Name:         name,
-			Confirmed:    false,
 			Unsubscribed: false,
 		},
 		Update: prisma.SubscriberUpdateInput{
