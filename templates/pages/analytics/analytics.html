@@ -9,22 +9,30 @@
     <h1 class="hidden-mobile">🚀 Website Analytics</h1>
     <div class="cards">
       <div class="card">
-        <div class="card__title">
-          Real-Time
+        <div class="card__inner">
+          <div class="card__title">
+            Real-Time
+          </div>
+          <div class="card__body" id="live-users">0</div>
         </div>
-        <div class="card__body" id="live-users">0</div>
       </div>
       <div class="card">
-        <div class="card__title">Time / Sess</div>
-        <div class="card__body">{{ avgSessionDuration }}</div>
+        <div class="card__inner">
+          <div class="card__title">Time / Sess</div>
+          <div class="card__body">{{ avgSessionDuration }}</div>
+        </div>
       </div>
       <div class="card">
-        <div class="card__title">Pages / Sess</div>
-        <div class="card__body">{{ avgPagesPerSession }}</div>
+        <div class="card__inner">
+          <div class="card__title">Pages / Sess</div>
+          <div class="card__body">{{ avgPagesPerSession }}</div>
+        </div>
       </div>
       <div class="card">
-        <div class="card__title">Bounce Rate</div>
-        <div class="card__body">{{ avgBounceRate }}</div>
+        <div class="card__inner">
+          <div class="card__title">Bounce Rate</div>
+          <div class="card__body">{{ avgBounceRate }}</div>
+        </div>
       </div>
     </div>
     <canvas id="page-views" style="height:15rem;"></canvas>
