@@ -534,15 +534,11 @@ body .CodeMirror .cm-comment {
 /* CARDS */
 
 .cards {
-  @apply flex flex-1 py-6;
+  @apply flex flex-1;
 }
 
 .card {
-  @apply border border-dashed border-gray-400 rounded w-full px-4 py-2 ml-4;
-}
-
-.card:first-child {
-  @apply ml-0;
+  @apply border border-dashed border-gray-400 w-full rounded px-4 py-2 mx-2 mt-4;
 }
 
 .card__title {
