@@ -51,7 +51,7 @@ func routeProjects(w http.ResponseWriter, r *http.Request) {
 	}
 
 	renderTemplate(w, r, projectsTemplate(), &pongo2.Context{
-		"projects":       projects,
+		"projects": projects,
 	})
 }
 
@@ -78,16 +78,7 @@ func routeHome(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	blogPostsOrderBy := prisma.BlogPostOrderByInputDateDesc
-	blogPosts, err := client.BlogPosts(&prisma.BlogPostsParams{
-		Where: &prisma.BlogPostWhereInput{
-			Published: prisma.Bool(true),
-			DateGt:    prisma.Str("2017-01-01"),
-		},
-		First:   prisma.Int32(5),
-		OrderBy: &blogPostsOrderBy,
-	},
-	).Exec(r.Context())
+	blogPosts, err := client.BlogPosts(RecentBlogPosts(5)).Exec(r.Context())
 	if err != nil {
 		log.Println("Failed to fetch blog posts: " + err.Error())
 		http.Error(w, "Failed to fetch blog posts", http.StatusInternalServerError)

@@ -16,15 +16,33 @@
 
   {% include './blog_post_tag.html' with tags=blogPost.Tags %}
 
-  <hr class="hr--spaced">
-  <footer class="blog-post-footer">
-    <div class="blog-post-footer__inner">
-      <p>
-        <strong>Hey there, I'm Greg! 🇨🇦🌲👨🏼‍💻</strong> Interested in more stuff like this?
-        Feel free to subscribe to my newsletter.
-      </p>
+  <footer>
+    <hr class="hr--spaced">
+    <div class="blog-post-footer">
+      <div class="blog-post-footer__inner">
+        <p>
+          <strong>Hey there, I'm Greg! 🇨🇦🌲👨🏼‍💻</strong> Interested in more stuff like this?
+          Feel free to subscribe to my newsletter.
+        </p>
 
-      {% include './subscription-form.html' %}
+        {% include './subscription-form.html' %}
+      </div>
+    </div>
+
+    <div class="content">
+      <hr class="hr--spaced">
+      <p>
+        Here are some things I've written about recently that you may enjoy 🙂
+      </p>
+      <ul>
+        {% for post in recentBlogPosts %}
+          {% if post.ID != blogPost.ID %}
+            <li>
+              <a href="/blog/{{ post.Slug }}">{{ post.Title }}</a>
+            </li>
+          {% endif %}
+        {% endfor %}
+      </ul>
     </div>
   </footer>
 </article>

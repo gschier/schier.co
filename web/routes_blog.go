@@ -282,7 +282,7 @@ func routeBlogPost(w http.ResponseWriter, r *http.Request) {
 	blogPostWhere := &prisma.BlogPostWhereInput{Slug: &slug}
 
 	// Fetch post
-	blogPosts, err := client.BlogPosts(
+	oneBlogPosts, err := client.BlogPosts(
 		&prisma.BlogPostsParams{Where: blogPostWhere},
 	).Exec(r.Context())
 	if err != nil {
@@ -290,12 +290,19 @@ func routeBlogPost(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Failed to get blog post", http.StatusInternalServerError)
 		return
 	}
-	if len(blogPosts) == 0 {
+	if len(oneBlogPosts) == 0 {
 		routeNotFound(w, r)
 		return
 	}
 
-	post := blogPosts[0]
+	post := oneBlogPosts[0]
+
+	recentBlogPosts, err := client.BlogPosts(RecentBlogPosts(5)).Exec(r.Context())
+	if err != nil {
+		log.Println("Failed to fetch recent blog posts: " + err.Error())
+		http.Error(w, "Failed to fetch recent blog posts", http.StatusInternalServerError)
+		return
+	}
 
 	// Render template
 	renderTemplate(w, r, blogPostTemplate(), &pongo2.Context{
@@ -303,6 +310,7 @@ func routeBlogPost(w http.ResponseWriter, r *http.Request) {
 		"pageImage":       post.Image,
 		"pageDescription": Summary(post.Content),
 		"blogPost":        post,
+		"recentBlogPosts": recentBlogPosts,
 	})
 
 	go func() {
