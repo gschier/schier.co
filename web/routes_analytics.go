@@ -10,6 +10,7 @@ import (
 	"github.com/mileusna/useragent"
 	"log"
 	"net/http"
+	"net/url"
 	"sort"
 	"strconv"
 	"time"
@@ -74,6 +75,7 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	topRefCounters := make(map[string]int)
 	topPathCounters := make(map[string]int)
 	topPlatformCounters := make(map[string]int)
 	topBrowserCounters := make(map[string]int)
@@ -114,12 +116,27 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 
 		// Add session stuff
 		latestSessionViews[view.Sess] = view
+
+		// Increment ref
+		if view.Referrer != "" {
+			u, err := url.Parse(view.Referrer)
+			if err != nil {
+				continue
+			}
+			topRefCounters[u.Hostname()] += 1
+		}
 	}
 
 	topPaths := make(counters, 0)
 	for path, count := range topPathCounters {
 		c := counter{Name: path, Count: float64(count)}
 		topPaths = append(topPaths, c)
+	}
+
+	topRefs := make(counters, 0)
+	for path, count := range topRefCounters {
+		c := counter{Name: path, Count: float64(count)}
+		topRefs = append(topRefs, c)
 	}
 
 	topBrowsers := make(counters, 0)
@@ -135,8 +152,7 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 	}
 
 	sort.Sort(topPaths)
-	sort.Sort(topPlatforms)
-	sort.Sort(topBrowsers)
+	sort.Sort(topRefs)
 
 	pageViews := make([]int, numBuckets)
 	sessions := make([]int, numBuckets)
@@ -147,8 +163,12 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 		users[i] = len(userCounters[numBuckets-i-1])
 	}
 
-	if len(topPaths) > 30 {
-		topPaths = topPaths[0:30]
+	if len(topPaths) > 20 {
+		topPaths = topPaths[0:20]
+	}
+
+	if len(topRefs) > 20 {
+		topRefs = topRefs[0:20]
 	}
 
 	if len(topBrowsers) > 4 {
@@ -206,12 +226,13 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 
 	renderTemplate(w, r, analyticsTemplate(), &pongo2.Context{
 		"avgSessionDuration": FormatTime(avgSessionDuration),
-		"avgBounceRate":      fmt.Sprintf("%.0f%%", avgBounceRate * 100),
+		"avgBounceRate":      fmt.Sprintf("%.0f%%", avgBounceRate*100),
 		"avgPagesPerSession": fmt.Sprintf("%.1f", avgPagesPerSession),
 		"pageViews":          pageViews,
 		"users":              users,
 		"sessions":           sessions,
 		"topPaths":           topPaths,
+		"topRefs":            topRefs,
 		"topPlatforms":       topPlatforms,
 		"topBrowsers":        topBrowsers,
 		"bucketSizeSeconds":  dateBucketSize / time.Second,

@@ -36,6 +36,28 @@
     <table>
       <thead>
       <tr>
+        <th>Referrer</th>
+        <th>Views</th>
+      </tr>
+      </thead>
+      <tbody>
+      {% for p in topRefs %}
+        <tr>
+          <td>
+            <a href="{{ p.Name }}" target="_blank">
+              <code>
+                {{ p.Name | truncatechars:"60" }}
+              </code>
+            </a>
+          </td>
+          <td>{{ p.Count | integer }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    <table>
+      <thead>
+      <tr>
         <th>Page</th>
         <th>Views</th>
       </tr>
