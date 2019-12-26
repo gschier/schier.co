@@ -11,14 +11,15 @@ import (
 	"net/http"
 	"sort"
 	"strconv"
-	"strings"
 	"time"
 )
 
 func AnalyticsRoutes(router *mux.Router) {
 	router.HandleFunc("/t", routeTrack).Methods(http.MethodGet)
-	router.HandleFunc("/analytics", routeAnalytics).Methods(http.MethodGet)
 	router.HandleFunc("/analytics/live", routeAnalyticsLive).Methods(http.MethodGet)
+
+	router.HandleFunc("/open", routeAnalytics).Methods(http.MethodGet)
+	router.Handle("/analytics", http.RedirectHandler("/foo", http.StatusSeeOther)).Methods(http.MethodGet)
 }
 
 var analyticsTemplate = pageTemplate("analytics/analytics.html")
@@ -82,11 +83,6 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 
 		userAgent := ua.Parse(view.UserAgent)
 		if userAgent.Bot {
-			continue
-		}
-
-		// Skip this one because it's weird
-		if strings.HasPrefix(view.Path, "/analytics") {
 			continue
 		}
 
