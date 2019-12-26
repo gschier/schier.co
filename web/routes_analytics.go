@@ -176,21 +176,23 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 
 	totalSessionPages := 0.0
 	totalSessionAge := 0.0
+	totalSessions := 0.0
 	bouncedSessions := 0.0
 	for _, v := range latestSessionViews {
 		if v.Page == 0 {
 			continue
 		}
 
+		totalSessions += 1
 		totalSessionAge += float64(v.Age)
 		totalSessionPages += float64(v.Page)
 		if v.Page == 1 {
 			bouncedSessions += 1
 		}
 	}
-	avgSessionDuration := totalSessionAge / float64(len(latestSessionViews))
-	avgBounceRate := bouncedSessions / float64(len(latestSessionViews))
-	avgPagesPerSession := totalSessionPages / float64(len(latestSessionViews))
+	avgSessionDuration := totalSessionAge / totalSessions
+	avgBounceRate := bouncedSessions / totalSessions
+	avgPagesPerSession := totalSessionPages / totalSessions
 
 	fmt.Println("NUM UNIQUE SESSIONS", len(latestSessionViews))
 	fmt.Println("TOTAL SESSION AGE  ", totalSessionAge / 60)
