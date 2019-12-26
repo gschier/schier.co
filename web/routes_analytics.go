@@ -26,6 +26,7 @@ var analyticsTemplate = pageTemplate("analytics/analytics.html")
 func routeAnalyticsLive(w http.ResponseWriter, r *http.Request) {
 	client := ctxPrismaClient(r)
 	now := time.Now()
+
 	fiveMinutesAgo := now.Add(-time.Minute * 5).Format(time.RFC3339)
 	views, err := client.AnalyticsPageViews(&prisma.AnalyticsPageViewsParams{
 		Where: &prisma.AnalyticsPageViewWhereInput{
@@ -51,13 +52,16 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 	client := ctxPrismaClient(r)
 
 	now := time.Now()
+	start := time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, now.Location())
+	start = start.Add(time.Hour * 24)
+
 	dateRange := time.Hour * 24 * 7
 	dateBucketSize := time.Hour * 24
 	numBuckets := int(dateRange / dateBucketSize)
 
 	views, err := client.AnalyticsPageViews(&prisma.AnalyticsPageViewsParams{
 		Where: &prisma.AnalyticsPageViewWhereInput{
-			TimeGte: prisma.Str(now.Add(-dateRange).Format(time.RFC3339)),
+			TimeGte: prisma.Str(start.Add(-dateRange).Format(time.RFC3339)),
 		},
 	}).Exec(r.Context())
 	if err != nil {
@@ -73,7 +77,7 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 
 	for _, view := range views {
 		t, _ := time.Parse(time.RFC3339, view.Time)
-		bucketIndex := int(now.Sub(t) / dateBucketSize)
+		bucketIndex := int(start.Sub(t) / dateBucketSize)
 
 		userAgent := ua.Parse(view.UserAgent)
 		if userAgent.Bot {
