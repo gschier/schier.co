@@ -194,11 +194,6 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 	avgBounceRate := bouncedSessions / totalSessions
 	avgPagesPerSession := totalSessionPages / totalSessions
 
-	fmt.Println("NUM UNIQUE SESSIONS", totalSessions)
-	fmt.Println("TOTAL SESSION AGE  ", totalSessionAge / 60)
-	fmt.Println("TOTAL SESSION PAGES", totalSessionPages)
-	fmt.Println("TOTAL BOUNCES      ", bouncedSessions)
-
 	subscribers, err := client.Subscribers(&prisma.SubscribersParams{
 		Where: &prisma.SubscriberWhereInput{
 			Unsubscribed: prisma.Bool(false),
@@ -211,8 +206,8 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 
 	renderTemplate(w, r, analyticsTemplate(), &pongo2.Context{
 		"avgSessionDuration": FormatTime(avgSessionDuration),
-		"avgBounceRate":      fmt.Sprintf("%.0f%%", avgBounceRate),
-		"avgPagesPerSession": fmt.Sprintf("%.0f", avgPagesPerSession),
+		"avgBounceRate":      fmt.Sprintf("%.0f%%", avgBounceRate * 100),
+		"avgPagesPerSession": fmt.Sprintf("%.1f", avgPagesPerSession),
 		"pageViews":          pageViews,
 		"users":              users,
 		"sessions":           sessions,
