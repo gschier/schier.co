@@ -178,6 +178,10 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 	totalSessionAge := 0.0
 	bouncedSessions := 0.0
 	for _, v := range latestSessionViews {
+		if v.Page == 0 {
+			continue
+		}
+
 		totalSessionAge += float64(v.Age)
 		totalSessionPages += float64(v.Page)
 		if v.Page == 1 {
@@ -188,9 +192,10 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 	avgBounceRate := bouncedSessions / float64(len(latestSessionViews))
 	avgPagesPerSession := totalSessionPages / float64(len(latestSessionViews))
 
-	log.Println("NUM UNIQUE SESSIONS", len(latestSessionViews))
-	log.Println("TOTAL SESSION AGE  ", totalSessionAge)
-	log.Println("TOTAL SESSION PAGES", totalSessionPages)
+	fmt.Println("NUM UNIQUE SESSIONS", len(latestSessionViews))
+	fmt.Println("TOTAL SESSION AGE  ", totalSessionAge / 60)
+	fmt.Println("TOTAL SESSION PAGES", totalSessionPages)
+	fmt.Println("TOTAL BOUNCES      ", bouncedSessions)
 
 	subscribers, err := client.Subscribers(&prisma.SubscribersParams{
 		Where: &prisma.SubscriberWhereInput{
