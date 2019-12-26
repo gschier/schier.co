@@ -176,8 +176,8 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 		topPaths = topPaths[0:20]
 	}
 
-	if len(topRefs) > 20 {
-		topRefs = topRefs[0:20]
+	if len(topRefs) > 10 {
+		topRefs = topRefs[0:10]
 	}
 
 	if len(topBrowsers) > 4 {
