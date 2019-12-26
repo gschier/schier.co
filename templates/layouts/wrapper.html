@@ -98,7 +98,7 @@
   sess.id = sess.id || id(10);
   sess.user = sess.user || id(10);
   sess.start = sess.start || Date.now();
-  sess.pages = sess.pages + 1 || 1;
+  sess.pages = (sess.pages || 0) + 1;
 
   // Always set last visited
   sess.last = Date.now();
