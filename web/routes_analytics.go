@@ -48,7 +48,9 @@ func routeAnalyticsLive(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	j, _ := json.Marshal(struct{ Live int `json:"count"` }{Live: len(userMap)})
+	j, _ := json.Marshal(struct {
+		Live int `json:"count"`
+	}{Live: len(userMap)})
 	_, _ = w.Write(j)
 }
 
@@ -128,6 +130,22 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 			h := u.Hostname()
 			if strings.HasPrefix(h, "schier.") {
 				continue
+			}
+
+			if strings.Contains(h, "google.") || strings.Contains(h, "googleapis.") {
+				h = "Google"
+			}
+
+			if strings.HasSuffix(h, "bing.com") {
+				h = "Bing"
+			}
+
+			if h == "t.co" {
+				h = "Twitter"
+			}
+
+			if h == "duckduckgo.com" {
+				h = "DuckDuckGo"
 			}
 
 			topRefCounters[u.Hostname()] += 1

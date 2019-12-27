@@ -91,7 +91,7 @@
       const data = await res.json();
       el.innerHTML = data.count;
     };
-    setInterval(next, 5000);
+    setInterval(next, 1000 * 10);
     next();
   </script>
   <div id="data" data-bucket-size-seconds="{{ bucketSizeSeconds }}"></div>
@@ -154,8 +154,8 @@
               maxTicksLimit: 7,
             }
           }]
-        }
-      }
+        },
+      },
     });
 
     const pieOptions = {
