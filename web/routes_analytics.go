@@ -55,7 +55,7 @@ func routeAnalyticsLive(w http.ResponseWriter, r *http.Request) {
 func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 	client := ctxPrismaClient(r)
 
-	now := time.Now()
+	now := time.Now().UTC()
 	start := time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, now.Location())
 	start = start.Add(time.Hour * 24)
 
