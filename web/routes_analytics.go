@@ -148,7 +148,7 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 				h = "DuckDuckGo"
 			}
 
-			topRefCounters[u.Hostname()] += 1
+			topRefCounters[h] += 1
 		}
 	}
 
