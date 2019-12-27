@@ -133,19 +133,19 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 			}
 
 			if strings.Contains(h, "google.") || strings.Contains(h, "googleapis.") {
-				h = "Google"
+				h = "Google 🔍"
 			}
 
 			if strings.HasSuffix(h, "bing.com") {
-				h = "Bing"
+				h = "Bing 🔍"
+			}
+
+			if h == "duckduckgo.com" {
+				h = "DuckDuckGo 🔍"
 			}
 
 			if h == "t.co" {
 				h = "Twitter"
-			}
-
-			if h == "duckduckgo.com" {
-				h = "DuckDuckGo"
 			}
 
 			topRefCounters[h] += 1
