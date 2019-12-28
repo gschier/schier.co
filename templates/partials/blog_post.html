@@ -17,7 +17,11 @@
   {% include './blog_post_tag.html' with tags=blogPost.Tags %}
 
   <footer>
+
     <hr class="hr--spaced">
+
+    <h2>Recent Writing ✍🏻</h2>
+    {% include './recent-posts.html' with blogPosts=recentBlogPosts %}
     {% include './full-subscription-form.html' %}
   </footer>
 </article>

@@ -26,19 +26,7 @@
       <p>This year, I'm trying to write at least once a week. Here are some of the things I've posted recently
         on my <a href="/blog">Blog</a>.</p>
     </div>
-    <div class="cards cards--3">
-      {% for blogPost in blogPosts %}
-        <div class="card">
-          <div class="card__inner">
-            {% include '../../partials/blog_post_meta.html' %}
-            <p class="card__body">{{ blogPost.Title }}</p>
-            <small>
-              <a href="/blog/{{ blogPost.Slug }}">Read Post &raquo;</a>
-            </small>
-          </div>
-        </div>
-      {% endfor %}
-    </div>
+    {% include '../../partials/recent-posts.html' %}
     <br>
 
     {% include '../../partials/full-subscription-form.html' with wording=2 %}
