@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"math"
 	"net/http"
+	"regexp"
 	"strings"
 )
 
@@ -45,17 +46,26 @@ func CapitalizeTitle(title string) string {
 		"nor": 1,
 	}
 
+	wordCharRegexp := regexp.MustCompile(`\w`)
 	words := strings.Fields(title)
 	for i, w := range words {
 		wLower := strings.ToLower(w)
 		if _, shouldBeLower := lowerWords[wLower]; shouldBeLower {
 			words[i] = wLower
-		} else if len(wLower) == 1 {
-			// This is more robust when working with emoji
-			words[i] = strings.ToUpper(wLower)
-		} else {
-			words[i] = strings.ToTitle(wLower[0:1]) + wLower[1:]
+			continue
 		}
+
+
+		first := w[0:1]
+		rest := w[1:]
+
+		// We need to check if we're upper-casing a word character because
+		// `ToTitle()` can mangle things like emoji
+		if wordCharRegexp.Match([]byte(first)) {
+			first = strings.ToTitle(first)
+		}
+
+		words[i] = first + rest
 	}
 
 	return strings.Join(words, " ")

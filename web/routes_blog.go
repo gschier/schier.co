@@ -2,6 +2,7 @@ package web
 
 import (
 	"context"
+	"fmt"
 	"github.com/flosch/pongo2"
 	"github.com/gorilla/feeds"
 	"github.com/gorilla/mux"
@@ -217,7 +218,9 @@ func routeBlogPostCreateOrUpdate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Force title capitalization
+	fmt.Println("TITLE 1", title)
 	title = CapitalizeTitle(title)
+	fmt.Println("TITLE 2", title)
 
 	// BlackFriday doesn't like Windows line endings
 	content = strings.Replace(content, "\r\n", "\n", -1)
