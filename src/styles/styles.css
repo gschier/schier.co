@@ -534,16 +534,19 @@ body .CodeMirror .cm-comment {
 }
 
 .cards--2,
-.cards--3 {
+.cards--3,
+.cards--flexy {
   @apply flex-wrap;
 }
 
 .cards--2 .card {
-  width: 50%;
+  flex-grow: 1;
 }
 
-.cards--3 .card {
-  width: 33.33%;
+.cards--flexy .card {
+  flex-grow: 1;
+  flex-basis: auto;
+  width: auto;
 }
 
 .card {
