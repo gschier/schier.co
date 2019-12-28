@@ -227,10 +227,6 @@ form input:invalid {
   @apply text-gray-100 border-0 border-b my-8;
 }
 
-.content .hr--spaced {
-  @apply my-16;
-}
-
 .content table th {
   @apply w-full;
 }
@@ -534,7 +530,7 @@ body .CodeMirror .cm-comment {
 /* CARDS */
 
 .cards {
-  @apply flex flex-1;
+  @apply flex flex-1 -mx-2;
 }
 
 .card {
@@ -545,11 +541,18 @@ body .CodeMirror .cm-comment {
   @apply border border-dashed border-gray-400 rounded px-4 py-2 mt-4;
 }
 
+.card__inner > * {
+  @apply m-0 mb-2 p-0;
+}
+
 .card__title {
   @apply text-xs text-gray-500 whitespace-no-wrap;
 }
 
 .card__body {
+}
+
+.card__body--big {
   @apply text-3xl font-thin;
 }
 
@@ -567,17 +570,42 @@ body .CodeMirror .cm-comment {
   }
 }
 
-/**********/
-/* AVATAR */
-/**********/
+/*************/
+/* HOME HERO */
+/*************/
 
-.avatar {
-  @apply rounded-full mx-auto my-12 block;
+.home-hero {
+  @apply flex items-center justify-between;
+}
+
+.home-hero__avatar {
+  @apply pr-8;
+  max-width: 20rem;
+  min-width: 8rem;
+}
+
+.home-hero__avatar img {
+  @apply rounded-full w-full block mx-auto;
+}
+
+@media only screen and (max-width: 600px) {
+  .home-hero {
+    @apply flex-wrap;
+  }
+
+  .home-hero__avatar {
+    @apply mx-auto;
+    max-width: 12rem;
+  }
 }
 
 /***********/
 /* HELPERS */
 /***********/
+
+.hr--spaced {
+  @apply my-12;
+}
 
 .inline-form {
   @apply inline;

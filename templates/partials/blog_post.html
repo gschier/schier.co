@@ -18,37 +18,6 @@
 
   <footer>
     <hr class="hr--spaced">
-    <div class="blog-post-footer">
-      <div class="blog-post-footer__inner">
-        <p>
-          <strong>Hey there, I'm Greg! 🇨🇦🌲👨🏼‍💻</strong> Interested in more stuff like this?
-          Feel free to subscribe to my newsletter.
-        </p>
-
-        {% include './subscription-form.html' %}
-      </div>
-    </div>
-
-    <div class="content">
-      <hr class="hr--spaced">
-      <p>
-        Here are some other posts you may enjoy 🙂
-      </p>
-      <ul>
-        {% for post in recentBlogPosts %}
-          {% if post.ID != blogPost.ID %}
-            <li>
-              <a href="/blog/{{ post.Slug }}">{{ post.Title }}</a>
-            </li>
-          {% endif %}
-        {% endfor %}
-      </ul>
-      <p>
-        <br>
-        <small>
-          <a href="/blog">&laquo; All Blog Posts</a>
-        </small>
-      </p>
-    </div>
+    {% include './full-subscription-form.html' %}
   </footer>
 </article>

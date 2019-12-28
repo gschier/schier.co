@@ -15,22 +15,14 @@
           GitHub
         </a>
         |
-        <a href="/newsletter">
-          Newsletter
-        </a>
-        |
-        <a href="{{ rssUrl }}" type="application/rss+xml" target="_blank">
-          RSS
-        </a>
-        |
         <a href="/open">
-          Open
+          Analytics
         </a>
         <p>
           {% if loggedIn %}
             {{ user.Email }} <a href="/logout">Logout</a>
           {% else %}
-            Thanks for visiting!
+            &copy; Greg Schier
           {% endif %}
         </p>
       </div>

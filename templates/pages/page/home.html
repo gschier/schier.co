@@ -1,69 +1,44 @@
 {% extends '../../layouts/base.html' %}
 
 {% block content %}
-  <div class="container content">
-    <h1>Hey there, I'm Greg!</h1>
-    <p>
-      I'm an independent software developer from Canada 🇨🇦. Web development is my primary focus,
-      but I also like to dabble with mobile apps, games, and design. Check out some of the
-      <strong><a href="/projects">Projects I'm working on 🧰</a></strong>
-    </p>
-    <p>
-      The best way to reach out to me is on Twitter <a href="https://twitter.com/GregorySchier" rel="noopener">
-      @GregorySchier</a>
-    </p>
-    <img
-            src="{{ staticUrl }}/build/images/me.jpg"
-            class="avatar"
-            alt="Greg Schier headshot"
-            style="height:200px;box-shadow:1px 1px 0.7rem rgba(0,0,0,0.2)"
-    />
+  <div class="container">
+    <div class="home-hero">
+      <div class="home-hero__avatar">
+        <img src="{{ staticUrl }}/build/images/me.jpg" alt="Greg Schier headshot"/>
+      </div>
+      <div class="home-hero__bio content">
+        <h1>Hey there, I'm Greg!</h1>
+        <p>
+          I'm a software dev in Montréal 🇨🇦. I'm best-known for creating
+          <a href="https://insomnia.rest">Insomnia</a> but also have
+          <a href="/projects">many projects</a> in the works.
+        </p>
+        <p>
+          Reach me <a href="https://twitter.com/GregorySchier" rel="noopener">@GregorySchier</a>
+        </p>
+      </div>
+    </div>
 
-    <h2>Recent Writing ✍🏻</h2>
-    <p>Here are some things I've written about recently on the <a href="/blog">Blog</a>.</p>
-    <ul>
-      {% for post in blogPosts %}
-        <li>
-          <a href="/blog/{{ post.Slug }}">{{ post.Title }}</a>
-        </li>
+    <hr class="hr--spaced">
+
+    <div class="content">
+      <h2>Recent Writing ✍🏻</h2>
+      <p>Here are some things I've written about recently on the <a href="/blog">Blog</a>.</p>
+    </div>
+    <div class="cards">
+      {% for blogPost in blogPosts %}
+        <div class="card">
+          <div class="card__inner">
+            {% include '../../partials/blog_post_meta.html' %}
+            <p class="card__body">{{ blogPost.Title }}</p>
+            <small>
+              <a href="/blog/{{ blogPost.Slug }}">Read Post &raquo;</a>
+            </small>
+          </div>
+        </div>
       {% endfor %}
-    </ul>
+    </div>
 
-    <hr>
-
-    <h2>Favorite Books 📚</h2>
-    <p>
-      I read mostly non-fiction books as a way to learn new things.
-      Here is my top-10 list.
-    </p>
-    <ol>
-      {% for book in books %}
-        <li>
-          {% if book.Link %}
-            <a href="{{ book.Link }}">
-              {{ book.Title }} ({{ book.Author }})
-            </a>
-          {% else %}
-            {{ book.Title }} ({{ book.Author }})
-          {% endif %}
-        </li>
-      {% endfor %}
-    </ol>
-
-    <hr>
-
-    <h2>Favorite Things 🌟</h2>
-
-    <p>Here are a few of the things that I can't live without.</p>
-
-    <ul>
-      {% for thing in favoriteThings %}
-        <li>
-          <a href="{{ thing.Link }}">
-            {{ thing.Name }}
-          </a> – {{ thing.Description }}
-        </li>
-      {% endfor %}
-    </ul>
+    {% include '../../partials/full-subscription-form.html' with wording=2 %}
   </div>
 {% endblock %}

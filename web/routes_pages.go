@@ -12,6 +12,7 @@ import (
 func PagesRoutes(router *mux.Router) {
 	router.HandleFunc("/", routeHome).Methods(http.MethodGet)
 	router.HandleFunc("/projects", routeProjects).Methods(http.MethodGet)
+	router.HandleFunc("/about", routeAbout).Methods(http.MethodGet)
 	router.HandleFunc("/robots.txt", routeRobotsTxt).Methods(http.MethodGet)
 }
 
@@ -27,6 +28,7 @@ Disallow: *
 `)
 
 var homeTemplate = pageTemplate("page/home.html")
+var aboutTemplate = pageTemplate("page/about.html")
 var projectsTemplate = pageTemplate("page/projects.html")
 
 func routeRobotsTxt(w http.ResponseWriter, r *http.Request) {
@@ -56,6 +58,20 @@ func routeProjects(w http.ResponseWriter, r *http.Request) {
 }
 
 func routeHome(w http.ResponseWriter, r *http.Request) {
+	client := ctxPrismaClient(r)
+	blogPosts, err := client.BlogPosts(RecentBlogPosts(5)).Exec(r.Context())
+	if err != nil {
+		log.Println("Failed to fetch blog posts: " + err.Error())
+		http.Error(w, "Failed to fetch blog posts", http.StatusInternalServerError)
+		return
+	}
+
+	renderTemplate(w, r, homeTemplate(), &pongo2.Context{
+		"blogPosts": blogPosts,
+	})
+}
+
+func routeAbout(w http.ResponseWriter, r *http.Request) {
 	client := ctxPrismaClient(r)
 
 	projectOrderBy := prisma.ProjectOrderByInputPriorityAsc
@@ -96,7 +112,8 @@ func routeHome(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	renderTemplate(w, r, homeTemplate(), &pongo2.Context{
+	renderTemplate(w, r, aboutTemplate(), &pongo2.Context{
+		"pageTitle":      "About Me",
 		"favoriteThings": favoriteThings,
 		"projects":       projects,
 		"blogPosts":      blogPosts,
