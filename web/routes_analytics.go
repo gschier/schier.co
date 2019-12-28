@@ -198,27 +198,12 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 		topRefs = topRefs[0:10]
 	}
 
-	if len(topBrowsers) > 4 {
-		topBrowsers = topBrowsers[0:4]
-		other := counter{Name: "Other"}
-		for _, v := range topBrowsers[4:] {
-			other.Count += v.Count
-		}
-
-		if other.Count > 0.01 {
-			topBrowsers = append(topBrowsers, other)
-		}
+	if len(topBrowsers) > 5 {
+		topBrowsers = topBrowsers[0:5]
 	}
 
-	if len(topPlatforms) > 6 {
-		topPlatforms = topPlatforms[0:6]
-		other := counter{Name: "Other"}
-		for _, v := range topBrowsers[6:] {
-			other.Count += v.Count
-		}
-		if other.Count > 0.01 {
-			topPlatforms = append(topPlatforms, other)
-		}
+	if len(topPlatforms) > 5 {
+		topPlatforms = topPlatforms[0:5]
 	}
 
 	totalSessionPages := 0.0
