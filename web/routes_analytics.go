@@ -270,6 +270,11 @@ func routeTrack(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	ip := r.Header.Get("X-FORWARDED-FOR")
+	if ip == "" {
+		ip = r.RemoteAddr
+	}
+
 	q := r.URL.Query()
 	path := q.Get("path")
 	search := q.Get("search")
@@ -291,6 +296,7 @@ func routeTrack(w http.ResponseWriter, r *http.Request) {
 			Referrer:  ref,
 			Sess:      sess,
 			User:      user,
+			Ip:        ip,
 			Age:       int32(age),
 			Page:      int32(page),
 		}).Exec(context.Background())

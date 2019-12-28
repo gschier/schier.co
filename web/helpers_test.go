@@ -20,3 +20,7 @@ func TestCapitalizeTitleWithWeirdSpaces(t *testing.T) {
 func TestCapitalizeTitleWithWeirdCharacters(t *testing.T) {
 	assert.Equal(t, "I'm Fine That It's Okay", web.CapitalizeTitle("i'm fine that it's okay"))
 }
+
+func TestCapitalizeTitleWithEmoji(t *testing.T) {
+	assert.Equal(t, "🚀 Example Title 🙆🏻‍♂️🤓!", web.CapitalizeTitle("🚀 example title 🙆🏻‍♂️🤓!"))
+}

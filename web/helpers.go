@@ -50,6 +50,9 @@ func CapitalizeTitle(title string) string {
 		wLower := strings.ToLower(w)
 		if _, shouldBeLower := lowerWords[wLower]; shouldBeLower {
 			words[i] = wLower
+		} else if len(wLower) == 1 {
+			// This is more robust when working with emoji
+			words[i] = strings.ToUpper(wLower)
 		} else {
 			words[i] = strings.ToTitle(wLower[0:1]) + wLower[1:]
 		}

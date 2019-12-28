@@ -90,4 +90,5 @@ type AnalyticsPageView {
     referrer: String!
     age: Int!
     page: Int!
+    ip: String!
 }
