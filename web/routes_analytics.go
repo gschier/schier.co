@@ -277,6 +277,7 @@ func routeTrack(w http.ResponseWriter, r *http.Request) {
 
 	q := r.URL.Query()
 	path := q.Get("path")
+	prev := q.Get("prev")
 	search := q.Get("search")
 	ref := q.Get("ref")
 	sess := q.Get("sess")
@@ -292,6 +293,7 @@ func routeTrack(w http.ResponseWriter, r *http.Request) {
 		_, err := client.CreateAnalyticsPageView(prisma.AnalyticsPageViewCreateInput{
 			UserAgent: userAgent,
 			Path:      path,
+			PPath:     prev,
 			Search:    search,
 			Referrer:  ref,
 			Sess:      sess,

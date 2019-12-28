@@ -86,6 +86,7 @@ type AnalyticsPageView {
     user: String!
     userAgent: String!
     path: String!
+    pPath: String!
     search: String!
     referrer: String!
     age: Int!
