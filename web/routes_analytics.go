@@ -190,8 +190,8 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 		users[i] = len(userCounters[numBuckets-i-1])
 	}
 
-	if len(topPaths) > 20 {
-		topPaths = topPaths[0:20]
+	if len(topPaths) > 50 {
+		topPaths = topPaths[0:50]
 	}
 
 	if len(topRefs) > 10 {
