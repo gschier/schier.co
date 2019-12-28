@@ -1,6 +1,9 @@
 <div class="meta">
   <time datetime{{ blogPost.Date }}>{{ blogPost.Date | isoformat }}</time>
   &bull; {{ blogPost.Content | words | readtime }} min read
+  {% if showWordCount %}
+    &bull; {{ blogPost.Content | words }} words
+  {% endif %}
   {% if not blogPost.Published %}
     &bull; Draft
   {% endif %}
