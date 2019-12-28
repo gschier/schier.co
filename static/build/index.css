@@ -1395,6 +1395,11 @@ body .CodeMirror .cm-comment {
   white-space: nowrap;
 }
 
+.card__body--big {
+  font-size: 1.875rem;
+  font-weight: 200;
+}
+
 @media only screen and (max-width: 600px) {
   .cards {
     flex-wrap: wrap;
