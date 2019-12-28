@@ -16,3 +16,7 @@ func TestCapitalizeTitle(t *testing.T) {
 func TestCapitalizeTitleWithWeirdSpaces(t *testing.T) {
 	assert.Equal(t, "This Is the Title", web.CapitalizeTitle("this   is\tthe\t  \n title"))
 }
+
+func TestCapitalizeTitleWithWeirdCharacters(t *testing.T) {
+	assert.Equal(t, "I'm Fine That It's Okay", web.CapitalizeTitle("i'm fine that it's okay"))
+}

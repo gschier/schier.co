@@ -51,7 +51,7 @@ func CapitalizeTitle(title string) string {
 		if _, shouldBeLower := lowerWords[wLower]; shouldBeLower {
 			words[i] = wLower
 		} else {
-			words[i] = strings.Title(wLower)
+			words[i] = strings.ToTitle(wLower[0:1]) + wLower[1:]
 		}
 	}
 
