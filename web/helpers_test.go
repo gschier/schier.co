@@ -24,3 +24,11 @@ func TestCapitalizeTitleWithWeirdCharacters(t *testing.T) {
 func TestCapitalizeTitleWithEmoji(t *testing.T) {
 	assert.Equal(t, "🚀 Example Title 🙆🏻‍♂️🤓!", web.CapitalizeTitle("🚀 example title 🙆🏻‍♂️🤓!"))
 }
+
+func TestReadTimeRoundUp(t *testing.T) {
+	assert.Equal(t, 1, web.ReadTime(0))
+	assert.Equal(t, 1, web.ReadTime(1))
+	assert.Equal(t, 1, web.ReadTime(99))
+	assert.Equal(t, 1, web.ReadTime(150))
+	assert.Equal(t, 2, web.ReadTime(250))
+}

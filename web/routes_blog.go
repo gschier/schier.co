@@ -8,12 +8,9 @@ import (
 	"github.com/gorilla/mux"
 	slugLib "github.com/gosimple/slug"
 	"github.com/gschier/schier.dev/generated/prisma-client"
-	stripmd "github.com/writeas/go-strip-markdown"
 	"log"
-	"math"
 	"net/http"
 	"os"
-	"regexp"
 	"sort"
 	"strconv"
 	"strings"
@@ -486,37 +483,6 @@ func stringToTags(tags string) []string {
 	}
 
 	return allTags
-}
-
-func WordCount(md string) int {
-	return strings.Count(stripmd.Strip(md), " ")
-}
-
-func ReadTime(words int) int {
-	return int(math.Ceil(float64(words) / 200))
-}
-
-var reNewlines = regexp.MustCompile(`\n+`)
-
-func Summary(md string) string {
-	md = strings.Replace(md, "\r\n", "\n", -1)
-
-	var summaryMD string
-	if strings.Contains(md, "<!--more-->") {
-		summaryMD = strings.Split(md, "<!--more-->")[0]
-	} else {
-		// Take the first paragraph if no <!--more-->
-		summaryMD = strings.Split(md, "\n\n")[0]
-	}
-
-	summary := stripmd.Strip(summaryMD)
-
-	// Replace some other things
-	summary = reNewlines.ReplaceAllString(summary, " ")
-	summary = strings.Replace(summary, "---", "—", -1)
-	summary = strings.Replace(summary, "--", "–", -1)
-
-	return strings.TrimSpace(summary)
 }
 
 type postTag struct {
