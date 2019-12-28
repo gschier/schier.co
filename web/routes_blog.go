@@ -2,7 +2,6 @@ package web
 
 import (
 	"context"
-	"fmt"
 	"github.com/flosch/pongo2"
 	"github.com/gorilla/feeds"
 	"github.com/gorilla/mux"
@@ -215,9 +214,7 @@ func routeBlogPostCreateOrUpdate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Force title capitalization
-	fmt.Println("TITLE 1", title)
 	title = CapitalizeTitle(title)
-	fmt.Println("TITLE 2", title)
 
 	// BlackFriday doesn't like Windows line endings
 	content = strings.Replace(content, "\r\n", "\n", -1)
@@ -411,7 +408,7 @@ func routeBlogList(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Fetch blog posts
-	orderBy := prisma.BlogPostOrderByInputCreatedAtDesc
+	orderBy := prisma.BlogPostOrderByInputDateDesc
 	blogPosts, err := ctxPrismaClient(r).BlogPosts(&prisma.BlogPostsParams{
 		Where: &prisma.BlogPostWhereInput{
 			Published:    prisma.Bool(true),
@@ -428,9 +425,12 @@ func routeBlogList(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Fetch blog posts
+	draftsOrderBy := prisma.BlogPostOrderByInputUpdatedAtDesc
 	blogPostDrafts, err := ctxPrismaClient(r).BlogPosts(&prisma.BlogPostsParams{
-		Where:   &prisma.BlogPostWhereInput{Published: prisma.Bool(false)},
-		OrderBy: &orderBy,
+		Where: &prisma.BlogPostWhereInput{
+			Published: prisma.Bool(false),
+		},
+		OrderBy: &draftsOrderBy,
 	}).Exec(r.Context())
 	if err != nil {
 		log.Println("Failed to load blog post blogPostDrafts", err)
