@@ -103,7 +103,7 @@ func routeBlogRender(w http.ResponseWriter, r *http.Request) {
 	title := r.Form.Get("title")
 	partial := r.Form.Get("partial") == "true"
 	date := r.Form.Get("date")
-	tags := r.Form.Get("tags")
+	tags := NormalizeTags(r.Form.Get("tags"))
 
 	if date == "" {
 		date = time.Now().Format(time.RFC3339)

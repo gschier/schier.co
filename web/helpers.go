@@ -126,3 +126,8 @@ func TagsToComma(tags string) string {
 	all := StringToTags(tags)
 	return strings.Join(all, ", ")
 }
+
+func NormalizeTags(tags string) string {
+	all := StringToTags(tags)
+	return TagsToString(all)
+}
