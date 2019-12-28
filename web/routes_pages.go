@@ -59,7 +59,7 @@ func routeProjects(w http.ResponseWriter, r *http.Request) {
 
 func routeHome(w http.ResponseWriter, r *http.Request) {
 	client := ctxPrismaClient(r)
-	blogPosts, err := client.BlogPosts(RecentBlogPosts(5)).Exec(r.Context())
+	blogPosts, err := client.BlogPosts(RecentBlogPosts(6)).Exec(r.Context())
 	if err != nil {
 		log.Println("Failed to fetch blog posts: " + err.Error())
 		http.Error(w, "Failed to fetch blog posts", http.StatusInternalServerError)
