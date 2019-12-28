@@ -53,6 +53,7 @@ func routeProjects(w http.ResponseWriter, r *http.Request) {
 	}
 
 	renderTemplate(w, r, projectsTemplate(), &pongo2.Context{
+		"pageTitle": "Projects",
 		"projects": projects,
 	})
 }
@@ -113,7 +114,7 @@ func routeAbout(w http.ResponseWriter, r *http.Request) {
 	}
 
 	renderTemplate(w, r, aboutTemplate(), &pongo2.Context{
-		"pageTitle":      "About Me",
+		"pageTitle":      "About",
 		"favoriteThings": favoriteThings,
 		"projects":       projects,
 		"blogPosts":      blogPosts,

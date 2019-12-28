@@ -20,11 +20,15 @@ var newsletterThanksTemplate = pageTemplate("page/thanks.html")
 var newsletterUnsubscribeTemplate = pageTemplate("page/unsubscribe.html")
 
 func routeNewsletter(w http.ResponseWriter, r *http.Request) {
-	renderTemplate(w, r, newsletterTemplate(), nil)
+	renderTemplate(w, r, newsletterTemplate(), &pongo2.Context{
+		"pageTitle": "Email Newsletter",
+	})
 }
 
 func routeThankSubscriber(w http.ResponseWriter, r *http.Request) {
-	renderTemplate(w, r, newsletterThanksTemplate(), nil)
+	renderTemplate(w, r, newsletterThanksTemplate(), &pongo2.Context{
+		"pageTitle": "Thanks!",
+	})
 }
 
 func routeUnsubscribe(w http.ResponseWriter, r *http.Request) {
@@ -50,6 +54,7 @@ func routeUnsubscribe(w http.ResponseWriter, r *http.Request) {
 	}
 
 	renderTemplate(w, r, newsletterUnsubscribeTemplate(), &pongo2.Context{
+		"pageTitle": "Unsubscribed",
 		"email": sub.Email,
 	})
 }
