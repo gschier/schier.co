@@ -353,7 +353,7 @@ pre.chroma-chroma {
 /*****************/
 
 .bottom-footer {
-  @apply bg-gray-100 py-32 mt-32;
+  @apply bg-gray-100 py-32 mt-24;
 }
 
 .bottom-footer .links {
