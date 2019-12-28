@@ -530,7 +530,20 @@ body .CodeMirror .cm-comment {
 /* CARDS */
 
 .cards {
-  @apply flex flex-1 -mx-2;
+  @apply flex flex-1 -mx-2 items-stretch;
+}
+
+.cards--2,
+.cards--3 {
+  @apply flex-wrap;
+}
+
+.cards--2 .card {
+  width: 50%;
+}
+
+.cards--3 .card {
+  width: 33.33%;
 }
 
 .card {
@@ -541,8 +554,8 @@ body .CodeMirror .cm-comment {
   @apply border border-dashed border-gray-400 rounded px-4 py-2 mt-4;
 }
 
-.card__inner > * {
-  @apply m-0 mb-2 p-0;
+.card__inner > *:not(:last-child) {
+  @apply m-0 mb-1 p-0;
 }
 
 .card__title {
@@ -558,7 +571,11 @@ body .CodeMirror .cm-comment {
     @apply flex-wrap;
   }
 
-  .cards--double-wrap .card {
+  .cards .card {
+    @apply w-full;
+  }
+
+  .cards.cards--double-wrap .card {
     width: 50%;
   }
 

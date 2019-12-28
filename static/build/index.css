@@ -1361,6 +1361,21 @@ body .CodeMirror .cm-comment {
           flex: 1 1 0%;
   margin-left: -0.5rem;
   margin-right: -0.5rem;
+  -webkit-box-align: stretch;
+          align-items: stretch;
+}
+
+.cards--2,
+.cards--3 {
+  flex-wrap: wrap;
+}
+
+.cards--2 .card {
+  width: 50%;
+}
+
+.cards--3 .card {
+  width: 33.33%;
 }
 
 .card {
@@ -1383,9 +1398,9 @@ body .CodeMirror .cm-comment {
   margin-top: 1rem;
 }
 
-.card__inner > * {
+.card__inner > *:not(:last-child) {
   margin: 0;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.25rem;
   padding: 0;
 }
 
@@ -1405,7 +1420,11 @@ body .CodeMirror .cm-comment {
     flex-wrap: wrap;
   }
 
-  .cards--double-wrap .card {
+  .cards .card {
+    width: 100%;
+  }
+
+  .cards.cards--double-wrap .card {
     width: 50%;
   }
 
