@@ -549,23 +549,20 @@ body .CodeMirror .cm-comment {
   @apply text-xs text-gray-500 whitespace-no-wrap;
 }
 
-.card__body {
-}
-
-.card__body--big {
-  @apply text-3xl font-thin;
-}
-
 @media only screen and (max-width: 600px) {
   .cards {
     @apply flex-wrap;
   }
 
-  .card {
+  .cards--double-wrap .card {
     width: 50%;
   }
 
   .card__body {
+    @apply text-lg;
+  }
+
+  .card__body--big {
     @apply text-2xl;
   }
 }

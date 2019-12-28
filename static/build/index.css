@@ -1395,24 +1395,20 @@ body .CodeMirror .cm-comment {
   white-space: nowrap;
 }
 
-.card__body {
-}
-
-.card__body--big {
-  font-size: 1.875rem;
-  font-weight: 200;
-}
-
 @media only screen and (max-width: 600px) {
   .cards {
     flex-wrap: wrap;
   }
 
-  .card {
+  .cards--double-wrap .card {
     width: 50%;
   }
 
   .card__body {
+    font-size: 1.125rem;
+  }
+
+  .card__body--big {
     font-size: 1.5rem;
   }
 }
