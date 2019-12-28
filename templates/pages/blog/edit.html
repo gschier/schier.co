@@ -11,12 +11,16 @@
       font-family: monospace;
       font-size: 0.8rem;
     }
+
+    #editor-app h1 {
+      font-size: 1.5rem;
+    }
   </style>
 {% endblock %}
 
 {% block content %}
   <div class="container" id="editor-app">
-    <h1 style="margin-bottom:1rem;">
+    <h1>
       {{ blogPost | yesno:'Edit,Create' }}
       Post {% if blogPost and blogPost.Published %}(Published){% else %}(Draft){% endif %}
     </h1>
