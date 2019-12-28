@@ -45,10 +45,6 @@ a:hover,
   text-decoration: underline;
 }
 
-p {
-  @apply mb-8 leading-relaxed;
-}
-
 small {
   @apply text-sm;
 }
@@ -215,6 +211,10 @@ form input:invalid {
   @apply block w-full rounded-sm my-8;
 }
 
+.content > p {
+  @apply mb-8 leading-relaxed;
+}
+
 .content p > img {
   @apply block mx-auto rounded-sm my-8;
 }
@@ -242,6 +242,10 @@ form input:invalid {
 
 .content table thead tr {
   @apply bg-gray-200;
+}
+
+.content blockquote {
+  @apply border-l-4 border-gray-300 p-3 bg-gray-100 italic text-gray-700 rounded-sm capitalize;
 }
 
 /**************/

@@ -216,6 +216,9 @@ func routeBlogPostCreateOrUpdate(w http.ResponseWriter, r *http.Request) {
 		slug = slugLib.Make(title)
 	}
 
+	// Force title capitalization
+	title = CapitalizeTitle(title)
+
 	// BlackFriday doesn't like Windows line endings
 	content = strings.Replace(content, "\r\n", "\n", -1)
 
