@@ -245,7 +245,7 @@ form input:invalid {
 }
 
 .content blockquote {
-  @apply border-l-4 border-gray-300 p-3 bg-gray-100 italic text-gray-700 rounded-sm capitalize;
+  @apply border-l-4 border-gray-300 p-3 bg-gray-100 italic text-gray-700 rounded-sm;
 }
 
 /**************/
