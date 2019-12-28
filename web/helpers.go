@@ -45,7 +45,7 @@ func CapitalizeTitle(title string) string {
 		"nor": 1,
 	}
 
-	words := strings.Split(title, " ")
+	words := strings.Fields(title)
 	for i, w := range words {
 		wLower := strings.ToLower(w)
 		if _, shouldBeLower := lowerWords[wLower]; shouldBeLower {
