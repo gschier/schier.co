@@ -65,7 +65,7 @@ func routeBlogTags(w http.ResponseWriter, r *http.Request) {
 
 	tagsMap := make(map[string]int, 0)
 	for _, p := range blogPosts {
-		for _, newTag := range stringToTags(p.Tags) {
+		for _, newTag := range StringToTags(p.Tags) {
 			if newTag == "" {
 				continue
 			}
@@ -192,6 +192,9 @@ func routeBlogPostEdit(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Convert tags to more editable format
+	blogPost.Tags = TagsToComma(blogPost.Tags)
+
 	renderTemplate(w, r, blogEditTemplate(), &pongo2.Context{
 		"pageTitle": blogPost.Title,
 		"pageImage": blogPost.Image,
@@ -207,7 +210,7 @@ func routeBlogPostCreateOrUpdate(w http.ResponseWriter, r *http.Request) {
 	content := r.Form.Get("content")
 	title := r.Form.Get("title")
 	image := r.Form.Get("image")
-	tagNames := stringToTags(r.Form.Get("tags"))
+	tagNames := StringToTags(r.Form.Get("tags"))
 
 	if slug == "" {
 		slug = slugLib.Make(title)
@@ -463,26 +466,6 @@ func routeBlogList(w http.ResponseWriter, r *http.Request) {
 		"blogPagePrev":     pagePrevious,
 		"blogPageNext":     pageNext,
 	})
-}
-
-func TagsToString(tags []string) string {
-	for i, t := range tags {
-		tags[i] = strings.ToLower(strings.TrimSpace(t))
-	}
-
-	return "|" + strings.Join(tags, "|") + "|"
-}
-
-func stringToTags(tags string) []string {
-	tags = strings.TrimPrefix(tags, "|")
-	tags = strings.TrimSuffix(tags, "|")
-
-	allTags := strings.Split(tags, "|")
-	for i, t := range allTags {
-		allTags[i] = strings.ToLower(strings.TrimSpace(t))
-	}
-
-	return allTags
 }
 
 type postTag struct {

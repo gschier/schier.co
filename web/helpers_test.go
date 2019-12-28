@@ -32,3 +32,11 @@ func TestReadTimeRoundUp(t *testing.T) {
 	assert.Equal(t, 1, web.ReadTime(150))
 	assert.Equal(t, 2, web.ReadTime(250))
 }
+
+func TestStringToTags(t *testing.T) {
+	assert.Equal(t, []string{"foo", "bar"}, web.StringToTags("|Foo|Bar|"))
+	assert.Equal(t, []string{"foo", "bar"}, web.StringToTags("Foo|Bar"))
+	assert.Equal(t, []string{"foo", "bar"}, web.StringToTags("Foo,Bar"))
+	assert.Equal(t, []string{"foo", "bar", "baz"}, web.StringToTags("Foo, Bar, Baz"))
+	assert.Equal(t, []string{"foo", "bar", "baz"}, web.StringToTags("Foo, Bar|Baz"))
+}

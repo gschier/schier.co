@@ -56,7 +56,6 @@ func CapitalizeTitle(title string) string {
 			continue
 		}
 
-
 		first := w[0:1]
 		rest := w[1:]
 
@@ -77,7 +76,7 @@ func WordCount(md string) int {
 }
 
 func ReadTime(words int) int {
-	return int(float64(words) / 200) + 1
+	return int(float64(words)/200) + 1
 }
 
 var reNewlines = regexp.MustCompile(`\n+`)
@@ -101,4 +100,29 @@ func Summary(md string) string {
 	summary = strings.Replace(summary, "--", "–", -1)
 
 	return strings.TrimSpace(summary)
+}
+
+func TagsToString(tags []string) string {
+	for i, t := range tags {
+		tags[i] = strings.ToLower(strings.TrimSpace(t))
+	}
+
+	return "|" + strings.Join(tags, "|") + "|"
+}
+
+func StringToTags(tags string) []string {
+	tags = strings.TrimPrefix(tags, "|")
+	tags = strings.TrimSuffix(tags, "|")
+
+	allTags := regexp.MustCompile("[|,]").Split(tags, -1)
+	for i, t := range allTags {
+		allTags[i] = strings.ToLower(strings.TrimSpace(t))
+	}
+
+	return allTags
+}
+
+func TagsToComma(tags string) string {
+	all := StringToTags(tags)
+	return strings.Join(all, ", ")
 }
