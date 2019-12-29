@@ -132,19 +132,16 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 				continue
 			}
 
-			if strings.Contains(h, "google.") || strings.Contains(h, "googleapis.") {
+			if strings.Contains(h, "com.google.android.googlequicksearchbox") ||
+				strings.Contains(view.Referrer, "www.googleapis.com/auth/chrome-content-suggestions") {
+				h = "Google Discover 💫"
+			} else if strings.Contains(h, "google.") || strings.Contains(h, "googleapis.") {
 				h = "Google 🔍"
-			}
-
-			if strings.HasSuffix(h, "bing.com") {
+			} else if strings.HasSuffix(h, "bing.com") {
 				h = "Bing 🔍"
-			}
-
-			if h == "duckduckgo.com" {
+			} else if h == "duckduckgo.com" {
 				h = "DuckDuckGo 🔍"
-			}
-
-			if h == "t.co" {
+			} else if h == "t.co" {
 				h = "Twitter"
 			}
 
