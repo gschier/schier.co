@@ -6,7 +6,6 @@
       <h1>
         {% if tag %}Posts in <span class="tag">{{ tag }}</span>{% else %}Welcome to the Blog!{% endif %}
       </h1>
-      {% if loggedIn %}<a href="/blog/new">New Post</a>{% endif %}
       {% if not tag %}
         <p>
           This is where I write about life, programming, and other interests.
@@ -14,16 +13,19 @@
         <p>
           You can view the most recent posts below, or <a href="/blog/tags">Browse Tags</a>.
         </p>
-        {% if loggedIn or post.Published %}
+        {% if loggedIn %}
           <ul>
             {% for blogPost in blogPostDrafts %}
               <li>
                 <a href="/blog/{{ blogPost.Slug }}">
-                  {{ blogPost.Title }}
+                  {{ blogPost.Title }} &nbsp;<small><code>{{ blogPost.Content | words }} words</code></small>
                 </a>
               </li>
             {% endfor %}
           </ul>
+          <p>
+            <a href="/blog/new" class="btn btn-small btn-gray">New Post</a>
+          </p>
         {% endif %}
       {% endif %}
     </div>

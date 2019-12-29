@@ -57,10 +57,10 @@
               v-cloak
       >
         <div class="blog-post-editor__edit">
-          <div style="display:flex;">
+          <div style="display:flex;align-items:center;">
             <h1 class="text-xl">{{ blogPost.Title | default:"New Post" }}</h1>
             <button
-                    class="btn btn-gray btn-small"
+                    class="btn btn-faint btn-small"
                     type="button"
                     v-on:click="toggleExpand"
             >
