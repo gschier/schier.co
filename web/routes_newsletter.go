@@ -20,8 +20,18 @@ var newsletterThanksTemplate = pageTemplate("page/thanks.html")
 var newsletterUnsubscribeTemplate = pageTemplate("page/unsubscribe.html")
 
 func routeNewsletter(w http.ResponseWriter, r *http.Request) {
+	client := ctxPrismaClient(r)
+
+	subscribers, err := client.Subscribers(nil).Exec(r.Context())
+	if err != nil {
+		log.Println("Failed to fetch subscribers", err.Error())
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		return
+	}
+
 	renderTemplate(w, r, newsletterTemplate(), &pongo2.Context{
 		"pageTitle": "Email Newsletter",
+		"subscribers": subscribers,
 	})
 }
 

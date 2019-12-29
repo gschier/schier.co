@@ -9,5 +9,26 @@
     </p>
     {% include '../../partials/subscription-form.html' %}
     <p><a href="/">&laquo; Home</a></p>
+
+    {% if loggedIn %}
+      <table>
+        <thead>
+        <tr>
+          <th>Created</th>
+          <th>Email</th>
+          <th>Status</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for s in subscribers %}
+          <tr>
+            <td>{{ s.CreatedAt | isoformat }}</td>
+            <td>{{ s.Email }}</td>
+            <td>{{ s.Unsubscribed | yesno:"Unsubscribed,Subscribed" }}</td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    {% endif %}
   </div>
 {% endblock %}

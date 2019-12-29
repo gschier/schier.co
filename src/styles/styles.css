@@ -227,7 +227,7 @@ form input:invalid {
   @apply text-gray-100 border-0 border-b my-8;
 }
 
-.content table th {
+.content table {
   @apply w-full;
 }
 
