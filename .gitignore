@@ -3,3 +3,4 @@ node_modules
 .DS_Store
 static/dev
 .env.prod
+*.map
