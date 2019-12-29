@@ -1,6 +1,10 @@
 <div class="meta">
-  <time datetime{{ blogPost.Date }}>{{ blogPost.Date | isoformat }}</time>
-  &bull; {{ blogPost.Content | words | readtime }} min read
+  <time datetime{{ blogPost.Date }} title="{{ blogPost.Date }}">
+    {{ blogPost.Date | isoformat }}
+  </time>
+  <span title="{{ blogPost.Content | words }} words">
+    &bull; {{ blogPost.Content | words | readtime }} min read
+  </span>
   {% if showWordCount %}
     &bull; {{ blogPost.Content | words }} words
   {% endif %}
