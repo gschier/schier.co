@@ -1,5 +1,10 @@
 <form class="inline-form" action="/forms/blog/delete" method="post">
   {{ csrfField | safe }}
   {% include './form-input.html' with type='hidden' name='id' value=blogPost.ID %}
-  <button class="btn btn-small btn-gray" type="submit">Delete</button>
+  <button
+          class="btn btn-small btn-gray"
+          type="submit"
+          {% if blogPost.Content | words > 100 %}disabled="disabled"{% endif %}
+  >Delete
+  </button>
 </form>

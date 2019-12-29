@@ -74,7 +74,7 @@ h6 {
   @apply fill-current;
 }
 
-.btn:hover {
+.btn:hover:not(:disabled) {
   @apply bg-primary-500 no-underline;
 }
 
@@ -82,7 +82,7 @@ h6 {
   @apply bg-gray-200 text-gray-400 ml-auto py-1 px-3 text-lg;
 }
 
-.btn.btn-faint:hover {
+.btn.btn-faint:hover:not(:disabled) {
   @apply bg-gray-300;
 }
 
@@ -90,7 +90,7 @@ h6 {
   @apply bg-gray-200 text-gray-600 ml-auto py-1 px-3 text-lg font-semibold;
 }
 
-.btn.btn-gray:hover {
+.btn.btn-gray:hover:not(:disabled) {
   @apply bg-gray-300;
 }
 
@@ -104,6 +104,10 @@ h6 {
 
 .btn.btn-wide {
   @apply w-full;
+}
+
+.btn:disabled {
+  @apply opacity-50 cursor-default;
 }
 
 /**********/
