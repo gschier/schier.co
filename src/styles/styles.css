@@ -114,6 +114,14 @@ h6 {
   @apply border border-danger-400 bg-danger-100 text-danger text-sm py-2 px-4 rounded;
 }
 
+.notice > code {
+  @apply bg-background border-background !important;
+}
+
+.notice--warning {
+  @apply border-warning-400 bg-warning-100 text-warning;
+}
+
 /*********/
 /* FORMS */
 /*********/

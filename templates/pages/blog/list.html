@@ -17,8 +17,12 @@
           <table>
             <thead>
             <tr>
-              <th>Draft</th>
-              <th>Words</th>
+              <th>
+                Draft Title
+              </th>
+              <th style="text-align:right;">
+                Words
+              </th>
               <th>
                 <a href="/blog/new" class="btn btn-tiny">New</a>
               </th>
@@ -32,8 +36,8 @@
                     {{ blogPost.Title }}
                   </a>
                 </td>
-                <td>
-                  {{ blogPost.Content | words }} words
+                <td style="width:2rem;text-align:right;">
+                  {{ blogPost.Content | words }}
                 </td>
                 <td style="width:2rem;">
                   <a href="/blog/{{ blogPost.Slug }}/edit" class="btn btn-gray btn-tiny">Edit</a>

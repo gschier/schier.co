@@ -63,6 +63,33 @@ func init() {
 	}
 
 	err = pongo2.RegisterFilter(
+		"isodate",
+		func(in *pongo2.Value, param *pongo2.Value) (*pongo2.Value, *pongo2.Error) {
+			t, err := time.Parse(time.RFC3339, in.String())
+			if err != nil {
+				return nil, &pongo2.Error{OrigError: err}
+			}
+
+			return pongo2.AsValue(t), nil
+		},
+	)
+
+	if err != nil {
+		panic("failed to register isodate filter: " + err.Error())
+	}
+
+	err = pongo2.RegisterFilter(
+		"isodategt",
+		func(in *pongo2.Value, param *pongo2.Value) (*pongo2.Value, *pongo2.Error) {
+			return pongo2.AsValue(param.String() > in.String()), nil
+		},
+	)
+
+	if err != nil {
+		panic("failed to register isodategte filter: " + err.Error())
+	}
+
+	err = pongo2.RegisterFilter(
 		"readtime",
 		func(in *pongo2.Value, param *pongo2.Value) (*pongo2.Value, *pongo2.Error) {
 			return pongo2.AsValue(ReadTime(in.Integer())), nil
