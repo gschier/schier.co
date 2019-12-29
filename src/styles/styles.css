@@ -220,7 +220,10 @@ form input:invalid {
 }
 
 .content :not(pre) code {
-  @apply text-xs bg-gray-200 rounded px-1 border-2 border-gray-200 font-mono;
+  @apply bg-gray-200 rounded px-1 border-2 border-gray-200 font-mono;
+
+  /* Relative size so it works in headings and stuff */
+  font-size: 0.8em;
 }
 
 .content hr {

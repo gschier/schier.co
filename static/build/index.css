@@ -929,7 +929,6 @@ form input:invalid {
 }
 
 .content :not(pre) code {
-  font-size: 0.75rem;
   background-color: #edf2f7;
   border-radius: 0.25rem;
   padding-left: 0.25rem;
@@ -937,6 +936,8 @@ form input:invalid {
   border-width: 2px;
   border-color: #edf2f7;
   font-family: Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  /* Relative size so it works in headings and stuff */
+  font-size: 0.8em;
 }
 
 .content hr {

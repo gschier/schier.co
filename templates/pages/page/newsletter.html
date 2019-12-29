@@ -11,6 +11,8 @@
     <p><a href="/">&laquo; Home</a></p>
 
     {% if loggedIn %}
+      <hr>
+      <h2>Subscribers <code>{{ subscribers | length }}</code></h2>
       <table>
         <thead>
         <tr>
