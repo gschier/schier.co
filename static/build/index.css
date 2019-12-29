@@ -642,7 +642,7 @@ main {
 
 a,
 .link {
-  color: #4299e1;
+  color: #3182ce;
 }
 
 a:hover,
@@ -761,15 +761,16 @@ h6 {
 
 .notice {
   border-width: 1px;
-  border-color: #fc8181;
-  background-color: #fff5f5;
-  color: #f56565;
   font-size: 0.875rem;
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
   padding-left: 1rem;
   padding-right: 1rem;
   border-radius: 0.25rem;
+  border-style: dotted;
+  border-color: #bee3f8;
+  background-color: #ebf8ff;
+  text-align: center;
 }
 
 .notice > code {
@@ -777,10 +778,23 @@ h6 {
   border-color: #fff !important;
 }
 
+.notice--danger {
+  border-color: #fc8181;
+  background-color: #fff5f5;
+  color: #e53e3e;
+}
+
 .notice--warning {
   border-color: #f6ad55;
   background-color: #fffaf0;
-  color: #ed8936;
+  color: #dd6b20;
+}
+
+.notice--subtle {
+  border-style: dotted;
+  border-color: #cbd5e0;
+  background-color: #f7fafc;
+  color: #718096;
 }
 
 /*********/
@@ -907,7 +921,7 @@ form input:invalid {
 .meta {
   display: block;
   font-size: 0.875rem;
-  color: #a0aec0;
+  color: #718096;
   font-weight: 400;
 }
 
@@ -1115,28 +1129,28 @@ pre.chroma-chroma {
 .chroma-cm,
 .chroma-c1 {
   font-style: italic;
-  color: #a0aec0;
+  color: #718096;
 }
 
 .chroma-s1,
 .chroma-sb,
 .chroma-s2 {
-  color: #9f7aea;
+  color: #805ad5;
 }
 
 .chroma-nt,
 .chroma-nb {
   color: #a0aec0;
-  color: #4299e1;
+  color: #3182ce;
 }
 
 .chroma-k,
 .chroma-kd {
-  color: #667eea;
+  color: #5a67d8;
 }
 
 .chroma-mi {
-  color: #9f7aea;
+  color: #805ad5;
 }
 
 /******************/
@@ -1208,7 +1222,7 @@ pre.chroma-chroma {
 }
 
 .bottom-footer a i {
-  color: #4299e1;
+  color: #3182ce;
   text-decoration: none;
 }
 
@@ -1358,15 +1372,15 @@ pre.chroma-chroma {
 }
 
 body .CodeMirror .cm-link {
-  color: #9f7aea;
+  color: #805ad5;
 }
 
 body .CodeMirror .cm-url {
-  color: #4299e1;
+  color: #3182ce;
 }
 
 body .CodeMirror .cm-comment {
-  color: #a0aec0;
+  color: #718096;
 }
 
 /***********/

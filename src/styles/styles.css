@@ -115,15 +115,23 @@ h6 {
 /**********/
 
 .notice {
-  @apply border border-danger-400 bg-danger-100 text-danger text-sm py-2 px-4 rounded;
+  @apply border text-sm py-2 px-4 rounded border-dotted border-primary-200 bg-primary-100 text-center;
 }
 
 .notice > code {
   @apply bg-background border-background !important;
 }
 
+.notice--danger {
+  @apply border-danger-400 bg-danger-100 text-danger;
+}
+
 .notice--warning {
   @apply border-warning-400 bg-warning-100 text-warning;
+}
+
+.notice--subtle {
+  @apply border-dotted border-gray-400 bg-gray-100 text-gray-600;
 }
 
 /*********/
@@ -196,7 +204,7 @@ form input:invalid {
 }
 
 .meta {
-  @apply block text-sm text-gray-500 font-normal;
+  @apply block text-sm text-gray-600 font-normal;
 }
 
 .blog-post-preview h2 {

@@ -16,7 +16,7 @@
 
   {% if blogPost.Date | isodategt:'2019-01-01T00:00:00.000Z' %}
     <p class="notice notice--warning">
-      ⚠️ This post was published on <code>{{ blogPost.Date | isoformat }}</code> and may no longer be relevantg
+      This post was published on <code>{{ blogPost.Date | isoformat }}</code> and may no longer be relevant
     </p>
   {% endif %}
 
