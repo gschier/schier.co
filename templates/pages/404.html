@@ -2,8 +2,12 @@
 
 {% block content %}
   <div class="container">
-    <h1>Page Not Found</h1>
-    <p>I'm sorry, but you seem to have arrived upon a page that does not exist.</p>
-    <p><a href="/">Home</a></p>
+    <div class="content">
+      <h1>Page Not Found</h1>
+      <p>I'm sorry, this page doesn't exist. Want to go <a href="/">back Home?</a></p>
+      <hr>
+    </div>
+    <p>Or, perhaps you were looking for a recent blog post.</p>
+    {% include '../partials/recent-posts.html' %}
   </div>
 {% endblock %}
