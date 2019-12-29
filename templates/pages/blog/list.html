@@ -14,15 +14,32 @@
           You can view the most recent posts below, or <a href="/blog/tags">Browse Tags</a>.
         </p>
         {% if loggedIn %}
-          <ul>
+          <table>
+            <thead>
+            <tr>
+              <th>Title</th>
+              <th>Words</th>
+              <th></th>
+            </tr>
+            </thead>
+            <tbody>
             {% for blogPost in blogPostDrafts %}
-              <li>
-                <a href="/blog/{{ blogPost.Slug }}">
-                  {{ blogPost.Title }} &nbsp;<small><code>{{ blogPost.Content | words }} words</code></small>
-                </a>
-              </li>
+              <tr>
+                <td>
+                  <a href="/blog/{{ blogPost.Slug }}">
+                    {{ blogPost.Title }}
+                  </a>
+                </td>
+                <td>
+                  {{ blogPost.Content | words }} words
+                </td>
+              <td style="width:2rem;">
+                <a href="/blog/{{ blogPost.Slug }}/edit" class="btn btn-gray btn-tiny">Edit</a>
+              </td>
+              </tr>
             {% endfor %}
-          </ul>
+            </tbody>
+          </table>
           <p>
             <a href="/blog/new" class="btn btn-small btn-gray">New Post</a>
           </p>

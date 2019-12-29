@@ -95,7 +95,11 @@ h6 {
 }
 
 .btn.btn-small {
-  @apply py-1 px-3 text-xs rounded;
+  @apply py-1 px-3 text-xs rounded-sm;
+}
+
+.btn.btn-tiny {
+  @apply py-0 px-3 text-xs rounded-sm;
 }
 
 .btn.btn-wide {
