@@ -8,7 +8,7 @@
     <div>
       <a href="/blog/{{ blogPost.Slug }}/edit">Edit</a> |
       {% include './publish_link.html' %} |
-      {% include './delete_link.html' %}
+      {% if not blogPost.Published %}{% include './delete_link.html' %}{% endif %}
     </div>
   {% endif %}
 
