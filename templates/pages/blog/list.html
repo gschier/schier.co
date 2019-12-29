@@ -4,9 +4,15 @@
   <div class="container">
     <div class="content">
       <h1>
-        {% if tag %}Posts in <span class="tag">{{ tag }}</span>{% else %}Welcome to the Blog!{% endif %}
+        {% if tag %}
+          Posts in <span class="tag">{{ tag }}</span>
+        {% elif blogPage == 0 %}
+          Welcome to the Blog!
+        {% else %}
+          Page {{ blogPageFriendly }}
+        {% endif %}
       </h1>
-      {% if not tag %}
+      {% if not tag and blogPage == 0 %}
         <p>
           This is where I write about life, programming, and other interests.
         </p>
