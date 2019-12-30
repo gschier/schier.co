@@ -82,12 +82,7 @@
     return v;
   };
 
-  let sess;
-  if (localStorage.schier) {
-    sess = JSON.parse(localStorage.schier);
-  } else {
-    sess = {};
-  }
+  let sess = localStorage.schier ? JSON.parse(localStorage.schier) : {};
 
   // Check if new session should be created for same user
   if (Date.now() - sess.last > 20 * 60 * 1000) {
@@ -95,6 +90,7 @@
   }
 
   const prev = sess.prev || '';
+  const age = (Date.now() - sess.start) / 1000;
   const path = location.pathname;
 
   // Initialize session properties if new or missing
@@ -108,17 +104,16 @@
   // Store session
   localStorage.schier = JSON.stringify(sess);
 
-  const age = Math.round((Date.now() - sess.start) / 1000);
   const e = encodeURIComponent;
   fetch('/t?t=page&' + [
-    `path=${e(path || '')}`,
-    `prev=${e(prev || '')}`,
-    `search=${e(location.search || '')}`,
-    `ref=${e(document.referrer || '')}`,
-    `user=${e(sess.user || '')}`,
-    `sess=${e(sess.id || '')}`,
-    `age=${e(age || '')}`,
-    `page=${e(sess.pages || '')}`
+    `path=${e(path)}`,
+    `prev=${e(prev)}`,
+    `search=${e(location.search)}`,
+    `ref=${e(document.referrer)}`,
+    `user=${e(sess.user)}`,
+    `sess=${e(sess.id)}`,
+    `age=${e(age)}`,
+    `page=${e(sess.pages)}`
   ].join('&'));
 </script>
 </body>

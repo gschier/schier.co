@@ -8,6 +8,9 @@
   {% if showWordCount %}
     &bull; {{ blogPost.Content | words }} words
   {% endif %}
+  {% if loggedIn %}
+    &bull; {{ blogPost.Views }} views
+  {% endif %}
   {% if not blogPost.Published %}
     &bull; Draft
   {% endif %}

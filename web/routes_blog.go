@@ -282,6 +282,7 @@ func routeBlogPost(w http.ResponseWriter, r *http.Request) {
 	slug := mux.Vars(r)["slug"]
 
 	client := ctxPrismaClient(r)
+	loggedIn := ctxGetLoggedIn(r)
 
 	blogPostWhere := &prisma.BlogPostWhereInput{Slug: &slug}
 
@@ -318,12 +319,16 @@ func routeBlogPost(w http.ResponseWriter, r *http.Request) {
 	})
 
 	go func() {
+		newViewCount := post.Views
+		if !loggedIn {
+			newViewCount += 1
+		}
 		_, err := client.UpdateBlogPost(prisma.BlogPostUpdateParams{
 			Where: prisma.BlogPostWhereUniqueInput{
 				ID: &post.ID,
 			},
 			Data: prisma.BlogPostUpdateInput{
-				Views: prisma.Int32(post.Views + 1),
+				Views: prisma.Int32(newViewCount),
 			},
 		}).Exec(context.Background())
 		if err != nil {
