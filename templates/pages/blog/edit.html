@@ -19,7 +19,7 @@
 {% endblock %}
 
 {% block content %}
-  <div class="container" id="editor-app">
+  <div class="content container" id="editor-app">
     <h1>
       {{ blogPost | yesno:'Edit,Create' }}
       Post {% if blogPost and blogPost.Published %}(Published){% else %}(Draft){% endif %}
