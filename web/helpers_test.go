@@ -8,9 +8,6 @@ import (
 
 func TestCapitalizeTitle(t *testing.T) {
 	assert.Equal(t, "This Is the Title", web.CapitalizeTitle("this is the title"))
-	assert.Equal(t, "This Is the Title", web.CapitalizeTitle("THIS IS THE TITLE"))
-	assert.Equal(t, "This Is the Title", web.CapitalizeTitle("tHIS iS THe tItLE"))
-	assert.Equal(t, "This Is the - Title", web.CapitalizeTitle("tHIS iS THe - tItLE"))
 }
 
 func TestCapitalizeTitleWithWeirdSpaces(t *testing.T) {
@@ -23,6 +20,16 @@ func TestCapitalizeTitleWithWeirdCharacters(t *testing.T) {
 
 func TestCapitalizeTitleWithEmoji(t *testing.T) {
 	assert.Equal(t, "🚀 Example Title 🙆🏻‍♂️🤓!", web.CapitalizeTitle("🚀 example title 🙆🏻‍♂️🤓!"))
+}
+
+func TestCapitalizeTitleWithFirstLetterAlwaysUpper(t *testing.T) {
+	assert.Equal(t, "A Big Thing", web.CapitalizeTitle("a big thing"))
+	assert.Equal(t, "The Big Thing", web.CapitalizeTitle("the big thing"))
+	assert.Equal(t, "🗻 The Big Thing", web.CapitalizeTitle("🗻 the big thing"))
+}
+
+func TestCapitalizeTitlePreserveNonFirstUppers(t *testing.T) {
+	assert.Equal(t, "Hello ThisIsCamelCase", web.CapitalizeTitle("hello thisIsCamelCase"))
 }
 
 func TestReadTimeRoundUp(t *testing.T) {

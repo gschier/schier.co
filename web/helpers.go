@@ -49,9 +49,10 @@ func CapitalizeTitle(title string) string {
 
 	wordCharRegexp := regexp.MustCompile(`\w`)
 	words := strings.Fields(title)
+	isFirstWord := true
 	for i, w := range words {
 		wLower := strings.ToLower(w)
-		if _, shouldBeLower := lowerWords[wLower]; shouldBeLower {
+		if _, shouldBeLower := lowerWords[wLower]; !isFirstWord && shouldBeLower {
 			words[i] = wLower
 			continue
 		}
@@ -63,6 +64,7 @@ func CapitalizeTitle(title string) string {
 		// `ToTitle()` can mangle things like emoji
 		if wordCharRegexp.Match([]byte(first)) {
 			first = strings.ToTitle(first)
+			isFirstWord = false
 		}
 
 		words[i] = first + rest
