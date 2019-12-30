@@ -18,15 +18,19 @@
         <tr>
           <th>Created</th>
           <th>Email</th>
-          <th>Status</th>
+          <th style="width:2em;"></th>
         </tr>
         </thead>
         <tbody>
         {% for s in subscribers %}
           <tr>
             <td>{{ s.CreatedAt | isoformat }}</td>
-            <td>{{ s.Email }}</td>
-            <td>{{ s.Unsubscribed | yesno:"Unsubscribed,Subscribed" }}</td>
+            <td>
+              <code style="word-break:break-all">
+                {{ s.Email }}
+              </code>
+            </td>
+            <td>{{ s.Unsubscribed | yesno:"✘,✔" }}</td>
           </tr>
         {% endfor %}
         </tbody>

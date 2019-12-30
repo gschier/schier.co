@@ -272,7 +272,7 @@ form input:invalid {
 
 .content table th,
 .content table td {
-  @apply border border-gray-300 px-2;
+  @apply border border-gray-300 px-2 py-1;
 }
 
 .content table thead tr {
