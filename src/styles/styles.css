@@ -235,10 +235,18 @@ form input:invalid {
   @apply list-decimal ml-6;
 }
 
+.content > h1,
+.content > h2,
+.content > h3,
+.content > h4,
+.content > h5,
+.content > h6,
 .content > img,
 .content > canvas,
 .content > pre,
+.content > ol,
 .content > ul,
+.content > hr,
 .content > div,
 .content > table,
 .content > blockquote,
