@@ -7,7 +7,7 @@
 {% block content %}
   <div class="content container">
     <h1 class="hidden-mobile">🚀 Website Analytics</h1>
-    <a href="?bucket=1&days=1" class="btn btn-tiny btn-gray">Day</a>
+    <a href="?bucket=24&days=1" class="btn btn-tiny btn-gray">Day</a>
     <a href="?bucket=24&days=7" class="btn btn-tiny btn-gray">Week</a>
     <a href="?bucket=24&days=30" class="btn btn-tiny btn-gray">Month</a>
     <div class="cards cards--double-wrap">
@@ -152,9 +152,14 @@
       },
       options: {
         scales: {
-          yAxes: [{
+          xAxes: [{
             ticks: {
               maxTicksLimit: 7,
+            }
+          }],
+          yAxes: [{
+            ticks: {
+              maxTicksLimit: 5,
             }
           }]
         },
