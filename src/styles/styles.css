@@ -235,7 +235,14 @@ form input:invalid {
   @apply list-decimal ml-6;
 }
 
-.content > * {
+.content > img,
+.content > canvas,
+.content > pre,
+.content > ul,
+.content > div,
+.content > table,
+.content > blockquote,
+.content > p {
   @apply my-6;
 }
 

@@ -61,8 +61,26 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 	start := time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, now.Location())
 	start = start.Add(time.Hour * 24)
 
-	dateRange := time.Hour * 24 * 7
-	dateBucketSize := time.Hour * 24
+	days, _ := strconv.Atoi(r.URL.Query().Get("days"))
+	if days == 0 {
+		days = 7
+	}
+
+	if days > 28 {
+		days = 28
+	}
+
+	bucket, _ := strconv.Atoi(r.URL.Query().Get("bucket"))
+	if bucket == 0 {
+		bucket = 24
+	}
+
+	if bucket < 1 {
+		bucket = 1
+	}
+
+	dateBucketSize := time.Hour * time.Duration(bucket)
+	dateRange := time.Hour * 24 * time.Duration(days)
 	numBuckets := int(dateRange / dateBucketSize)
 
 	// Order from oldest to newest so we can get latest sessions last
