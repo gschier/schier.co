@@ -28,10 +28,11 @@ func routeLogout(w http.ResponseWriter, r *http.Request) {
 func routeLogin(w http.ResponseWriter, r *http.Request) {
 	render := func(email, password, error string) {
 		renderTemplate(w, r, loginTemplate(), &pongo2.Context{
-			"pageTitle": "Login",
-			"email":     email,
-			"password":  password,
-			"error":     error,
+			"pageTitle":  "Login",
+			"email":      email,
+			"password":   password,
+			"error":      error,
+			"doNotTrack": true,
 		})
 	}
 
@@ -72,6 +73,7 @@ func routeRegister(w http.ResponseWriter, r *http.Request) {
 			"password":  password,
 			"name":      name,
 			"error":     error,
+			"doNotTrack": true,
 		})
 	}
 
