@@ -32,5 +32,6 @@ func routeNotFound(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusNotFound)
 	renderTemplate(w, r, notFoundTemplate(), &pongo2.Context{
 		"blogPosts": blogPosts,
+		"doNotTrack": true,
 	})
 }
