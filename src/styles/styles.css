@@ -247,6 +247,7 @@ form input:invalid {
 .content > ol,
 .content > ul,
 .content > hr,
+.content > form,
 .content > div,
 .content > table,
 .content > blockquote,
