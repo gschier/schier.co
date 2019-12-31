@@ -90,7 +90,7 @@
   <script>
     const el = document.querySelector('#live-users');
     const next = async () => {
-      const res = await fetch('/analytics/live');
+      const res = await fetch('{{ analyticsUrl }}/analytics/live');
       const data = await res.json();
       el.innerHTML = data.count;
     };
