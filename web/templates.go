@@ -211,21 +211,22 @@ func renderTemplate(w http.ResponseWriter, r *http.Request, template *pongo2.Tem
 	}
 
 	newContext := pongo2.Context{
+		"analyticsUrl":     os.Getenv("ANALYTICS_URL"),
 		"csrfToken":        csrf.Token(r),
 		"csrfTokenHeader":  "X-CSRF-Token",
+		"deployTime":       deployTime,
+		"doNotTrack":       loggedIn,
 		"gaId":             os.Getenv("GA_ID"),
 		"isDev":            isDev,
 		"loggedIn":         loggedIn,
-		"deployTime":       deployTime,
-		"pageUrl":          os.Getenv("BASE_URL") + r.URL.EscapedPath(),
-		"pageTitle":        "",
 		"pageDescription":  "Thoughts on software and technology, by an independent software developer",
 		"pageImage":        "",
 		"pageImageDefault": os.Getenv("BASE_URL") + "/static/build/images/greg.png",
+		"pageTitle":        "",
+		"pageUrl":          os.Getenv("BASE_URL") + r.URL.EscapedPath(),
 		"rssUrl":           "/rss.xml",
 		"staticUrl":        fmt.Sprintf("%s-%d", os.Getenv("STATIC_URL"), staticBreaker),
 		"user":             user,
-		"analyticsUrl":     os.Getenv("ANALYTICS_URL"),
 		csrf.TemplateTag:   csrf.TemplateField(r),
 	}
 
