@@ -366,7 +366,11 @@ form input:invalid {
 
 .blog-post-footer__inner {
   @apply text-center mx-auto py-10 px-4;
-  max-width: 27rem;
+}
+
+.blog-post-footer form {
+  @apply mx-auto;
+  max-width: 24rem;
 }
 
 /***********************/
