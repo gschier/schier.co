@@ -241,8 +241,12 @@ func routeBlogPostCreateOrUpdate(w http.ResponseWriter, r *http.Request) {
 			date = time.Now().Format(time.RFC3339)
 		}
 
-		if slug == "" {
+		if existingPost.Published {
+			// Never update slug if published
 			slug = existingPost.Slug
+		} else if slug == "" {
+			// Update slug if draft and no slug provided
+			slug = sluglib.Make(title)
 		}
 
 		_, upsertErr = client.UpdateBlogPost(prisma.BlogPostUpdateParams{
@@ -250,7 +254,7 @@ func routeBlogPostCreateOrUpdate(w http.ResponseWriter, r *http.Request) {
 				ID: &id,
 			},
 			Data: prisma.BlogPostUpdateInput{
-				Slug:    prisma.Str(slug),
+				Slug:    &slug,
 				Title:   &title,
 				Content: &content,
 				Image:   &image,
