@@ -6,13 +6,13 @@
       <h1>
         {% if tag %}
           Posts in <span class="tag">{{ tag }}</span>
-        {% elif blogPage == 0 %}
+        {% elif blogPage == 1 %}
           Welcome to the Blog!
         {% else %}
           Page {{ blogPage }}
         {% endif %}
       </h1>
-      {% if not tag and blogPage == 0 %}
+      {% if not tag and blogPage == 1 %}
         <p>
           This is where I write about life, programming, and other interests.
         </p>
