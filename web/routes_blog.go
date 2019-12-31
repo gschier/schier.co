@@ -241,12 +241,16 @@ func routeBlogPostCreateOrUpdate(w http.ResponseWriter, r *http.Request) {
 			date = time.Now().Format(time.RFC3339)
 		}
 
+		if slug == "" {
+			slug = existingPost.Slug
+		}
+
 		_, upsertErr = client.UpdateBlogPost(prisma.BlogPostUpdateParams{
 			Where: prisma.BlogPostWhereUniqueInput{
 				ID: &id,
 			},
 			Data: prisma.BlogPostUpdateInput{
-				Slug:    &slug,
+				Slug:    prisma.Str(slug),
 				Title:   &title,
 				Content: &content,
 				Image:   &image,
