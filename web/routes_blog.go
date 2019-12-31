@@ -157,10 +157,7 @@ func routeBlogPostPublish(w http.ResponseWriter, r *http.Request) {
 
 	client := ctxPrismaClient(r)
 	blogPost, err := client.UpdateBlogPost(prisma.BlogPostUpdateParams{
-		Data: prisma.BlogPostUpdateInput{
-			Published: &published,
-			Date:      prisma.Str(time.Now().Format(time.RFC3339)),
-		},
+		Data:  prisma.BlogPostUpdateInput{Published: &published},
 		Where: prisma.BlogPostWhereUniqueInput{ID: &id},
 	}).Exec(r.Context())
 	if err != nil {
@@ -232,28 +229,49 @@ func routeBlogPostCreateOrUpdate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	existingPost, err := client.BlogPost(prisma.BlogPostWhereUniqueInput{ID: &id}).Exec(r.Context())
+	if err != nil && err != prisma.ErrNoResult {
+		log.Println("Failed to update blog posts", err)
+		http.Error(w, "Failed to update blog post", http.StatusInternalServerError)
+		return
+	}
+
 	// Upsert blog post
-	_, err := client.UpsertBlogPost(prisma.BlogPostUpsertParams{
-		Where: prisma.BlogPostWhereUniqueInput{ID: &id},
-		Create: prisma.BlogPostCreateInput{
+	// NOTE: Note using prisma upsert method because updating date is conditional
+	var upsertErr error
+	if existingPost != nil {
+		date := existingPost.Date
+		if !existingPost.Published {
+			date = time.Now().Format(time.RFC3339)
+		}
+
+		_, upsertErr = client.UpdateBlogPost(prisma.BlogPostUpdateParams{
+			Where: prisma.BlogPostWhereUniqueInput{
+				ID: &id,
+			},
+			Data: prisma.BlogPostUpdateInput{
+				Slug:    &slug,
+				Title:   &title,
+				Content: &content,
+				Image:   &image,
+				Date:    &date,
+				Tags:    prisma.Str(TagsToString(tagNames)),
+			},
+		}).Exec(r.Context())
+	} else {
+		_, upsertErr = client.CreateBlogPost(prisma.BlogPostCreateInput{
+			Published: false,
 			Slug:      slug,
 			Title:     title,
-			Published: false,
 			Content:   content,
 			Image:     image,
 			Date:      time.Now().Format(time.RFC3339),
 			Author:    prisma.UserCreateOneInput{Connect: &prisma.UserWhereUniqueInput{ID: &user.ID}},
 			Tags:      TagsToString(tagNames),
-		},
-		Update: prisma.BlogPostUpdateInput{
-			Slug:    &slug,
-			Title:   &title,
-			Content: &content,
-			Image:   &image,
-			Tags:    prisma.Str(TagsToString(tagNames)),
-		},
-	}).Exec(r.Context())
-	if err != nil {
+		}).Exec(r.Context())
+	}
+
+	if upsertErr != nil {
 		log.Println("Failed to update blog posts", err)
 		http.Error(w, "Failed to update blog post", http.StatusInternalServerError)
 		return

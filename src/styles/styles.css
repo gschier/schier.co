@@ -319,12 +319,10 @@ form input:invalid {
   @apply border-l-4 border-gray-300 p-3 bg-gray-100 italic text-gray-700 rounded-sm;
 }
 
-
 .blog-post hr {
   @apply border-gray-300 border-0 border-double border-b-4 my-8 mx-auto;
   width: 5em;
 }
-
 
 /**************/
 /* PAGINATION */
