@@ -106,7 +106,7 @@
     localStorage.schier = JSON.stringify(sess);
 
     const e = encodeURIComponent;
-    fetch('/t?t=page&' + [
+    fetch('{{ analyticsUrl }}/t?t=page&' + [
       `path=${e(path)}`,
       `prev=${e(prev)}`,
       `search=${e(location.search)}`,

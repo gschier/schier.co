@@ -225,6 +225,7 @@ func renderTemplate(w http.ResponseWriter, r *http.Request, template *pongo2.Tem
 		"rssUrl":           "/rss.xml",
 		"staticUrl":        fmt.Sprintf("%s-%d", os.Getenv("STATIC_URL"), staticBreaker),
 		"user":             user,
+		"analyticsUrl":     os.Getenv("ANALYTICS_URL"),
 		csrf.TemplateTag:   csrf.TemplateField(r),
 	}
 
