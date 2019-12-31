@@ -158,6 +158,8 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 				h = "Google 🔍"
 			} else if strings.HasSuffix(h, "bing.com") {
 				h = "Bing 🔍"
+			} else if strings.HasSuffix(h, "reddit.com") {
+				h = "Reddit"
 			} else if h == "duckduckgo.com" {
 				h = "DuckDuckGo 🔍"
 			} else if h == "t.co" {
