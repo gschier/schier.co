@@ -299,12 +299,33 @@ func routeTrack(w http.ResponseWriter, r *http.Request) {
 	user := q.Get("user")
 	ageStr := q.Get("age")
 	pageStr := q.Get("page")
+	lang := q.Get("lang")
 
+	// Convert to ints
 	age, _ := strconv.Atoi(ageStr)
 	page, _ := strconv.Atoi(pageStr)
 
+	// Remove port from IP
+	ip = strings.Split(ip, ":")[0]
+
 	go func() {
+		country := ""
+		//db, err := maxminddb.Open("geo/GeoLite2-Country.mmdb")
+		//if err != nil {
+		//	log.Fatal(err)
+		//}
+		//defer db.Close()
+		//
+		//var record interface{}
+		//fmt.Println("IP", ip, net.ParseIP(ip))
+		//err = db.Lookup(net.ParseIP(ip), &record)
+		//if err != nil {
+		//	log.Println("Failed to lookup IP", err.Error())
+		//}
+		//fmt.Printf("HELLO? %v\n", record)
+
 		client := ctxPrismaClient(r)
+
 		_, err := client.CreateAnalyticsPageView(prisma.AnalyticsPageViewCreateInput{
 			UserAgent: userAgent,
 			Path:      path,
@@ -314,6 +335,8 @@ func routeTrack(w http.ResponseWriter, r *http.Request) {
 			Sess:      sess,
 			User:      user,
 			Ip:        ip,
+			Lang:      lang,
+			Country:   country,
 			Age:       int32(age),
 			Page:      int32(page),
 		}).Exec(context.Background())

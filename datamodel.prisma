@@ -92,4 +92,6 @@ type AnalyticsPageView {
     age: Int!
     page: Int!
     ip: String!
+    lang: String!
+    country: String!
 }

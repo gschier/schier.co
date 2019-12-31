@@ -66,6 +66,8 @@ github.com/mailjet/mailjet-apiv3-go/resources
 github.com/mileusna/useragent
 # github.com/mitchellh/mapstructure v1.1.2
 github.com/mitchellh/mapstructure
+# github.com/oschwald/maxminddb-golang v1.6.0
+github.com/oschwald/maxminddb-golang
 # github.com/pkg/errors v0.8.1
 github.com/pkg/errors
 # github.com/pmezard/go-difflib v1.0.0
@@ -78,12 +80,15 @@ github.com/rainycape/unidecode
 github.com/russross/blackfriday/v2
 # github.com/shurcooL/sanitized_anchor_name v1.0.0
 github.com/shurcooL/sanitized_anchor_name
-# github.com/stretchr/testify v1.2.2
+# github.com/stretchr/testify v1.4.0
 github.com/stretchr/testify/assert
 # github.com/writeas/go-strip-markdown v2.0.1+incompatible
 github.com/writeas/go-strip-markdown
 # golang.org/x/crypto v0.0.0-20191111213947-16651526fdb4
 golang.org/x/crypto/bcrypt
 golang.org/x/crypto/blowfish
+# golang.org/x/sys v0.0.0-20191224085550-c709ea063b76
+golang.org/x/sys/unix
+golang.org/x/sys/windows
 # gopkg.in/yaml.v2 v2.2.2
 gopkg.in/yaml.v2

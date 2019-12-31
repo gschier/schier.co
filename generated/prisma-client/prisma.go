@@ -70,7 +70,7 @@ func (client *Client) AnalyticsPageView(params AnalyticsPageViewWhereUniqueInput
 		params,
 		[2]string{"AnalyticsPageViewWhereUniqueInput!", "AnalyticsPageView"},
 		"analyticsPageView",
-		[]string{"id", "time", "sess", "user", "userAgent", "path", "pPath", "search", "referrer", "age", "page", "ip"})
+		[]string{"id", "time", "sess", "user", "userAgent", "path", "pPath", "search", "referrer", "age", "page", "ip", "lang", "country"})
 
 	return &AnalyticsPageViewExec{ret}
 }
@@ -104,7 +104,7 @@ func (client *Client) AnalyticsPageViews(params *AnalyticsPageViewsParams) *Anal
 		wparams,
 		[3]string{"AnalyticsPageViewWhereInput", "AnalyticsPageViewOrderByInput", "AnalyticsPageView"},
 		"analyticsPageViews",
-		[]string{"id", "time", "sess", "user", "userAgent", "path", "pPath", "search", "referrer", "age", "page", "ip"})
+		[]string{"id", "time", "sess", "user", "userAgent", "path", "pPath", "search", "referrer", "age", "page", "ip", "lang", "country"})
 
 	return &AnalyticsPageViewExecArray{ret}
 }
@@ -951,7 +951,7 @@ func (client *Client) CreateAnalyticsPageView(params AnalyticsPageViewCreateInpu
 		params,
 		[2]string{"AnalyticsPageViewCreateInput!", "AnalyticsPageView"},
 		"createAnalyticsPageView",
-		[]string{"id", "time", "sess", "user", "userAgent", "path", "pPath", "search", "referrer", "age", "page", "ip"})
+		[]string{"id", "time", "sess", "user", "userAgent", "path", "pPath", "search", "referrer", "age", "page", "ip", "lang", "country"})
 
 	return &AnalyticsPageViewExec{ret}
 }
@@ -969,7 +969,7 @@ func (client *Client) UpdateAnalyticsPageView(params AnalyticsPageViewUpdatePara
 		},
 		[3]string{"AnalyticsPageViewUpdateInput!", "AnalyticsPageViewWhereUniqueInput!", "AnalyticsPageView"},
 		"updateAnalyticsPageView",
-		[]string{"id", "time", "sess", "user", "userAgent", "path", "pPath", "search", "referrer", "age", "page", "ip"})
+		[]string{"id", "time", "sess", "user", "userAgent", "path", "pPath", "search", "referrer", "age", "page", "ip", "lang", "country"})
 
 	return &AnalyticsPageViewExec{ret}
 }
@@ -1006,7 +1006,7 @@ func (client *Client) UpsertAnalyticsPageView(params AnalyticsPageViewUpsertPara
 		uparams,
 		[4]string{"AnalyticsPageViewWhereUniqueInput!", "AnalyticsPageViewCreateInput!", "AnalyticsPageViewUpdateInput!", "AnalyticsPageView"},
 		"upsertAnalyticsPageView",
-		[]string{"id", "time", "sess", "user", "userAgent", "path", "pPath", "search", "referrer", "age", "page", "ip"})
+		[]string{"id", "time", "sess", "user", "userAgent", "path", "pPath", "search", "referrer", "age", "page", "ip", "lang", "country"})
 
 	return &AnalyticsPageViewExec{ret}
 }
@@ -1016,7 +1016,7 @@ func (client *Client) DeleteAnalyticsPageView(params AnalyticsPageViewWhereUniqu
 		params,
 		[2]string{"AnalyticsPageViewWhereUniqueInput!", "AnalyticsPageView"},
 		"deleteAnalyticsPageView",
-		[]string{"id", "time", "sess", "user", "userAgent", "path", "pPath", "search", "referrer", "age", "page", "ip"})
+		[]string{"id", "time", "sess", "user", "userAgent", "path", "pPath", "search", "referrer", "age", "page", "ip", "lang", "country"})
 
 	return &AnalyticsPageViewExec{ret}
 }
@@ -1677,6 +1677,10 @@ const (
 	AnalyticsPageViewOrderByInputPageDesc      AnalyticsPageViewOrderByInput = "page_DESC"
 	AnalyticsPageViewOrderByInputIpAsc         AnalyticsPageViewOrderByInput = "ip_ASC"
 	AnalyticsPageViewOrderByInputIpDesc        AnalyticsPageViewOrderByInput = "ip_DESC"
+	AnalyticsPageViewOrderByInputLangAsc       AnalyticsPageViewOrderByInput = "lang_ASC"
+	AnalyticsPageViewOrderByInputLangDesc      AnalyticsPageViewOrderByInput = "lang_DESC"
+	AnalyticsPageViewOrderByInputCountryAsc    AnalyticsPageViewOrderByInput = "country_ASC"
+	AnalyticsPageViewOrderByInputCountryDesc   AnalyticsPageViewOrderByInput = "country_DESC"
 )
 
 type UserType string
@@ -1854,6 +1858,8 @@ type AnalyticsPageViewUpdateInput struct {
 	Age       *int32  `json:"age,omitempty"`
 	Page      *int32  `json:"page,omitempty"`
 	Ip        *string `json:"ip,omitempty"`
+	Lang      *string `json:"lang,omitempty"`
+	Country   *string `json:"country,omitempty"`
 }
 
 type BlogPostWhereUniqueInput struct {
@@ -1884,6 +1890,8 @@ type AnalyticsPageViewUpdateManyMutationInput struct {
 	Age       *int32  `json:"age,omitempty"`
 	Page      *int32  `json:"page,omitempty"`
 	Ip        *string `json:"ip,omitempty"`
+	Lang      *string `json:"lang,omitempty"`
+	Country   *string `json:"country,omitempty"`
 }
 
 type ProjectWhereUniqueInput struct {
@@ -2265,6 +2273,34 @@ type AnalyticsPageViewWhereInput struct {
 	IpNotStartsWith        *string                       `json:"ip_not_starts_with,omitempty"`
 	IpEndsWith             *string                       `json:"ip_ends_with,omitempty"`
 	IpNotEndsWith          *string                       `json:"ip_not_ends_with,omitempty"`
+	Lang                   *string                       `json:"lang,omitempty"`
+	LangNot                *string                       `json:"lang_not,omitempty"`
+	LangIn                 []string                      `json:"lang_in,omitempty"`
+	LangNotIn              []string                      `json:"lang_not_in,omitempty"`
+	LangLt                 *string                       `json:"lang_lt,omitempty"`
+	LangLte                *string                       `json:"lang_lte,omitempty"`
+	LangGt                 *string                       `json:"lang_gt,omitempty"`
+	LangGte                *string                       `json:"lang_gte,omitempty"`
+	LangContains           *string                       `json:"lang_contains,omitempty"`
+	LangNotContains        *string                       `json:"lang_not_contains,omitempty"`
+	LangStartsWith         *string                       `json:"lang_starts_with,omitempty"`
+	LangNotStartsWith      *string                       `json:"lang_not_starts_with,omitempty"`
+	LangEndsWith           *string                       `json:"lang_ends_with,omitempty"`
+	LangNotEndsWith        *string                       `json:"lang_not_ends_with,omitempty"`
+	Country                *string                       `json:"country,omitempty"`
+	CountryNot             *string                       `json:"country_not,omitempty"`
+	CountryIn              []string                      `json:"country_in,omitempty"`
+	CountryNotIn           []string                      `json:"country_not_in,omitempty"`
+	CountryLt              *string                       `json:"country_lt,omitempty"`
+	CountryLte             *string                       `json:"country_lte,omitempty"`
+	CountryGt              *string                       `json:"country_gt,omitempty"`
+	CountryGte             *string                       `json:"country_gte,omitempty"`
+	CountryContains        *string                       `json:"country_contains,omitempty"`
+	CountryNotContains     *string                       `json:"country_not_contains,omitempty"`
+	CountryStartsWith      *string                       `json:"country_starts_with,omitempty"`
+	CountryNotStartsWith   *string                       `json:"country_not_starts_with,omitempty"`
+	CountryEndsWith        *string                       `json:"country_ends_with,omitempty"`
+	CountryNotEndsWith     *string                       `json:"country_not_ends_with,omitempty"`
 	And                    []AnalyticsPageViewWhereInput `json:"AND,omitempty"`
 	Or                     []AnalyticsPageViewWhereInput `json:"OR,omitempty"`
 	Not                    []AnalyticsPageViewWhereInput `json:"NOT,omitempty"`
@@ -2923,6 +2959,8 @@ type AnalyticsPageViewCreateInput struct {
 	Age       int32   `json:"age"`
 	Page      int32   `json:"page"`
 	Ip        string  `json:"ip"`
+	Lang      string  `json:"lang"`
+	Country   string  `json:"country"`
 }
 
 type BlogPostCreateInput struct {
@@ -3330,7 +3368,7 @@ func (instance AnalyticsPageViewExecArray) Exec(ctx context.Context) ([]Analytic
 	return v, err
 }
 
-var AnalyticsPageViewFields = []string{"id", "time", "sess", "user", "userAgent", "path", "pPath", "search", "referrer", "age", "page", "ip"}
+var AnalyticsPageViewFields = []string{"id", "time", "sess", "user", "userAgent", "path", "pPath", "search", "referrer", "age", "page", "ip", "lang", "country"}
 
 type AnalyticsPageView struct {
 	ID        string `json:"id"`
@@ -3345,6 +3383,8 @@ type AnalyticsPageView struct {
 	Age       int32  `json:"age"`
 	Page      int32  `json:"page"`
 	Ip        string `json:"ip"`
+	Lang      string `json:"lang"`
+	Country   string `json:"country"`
 }
 
 type UserConnectionExec struct {
@@ -3441,7 +3481,7 @@ func (instance *AnalyticsPageViewSubscriptionPayloadExec) Node() *AnalyticsPageV
 		nil,
 		[2]string{"", "AnalyticsPageView"},
 		"node",
-		[]string{"id", "time", "sess", "user", "userAgent", "path", "pPath", "search", "referrer", "age", "page", "ip"})
+		[]string{"id", "time", "sess", "user", "userAgent", "path", "pPath", "search", "referrer", "age", "page", "ip", "lang", "country"})
 
 	return &AnalyticsPageViewExec{ret}
 }
@@ -3452,7 +3492,7 @@ func (instance *AnalyticsPageViewSubscriptionPayloadExec) PreviousValues() *Anal
 		nil,
 		[2]string{"", "AnalyticsPageViewPreviousValues"},
 		"previousValues",
-		[]string{"id", "time", "sess", "user", "userAgent", "path", "pPath", "search", "referrer", "age", "page", "ip"})
+		[]string{"id", "time", "sess", "user", "userAgent", "path", "pPath", "search", "referrer", "age", "page", "ip", "lang", "country"})
 
 	return &AnalyticsPageViewPreviousValuesExec{ret}
 }
@@ -3737,7 +3777,7 @@ func (instance AnalyticsPageViewPreviousValuesExecArray) Exec(ctx context.Contex
 	return v, err
 }
 
-var AnalyticsPageViewPreviousValuesFields = []string{"id", "time", "sess", "user", "userAgent", "path", "pPath", "search", "referrer", "age", "page", "ip"}
+var AnalyticsPageViewPreviousValuesFields = []string{"id", "time", "sess", "user", "userAgent", "path", "pPath", "search", "referrer", "age", "page", "ip", "lang", "country"}
 
 type AnalyticsPageViewPreviousValues struct {
 	ID        string `json:"id"`
@@ -3752,6 +3792,8 @@ type AnalyticsPageViewPreviousValues struct {
 	Age       int32  `json:"age"`
 	Page      int32  `json:"page"`
 	Ip        string `json:"ip"`
+	Lang      string `json:"lang"`
+	Country   string `json:"country"`
 }
 
 type SubscriberExec struct {
@@ -5088,7 +5130,7 @@ func (instance *AnalyticsPageViewEdgeExec) Node() *AnalyticsPageViewExec {
 		nil,
 		[2]string{"", "AnalyticsPageView"},
 		"node",
-		[]string{"id", "time", "sess", "user", "userAgent", "path", "pPath", "search", "referrer", "age", "page", "ip"})
+		[]string{"id", "time", "sess", "user", "userAgent", "path", "pPath", "search", "referrer", "age", "page", "ip", "lang", "country"})
 
 	return &AnalyticsPageViewExec{ret}
 }
