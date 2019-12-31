@@ -8,6 +8,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/gschier/schier.dev/generated/prisma-client"
 	"github.com/mileusna/useragent"
+	"github.com/oschwald/maxminddb-golang"
 	"log"
 	"net"
 	"net/http"
@@ -16,11 +17,10 @@ import (
 	"strconv"
 	"strings"
 	"time"
-	"github.com/oschwald/maxminddb-golang"
 )
 
 func AnalyticsRoutes(router *mux.Router) {
-	router.HandleFunc("/t", routeTrack).Methods(http.MethodGet)
+	router.HandleFunc("/t", routeTrack).Methods(http.MethodGet, http.MethodOptions)
 	router.HandleFunc("/analytics/live", routeAnalyticsLive).Methods(http.MethodGet)
 
 	router.HandleFunc("/open", routeAnalytics).Methods(http.MethodGet)
@@ -272,6 +272,12 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 }
 
 func routeTrack(w http.ResponseWriter, r *http.Request) {
+	if r.Method == http.MethodOptions {
+		w.Header().Set("Access-Control-Allow-Origin", "schier.co")
+		w.Header().Set("Access-Control-Allow-Methods", "POST")
+		return
+	}
+
 	// Don't track admins
 	if ctxGetLoggedIn(r) {
 		w.WriteHeader(http.StatusNoContent)

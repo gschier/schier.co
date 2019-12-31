@@ -689,12 +689,11 @@ body .CodeMirror .cm-comment {
 
 .home-hero__avatar {
   @apply pr-8;
-  max-width: 20rem;
-  min-width: 8rem;
 }
 
 .home-hero__avatar img {
   @apply rounded-full w-full block mx-auto;
+  width: 18rem;
 }
 
 @media only screen and (max-width: 600px) {
@@ -703,7 +702,7 @@ body .CodeMirror .cm-comment {
   }
 
   .home-hero__avatar {
-    @apply mx-auto;
+    @apply mx-auto w-auto;
     max-width: 12rem;
   }
 }
