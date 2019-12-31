@@ -5,7 +5,7 @@ import (
 	"github.com/flosch/pongo2"
 	"github.com/gorilla/feeds"
 	"github.com/gorilla/mux"
-	slugLib "github.com/gosimple/slug"
+	sluglib "github.com/gosimple/slug"
 	"github.com/gschier/schier.dev/generated/prisma-client"
 	"log"
 	"net/http"
@@ -210,10 +210,6 @@ func routeBlogPostCreateOrUpdate(w http.ResponseWriter, r *http.Request) {
 	image := r.Form.Get("image")
 	tagNames := StringToTags(r.Form.Get("tags"))
 
-	if slug == "" {
-		slug = slugLib.Make(title)
-	}
-
 	// Force title capitalization
 	title = CapitalizeTitle(title)
 
@@ -261,10 +257,10 @@ func routeBlogPostCreateOrUpdate(w http.ResponseWriter, r *http.Request) {
 	} else {
 		_, upsertErr = client.CreateBlogPost(prisma.BlogPostCreateInput{
 			Published: false,
-			Slug:      slug,
 			Title:     title,
 			Content:   content,
 			Image:     image,
+			Slug:      sluglib.Make(title),
 			Date:      time.Now().Format(time.RFC3339),
 			Author:    prisma.UserCreateOneInput{Connect: &prisma.UserWhereUniqueInput{ID: &user.ID}},
 			Tags:      TagsToString(tagNames),
