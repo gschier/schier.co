@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"github.com/flosch/pongo2"
 	"github.com/gorilla/mux"
-	schier_dev "github.com/gschier/schier.dev"
+	schier "github.com/gschier/schier.dev"
 	"github.com/gschier/schier.dev/generated/prisma-client"
 	"github.com/mileusna/useragent"
 	"log"
@@ -19,7 +19,7 @@ import (
 )
 
 func AnalyticsRoutes(router *mux.Router) {
-	router.HandleFunc("/t", routeTrack).Methods(http.MethodGet, http.MethodOptions)
+	router.HandleFunc("/t", routeTrack).Methods(http.MethodGet, http.MethodPost)
 	router.HandleFunc("/analytics/live", routeAnalyticsLive).Methods(http.MethodGet)
 
 	router.HandleFunc("/open", routeAnalytics).Methods(http.MethodGet)
@@ -310,7 +310,7 @@ func routeTrack(w http.ResponseWriter, r *http.Request) {
 	ip = strings.Split(ip, ":")[0]
 
 	go func() {
-		client := schier_dev.NewPrismaClient()
+		client := schier.NewPrismaClient()
 
 		_, err := client.CreateAnalyticsPageView(prisma.AnalyticsPageViewCreateInput{
 			UserAgent: userAgent,

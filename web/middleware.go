@@ -103,7 +103,7 @@ func CSRFMiddleware(next http.Handler) http.Handler {
 
 // CORSMiddleware adds CORS headers to the requests
 func CORSMiddleware(next http.Handler) http.Handler {
-	return handlers.CORS(handlers.AllowedOrigins([]string{"schier.co"}))(next)
+	return handlers.CORS(handlers.AllowedOrigins([]string{"https://schier.co"}))(next)
 }
 
 // UserMiddleware adds the User object to the context if available
