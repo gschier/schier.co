@@ -275,6 +275,18 @@ form input:invalid {
   @apply block mx-auto rounded-sm my-8;
 }
 
+.content .footnotes {
+  @apply text-sm opacity-80 mb-8;
+}
+
+.content .footnotes li {
+  @apply ml-5;
+}
+
+.content .footnotes hr {
+  @apply border-dashed;
+}
+
 .content :not(pre) code {
   @apply bg-gray-200 rounded px-1 border-2 border-gray-200 font-mono;
 
