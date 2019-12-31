@@ -28,7 +28,6 @@ func setupRouter(client *prisma.Client) *mux.Router {
 	router.Use(web.NewContextMiddleware(client))
 	router.Use(web.CSRFMiddleware)
 	router.Use(web.UserMiddleware)
-	router.Use(web.CORSMiddleware)
 	router.Use(web.NewForceLoginHostMiddleware("schier.dev"))
 
 	// Apply routes
@@ -50,6 +49,7 @@ func applyMiddleware(r *mux.Router) http.Handler {
 	var handler http.Handler = r
 
 	// Global middleware
+	handler = web.CORSMiddleware(handler)
 	handler = web.DeployHeadersMiddleware(handler)
 	handler = web.CacheHeadersMiddleware(handler)
 	handler = web.LoggerMiddleware(handler)
