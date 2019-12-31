@@ -483,6 +483,11 @@ func routeBlogList(w http.ResponseWriter, r *http.Request) {
 		blogPosts = blogPosts[:len(blogPosts)-1]
 	}
 
+	if len(blogPosts) == 0 {
+		routeNotFound(w, r)
+		return
+	}
+
 	// Render template
 	renderTemplate(w, r, blogListTemplate(), &pongo2.Context{
 		"pageTitle":        "Blog Posts",
