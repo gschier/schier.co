@@ -62,16 +62,6 @@
 >
 {% block body %}{% endblock %}
 
-{% block extraScripts %}{% endblock %}
-{% if not loggedIn and gaId %}
-  <script>
-    window.ga = window.ga || function () {
-      (ga.q = ga.q || []).push(arguments);
-    }, ga.l = +new Date, ga('create', '{{ gaId }}', 'auto'), ga('send', 'pageview');</script>
-  <script async src="//www.google-analytics.com/analytics.js"></script>
-{% else %}
-  <!-- Google Analytics Disabled -->
-{% endif %}
 {% if not doNotTrack %}
   <script>
     (function () {
@@ -125,6 +115,8 @@
       ].join('&'));
     })();
   </script>
+{% else %}
+  <!-- Analytics Disabled -->
 {% endif %}
 </body>
 </html>
