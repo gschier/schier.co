@@ -81,7 +81,7 @@
     <div class="pagination">
       <div class="pagination-left">
         {% if blogPagePrev != blogPage %}
-          <a href="/blog/{{ blogPagePrev }}" class="left">Previous</a>
+          <a href="/blog/page/{{ blogPagePrev }}" class="left">Previous</a>
         {% endif %}
       </div>
 
@@ -91,7 +91,7 @@
 
       <div class="pagination-right">
         {% if blogPageNext != blogPage %}
-          <a href="/blog/{{ blogPageNext }}">Next</a>
+          <a href="/blog/page/{{ blogPageNext }}">Next</a>
         {% else %}
         {% endif %}
       </div>
