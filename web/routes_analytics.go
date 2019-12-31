@@ -6,11 +6,10 @@ import (
 	"fmt"
 	"github.com/flosch/pongo2"
 	"github.com/gorilla/mux"
+	schier_dev "github.com/gschier/schier.dev"
 	"github.com/gschier/schier.dev/generated/prisma-client"
 	"github.com/mileusna/useragent"
-	"github.com/oschwald/maxminddb-golang"
 	"log"
-	"net"
 	"net/http"
 	"net/url"
 	"sort"
@@ -20,7 +19,7 @@ import (
 )
 
 func AnalyticsRoutes(router *mux.Router) {
-	router.HandleFunc("/t", routeTrack).Methods(http.MethodGet)
+	router.HandleFunc("/t", routeTrack).Methods(http.MethodGet, http.MethodOptions)
 	router.HandleFunc("/analytics/live", routeAnalyticsLive).Methods(http.MethodGet)
 
 	router.HandleFunc("/open", routeAnalytics).Methods(http.MethodGet)
@@ -311,25 +310,9 @@ func routeTrack(w http.ResponseWriter, r *http.Request) {
 	ip = strings.Split(ip, ":")[0]
 
 	go func() {
-		db, err := maxminddb.Open("geo/GeoLite2-Country.mmdb")
-		if err != nil {
-			log.Fatal(err)
-		}
-		defer db.Close()
+		client := schier_dev.NewPrismaClient()
 
-		var record struct {
-			Country struct {
-				ISOCode string `maxminddb:"iso_code"`
-			} `maxminddb:"country"`
-		}
-		err = db.Lookup(net.ParseIP(ip), &record)
-		if err != nil {
-			log.Println("Failed to lookup IP", err.Error())
-		}
-
-		client := ctxPrismaClient(r)
-
-		_, err = client.CreateAnalyticsPageView(prisma.AnalyticsPageViewCreateInput{
+		_, err := client.CreateAnalyticsPageView(prisma.AnalyticsPageViewCreateInput{
 			UserAgent: userAgent,
 			Path:      path,
 			PPath:     prev,
@@ -339,7 +322,7 @@ func routeTrack(w http.ResponseWriter, r *http.Request) {
 			User:      user,
 			Ip:        ip,
 			Lang:      lang,
-			Country:   record.Country.ISOCode,
+			Country:   LookupCountry(ip),
 			Age:       int32(age),
 			Page:      int32(page),
 		}).Exec(context.Background())
