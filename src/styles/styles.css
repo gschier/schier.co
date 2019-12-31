@@ -567,11 +567,19 @@ pre.chroma-chroma {
   border-bottom: 2px dotted #ff5f00;
 }
 
+body .CodeMirror .cm-variable-2 {
+  @apply text-primary;
+}
+
 body .CodeMirror .cm-link {
   @apply text-syntax1;
 }
 
 body .CodeMirror .cm-url {
+  @apply text-syntax2;
+}
+
+body .CodeMirror .cm-header {
   @apply text-syntax2;
 }
 
