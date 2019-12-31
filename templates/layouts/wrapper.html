@@ -106,19 +106,17 @@
     localStorage.schier = JSON.stringify(sess);
 
     const e = encodeURIComponent;
-    if (navigator.doNotTrack !== '1') {
-      fetch('{{ analyticsUrl }}/t?t=page&' + [
-        `path=${e(path)}`,
-        `prev=${e(prev)}`,
-        `search=${e(location.search)}`,
-        `ref=${e(document.referrer)}`,
-        `user=${e(sess.user)}`,
-        `sess=${e(sess.id)}`,
-        `age=${e(age)}`,
-        `page=${e(sess.pages)}`,
-        `lang=${e(navigator.language)}`
-      ].join('&'));
-    }
+    fetch('{{ analyticsUrl }}/t?t=page&' + [
+      `path=${e(path)}`,
+      `prev=${e(prev)}`,
+      `search=${e(location.search)}`,
+      `ref=${e(document.referrer)}`,
+      `user=${e(sess.user)}`,
+      `sess=${e(sess.id)}`,
+      `age=${e(age)}`,
+      `page=${e(sess.pages)}`,
+      `lang=${e(navigator.language)}`
+    ].join('&'));
   </script>
 {% endif %}
 </body>
