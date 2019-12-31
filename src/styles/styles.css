@@ -337,11 +337,11 @@ form input:invalid {
 }
 
 .pagination-left {
-  @apply w-20 text-left;
+  @apply w-24 text-left whitespace-no-wrap;
 }
 
 .pagination-right {
-  @apply w-20 text-center;
+  @apply w-24 text-center;
 }
 
 /*************/
