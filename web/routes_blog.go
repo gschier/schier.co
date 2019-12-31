@@ -22,9 +22,9 @@ func BlogRoutes(router *mux.Router) {
 	router.HandleFunc("/blog/rss.xml", routeBlogRSS).Methods(http.MethodGet)
 
 	// Blog Static
-	router.HandleFunc("/blog", routeBlogList).Methods(http.MethodGet)
 	router.HandleFunc("/blog/new", Admin(routeBlogPostEdit)).Methods(http.MethodGet)
 	router.HandleFunc("/blog/render", routeBlogRender).Methods(http.MethodPost)
+	router.Handle("/blog", http.RedirectHandler("/blog/page/1", http.StatusSeeOther)).Methods(http.MethodGet)
 	router.HandleFunc("/blog/page/{page:[0-9]+}", routeBlogList).Methods(http.MethodGet)
 
 	// Tags
@@ -428,10 +428,10 @@ func routeBlogRSS(w http.ResponseWriter, r *http.Request) {
 
 func routeBlogList(w http.ResponseWriter, r *http.Request) {
 	tag := mux.Vars(r)["tag"]
-	page, _ := strconv.Atoi(mux.Vars(r)["page"])
+	page := StrToInt(mux.Vars(r)["page"], 1)
 
-	first := 6
-	skip := page * first
+	first := 5
+	skip := (page - 1) * first
 
 	var tagsContains *string = nil
 	if tag != "" {
@@ -495,7 +495,6 @@ func routeBlogList(w http.ResponseWriter, r *http.Request) {
 		"blogPosts":        blogPosts,
 		"blogPostDrafts":   blogPostDrafts,
 		"blogPage":         page,
-		"blogPageFriendly": page + 1,
 		"blogPagePrev":     pagePrevious,
 		"blogPageNext":     pageNext,
 	})

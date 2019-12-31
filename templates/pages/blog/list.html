@@ -9,7 +9,7 @@
         {% elif blogPage == 0 %}
           Welcome to the Blog!
         {% else %}
-          Page {{ blogPageFriendly }}
+          Page {{ blogPage }}
         {% endif %}
       </h1>
       {% if not tag and blogPage == 0 %}
@@ -86,7 +86,7 @@
       </div>
 
       <div class="pagination-center">
-        Page {{ blogPageFriendly }}
+        Page {{ blogPage }}
       </div>
 
       <div class="pagination-right">

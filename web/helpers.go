@@ -6,6 +6,7 @@ import (
 	"math"
 	"net/http"
 	"regexp"
+	"strconv"
 	"strings"
 )
 
@@ -132,4 +133,13 @@ func TagsToComma(tags string) string {
 func NormalizeTags(tags string) string {
 	all := StringToTags(tags)
 	return TagsToString(all)
+}
+
+func StrToInt(number string, defaultValue int) int {
+	n, err := strconv.Atoi(number)
+	if err != nil {
+		return defaultValue
+	}
+
+	return n
 }
