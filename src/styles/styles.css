@@ -130,6 +130,14 @@ h6 {
   @apply border-warning-400 bg-warning-100 text-warning;
 }
 
+.notice--notice {
+  @apply border-notice-400 bg-notice-100 text-notice;
+}
+
+.notice--info {
+  @apply border-info-400 bg-info-100 text-info;
+}
+
 .notice--subtle {
   @apply border-dotted border-gray-400 bg-gray-100 text-gray-600;
 }
