@@ -268,7 +268,7 @@ form input:invalid {
 }
 
 .content > p {
-  @apply mb-8 leading-relaxed;
+  @apply leading-relaxed;
 }
 
 .content p > img {
