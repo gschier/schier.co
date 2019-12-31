@@ -74,49 +74,56 @@
 {% endif %}
 {% if not doNotTrack %}
   <script>
-    const id = (len) => {
-      let v = '';
-      const chars = 'abcdefghijklmnopqrstuvwxyz01234567890';
-      for (let i = 0; i < len; i++) {
-        v += chars[Math.floor(Math.random() * chars.length)];
+    (function () {
+      const id = (len) => {
+        let v = '';
+        const chars = 'abcdefghijklmnopqrstuvwxyz01234567890';
+        for (let i = 0; i < len; i++) {
+          v += chars[Math.floor(Math.random() * chars.length)];
+        }
+        return v;
+      };
+
+      let sess = localStorage.schier ? JSON.parse(localStorage.schier) : {};
+
+      // Check if new session should be created for same user
+      if (Date.now() - sess.last > 20 * 60 * 1000) {
+        sess = { user: sess.user };
       }
-      return v;
-    };
 
-    let sess = localStorage.schier ? JSON.parse(localStorage.schier) : {};
+      const prev = sess.prev || '';
+      const age = (Date.now() - sess.start) / 1000;
+      const path = location.pathname;
 
-    // Check if new session should be created for same user
-    if (Date.now() - sess.last > 20 * 60 * 1000) {
-      sess = { user: sess.user };
-    }
+      if (path === prev) {
+        console.log('[analytics] Ignore same page');
+        return;
+      }
 
-    const prev = sess.prev || '';
-    const age = (Date.now() - sess.start) / 1000;
-    const path = location.pathname;
+      // Initialize session properties if new or missing
+      sess.id = sess.id || id(10);
+      sess.user = sess.user || id(10);
+      sess.start = sess.start || Date.now();
+      sess.pages = (sess.pages || 0) + 1;
+      sess.last = Date.now();
+      sess.prev = path;
 
-    // Initialize session properties if new or missing
-    sess.id = sess.id || id(10);
-    sess.user = sess.user || id(10);
-    sess.start = sess.start || Date.now();
-    sess.pages = (sess.pages || 0) + 1;
-    sess.last = Date.now();
-    sess.prev = path;
+      // Store session
+      localStorage.schier = JSON.stringify(sess);
 
-    // Store session
-    localStorage.schier = JSON.stringify(sess);
-
-    const e = encodeURIComponent;
-    fetch('{{ analyticsUrl }}/t?' + [
-      `path=${e(path)}`,
-      `prev=${e(prev)}`,
-      `search=${e(location.search)}`,
-      `ref=${e(document.referrer)}`,
-      `user=${e(sess.user)}`,
-      `sess=${e(sess.id)}`,
-      `age=${e(age)}`,
-      `page=${e(sess.pages)}`,
-      `lang=${e(navigator.language)}`
-    ].join('&'));
+      const e = encodeURIComponent;
+      fetch('{{ analyticsUrl }}/t?' + [
+        `path=${e(path)}`,
+        `prev=${e(prev)}`,
+        `search=${e(location.search)}`,
+        `ref=${e(document.referrer)}`,
+        `user=${e(sess.user)}`,
+        `sess=${e(sess.id)}`,
+        `age=${e(age)}`,
+        `page=${e(sess.pages)}`,
+        `lang=${e(navigator.language)}`
+      ].join('&'));
+    })();
   </script>
 {% endif %}
 </body>
