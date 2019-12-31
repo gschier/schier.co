@@ -45,6 +45,10 @@ a:hover,
   text-decoration: underline;
 }
 
+hr {
+  @apply border-gray-300 border-0 border-b my-8;
+}
+
 small {
   @apply text-sm;
 }
@@ -276,7 +280,7 @@ form input:invalid {
 }
 
 .content .footnotes {
-  @apply text-sm opacity-80 mb-8;
+  @apply text-sm opacity-80 my-10 italic;
 }
 
 .content .footnotes li {
@@ -284,7 +288,7 @@ form input:invalid {
 }
 
 .content .footnotes hr {
-  @apply border-dashed;
+  @apply hidden;
 }
 
 .content :not(pre) code {
@@ -292,10 +296,6 @@ form input:invalid {
 
   /* Relative size so it works in headings and stuff */
   font-size: 0.8em;
-}
-
-.content hr {
-  @apply text-gray-100 border-0 border-b my-8;
 }
 
 .content table {
@@ -318,6 +318,13 @@ form input:invalid {
 .content blockquote {
   @apply border-l-4 border-gray-300 p-3 bg-gray-100 italic text-gray-700 rounded-sm;
 }
+
+
+.blog-post hr {
+  @apply border-gray-300 border-0 border-double border-b-4 my-8 mx-auto;
+  width: 5em;
+}
+
 
 /**************/
 /* PAGINATION */
