@@ -28,6 +28,7 @@ func setupRouter(client *prisma.Client) *mux.Router {
 	router.Use(web.NewContextMiddleware(client))
 	router.Use(web.CSRFMiddleware)
 	router.Use(web.UserMiddleware)
+	router.Use(web.CORSMiddleware)
 	router.Use(web.NewForceLoginHostMiddleware("schier.dev"))
 
 	// Apply routes
