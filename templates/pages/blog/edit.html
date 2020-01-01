@@ -36,7 +36,7 @@
 
       <div class="form-row">
         <div style="display:flex">
-          <label for="content">Content</label>
+          <label for="i-content">Content</label>
           <a
                   href="#"
                   v-on:click="toggleExpand"
@@ -45,7 +45,7 @@
             Full Screen
           </a>
         </div>
-        <textarea name="content" id="content" rows="20" @input="onContentChange">{{ blogPost.Content }}</textarea>
+        <textarea name="content" id="i-content" rows="20" @input="onContentChange">{{ blogPost.Content }}</textarea>
       </div>
 
       <!-- Blog Post Editor -->
@@ -204,7 +204,7 @@
                 const { url, name } = await upload(e.dataTransfer || e.clipboardData);
                 const doc = this.cm.getDoc();
                 const cur = doc.getCursor();
-                doc.replaceRange(`![${name}](${url})\n`, cur);
+                doc.replaceRange(`\n${mdImage(url, name)}\n`, cur);
               };
 
               this.cm.on('paste', upImg);
@@ -218,11 +218,36 @@
       }
     });
 
-    const imageEl = document.querySelector('#i-image');
+    const contentEl = document.querySelector('textarea[name=content]');
+    contentEl.addEventListener('paste', async e => {
+      const { url, name } = await upload(e.clipboardData);
+      const img = mdImage(url, name);
+
+      if (contentEl.selectionStart) {
+        const startPos = contentEl.selectionStart;
+        const endPos = contentEl.selectionEnd;
+        const before = contentEl.value.substring(0, startPos);
+        const after = contentEl.value.substring(endPos, contentEl.value.length);
+
+        //  Update value
+        contentEl.value = before + img + after;
+
+        // Not sure why this can't be done right away
+        setTimeout(() => contentEl.setSelectionRange(startPos, startPos + img.length));
+      } else {
+        contentEl.value += img;
+      }
+    });
+
+    const imageEl = document.querySelector('input[name=image]');
     imageEl.addEventListener('paste', async e => {
       const { url } = await upload(e.clipboardData);
       imageEl.value = url;
     });
+
+    function mdImage(url, name) {
+      return `![${name}](${url})`;
+    }
 
     function upload(data) {
       return new Promise(resolve => {
