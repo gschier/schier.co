@@ -99,7 +99,6 @@
       methods: {
         onContentChange: function (e) {
           // Already contains a <!--more-->
-          tag;
           if (e.target.value.includes('<!--more-->')) {
             e.target.setCustomValidity('');
             return;
@@ -134,21 +133,13 @@
               }
 
               // Swap between two i-frames to prevent loading flicker
-              const oldPreviewEl = document.querySelector(
-                      '#preview-frame-' + (this.previewCount % 2)
-              );
-              const newPreviewEl = document.querySelector(
-                      '#preview-frame-' + ((this.previewCount + 1) % 2)
-              );
+              const oldPreviewEl = document.querySelector('#preview-frame-' + (this.previewCount % 2));
+              const newPreviewEl = document.querySelector('#preview-frame-' + ((this.previewCount + 1) % 2));
               this.previewCount++;
 
               // If the iFrame already had content, we can just fetch the partial and replace it. This
               // prevents it from having to re-fetch the scripts and styles and stuff.
-              const partial = newPreviewEl.contentDocument.querySelector(
-                      '.blog-post-container'
-              )
-                      ? 'true'
-                      : 'false';
+              const partial = newPreviewEl.contentDocument.querySelector('.blog-post-container') ? 'true' : 'false';
 
               // Fetch the preview from server
               const formData = new FormData();
@@ -165,9 +156,7 @@
               }
 
               // Send the AJAX request to fetch the render HTML
-              const csrfTokenHeaderName = document.body.getAttribute(
-                      'data-csrf-token-header'
-              );
+              const csrfTokenHeaderName = document.body.getAttribute('data-csrf-token-header');
               const csrfToken = document.body.getAttribute('data-csrf-token');
               const resp = await fetch('/blog/render', {
                 method: 'POST',
@@ -213,6 +202,30 @@
                       document.querySelector('#editor')
               );
               this.cm.on('change', () => update(500));
+              this.cm.on('drop', async (cm, e) => {
+                for (const item of e.dataTransfer.items) {
+                  const csrfTokenHeaderName = document.body.getAttribute('data-csrf-token-header');
+                  const csrfToken = document.body.getAttribute('data-csrf-token');
+                  const file = item.getAsFile();
+                  const reader = new FileReader();
+
+                  reader.onload = async e => {
+                    const body = new FormData();
+                    const headers = { [csrfTokenHeaderName]: csrfToken };
+                    body.append('file', file);
+
+                    const resp = await fetch('/api/blog/assets', { method: 'PUT', body, headers });
+                    const { url } = await resp.json();
+
+                    const doc = this.cm.getDoc();
+                    doc.replaceRange(`![${file.name}](${url})`, doc.getCursor());
+                  };
+                  reader.readAsArrayBuffer(file);
+                }
+              });
+              this.cm.on('paste', (cm, e) => {
+                console.log('PASTE', e);
+              });
               this.cm.focus();
             }
 

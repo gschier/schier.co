@@ -2,6 +2,7 @@ package web
 
 import (
 	"context"
+	"encoding/json"
 	"github.com/flosch/pongo2"
 	"github.com/gorilla/feeds"
 	"github.com/gorilla/mux"
@@ -41,6 +42,9 @@ func BlogRoutes(router *mux.Router) {
 	router.HandleFunc("/forms/blog/upsert", Admin(routeBlogPostCreateOrUpdate)).Methods(http.MethodPost)
 	router.HandleFunc("/forms/blog/publish", Admin(routeBlogPostPublish)).Methods(http.MethodPost)
 	router.HandleFunc("/forms/blog/delete", Admin(routeBlogPostDelete)).Methods(http.MethodPost)
+
+	// API
+	router.HandleFunc("/api/blog/assets", Admin(routeUploadAsset)).Methods(http.MethodPut)
 }
 
 var blogEditTemplate = pageTemplate("blog/edit.html")
@@ -490,14 +494,45 @@ func routeBlogList(w http.ResponseWriter, r *http.Request) {
 
 	// Render template
 	renderTemplate(w, r, blogListTemplate(), &pongo2.Context{
-		"pageTitle":        "Blog Posts",
-		"tag":              tag,
-		"blogPosts":        blogPosts,
-		"blogPostDrafts":   blogPostDrafts,
-		"blogPage":         page,
-		"blogPagePrev":     pagePrevious,
-		"blogPageNext":     pageNext,
+		"pageTitle":      "Blog Posts",
+		"tag":            tag,
+		"blogPosts":      blogPosts,
+		"blogPostDrafts": blogPostDrafts,
+		"blogPage":       page,
+		"blogPagePrev":   pagePrevious,
+		"blogPageNext":   pageNext,
 	})
+}
+
+func routeUploadAsset(w http.ResponseWriter, r *http.Request) {
+	err := r.ParseMultipartForm(1)
+	if err != nil {
+		panic(err)
+	}
+
+	// Read file
+	f, fh, err := r.FormFile("file")
+	if err != nil {
+		panic(err)
+	}
+
+	uploadPath, err := uploadImage(
+		f,
+		fh.Header.Get("Content-Type"),
+		fh.Filename,
+		fh.Size,
+	)
+	if err != nil {
+		panic(err)
+	}
+
+	body, _ := json.Marshal(struct {
+		URL string `json:"url"`
+	}{
+		URL: "https://assets.schier.dev/" + uploadPath,
+	})
+	w.Header().Set("Content-Type", "application/json")
+	_, _ = w.Write(body)
 }
 
 type postTag struct {

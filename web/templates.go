@@ -216,7 +216,6 @@ func renderTemplate(w http.ResponseWriter, r *http.Request, template *pongo2.Tem
 		"csrfTokenHeader":  "X-CSRF-Token",
 		"deployTime":       deployTime,
 		"doNotTrack":       loggedIn,
-		"gaId":             os.Getenv("GA_ID"),
 		"isDev":            isDev,
 		"loggedIn":         loggedIn,
 		"pageDescription":  "Thoughts on software and technology, by an independent software developer",

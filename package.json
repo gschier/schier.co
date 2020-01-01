@@ -33,6 +33,13 @@
       }
     ]
   },
+  "prettier": {
+    "trailingComma": "es5",
+    "tabWidth": 2,
+    "semi": true,
+    "singleQuote": true,
+    "printWidth": 120
+  },
   "devDependencies": {
     "autoprefixer": "^9.7.1",
     "husky": "^3.0.9",

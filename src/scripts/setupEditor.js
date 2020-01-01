@@ -47,6 +47,8 @@ export function setupEditor(textareaEl, containerEl) {
       selectionPointer: "default",
       showCursorWhenSelecting: false,
       cursorScrollMargin: 12, // NOTE: This is px
+      dragDrop: true,
+      allowDropFileTypes: ['image/jpeg', 'image/png', 'image/svg+xml', 'image/gif', 'image/webp'],
       extraKeys: CodeMirror.normalizeKeyMap({
         "Cmd-F": "findPersistent",
         "Ctrl-F": "findPersistent"

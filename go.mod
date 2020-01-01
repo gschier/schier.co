@@ -8,6 +8,7 @@ require (
 	github.com/alecthomas/chroma v0.6.0
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible // indirect
 	github.com/flosch/pongo2 v0.0.0-20190707114632-bbf5a6c351f4
+	github.com/go-ini/ini v1.51.1 // indirect
 	github.com/gorilla/csrf v1.6.1
 	github.com/gorilla/feeds v1.1.1
 	github.com/gorilla/handlers v1.4.2
@@ -17,6 +18,8 @@ require (
 	github.com/mailgun/mailgun-go/v3 v3.6.3 // indirect
 	github.com/mailjet/mailjet-apiv3-go v0.0.0-20190724151621-55e56f74078c
 	github.com/mileusna/useragent v0.0.0-20190129205925-3e331f0949a5
+	github.com/minio/minio-go v6.0.14+incompatible
+	github.com/mitchellh/go-homedir v1.1.0 // indirect
 	github.com/mitchellh/mapstructure v1.1.2 // indirect
 	github.com/oschwald/maxminddb-golang v1.6.0
 	github.com/prisma/prisma-client-lib-go v0.0.0-20181017161110-68a1f9908416

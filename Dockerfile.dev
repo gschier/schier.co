@@ -11,3 +11,5 @@ COPY ./go.mod ./go.sum ./vendor ./
 RUN go mod download
 
 COPY . .
+
+RUN go install ./..

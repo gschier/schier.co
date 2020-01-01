@@ -11,17 +11,20 @@ services:
       - "8084:8084"
     restart: always
     environment:
+      ANALYTICS_URL: ''
+      BASE_URL: http://localhost:8084
+      CSRF_KEY: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+      DEV_ENVIRONMENT: development
+      DO_SPACES_DOMAIN: nyc3.digitaloceanspaces.com
+      DO_SPACES_KEY: ''
+      DO_SPACES_SECRET: ''
+      DO_SPACES_SPACE: schierco
+      MAILJET_PRV_KEY: ''
+      MAILJET_PUB_KEY: ''
       PORT: "8084"
       PRISMA_ENDPOINT: http://prisma:4488
       PRISMA_SECRET: development
-      ANALYTICS_URL: ''
-      MAILJET_PUB_KEY: ''
-      MAILJET_PRV_KEY: ''
-      CSRF_KEY: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
       STATIC_URL: /static
-      BASE_URL: http://localhost:8084
-      GA_ID: "" # UA-9837747-4
-      DEV_ENVIRONMENT: development
       USER_PASSWORD: testing123
     depends_on:
       - prisma
