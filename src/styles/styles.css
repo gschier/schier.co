@@ -698,7 +698,7 @@ body .CodeMirror .cm-comment {
 }
 
 .home-hero__avatar img {
-  @apply rounded-full w-full block mx-auto;
+  @apply rounded-full block mx-auto;
   width: 18rem;
 }
 
