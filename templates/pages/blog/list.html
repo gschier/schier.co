@@ -17,42 +17,9 @@
           This is where I write about life, programming, and other interests.
         </p>
         <p>
-          You can view the most recent posts below, or <a href="/blog/tags">Browse Tags</a>.
+          You can view the most recent posts below, or <a href="/blog/tags">Browse Tags</a>
+          {% if loggedIn %}or <a href="/blog/drafts">Drafts</a>{% endif %}.
         </p>
-        {% if loggedIn %}
-          <table>
-            <thead>
-            <tr>
-              <th>
-                Draft Title
-              </th>
-              <th style="text-align:right;">
-                Words
-              </th>
-              <th>
-                <a href="/blog/new" class="btn btn-tiny">New</a>
-              </th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for blogPost in blogPostDrafts %}
-              <tr>
-                <td>
-                  <a href="/blog/{{ blogPost.Slug }}">
-                    {{ blogPost.Title }}
-                  </a>
-                </td>
-                <td style="width:2rem;text-align:right;">
-                  {{ blogPost.Content | words }}
-                </td>
-                <td style="width:2rem;">
-                  <a href="/blog/{{ blogPost.Slug }}/edit" class="btn btn-gray btn-tiny">Edit</a>
-                </td>
-              </tr>
-            {% endfor %}
-            </tbody>
-          </table>
-        {% endif %}
       {% endif %}
     </div>
     <hr>

@@ -26,6 +26,7 @@ func BlogRoutes(router *mux.Router) {
 	// Blog Static
 	router.HandleFunc("/blog/new", Admin(routeBlogPostEdit)).Methods(http.MethodGet)
 	router.HandleFunc("/blog/render", routeBlogRender).Methods(http.MethodPost)
+	router.HandleFunc("/blog/drafts", Admin(routeBlogDrafts)).Methods(http.MethodGet)
 	router.Handle("/blog", http.RedirectHandler("/blog/page/1", http.StatusSeeOther)).Methods(http.MethodGet)
 	router.HandleFunc("/blog/page/{page:[0-9]+}", routeBlogList).Methods(http.MethodGet)
 
@@ -50,6 +51,7 @@ func BlogRoutes(router *mux.Router) {
 
 var blogEditTemplate = pageTemplate("blog/edit.html")
 var blogListTemplate = pageTemplate("blog/list.html")
+var blogDraftsTemplate = pageTemplate("blog/drafts.html")
 var blogPostTemplate = pageTemplate("blog/post.html")
 var blogTagsTemplate = pageTemplate("blog/tags.html")
 var blogPostPartial = partialTemplate("blog_post.html")
@@ -432,6 +434,26 @@ func routeBlogRSS(w http.ResponseWriter, r *http.Request) {
 	_, _ = w.Write([]byte(rss))
 }
 
+func routeBlogDrafts(w http.ResponseWriter, r *http.Request) {
+	// Fetch blog posts
+	draftsOrderBy := prisma.BlogPostOrderByInputUpdatedAtDesc
+	drafts, err := ctxPrismaClient(r).BlogPosts(&prisma.BlogPostsParams{
+		Where: &prisma.BlogPostWhereInput{
+			Published: prisma.Bool(false),
+		},
+		OrderBy: &draftsOrderBy,
+	}).Exec(r.Context())
+	if err != nil {
+		log.Println("Failed to load blog post blogPostDrafts", err)
+		http.Error(w, "Failed to load blog posts blogPostDrafts", http.StatusInternalServerError)
+		return
+	}
+
+	renderTemplate(w, r, blogDraftsTemplate(), &pongo2.Context{
+		"drafts": drafts,
+	})
+}
+
 func routeBlogList(w http.ResponseWriter, r *http.Request) {
 	tag := mux.Vars(r)["tag"]
 	page := StrToInt(mux.Vars(r)["page"], 1)
@@ -458,20 +480,6 @@ func routeBlogList(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Println("Failed to load blog posts", err)
 		http.Error(w, "Failed to load blog posts", http.StatusInternalServerError)
-		return
-	}
-
-	// Fetch blog posts
-	draftsOrderBy := prisma.BlogPostOrderByInputUpdatedAtDesc
-	blogPostDrafts, err := ctxPrismaClient(r).BlogPosts(&prisma.BlogPostsParams{
-		Where: &prisma.BlogPostWhereInput{
-			Published: prisma.Bool(false),
-		},
-		OrderBy: &draftsOrderBy,
-	}).Exec(r.Context())
-	if err != nil {
-		log.Println("Failed to load blog post blogPostDrafts", err)
-		http.Error(w, "Failed to load blog posts blogPostDrafts", http.StatusInternalServerError)
 		return
 	}
 
@@ -508,7 +516,6 @@ func routeBlogList(w http.ResponseWriter, r *http.Request) {
 		"pageDescription": description,
 		"tag":             tag,
 		"blogPosts":       blogPosts,
-		"blogPostDrafts":  blogPostDrafts,
 		"blogPage":        page,
 		"blogPagePrev":    pagePrevious,
 		"blogPageNext":    pageNext,
