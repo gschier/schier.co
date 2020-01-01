@@ -480,7 +480,7 @@ func routeBlogList(w http.ResponseWriter, r *http.Request) {
 	if len(blogPosts) > first {
 		pageNext++
 	}
-	if page > 0 {
+	if page > 1 {
 		pagePrevious--
 	}
 
