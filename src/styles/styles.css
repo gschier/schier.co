@@ -3,7 +3,7 @@
 html {
   @apply bg-background text-primary;
   font-size: 17px;
-  font-family: "Open Sans", sans-serif;
+  font-family: 'Open Sans', sans-serif;
 }
 
 @media only screen and (max-width: 600px) {
@@ -16,7 +16,7 @@ body {
   @apply p-0 text-primary;
 }
 
-body[data-logged-in="yes"] {
+body[data-logged-in='yes'] {
   @apply border-t-4 border-danger-500;
 }
 
@@ -516,7 +516,7 @@ pre.chroma-chroma {
 .blog-post-editor {
   @apply bg-background;
   display: grid;
-  grid-template-areas: "editor preview";
+  grid-template-areas: 'editor preview';
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 100%;
   position: fixed;

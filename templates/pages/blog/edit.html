@@ -218,7 +218,8 @@
                     const { url } = await resp.json();
 
                     const doc = this.cm.getDoc();
-                    doc.replaceRange(`![${file.name}](${url})`, doc.getCursor());
+                    const cur = doc.getCursor();
+                    doc.replaceRange(`![${file.name}](${url})\n`, cur);
                   };
                   reader.readAsArrayBuffer(file);
                 }
