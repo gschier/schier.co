@@ -277,6 +277,7 @@ form input:invalid {
 
 .content p > img {
   @apply block mx-auto rounded-sm my-8;
+  max-height: 40vh;
   box-shadow: 0.05rem 0.05rem 0.5rem rgba(127, 127, 127, 0.15);
 }
 
