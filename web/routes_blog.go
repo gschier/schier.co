@@ -499,7 +499,7 @@ func routeBlogList(w http.ResponseWriter, r *http.Request) {
 		description += " for tag " + tag
 	}
 	if page > 1 {
-		description += " (page " + page + ")"
+		description += fmt.Sprintf(" (page %d)", page)
 	}
 
 	// Render template
