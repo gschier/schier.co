@@ -892,6 +892,7 @@ textarea::-ms-input-placeholder, input::-ms-input-placeholder {
   color: #cbd5e0;
 }
 
+.CodeMirror .placeholder,
 textarea::placeholder,
 input::placeholder {
   color: #cbd5e0;
