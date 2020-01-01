@@ -219,8 +219,8 @@
     });
 
     const imageEl = document.querySelector('#i-image');
-    imageEl.addEventListener('paste', e => {
-      const { url } = upload(e.clipboardData);
+    imageEl.addEventListener('paste', async e => {
+      const { url } = await upload(e.clipboardData);
       imageEl.value = url;
     });
 
