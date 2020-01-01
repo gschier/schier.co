@@ -3,6 +3,7 @@ package web
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"github.com/flosch/pongo2"
 	"github.com/gorilla/feeds"
 	"github.com/gorilla/mux"
@@ -92,8 +93,9 @@ func routeBlogTags(w http.ResponseWriter, r *http.Request) {
 
 	sort.Sort(ByTag(tags))
 	renderTemplate(w, r, blogTagsTemplate(), &pongo2.Context{
-		"pageTitle": "Post Tags",
-		"tags":      tags,
+		"pageTitle":       "Post Tags",
+		"pageDescription": "Browse blog posts by tag category",
+		"tags":            tags,
 	})
 }
 
@@ -492,15 +494,24 @@ func routeBlogList(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	description := "Blog posts"
+	if tag != "" {
+		description += " for tag " + tag
+	}
+	if page > 1 {
+		description += " (page " + page + ")"
+	}
+
 	// Render template
 	renderTemplate(w, r, blogListTemplate(), &pongo2.Context{
-		"pageTitle":      "Blog Posts",
-		"tag":            tag,
-		"blogPosts":      blogPosts,
-		"blogPostDrafts": blogPostDrafts,
-		"blogPage":       page,
-		"blogPagePrev":   pagePrevious,
-		"blogPageNext":   pageNext,
+		"pageTitle":       "Blog Posts",
+		"pageDescription": description,
+		"tag":             tag,
+		"blogPosts":       blogPosts,
+		"blogPostDrafts":  blogPostDrafts,
+		"blogPage":        page,
+		"blogPagePrev":    pagePrevious,
+		"blogPageNext":    pageNext,
 	})
 }
 

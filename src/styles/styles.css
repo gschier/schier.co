@@ -248,6 +248,21 @@ form input:invalid {
   @apply list-decimal ml-6;
 }
 
+.content dl {
+
+}
+
+.content dl dt {
+  @apply font-bold;
+}
+
+.content dl dt::after {
+  content: ':';
+}
+
+.content dl dd {
+}
+
 .content > h1,
 .content > h2,
 .content > h3,

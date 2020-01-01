@@ -978,6 +978,20 @@ form input:invalid {
   margin-left: 1.5rem;
 }
 
+.content dl {
+}
+
+.content dl dt {
+  font-weight: 700;
+}
+
+.content dl dt::after {
+  content: ':';
+}
+
+.content dl dd {
+}
+
 .content > h1,
 .content > h2,
 .content > h3,
@@ -1607,7 +1621,6 @@ body .CodeMirror .cm-comment {
   margin-left: auto;
   margin-right: auto;
   width: 18rem;
-  max-width: 100%;
 }
 
 @media only screen and (max-width: 600px) {

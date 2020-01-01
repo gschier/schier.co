@@ -33,14 +33,16 @@ func routeNewsletter(w http.ResponseWriter, r *http.Request) {
 	}
 
 	renderTemplate(w, r, newsletterTemplate(), &pongo2.Context{
-		"pageTitle":   "Email Newsletter",
-		"subscribers": subscribers,
+		"pageTitle":       "Email Newsletter",
+		"pageDescription": "Subscribe to the newsletter to be the first to hear about new posts",
+		"subscribers":     subscribers,
 	})
 }
 
 func routeThankSubscriber(w http.ResponseWriter, r *http.Request) {
 	renderTemplate(w, r, newsletterThanksTemplate(), &pongo2.Context{
 		"pageTitle": "Thanks!",
+		"pageDescription": "Thank you for signing up to the newsletter!",
 	})
 }
 

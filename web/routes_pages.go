@@ -18,6 +18,9 @@ func PagesRoutes(router *mux.Router) {
 
 var robots = strings.TrimSpace(`
 User-agent: *
+Disallow: /open
+Disallow: /newsletter/thanks
+Disallow: /newsletter/unsubscribe/*
 Disallow: /login
 Disallow: /register
 `)
@@ -53,8 +56,9 @@ func routeProjects(w http.ResponseWriter, r *http.Request) {
 	}
 
 	renderTemplate(w, r, projectsTemplate(), &pongo2.Context{
-		"pageTitle": "Projects",
-		"projects": projects,
+		"pageTitle":       "Projects",
+		"pageDescription": "Projects I'm currently working on",
+		"projects":        projects,
 	})
 }
 
@@ -69,6 +73,7 @@ func routeHome(w http.ResponseWriter, r *http.Request) {
 
 	renderTemplate(w, r, homeTemplate(), &pongo2.Context{
 		"blogPosts": blogPosts,
+		"pageTitle": "Gregory Schier",
 	})
 }
 
@@ -114,10 +119,11 @@ func routeAbout(w http.ResponseWriter, r *http.Request) {
 	}
 
 	renderTemplate(w, r, aboutTemplate(), &pongo2.Context{
-		"pageTitle":      "About",
-		"favoriteThings": favoriteThings,
-		"projects":       projects,
-		"blogPosts":      blogPosts,
-		"books":          books,
+		"pageTitle":       "About",
+		"pageDescription": "Fun facts about me",
+		"favoriteThings":  favoriteThings,
+		"projects":        projects,
+		"blogPosts":       blogPosts,
+		"books":           books,
 	})
 }
