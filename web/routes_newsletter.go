@@ -22,7 +22,10 @@ var newsletterUnsubscribeTemplate = pageTemplate("page/unsubscribe.html")
 func routeNewsletter(w http.ResponseWriter, r *http.Request) {
 	client := ctxPrismaClient(r)
 
-	subscribers, err := client.Subscribers(nil).Exec(r.Context())
+	orderBy := prisma.SubscriberOrderByInputUpdatedAtDesc
+	subscribers, err := client.Subscribers(&prisma.SubscribersParams{
+		OrderBy: &orderBy,
+	}).Exec(r.Context())
 	if err != nil {
 		log.Println("Failed to fetch subscribers", err.Error())
 		http.Error(w, "Internal server error", http.StatusInternalServerError)
@@ -30,7 +33,7 @@ func routeNewsletter(w http.ResponseWriter, r *http.Request) {
 	}
 
 	renderTemplate(w, r, newsletterTemplate(), &pongo2.Context{
-		"pageTitle": "Email Newsletter",
+		"pageTitle":   "Email Newsletter",
 		"subscribers": subscribers,
 	})
 }
@@ -65,7 +68,7 @@ func routeUnsubscribe(w http.ResponseWriter, r *http.Request) {
 
 	renderTemplate(w, r, newsletterUnsubscribeTemplate(), &pongo2.Context{
 		"pageTitle": "Unsubscribed",
-		"email": sub.Email,
+		"email":     sub.Email,
 	})
 }
 
