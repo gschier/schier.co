@@ -202,8 +202,9 @@
                       document.querySelector('#editor')
               );
               this.cm.on('change', () => update(500));
-              this.cm.on('drop', async (cm, e) => {
-                for (const item of e.dataTransfer.items) {
+              const upload = async (cm, e) => {
+                const data = e.clipboardData || e.dataTransfer;
+                for (const item of data.items) {
                   const csrfTokenHeaderName = document.body.getAttribute('data-csrf-token-header');
                   const csrfToken = document.body.getAttribute('data-csrf-token');
                   const file = item.getAsFile();
@@ -223,10 +224,9 @@
                   };
                   reader.readAsArrayBuffer(file);
                 }
-              });
-              this.cm.on('paste', (cm, e) => {
-                console.log('PASTE', e);
-              });
+              };
+              this.cm.on('paste', upload);
+              this.cm.on('drop', upload);
               this.cm.focus();
             }
 

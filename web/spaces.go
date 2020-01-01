@@ -22,7 +22,7 @@ func uploadImage(r io.Reader, contentType, name string, size int64) (string, err
 		log.Fatal(err)
 	}
 
-	uploadPath := fmt.Sprintf("images/a/%s%s", time.Now().Format(time.RFC3339), path.Ext(name))
+	uploadPath := fmt.Sprintf("images/a/%d%s", time.Now().Unix(), path.Ext(name))
 
 	_, err = client.PutObject(spaceName, uploadPath, r, size, minio.PutObjectOptions{
 		UserMetadata: map[string]string{"x-amz-acl": "public-read"},
