@@ -292,6 +292,12 @@ func routeTrack(w http.ResponseWriter, r *http.Request) {
 		ip = r.RemoteAddr
 	}
 
+	// IP Blacklist
+	if ip == "66.130.147.203" {
+		w.WriteHeader(http.StatusNoContent)
+		return
+	}
+
 	q := r.URL.Query()
 	path := q.Get("path")
 	prev := q.Get("prev")
