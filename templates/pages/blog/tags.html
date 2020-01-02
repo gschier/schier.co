@@ -9,6 +9,9 @@
           {{ tag.Name }} ({{ tag.Count }})
         </a>
       {% endfor %}
+      {% if loggedIn %}
+        <a href="/blog/tags/-" class="tag">Untagged</a>
+      {% endif %}
     </p>
     <p>
       <small>

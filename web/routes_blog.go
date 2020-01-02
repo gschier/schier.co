@@ -458,7 +458,7 @@ func routeBlogDrafts(w http.ResponseWriter, r *http.Request) {
 
 func routeBlogList(w http.ResponseWriter, r *http.Request) {
 	// Redirect /blog = /blog/page/1
-	if mux.Vars(r)["page"] == ""  && mux.Vars(r)["tag"] == "" {
+	if mux.Vars(r)["page"] == "" && mux.Vars(r)["tag"] == "" {
 		http.Redirect(w, r, "/blog/page/1", http.StatusSeeOther)
 		return
 	}
@@ -470,7 +470,10 @@ func routeBlogList(w http.ResponseWriter, r *http.Request) {
 	skip := (page - 1) * first
 
 	var tagsContains *string = nil
-	if tag != "" {
+	var tagsEqual *string = nil
+	if tag == "-" {
+		tagsEqual = prisma.Str("||")
+	} else if tag != "" {
 		tagsContains = prisma.Str(TagsToString([]string{tag}))
 	}
 
@@ -480,6 +483,7 @@ func routeBlogList(w http.ResponseWriter, r *http.Request) {
 		Where: &prisma.BlogPostWhereInput{
 			Published:    prisma.Bool(true),
 			TagsContains: tagsContains,
+			Tags:         tagsEqual,
 		},
 		OrderBy: &orderBy,
 		Skip:    prisma.Int32(int32(skip)),
