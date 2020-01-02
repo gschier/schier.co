@@ -27,6 +27,7 @@ func BlogRoutes(router *mux.Router) {
 	router.HandleFunc("/blog/new", Admin(routeBlogPostEdit)).Methods(http.MethodGet)
 	router.HandleFunc("/blog/render", routeBlogRender).Methods(http.MethodPost)
 	router.HandleFunc("/blog/drafts", Admin(routeBlogDrafts)).Methods(http.MethodGet)
+	router.HandleFunc("/blog", routeBlogList).Methods(http.MethodGet)
 	router.HandleFunc("/blog/page/{page:[0-9]+}", routeBlogList).Methods(http.MethodGet)
 
 	// Tags
