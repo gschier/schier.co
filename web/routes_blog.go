@@ -27,7 +27,6 @@ func BlogRoutes(router *mux.Router) {
 	router.HandleFunc("/blog/new", Admin(routeBlogPostEdit)).Methods(http.MethodGet)
 	router.HandleFunc("/blog/render", routeBlogRender).Methods(http.MethodPost)
 	router.HandleFunc("/blog/drafts", Admin(routeBlogDrafts)).Methods(http.MethodGet)
-	router.Handle("/blog", http.RedirectHandler("/blog/page/1", http.StatusSeeOther)).Methods(http.MethodGet)
 	router.HandleFunc("/blog/page/{page:[0-9]+}", routeBlogList).Methods(http.MethodGet)
 
 	// Tags
@@ -243,6 +242,7 @@ func routeBlogPostCreateOrUpdate(w http.ResponseWriter, r *http.Request) {
 	// Upsert blog post
 	// NOTE: Note using prisma upsert method because updating date is conditional
 	var upsertErr error
+	var newPost *prisma.BlogPost = nil
 	if existingPost != nil {
 		date := existingPost.Date
 		if !existingPost.Published {
@@ -257,7 +257,7 @@ func routeBlogPostCreateOrUpdate(w http.ResponseWriter, r *http.Request) {
 			slug = sluglib.Make(title)
 		}
 
-		_, upsertErr = client.UpdateBlogPost(prisma.BlogPostUpdateParams{
+		newPost, upsertErr = client.UpdateBlogPost(prisma.BlogPostUpdateParams{
 			Where: prisma.BlogPostWhereUniqueInput{
 				ID: &id,
 			},
@@ -271,7 +271,7 @@ func routeBlogPostCreateOrUpdate(w http.ResponseWriter, r *http.Request) {
 			},
 		}).Exec(r.Context())
 	} else {
-		_, upsertErr = client.CreateBlogPost(prisma.BlogPostCreateInput{
+		newPost, upsertErr = client.CreateBlogPost(prisma.BlogPostCreateInput{
 			Published: false,
 			Title:     title,
 			Content:   content,
@@ -289,7 +289,7 @@ func routeBlogPostCreateOrUpdate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	http.Redirect(w, r, "/blog/"+slug, http.StatusSeeOther)
+	http.Redirect(w, r, "/blog/"+newPost.Slug, http.StatusSeeOther)
 }
 
 func routeBlogPostYMD(w http.ResponseWriter, r *http.Request) {
@@ -455,6 +455,12 @@ func routeBlogDrafts(w http.ResponseWriter, r *http.Request) {
 }
 
 func routeBlogList(w http.ResponseWriter, r *http.Request) {
+	// Redirect /blog = /blog/page/1
+	if mux.Vars(r)["page"] == "" {
+		http.Redirect(w, r, "/blog/page/1", http.StatusSeeOther)
+		return
+	}
+
 	tag := mux.Vars(r)["tag"]
 	page := StrToInt(mux.Vars(r)["page"], 1)
 
