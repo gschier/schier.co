@@ -59,8 +59,7 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 	client := ctxPrismaClient(r)
 
 	now := time.Now().UTC()
-	start := time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, now.Location())
-	start = start.Add(time.Hour * 24)
+	endOfToday := time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, now.Location()).Add(time.Hour * 24)
 
 	days, _ := strconv.Atoi(r.URL.Query().Get("days"))
 	if days == 0 {
@@ -89,7 +88,7 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 	views, err := client.AnalyticsPageViews(&prisma.AnalyticsPageViewsParams{
 		OrderBy: &orderBy,
 		Where: &prisma.AnalyticsPageViewWhereInput{
-			TimeGte: prisma.Str(start.Add(-dateRange).Format(time.RFC3339)),
+			TimeGte: prisma.Str(endOfToday.Add(-dateRange).Format(time.RFC3339)),
 		},
 	}).Exec(r.Context())
 	if err != nil {
@@ -109,7 +108,7 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 
 	for _, view := range views {
 		t, _ := time.Parse(time.RFC3339, view.Time)
-		bucketIndex := int(start.Sub(t) / dateBucketSize)
+		bucketIndex := int(endOfToday.Sub(t) / dateBucketSize)
 
 		userAgent := ua.Parse(view.UserAgent)
 		if userAgent.Bot {

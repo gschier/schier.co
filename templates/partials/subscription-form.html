@@ -1,6 +1,6 @@
-<form class="subscription-form" action="/forms/newsletter/subscribe" method="post">
+<form action="/forms/newsletter/subscribe" method="post">
   {{ csrfField | safe }}
-  <div>
+  <div class="button-input">
     <label for="subscription-email">Want to be updated on new posts?</label>
     <input id="subscription-email" name="email" type="email" placeholder="me@example.com">
     <button class="btn" title="subscribe">

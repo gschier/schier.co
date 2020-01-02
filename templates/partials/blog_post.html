@@ -21,13 +21,62 @@
   {% endif %}
 
   {{ blogPost.Content | markdown }}
-
-  {% include './blog_post_tag.html' with tags=blogPost.Tags %}
 </article>
-<div>
-  <hr class="hr--spaced">
 
-  <h2>Recent Writing ✍🏻</h2>
-  {% include './recent-posts.html' with blogPosts=recentBlogPosts %}
-  {% include './full-subscription-form.html' %}
+<div class="row-spaced">
+  <div class="clap-button">
+    <button>{{ 'images/icons/cheers.svg' | inlineStatic | safe }}</button>
+    <div><span class="clap-count">{{ blogPost.VotesTotal | default:"Be the first to" }}</span> cheers</div>
+  </div>
+  {% include './blog_post_tag.html' with tags=blogPost.Tags %}
 </div>
+
+<hr class="hr--spaced">
+<div class="row-spaced">
+  <h2 class="row-spaced">Recent Writing ✍🏻</h2>
+  <small><a href="/blog" title="See all blog posts">More &raquo;</a></small>
+</div>
+
+{% include './recent-posts.html' with blogPosts=recentBlogPosts %}
+{% include './full-subscription-form.html' %}
+
+{% block extraScripts %}
+  <script>
+    (function () {
+      const body = document.body;
+      const el = body.querySelector('.clap-button');
+      const lbl = el.querySelector('.clap-count');
+      const btn = el.querySelector('button');
+      const lsKey = 'vote-{{ blogPost.Slug }}';
+
+      const updateDisabled = function () {
+        const count = JSON.parse(localStorage.getItem(lsKey)) || 0;
+        if (count >= 50) {
+          btn.setAttribute('disabled', 'disabled');
+        }
+      };
+
+      updateDisabled();
+
+      btn.addEventListener('click', function () {
+        let count = parseInt(localStorage.getItem(lsKey)) || 0;
+        count = isNaN(count) ? 0 : count;
+
+        fetch('/api/blog/vote', {
+          method: 'POST',
+          body: `slug={{ blogPost.Slug }}&count=${count}`,
+          headers: {
+            [body.getAttribute('data-csrf-token-header')]: body.getAttribute('data-csrf-token'),
+            'Content-Type': 'application/x-www-form-urlencoded'
+          }
+        }).then(resp => resp.text()).then(function (total) {
+          localStorage.setItem(lsKey, JSON.stringify(count + 1));
+
+          el.setAttribute('data-total', total);
+          updateDisabled();
+          lbl.innerHTML = total;
+        });
+      });
+    })();
+  </script>
+{% endblock %}

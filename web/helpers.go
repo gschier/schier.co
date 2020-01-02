@@ -143,3 +143,7 @@ func StrToInt(number string, defaultValue int) int {
 
 	return n
 }
+
+func StrToInt32(number string, defaultValue int) int32 {
+	return int32(StrToInt(number, defaultValue))
+}

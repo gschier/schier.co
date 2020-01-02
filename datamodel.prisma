@@ -32,6 +32,8 @@ type BlogPost {
     content: String!
     tags: String!
     views: Int!
+    votesTotal: Int!
+    votesUsers: Int!
 }
 
 type Project {

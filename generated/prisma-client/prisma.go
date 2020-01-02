@@ -168,7 +168,7 @@ func (client *Client) BlogPost(params BlogPostWhereUniqueInput) *BlogPostExec {
 		params,
 		[2]string{"BlogPostWhereUniqueInput!", "BlogPost"},
 		"blogPost",
-		[]string{"id", "createdAt", "updatedAt", "slug", "published", "image", "title", "date", "content", "tags", "views"})
+		[]string{"id", "createdAt", "updatedAt", "slug", "published", "image", "title", "date", "content", "tags", "views", "votesTotal", "votesUsers"})
 
 	return &BlogPostExec{ret}
 }
@@ -202,7 +202,7 @@ func (client *Client) BlogPosts(params *BlogPostsParams) *BlogPostExecArray {
 		wparams,
 		[3]string{"BlogPostWhereInput", "BlogPostOrderByInput", "BlogPost"},
 		"blogPosts",
-		[]string{"id", "createdAt", "updatedAt", "slug", "published", "image", "title", "date", "content", "tags", "views"})
+		[]string{"id", "createdAt", "updatedAt", "slug", "published", "image", "title", "date", "content", "tags", "views", "votesTotal", "votesUsers"})
 
 	return &BlogPostExecArray{ret}
 }
@@ -1031,7 +1031,7 @@ func (client *Client) CreateBlogPost(params BlogPostCreateInput) *BlogPostExec {
 		params,
 		[2]string{"BlogPostCreateInput!", "BlogPost"},
 		"createBlogPost",
-		[]string{"id", "createdAt", "updatedAt", "slug", "published", "image", "title", "date", "content", "tags", "views"})
+		[]string{"id", "createdAt", "updatedAt", "slug", "published", "image", "title", "date", "content", "tags", "views", "votesTotal", "votesUsers"})
 
 	return &BlogPostExec{ret}
 }
@@ -1049,7 +1049,7 @@ func (client *Client) UpdateBlogPost(params BlogPostUpdateParams) *BlogPostExec 
 		},
 		[3]string{"BlogPostUpdateInput!", "BlogPostWhereUniqueInput!", "BlogPost"},
 		"updateBlogPost",
-		[]string{"id", "createdAt", "updatedAt", "slug", "published", "image", "title", "date", "content", "tags", "views"})
+		[]string{"id", "createdAt", "updatedAt", "slug", "published", "image", "title", "date", "content", "tags", "views", "votesTotal", "votesUsers"})
 
 	return &BlogPostExec{ret}
 }
@@ -1086,7 +1086,7 @@ func (client *Client) UpsertBlogPost(params BlogPostUpsertParams) *BlogPostExec 
 		uparams,
 		[4]string{"BlogPostWhereUniqueInput!", "BlogPostCreateInput!", "BlogPostUpdateInput!", "BlogPost"},
 		"upsertBlogPost",
-		[]string{"id", "createdAt", "updatedAt", "slug", "published", "image", "title", "date", "content", "tags", "views"})
+		[]string{"id", "createdAt", "updatedAt", "slug", "published", "image", "title", "date", "content", "tags", "views", "votesTotal", "votesUsers"})
 
 	return &BlogPostExec{ret}
 }
@@ -1096,7 +1096,7 @@ func (client *Client) DeleteBlogPost(params BlogPostWhereUniqueInput) *BlogPostE
 		params,
 		[2]string{"BlogPostWhereUniqueInput!", "BlogPost"},
 		"deleteBlogPost",
-		[]string{"id", "createdAt", "updatedAt", "slug", "published", "image", "title", "date", "content", "tags", "views"})
+		[]string{"id", "createdAt", "updatedAt", "slug", "published", "image", "title", "date", "content", "tags", "views", "votesTotal", "votesUsers"})
 
 	return &BlogPostExec{ret}
 }
@@ -1693,28 +1693,32 @@ const (
 type BlogPostOrderByInput string
 
 const (
-	BlogPostOrderByInputIDAsc         BlogPostOrderByInput = "id_ASC"
-	BlogPostOrderByInputIDDesc        BlogPostOrderByInput = "id_DESC"
-	BlogPostOrderByInputCreatedAtAsc  BlogPostOrderByInput = "createdAt_ASC"
-	BlogPostOrderByInputCreatedAtDesc BlogPostOrderByInput = "createdAt_DESC"
-	BlogPostOrderByInputUpdatedAtAsc  BlogPostOrderByInput = "updatedAt_ASC"
-	BlogPostOrderByInputUpdatedAtDesc BlogPostOrderByInput = "updatedAt_DESC"
-	BlogPostOrderByInputSlugAsc       BlogPostOrderByInput = "slug_ASC"
-	BlogPostOrderByInputSlugDesc      BlogPostOrderByInput = "slug_DESC"
-	BlogPostOrderByInputPublishedAsc  BlogPostOrderByInput = "published_ASC"
-	BlogPostOrderByInputPublishedDesc BlogPostOrderByInput = "published_DESC"
-	BlogPostOrderByInputImageAsc      BlogPostOrderByInput = "image_ASC"
-	BlogPostOrderByInputImageDesc     BlogPostOrderByInput = "image_DESC"
-	BlogPostOrderByInputTitleAsc      BlogPostOrderByInput = "title_ASC"
-	BlogPostOrderByInputTitleDesc     BlogPostOrderByInput = "title_DESC"
-	BlogPostOrderByInputDateAsc       BlogPostOrderByInput = "date_ASC"
-	BlogPostOrderByInputDateDesc      BlogPostOrderByInput = "date_DESC"
-	BlogPostOrderByInputContentAsc    BlogPostOrderByInput = "content_ASC"
-	BlogPostOrderByInputContentDesc   BlogPostOrderByInput = "content_DESC"
-	BlogPostOrderByInputTagsAsc       BlogPostOrderByInput = "tags_ASC"
-	BlogPostOrderByInputTagsDesc      BlogPostOrderByInput = "tags_DESC"
-	BlogPostOrderByInputViewsAsc      BlogPostOrderByInput = "views_ASC"
-	BlogPostOrderByInputViewsDesc     BlogPostOrderByInput = "views_DESC"
+	BlogPostOrderByInputIDAsc          BlogPostOrderByInput = "id_ASC"
+	BlogPostOrderByInputIDDesc         BlogPostOrderByInput = "id_DESC"
+	BlogPostOrderByInputCreatedAtAsc   BlogPostOrderByInput = "createdAt_ASC"
+	BlogPostOrderByInputCreatedAtDesc  BlogPostOrderByInput = "createdAt_DESC"
+	BlogPostOrderByInputUpdatedAtAsc   BlogPostOrderByInput = "updatedAt_ASC"
+	BlogPostOrderByInputUpdatedAtDesc  BlogPostOrderByInput = "updatedAt_DESC"
+	BlogPostOrderByInputSlugAsc        BlogPostOrderByInput = "slug_ASC"
+	BlogPostOrderByInputSlugDesc       BlogPostOrderByInput = "slug_DESC"
+	BlogPostOrderByInputPublishedAsc   BlogPostOrderByInput = "published_ASC"
+	BlogPostOrderByInputPublishedDesc  BlogPostOrderByInput = "published_DESC"
+	BlogPostOrderByInputImageAsc       BlogPostOrderByInput = "image_ASC"
+	BlogPostOrderByInputImageDesc      BlogPostOrderByInput = "image_DESC"
+	BlogPostOrderByInputTitleAsc       BlogPostOrderByInput = "title_ASC"
+	BlogPostOrderByInputTitleDesc      BlogPostOrderByInput = "title_DESC"
+	BlogPostOrderByInputDateAsc        BlogPostOrderByInput = "date_ASC"
+	BlogPostOrderByInputDateDesc       BlogPostOrderByInput = "date_DESC"
+	BlogPostOrderByInputContentAsc     BlogPostOrderByInput = "content_ASC"
+	BlogPostOrderByInputContentDesc    BlogPostOrderByInput = "content_DESC"
+	BlogPostOrderByInputTagsAsc        BlogPostOrderByInput = "tags_ASC"
+	BlogPostOrderByInputTagsDesc       BlogPostOrderByInput = "tags_DESC"
+	BlogPostOrderByInputViewsAsc       BlogPostOrderByInput = "views_ASC"
+	BlogPostOrderByInputViewsDesc      BlogPostOrderByInput = "views_DESC"
+	BlogPostOrderByInputVotesTotalAsc  BlogPostOrderByInput = "votesTotal_ASC"
+	BlogPostOrderByInputVotesTotalDesc BlogPostOrderByInput = "votesTotal_DESC"
+	BlogPostOrderByInputVotesUsersAsc  BlogPostOrderByInput = "votesUsers_ASC"
+	BlogPostOrderByInputVotesUsersDesc BlogPostOrderByInput = "votesUsers_DESC"
 )
 
 type BookOrderByInput string
@@ -2557,14 +2561,16 @@ type BookWhereUniqueInput struct {
 }
 
 type BlogPostUpdateManyMutationInput struct {
-	Slug      *string `json:"slug,omitempty"`
-	Published *bool   `json:"published,omitempty"`
-	Image     *string `json:"image,omitempty"`
-	Title     *string `json:"title,omitempty"`
-	Date      *string `json:"date,omitempty"`
-	Content   *string `json:"content,omitempty"`
-	Tags      *string `json:"tags,omitempty"`
-	Views     *int32  `json:"views,omitempty"`
+	Slug       *string `json:"slug,omitempty"`
+	Published  *bool   `json:"published,omitempty"`
+	Image      *string `json:"image,omitempty"`
+	Title      *string `json:"title,omitempty"`
+	Date       *string `json:"date,omitempty"`
+	Content    *string `json:"content,omitempty"`
+	Tags       *string `json:"tags,omitempty"`
+	Views      *int32  `json:"views,omitempty"`
+	VotesTotal *int32  `json:"votesTotal,omitempty"`
+	VotesUsers *int32  `json:"votesUsers,omitempty"`
 }
 
 type BookSubscriptionWhereInput struct {
@@ -2860,21 +2866,39 @@ type BlogPostWhereInput struct {
 	ViewsLte             *int32               `json:"views_lte,omitempty"`
 	ViewsGt              *int32               `json:"views_gt,omitempty"`
 	ViewsGte             *int32               `json:"views_gte,omitempty"`
+	VotesTotal           *int32               `json:"votesTotal,omitempty"`
+	VotesTotalNot        *int32               `json:"votesTotal_not,omitempty"`
+	VotesTotalIn         []int32              `json:"votesTotal_in,omitempty"`
+	VotesTotalNotIn      []int32              `json:"votesTotal_not_in,omitempty"`
+	VotesTotalLt         *int32               `json:"votesTotal_lt,omitempty"`
+	VotesTotalLte        *int32               `json:"votesTotal_lte,omitempty"`
+	VotesTotalGt         *int32               `json:"votesTotal_gt,omitempty"`
+	VotesTotalGte        *int32               `json:"votesTotal_gte,omitempty"`
+	VotesUsers           *int32               `json:"votesUsers,omitempty"`
+	VotesUsersNot        *int32               `json:"votesUsers_not,omitempty"`
+	VotesUsersIn         []int32              `json:"votesUsers_in,omitempty"`
+	VotesUsersNotIn      []int32              `json:"votesUsers_not_in,omitempty"`
+	VotesUsersLt         *int32               `json:"votesUsers_lt,omitempty"`
+	VotesUsersLte        *int32               `json:"votesUsers_lte,omitempty"`
+	VotesUsersGt         *int32               `json:"votesUsers_gt,omitempty"`
+	VotesUsersGte        *int32               `json:"votesUsers_gte,omitempty"`
 	And                  []BlogPostWhereInput `json:"AND,omitempty"`
 	Or                   []BlogPostWhereInput `json:"OR,omitempty"`
 	Not                  []BlogPostWhereInput `json:"NOT,omitempty"`
 }
 
 type BlogPostUpdateInput struct {
-	Slug      *string                     `json:"slug,omitempty"`
-	Published *bool                       `json:"published,omitempty"`
-	Image     *string                     `json:"image,omitempty"`
-	Title     *string                     `json:"title,omitempty"`
-	Date      *string                     `json:"date,omitempty"`
-	Author    *UserUpdateOneRequiredInput `json:"author,omitempty"`
-	Content   *string                     `json:"content,omitempty"`
-	Tags      *string                     `json:"tags,omitempty"`
-	Views     *int32                      `json:"views,omitempty"`
+	Slug       *string                     `json:"slug,omitempty"`
+	Published  *bool                       `json:"published,omitempty"`
+	Image      *string                     `json:"image,omitempty"`
+	Title      *string                     `json:"title,omitempty"`
+	Date       *string                     `json:"date,omitempty"`
+	Author     *UserUpdateOneRequiredInput `json:"author,omitempty"`
+	Content    *string                     `json:"content,omitempty"`
+	Tags       *string                     `json:"tags,omitempty"`
+	Views      *int32                      `json:"views,omitempty"`
+	VotesTotal *int32                      `json:"votesTotal,omitempty"`
+	VotesUsers *int32                      `json:"votesUsers,omitempty"`
 }
 
 type BookWhereInput struct {
@@ -2964,16 +2988,18 @@ type AnalyticsPageViewCreateInput struct {
 }
 
 type BlogPostCreateInput struct {
-	ID        *string            `json:"id,omitempty"`
-	Slug      string             `json:"slug"`
-	Published bool               `json:"published"`
-	Image     string             `json:"image"`
-	Title     string             `json:"title"`
-	Date      string             `json:"date"`
-	Author    UserCreateOneInput `json:"author"`
-	Content   string             `json:"content"`
-	Tags      string             `json:"tags"`
-	Views     int32              `json:"views"`
+	ID         *string            `json:"id,omitempty"`
+	Slug       string             `json:"slug"`
+	Published  bool               `json:"published"`
+	Image      string             `json:"image"`
+	Title      string             `json:"title"`
+	Date       string             `json:"date"`
+	Author     UserCreateOneInput `json:"author"`
+	Content    string             `json:"content"`
+	Tags       string             `json:"tags"`
+	Views      int32              `json:"views"`
+	VotesTotal int32              `json:"votesTotal"`
+	VotesUsers int32              `json:"votesUsers"`
 }
 
 type UserCreateOneInput struct {
@@ -3322,20 +3348,22 @@ func (instance BlogPostExecArray) Exec(ctx context.Context) ([]BlogPost, error) 
 	return v, err
 }
 
-var BlogPostFields = []string{"id", "createdAt", "updatedAt", "slug", "published", "image", "title", "date", "content", "tags", "views"}
+var BlogPostFields = []string{"id", "createdAt", "updatedAt", "slug", "published", "image", "title", "date", "content", "tags", "views", "votesTotal", "votesUsers"}
 
 type BlogPost struct {
-	ID        string `json:"id"`
-	CreatedAt string `json:"createdAt"`
-	UpdatedAt string `json:"updatedAt"`
-	Slug      string `json:"slug"`
-	Published bool   `json:"published"`
-	Image     string `json:"image"`
-	Title     string `json:"title"`
-	Date      string `json:"date"`
-	Content   string `json:"content"`
-	Tags      string `json:"tags"`
-	Views     int32  `json:"views"`
+	ID         string `json:"id"`
+	CreatedAt  string `json:"createdAt"`
+	UpdatedAt  string `json:"updatedAt"`
+	Slug       string `json:"slug"`
+	Published  bool   `json:"published"`
+	Image      string `json:"image"`
+	Title      string `json:"title"`
+	Date       string `json:"date"`
+	Content    string `json:"content"`
+	Tags       string `json:"tags"`
+	Views      int32  `json:"views"`
+	VotesTotal int32  `json:"votesTotal"`
+	VotesUsers int32  `json:"votesUsers"`
 }
 
 type AnalyticsPageViewExec struct {
@@ -4003,7 +4031,7 @@ func (instance *BlogPostSubscriptionPayloadExec) Node() *BlogPostExec {
 		nil,
 		[2]string{"", "BlogPost"},
 		"node",
-		[]string{"id", "createdAt", "updatedAt", "slug", "published", "image", "title", "date", "content", "tags", "views"})
+		[]string{"id", "createdAt", "updatedAt", "slug", "published", "image", "title", "date", "content", "tags", "views", "votesTotal", "votesUsers"})
 
 	return &BlogPostExec{ret}
 }
@@ -4014,7 +4042,7 @@ func (instance *BlogPostSubscriptionPayloadExec) PreviousValues() *BlogPostPrevi
 		nil,
 		[2]string{"", "BlogPostPreviousValues"},
 		"previousValues",
-		[]string{"id", "createdAt", "updatedAt", "slug", "published", "image", "title", "date", "content", "tags", "views"})
+		[]string{"id", "createdAt", "updatedAt", "slug", "published", "image", "title", "date", "content", "tags", "views", "votesTotal", "votesUsers"})
 
 	return &BlogPostPreviousValuesExec{ret}
 }
@@ -4083,20 +4111,22 @@ func (instance BlogPostPreviousValuesExecArray) Exec(ctx context.Context) ([]Blo
 	return v, err
 }
 
-var BlogPostPreviousValuesFields = []string{"id", "createdAt", "updatedAt", "slug", "published", "image", "title", "date", "content", "tags", "views"}
+var BlogPostPreviousValuesFields = []string{"id", "createdAt", "updatedAt", "slug", "published", "image", "title", "date", "content", "tags", "views", "votesTotal", "votesUsers"}
 
 type BlogPostPreviousValues struct {
-	ID        string `json:"id"`
-	CreatedAt string `json:"createdAt"`
-	UpdatedAt string `json:"updatedAt"`
-	Slug      string `json:"slug"`
-	Published bool   `json:"published"`
-	Image     string `json:"image"`
-	Title     string `json:"title"`
-	Date      string `json:"date"`
-	Content   string `json:"content"`
-	Tags      string `json:"tags"`
-	Views     int32  `json:"views"`
+	ID         string `json:"id"`
+	CreatedAt  string `json:"createdAt"`
+	UpdatedAt  string `json:"updatedAt"`
+	Slug       string `json:"slug"`
+	Published  bool   `json:"published"`
+	Image      string `json:"image"`
+	Title      string `json:"title"`
+	Date       string `json:"date"`
+	Content    string `json:"content"`
+	Tags       string `json:"tags"`
+	Views      int32  `json:"views"`
+	VotesTotal int32  `json:"votesTotal"`
+	VotesUsers int32  `json:"votesUsers"`
 }
 
 type ProjectConnectionExec struct {
@@ -5323,7 +5353,7 @@ func (instance *BlogPostEdgeExec) Node() *BlogPostExec {
 		nil,
 		[2]string{"", "BlogPost"},
 		"node",
-		[]string{"id", "createdAt", "updatedAt", "slug", "published", "image", "title", "date", "content", "tags", "views"})
+		[]string{"id", "createdAt", "updatedAt", "slug", "published", "image", "title", "date", "content", "tags", "views", "votesTotal", "votesUsers"})
 
 	return &BlogPostExec{ret}
 }

@@ -200,6 +200,10 @@ form input:invalid {
 /* MARKDOWN POST */
 /*****************/
 
+.blog-post {
+  @apply mb-10;
+}
+
 .blog-post-preview {
   @apply mt-12 pb-6 border-b border-primary-100;
 }
@@ -278,6 +282,7 @@ form input:invalid {
 .content > div,
 .content > table,
 .content > blockquote,
+.content > dl,
 .content > p {
   @apply my-6;
 }
@@ -360,33 +365,33 @@ form input:invalid {
   @apply w-24 text-center;
 }
 
-/*************/
-/* BLOG POST */
-/*************/
+/*********************/
+/* SUBSCRIPTION FORM */
+/*********************/
 
-.blog-post-footer {
+.subscription-form {
   @apply border border-dashed border-primary-400 bg-primary-50 rounded mt-10;
 }
 
-.blog-post-footer small {
+.subscription-form small {
   @apply text-xs italic text-gray-600;
 }
 
-.blog-post-footer p {
+.subscription-form p {
   @apply mb-4;
 }
 
-.blog-post-footer input {
+.subscription-form input {
   @apply border-primary-300;
 }
 
-.blog-post-footer__inner {
-  @apply text-center mx-auto py-10 px-4;
-}
-
-.blog-post-footer form {
+.subscription-form form {
   @apply mx-auto;
   max-width: 24rem;
+}
+
+.subscription-form__inner {
+  @apply text-center mx-auto py-10 px-4;
 }
 
 /***********************/
@@ -473,37 +478,27 @@ pre.chroma-chroma {
   @apply text-secondary no-underline;
 }
 
-.bottom-footer .subscription-form {
-  @apply text-sm mt-10 mx-auto;
-  max-width: 20rem;
-}
+/****************/
+/* BUTTON INPUT */
+/****************/
 
-.bottom-footer .subscription-form .btn,
-.bottom-footer .subscription-form input {
-  @apply py-2;
-}
-
-/*********************/
-/* SUBSCRIPTION FORM */
-/*********************/
-
-.subscription-form label {
-  @apply mb-0 hidden;
-}
-
-.subscription-form div {
+.button-input {
   @apply flex;
 }
 
-.subscription-form input {
+.button-input label {
+  @apply hidden;
+}
+
+.button-input input {
   @apply rounded-r-none border-r-0;
 }
 
-.subscription-form input:focus {
+.button-input input:focus {
   @apply border-r-0;
 }
 
-.subscription-form .btn {
+.button-input .btn {
   @apply w-auto text-center text-xs rounded-l-none;
 }
 
@@ -727,9 +722,53 @@ body .CodeMirror .cm-comment {
   }
 }
 
+/***************/
+/* CLAP BUTTON */
+/***************/
+
+.clap-button {
+  @apply flex items-center text-sm text-gray-600;
+}
+
+.clap-button button {
+  @apply rounded-full border border-gray-600 mr-3;
+  @apply outline-none !important;
+  width: 3rem;
+  height: 3rem;
+  transition: transform 100ms;
+}
+
+.clap-button button:disabled {
+  @apply opacity-50;
+}
+
+.clap-button button:not(:disabled):hover {
+  @apply border-gray-800;
+}
+
+.clap-button button:not(:disabled):active {
+  transform: scale(1.1);
+}
+
+.clap-button button:not(:disabled):hover svg path {
+  @apply fill-current text-gray-900;
+}
+
+.clap-button button svg {
+  padding: 17%;
+}
+
+.clap-button button svg path {
+  @apply fill-current text-gray-700;
+}
+
 /***********/
 /* HELPERS */
 /***********/
+
+.row-spaced {
+  @apply flex justify-between items-center;
+}
 
 .hr--spaced {
   @apply my-12;

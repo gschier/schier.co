@@ -47,6 +47,7 @@ func BlogRoutes(router *mux.Router) {
 
 	// API
 	router.HandleFunc("/api/blog/assets", Admin(routeUploadAsset)).Methods(http.MethodPut)
+	router.HandleFunc("/api/blog/vote", Admin(routeVote)).Methods(http.MethodPost)
 }
 
 var blogEditTemplate = pageTemplate("blog/edit.html")
@@ -527,6 +528,50 @@ func routeBlogList(w http.ResponseWriter, r *http.Request) {
 		"blogPagePrev":    pagePrevious,
 		"blogPageNext":    pageNext,
 	})
+}
+
+func routeVote(w http.ResponseWriter, r *http.Request) {
+	_ = r.ParseForm()
+
+	count := StrToInt32(r.Form.Get("count"), 0)
+	slug := r.Form.Get("slug")
+
+	// Don't allow user to over 50 votes
+	if count > 50 {
+		w.WriteHeader(http.StatusNoContent)
+		return
+	}
+
+	client := ctxPrismaClient(r)
+
+	post, err := client.BlogPost(prisma.BlogPostWhereUniqueInput{Slug: &slug}).Exec(r.Context())
+	if err != nil {
+		log.Println("Failed to get blog post", err)
+		http.Error(w, "Failed to get blog post", http.StatusInternalServerError)
+		return
+	}
+
+	// Only increment user on first vote
+	var userInc int32 = 0
+	if count == 0 {
+		userInc = 1
+	}
+
+	newPost, err := client.UpdateBlogPost(prisma.BlogPostUpdateParams{
+		Data: prisma.BlogPostUpdateInput{
+			VotesTotal: prisma.Int32(post.VotesTotal + 1),
+			VotesUsers: prisma.Int32(post.VotesUsers + userInc),
+		},
+		Where: prisma.BlogPostWhereUniqueInput{ID: &post.ID},
+	}).Exec(r.Context())
+	if err != nil {
+		log.Println("Failed to vote", err)
+		http.Error(w, "Failed to vote", http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	_, _ = w.Write([]byte(fmt.Sprintf("%d", newPost.VotesTotal)))
 }
 
 func routeUploadAsset(w http.ResponseWriter, r *http.Request) {
