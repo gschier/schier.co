@@ -160,6 +160,7 @@ h6 {
 
 .form-row {
   @apply mb-6;
+  box-sizing: border-box;
 }
 
 .form-actions {
@@ -194,6 +195,10 @@ form input:focus {
 form textarea:invalid,
 form input:invalid {
   @apply border-danger-500;
+}
+
+details summary:focus {
+  @apply outline-none;
 }
 
 /*****************/
@@ -266,24 +271,26 @@ form input:invalid {
 .content dl dd {
 }
 
+.content blockquote,
+.content canvas,
+.content details,
+.content details > summary,
+.content form,
+.content table,
+.content > div,
+.content > dl,
 .content > h1,
 .content > h2,
 .content > h3,
 .content > h4,
 .content > h5,
 .content > h6,
-.content > img,
-.content > canvas,
-.content > pre,
-.content > ol,
-.content > ul,
 .content > hr,
-.content > form,
-.content > div,
-.content > table,
-.content > blockquote,
-.content > dl,
-.content > p {
+.content > img,
+.content > ol,
+.content > p,
+.content > pre,
+.content > ul {
   @apply my-6;
 }
 
