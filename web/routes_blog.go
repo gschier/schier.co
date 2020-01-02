@@ -598,18 +598,18 @@ func routeVote(w http.ResponseWriter, r *http.Request) {
 	count := StrToInt32(r.Form.Get("count"), 0)
 	slug := r.Form.Get("slug")
 
-	// Don't allow user to over 50 votes
-	if count > 50 {
-		w.WriteHeader(http.StatusNoContent)
-		return
-	}
-
 	client := ctxPrismaClient(r)
 
 	post, err := client.BlogPost(prisma.BlogPostWhereUniqueInput{Slug: &slug}).Exec(r.Context())
 	if err != nil {
 		log.Println("Failed to get blog post", err)
 		http.Error(w, "Failed to get blog post", http.StatusInternalServerError)
+		return
+	}
+
+	// Don't allow these conditions to vote
+	if count > 50 || !post.Published {
+		w.WriteHeader(http.StatusNoContent)
 		return
 	}
 
