@@ -8,8 +8,10 @@
   {% if showWordCount %}
     &bull; {{ blogPost.Content | words }} words
   {% endif %}
-  {% if blogPost.VotesTotal > 2 %}
-    &bull; {{ blogPost.VotesTotal }} votes
+  {% if blogPost.VotesTotal > 0 %}
+    <span title="{{ blogPost.VotesUsers }} reader">
+      &bull; {{ blogPost.VotesTotal }} votes
+    </span>
   {% endif %}
   {% if loggedIn and blogPost.Published %}
     &bull; {{ blogPost.Views }} views
