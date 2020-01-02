@@ -36,6 +36,10 @@ func TestCapitalizeTitleWorksWithHyphens(t *testing.T) {
 	assert.Equal(t, "Something-Something", web.CapitalizeTitle("something-something"))
 }
 
+func TestCapitalizeTitleWorksWithQuotes(t *testing.T) {
+	assert.Equal(t, "Something \"Quote\" Something", web.CapitalizeTitle("something \"quote\" something"))
+}
+
 func TestReadTimeRoundUp(t *testing.T) {
 	assert.Equal(t, 1, web.ReadTime(0))
 	assert.Equal(t, 1, web.ReadTime(1))

@@ -30,7 +30,7 @@
             <a href="/blog/{{ blogPost.Slug }}">
               {{ blogPost.Title }}
             </a>
-            {% include '../../partials/blog_post_meta.html' %}
+            {% include '../../partials/blog_post_meta.html' with hot=true %}
           </h2>
           <div>
             {{ blogPost.Content | summary }}
