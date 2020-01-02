@@ -17,5 +17,10 @@
     <li>
       <a href="/blog/page/1">Blog</a>
     </li>
+    {% if loggedIn %}
+      <li>
+        <a href="/blog/drafts">Drafts</a>
+      </li>
+    {% endif %}
   </ul>
 </nav>
