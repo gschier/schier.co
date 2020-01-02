@@ -763,7 +763,7 @@ body .CodeMirror .cm-comment {
 }
 
 .clap-button button:disabled {
-  @apply opacity-50;
+  @apply opacity-50 cursor-default;
 }
 
 .clap-button button:not(:disabled):hover {
