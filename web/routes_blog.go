@@ -513,6 +513,12 @@ func routeBlogList(w http.ResponseWriter, r *http.Request) {
 	first := 5
 	skip := (page - 1) * first
 
+	// Show all for tags
+	if tag != "" {
+		first = 999
+		skip = 0
+	}
+
 	var tagsContains *string = nil
 	var tagsEqual *string = nil
 	if tag == "-" {
