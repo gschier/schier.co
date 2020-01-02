@@ -44,6 +44,7 @@ func BlogRoutes(router *mux.Router) {
 	router.HandleFunc("/forms/blog/upsert", Admin(routeBlogPostCreateOrUpdate)).Methods(http.MethodPost)
 	router.HandleFunc("/forms/blog/publish", Admin(routeBlogPostPublish)).Methods(http.MethodPost)
 	router.HandleFunc("/forms/blog/delete", Admin(routeBlogPostDelete)).Methods(http.MethodPost)
+	router.HandleFunc("/forms/blog/unlist", Admin(routeBlogPostUnlist)).Methods(http.MethodPost)
 
 	// API
 	router.HandleFunc("/api/blog/assets", Admin(routeUploadAsset)).Methods(http.MethodPut)
@@ -138,6 +139,35 @@ func routeBlogRender(w http.ResponseWriter, r *http.Request) {
 			Tags:      tags,
 		},
 	})
+}
+
+func routeBlogPostUnlist(w http.ResponseWriter, r *http.Request) {
+	_ = r.ParseForm()
+
+	id := r.Form.Get("id")
+
+	client := ctxPrismaClient(r)
+
+	blogPost, err := client.BlogPost(prisma.BlogPostWhereUniqueInput{
+		ID: &id,
+	}).Exec(r.Context())
+	if err != nil {
+		log.Println("Failed to fetch Post", err)
+		http.Error(w, "Failed to fetch Post", http.StatusInternalServerError)
+		return
+	}
+
+	_, err = client.UpdateBlogPost(prisma.BlogPostUpdateParams{
+		Data:  prisma.BlogPostUpdateInput{Unlisted: prisma.Bool(!blogPost.Unlisted)},
+		Where: prisma.BlogPostWhereUniqueInput{ID: &id},
+	}).Exec(r.Context())
+	if err != nil {
+		log.Println("Failed to unlist Post", err)
+		http.Error(w, "Failed to unlist Post", http.StatusInternalServerError)
+		return
+	}
+
+	http.Redirect(w, r, "/blog", http.StatusSeeOther)
 }
 
 func routeBlogPostDelete(w http.ResponseWriter, r *http.Request) {
@@ -482,6 +512,7 @@ func routeBlogList(w http.ResponseWriter, r *http.Request) {
 	blogPosts, err := ctxPrismaClient(r).BlogPosts(&prisma.BlogPostsParams{
 		Where: &prisma.BlogPostWhereInput{
 			Published:    prisma.Bool(true),
+			Unlisted:     prisma.Bool(false),
 			TagsContains: tagsContains,
 			Tags:         tagsEqual,
 		},
