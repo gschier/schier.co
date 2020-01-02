@@ -676,6 +676,10 @@ body .CodeMirror .cm-comment {
   @apply cursor-pointer;
 }
 
+.card--clicky:hover a {
+  @apply underline;
+}
+
 .card--clicky:active {
   @apply cursor-pointer;
 }
