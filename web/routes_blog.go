@@ -458,7 +458,7 @@ func routeBlogDrafts(w http.ResponseWriter, r *http.Request) {
 
 func routeBlogList(w http.ResponseWriter, r *http.Request) {
 	// Redirect /blog = /blog/page/1
-	if mux.Vars(r)["page"] == "" {
+	if mux.Vars(r)["page"] == ""  && mux.Vars(r)["tag"] == "" {
 		http.Redirect(w, r, "/blog/page/1", http.StatusSeeOther)
 		return
 	}
