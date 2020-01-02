@@ -20,7 +20,7 @@
 
 {% block content %}
   <div class="content container" id="editor-app">
-    <h1>
+    <h1 class="hidden-mobile">
       {{ blogPost | yesno:'Edit,Create' }}
       Post {% if blogPost and blogPost.Published %}(Published){% else %}(Draft){% endif %}
     </h1>
@@ -75,9 +75,9 @@
       </div>
       <!-- / Blog Post Editor -->
 
-      <div style="display:flex">
+      <div class="form-actions">
         <button class="btn">
-          {% if blogPost %}Update{% else %}Create{% endif %}
+          {% if blogPost %}Save{% else %}Create{% endif %}
         </button>
       </div>
     </form>

@@ -441,7 +441,7 @@ pre.chroma-chroma {
 /******************/
 
 .top-nav .container {
-  @apply flex flex-row items-center py-4 mb-10;
+  @apply flex flex-row items-center py-4;
 }
 
 .top-nav a {
