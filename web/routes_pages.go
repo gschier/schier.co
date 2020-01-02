@@ -19,6 +19,7 @@ func PagesRoutes(router *mux.Router) {
 var robots = strings.TrimSpace(`
 User-agent: *
 Disallow: /open
+Disallow: /blog/drafts
 Disallow: /newsletter/thanks
 Disallow: /newsletter/unsubscribe/*
 Disallow: /login
