@@ -197,6 +197,10 @@ form input:invalid {
   @apply border-danger-500;
 }
 
+details summary {
+  @apply cursor-pointer;
+}
+
 details summary:focus {
   @apply outline-none;
 }
