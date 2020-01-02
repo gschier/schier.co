@@ -91,7 +91,7 @@
   <script>
     const el = document.querySelector('#live-users');
     const next = async () => {
-      const res = await fetch('{{ analyticsUrl }}/analytics/live');
+      const res = await fetch('{{ analyticsUrl | escapejs }}/analytics/live');
       const data = await res.json();
       el.innerHTML = data.count;
     };
@@ -184,7 +184,7 @@
       type: 'doughnut',
       options: pieOptions,
       data: {
-        labels: [{% for e in topBrowsers %}'{{ e.Name }}', {% endfor %}],
+        labels: [{% for e in topBrowsers %}'{{ e.Name | escapejs }}', {% endfor %}],
         datasets: [{
           label: 'Browsers',
           data: [{% for e in topBrowsers %}'{{ e.Count }}', {% endfor %}],
@@ -197,7 +197,7 @@
       type: 'doughnut',
       options: pieOptions,
       data: {
-        labels: [{% for e in topPlatforms %}'{{ e.Name }}', {% endfor %}],
+        labels: [{% for e in topPlatforms %}'{{ e.Name | escapejs }}', {% endfor %}],
         datasets: [{
           label: 'Operating Systems',
           data: [{% for e in topPlatforms %}'{{ e.Count }}', {% endfor %}],

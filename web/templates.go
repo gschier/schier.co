@@ -60,7 +60,6 @@ func init() {
 			return pongo2.AsValue(dateStr), nil
 		},
 	)
-
 	if err != nil {
 		panic("failed to register isoformat filter: " + err.Error())
 	}
@@ -76,7 +75,16 @@ func init() {
 			return pongo2.AsValue(t), nil
 		},
 	)
+	if err != nil {
+		panic("failed to register isodate filter: " + err.Error())
+	}
 
+	err = pongo2.RegisterFilter(
+		"contains",
+		func(in *pongo2.Value, param *pongo2.Value) (*pongo2.Value, *pongo2.Error) {
+			return pongo2.AsValue(strings.Contains(in.String(), param.String())), nil
+		},
+	)
 	if err != nil {
 		panic("failed to register isodate filter: " + err.Error())
 	}
@@ -87,7 +95,6 @@ func init() {
 			return pongo2.AsValue(param.String() > in.String()), nil
 		},
 	)
-
 	if err != nil {
 		panic("failed to register isodategte filter: " + err.Error())
 	}
@@ -98,7 +105,6 @@ func init() {
 			return pongo2.AsValue(ReadTime(in.Integer())), nil
 		},
 	)
-
 	if err != nil {
 		panic("failed to register isoformat filter: " + err.Error())
 	}
@@ -114,7 +120,6 @@ func init() {
 			return pongo2.AsSafeValue(string(b)), nil
 		},
 	)
-
 	if err != nil {
 		panic("failed to register isoformat filter: " + err.Error())
 	}
@@ -137,7 +142,6 @@ func init() {
 			return pongo2.AsValue(finalValue), nil
 		},
 	)
-
 	if err != nil {
 		panic("failed to register inlineStatic filter: " + err.Error())
 	}
@@ -151,7 +155,6 @@ func init() {
 			return pongo2.AsSafeValue(RenderMarkdownStr(md)), nil
 		},
 	)
-
 	if err != nil {
 		panic("failed to register markdown filter: " + err.Error())
 	}
@@ -162,7 +165,6 @@ func init() {
 			return pongo2.AsValue(Summary(in.String())), nil
 		},
 	)
-
 	if err != nil {
 		panic("failed to register summary filter: " + err.Error())
 	}
@@ -173,7 +175,6 @@ func init() {
 			return pongo2.AsValue(WordCount(in.String())), nil
 		},
 	)
-
 	if err != nil {
 		panic("failed to register words filter: " + err.Error())
 	}
