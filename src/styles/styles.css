@@ -674,14 +674,10 @@ body .CodeMirror .cm-comment {
 
 .card--clicky:hover {
   @apply cursor-pointer;
-  transform: scale(1.02);
-  transition: transform 100ms;
 }
 
 .card--clicky:active {
   @apply cursor-pointer;
-  transform: scale(1.01);
-  transition: transform 100ms;
 }
 
 .card--clicky:hover .card__inner {
