@@ -8,7 +8,9 @@
   {% if showWordCount %}
     &bull; {{ blogPost.Content | words }} words
   {% endif %}
-  &bull; {{ blogPost.VotesTotal | default:"no" }} cheers
+  {% if blogPost.VotesTotal > 2 %}
+    &bull; {{ blogPost.VotesTotal }} votes
+  {% endif %}
   {% if loggedIn and blogPost.Published %}
     &bull; {{ blogPost.Views }} views
   {% endif %}
