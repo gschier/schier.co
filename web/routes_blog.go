@@ -47,7 +47,7 @@ func BlogRoutes(router *mux.Router) {
 
 	// API
 	router.HandleFunc("/api/blog/assets", Admin(routeUploadAsset)).Methods(http.MethodPut)
-	router.HandleFunc("/api/blog/vote", Admin(routeVote)).Methods(http.MethodPost)
+	router.HandleFunc("/api/blog/vote", routeVote).Methods(http.MethodPost)
 }
 
 var blogEditTemplate = pageTemplate("blog/edit.html")
