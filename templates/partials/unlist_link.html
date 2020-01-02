@@ -2,6 +2,6 @@
   {{ csrfField | safe }}
   {% include './form-input.html' with type='hidden' name='id' value=blogPost.ID %}
   <button class="btn btn-small btn-gray" type="submit">
-    {{ blogPost.Unlisted | yesno:"List:Unlist" }}
+    {{ blogPost.Unlisted | yesno:"List,Unlist" }}
   </button>
 </form>
