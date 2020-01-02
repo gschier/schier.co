@@ -266,7 +266,7 @@ func routeBlogPostCreateOrUpdate(w http.ResponseWriter, r *http.Request) {
 
 	existingPost, err := client.BlogPost(prisma.BlogPostWhereUniqueInput{ID: &id}).Exec(r.Context())
 	if err != nil && err != prisma.ErrNoResult {
-		log.Println("Failed to update blog posts", err)
+		log.Println("Failed to update blog post", err.Error())
 		http.Error(w, "Failed to update blog post", http.StatusInternalServerError)
 		return
 	}

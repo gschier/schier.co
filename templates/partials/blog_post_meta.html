@@ -11,6 +11,9 @@
   {% if blogPost.VotesTotal > 0 %}
     <span title="{{ blogPost.VotesUsers }} reader">
       &bull; {{ blogPost.VotesTotal }} votes
+      {% if blogPost.VotesUsers > 9 and blogPost.Date | isodatenewerdays:7 %}
+        <span style="opacity:0.5">🔥</span>
+      {% endif %}
     </span>
   {% endif %}
   {% if loggedIn and blogPost.Published %}
