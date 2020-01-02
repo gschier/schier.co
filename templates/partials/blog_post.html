@@ -26,7 +26,9 @@
 <div class="row-spaced">
   <div class="clap-button">
     <button>{{ 'images/icons/cheers.svg' | inlineStatic | safe }}</button>
-    <div><span class="clap-count">{{ blogPost.VotesTotal | default:"Be the first to" }}</span> cheers</div>
+    <div title="{{ blogPost.VotesUsers }} readers">
+      <span class="clap-count">{{ blogPost.VotesTotal | default:"Be the first to" }}</span> cheers
+    </div>
   </div>
   {% include './blog_post_tag.html' with tags=blogPost.Tags %}
 </div>
