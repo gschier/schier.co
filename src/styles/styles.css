@@ -723,11 +723,11 @@ body .CodeMirror .cm-comment {
 /*************/
 
 .home-hero {
-  @apply flex items-center justify-between;
+  @apply flex items-center justify-between mt-6;
 }
 
 .home-hero__avatar {
-  @apply pr-8;
+  @apply pr-8 mt-6;
 }
 
 .home-hero__avatar img {
