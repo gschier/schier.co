@@ -2,7 +2,7 @@
   <div class="form-row">
 {% endif %}
 
-{% if label %}
+{% if label and type != 'hidden' %}
   <label class="form-label" for="i-{{ name }}">{{ label }}</label>
 {% endif %}
 
