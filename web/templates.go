@@ -51,7 +51,9 @@ func init() {
 			}
 
 			dateStr := t.Format("Jan _2, 2006")
-			if t.Year() == time.Now().Year() {
+
+			// Use short date if less than 200 days ago
+			if time.Now().Sub(t) < time.Hour * 24 * 200 {
 				dateStr = t.Format("Jan _2")
 			}
 
