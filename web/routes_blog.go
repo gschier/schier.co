@@ -248,6 +248,7 @@ func routeBlogPostCreateOrUpdate(w http.ResponseWriter, r *http.Request) {
 	title := r.Form.Get("title")
 	image := r.Form.Get("image")
 	tagNames := StringToTags(r.Form.Get("tags"))
+	stage := StrToInt32(r.Form.Get("stage"), 0)
 
 	// Force title capitalization
 	title = CapitalizeTitle(title)
@@ -299,6 +300,7 @@ func routeBlogPostCreateOrUpdate(w http.ResponseWriter, r *http.Request) {
 				Content: &content,
 				Image:   &image,
 				Date:    &date,
+				Stage:   &stage,
 				Tags:    prisma.Str(TagsToString(tagNames)),
 			},
 		}).Exec(r.Context())
@@ -308,6 +310,7 @@ func routeBlogPostCreateOrUpdate(w http.ResponseWriter, r *http.Request) {
 			Title:     title,
 			Content:   content,
 			Image:     image,
+			Stage:     stage,
 			Slug:      sluglib.Make(title),
 			Date:      time.Now().Format(time.RFC3339),
 			Author:    prisma.UserCreateOneInput{Connect: &prisma.UserWhereUniqueInput{ID: &user.ID}},
@@ -373,10 +376,10 @@ func routeBlogPost(w http.ResponseWriter, r *http.Request) {
 
 	// Render template
 	renderTemplate(w, r, blogPostTemplate(), &pongo2.Context{
-		"pageTitle":       post.Title,
-		"pageImage":       post.Image,
-		"pageDescription": Summary(post.Content),
-		"blogPost":        post,
+		"pageTitle":            post.Title,
+		"pageImage":            post.Image,
+		"pageDescription":      Summary(post.Content),
+		"blogPost":             post,
 		"recommendedBlogPosts": recommendedBlogPosts,
 	})
 
@@ -468,7 +471,7 @@ func routeBlogRSS(w http.ResponseWriter, r *http.Request) {
 
 func routeBlogDrafts(w http.ResponseWriter, r *http.Request) {
 	// Fetch blog posts
-	draftsOrderBy := prisma.BlogPostOrderByInputUpdatedAtDesc
+	draftsOrderBy := prisma.BlogPostOrderByInputStageDesc
 	drafts, err := ctxPrismaClient(r).BlogPosts(&prisma.BlogPostsParams{
 		Where: &prisma.BlogPostWhereInput{
 			Published: prisma.Bool(false),
@@ -482,11 +485,12 @@ func routeBlogDrafts(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Fetch blog posts
+	unlistedOrderBy := prisma.BlogPostOrderByInputUpdatedAtDesc
 	unlisted, err := ctxPrismaClient(r).BlogPosts(&prisma.BlogPostsParams{
 		Where: &prisma.BlogPostWhereInput{
 			Unlisted: prisma.Bool(true),
 		},
-		OrderBy: &draftsOrderBy,
+		OrderBy: &unlistedOrderBy,
 	}).Exec(r.Context())
 	if err != nil {
 		log.Println("Failed to load unlisted posts", err)

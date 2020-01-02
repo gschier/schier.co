@@ -28,11 +28,10 @@
       {{ csrfField | safe }}
       {% include '../../partials/form-input.html' with type='hidden' name='id' value=blogPost.ID required=true %}
       {% include '../../partials/form-input.html' with label='Title' type='text' name='title' value=blogPost.Title placeholder='My Blog Post' required=true autofocus=true %}
-      {% if blogPost.Slug and not blogPost.Published %}
-        {% include '../../partials/form-input.html' with label='Slug' type='text' name='slug' value=blogPost.Slug placeholder='my-blog-post' %}
-      {% endif %}
+      {% include '../../partials/form-input.html' with label='Slug' type=blogPost.Published|yesno:"hidden,text" name='slug' value=blogPost.Slug placeholder='my-blog-post' %}
       {% include '../../partials/form-input.html' with label='Image' type='url' name='image' value=blogPost.Image placeholder='https://assets.schier.dev/images/insomnia-growth.png' %}
       {% include '../../partials/form-input.html' with label='Tags' type='text' name='tags' value=blogPost.Tags placeholder='Tag1, Tag2' %}
+      {% include '../../partials/form-input.html' with label='Stage' type=blogPost.Published|yesno:"hidden,number" name='stage' value=blogPost.Stage placeholder='0' %}
 
       <div class="form-row">
         <div style="display:flex">
