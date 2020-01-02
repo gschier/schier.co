@@ -364,7 +364,7 @@ func routeBlogPost(w http.ResponseWriter, r *http.Request) {
 
 	post := oneBlogPosts[0]
 
-	recentBlogPosts, err := client.BlogPosts(RecentBlogPosts(4, &post.ID)).Exec(r.Context())
+	recommendedBlogPosts, err := client.BlogPosts(RecommendedBlogPosts(4, &post.ID)).Exec(r.Context())
 	if err != nil {
 		log.Println("Failed to fetch recent blog posts: " + err.Error())
 		http.Error(w, "Failed to fetch recent blog posts", http.StatusInternalServerError)
@@ -377,7 +377,7 @@ func routeBlogPost(w http.ResponseWriter, r *http.Request) {
 		"pageImage":       post.Image,
 		"pageDescription": Summary(post.Content),
 		"blogPost":        post,
-		"recentBlogPosts": recentBlogPosts,
+		"recommendedBlogPosts": recommendedBlogPosts,
 	})
 
 	go func() {
