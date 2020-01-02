@@ -2,11 +2,11 @@
 
 {% block content %}
   <div class="content container">
-    <h1>Drafts</h1>
+    <h1>Drafts <code>{{ drafts | length }}</code></h1>
     <table>
       <thead>
       <tr>
-        <th>Draft Title</th>
+        <th>Title</th>
         <th style="text-align:right;">Words</th>
         <th><a href="/blog/new" class="btn btn-tiny">New</a></th>
       </tr>
