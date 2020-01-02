@@ -1,6 +1,6 @@
 <div class="cards cards--flexy">
   {% for blogPost in blogPosts %}
-    <div class="card">
+    <div class="card card--clicky" onclick="window.location='/blog/{{ blogPost.Slug }}'">
       <div class="card__inner">
         {% include './blog_post_meta.html' with class='card__title' %}
         <p class="card__body">{{ blogPost.Title }}</p>

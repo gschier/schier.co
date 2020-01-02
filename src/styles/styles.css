@@ -653,7 +653,7 @@ body .CodeMirror .cm-comment {
 }
 
 .card {
-  @apply px-2 w-full mx-auto;
+  @apply px-2 w-full mx-auto block;
 }
 
 .card__inner {
@@ -670,6 +670,22 @@ body .CodeMirror .cm-comment {
 
 .card__body--big {
   @apply text-3xl font-thin;
+}
+
+.card--clicky:hover {
+  @apply cursor-pointer;
+  transform: scale(1.02);
+  transition: transform 100ms;
+}
+
+.card--clicky:active {
+  @apply cursor-pointer;
+  transform: scale(1.01);
+  transition: transform 100ms;
+}
+
+.card--clicky:hover .card__inner {
+  @apply border-primary-400;
 }
 
 @media only screen and (max-width: 600px) {
