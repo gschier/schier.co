@@ -29,5 +29,34 @@
       {% endfor %}
       </tbody>
     </table>
+
+    <h2>Unlisted</h2>
+
+    <table>
+      <thead>
+      <tr>
+        <th>Title</th>
+        <th style="text-align:right;">Words</th>
+        <th><a href="/blog/new" class="btn btn-tiny">New</a></th>
+      </tr>
+      </thead>
+      <tbody>
+      {% for blogPost in unlisted %}
+        <tr>
+          <td>
+            <a href="/blog/{{ blogPost.Slug }}">
+              {{ blogPost.Title }}
+            </a>
+          </td>
+          <td style="width:2rem;text-align:right;">
+            {{ blogPost.Content | words }}
+          </td>
+          <td style="width:2rem;">
+            <a href="/blog/{{ blogPost.Slug }}/edit" class="btn btn-gray btn-tiny">Edit</a>
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
   </div>
 {% endblock %}

@@ -481,8 +481,22 @@ func routeBlogDrafts(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Fetch blog posts
+	unlisted, err := ctxPrismaClient(r).BlogPosts(&prisma.BlogPostsParams{
+		Where: &prisma.BlogPostWhereInput{
+			Unlisted: prisma.Bool(true),
+		},
+		OrderBy: &draftsOrderBy,
+	}).Exec(r.Context())
+	if err != nil {
+		log.Println("Failed to load unlisted posts", err)
+		http.Error(w, "Failed to load unlisted posts", http.StatusInternalServerError)
+		return
+	}
+
 	renderTemplate(w, r, blogDraftsTemplate(), &pongo2.Context{
 		"drafts": drafts,
+		"unlisted": unlisted,
 	})
 }
 
