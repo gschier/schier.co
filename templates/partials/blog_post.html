@@ -8,9 +8,8 @@
     <div>
       <a href="/blog/{{ blogPost.Slug }}/edit" class="btn btn-gray btn-small">Edit</a>
       {% include './publish_link.html' %}
-      {% if not blogPost.Published %}
-        {% include './delete_link.html' %}
-      {% endif %}
+      {% include './unlist_link.html' %}
+      {% include './delete_link.html' %}
     </div>
   {% endif %}
 
