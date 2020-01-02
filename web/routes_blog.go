@@ -565,17 +565,20 @@ func routeBlogList(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	description := "Blog posts"
+	description := "An archive of blog posts"
+	title := "Blog"
 	if tag != "" {
 		description += " for tag " + tag
+		title += " " + tag + " Tag"
 	}
 	if page > 1 {
 		description += fmt.Sprintf(" (page %d)", page)
+		title += fmt.Sprintf(" (Page %d)", page)
 	}
 
 	// Render template
 	renderTemplate(w, r, blogListTemplate(), &pongo2.Context{
-		"pageTitle":       "Blog Posts",
+		"pageTitle":       title,
 		"pageDescription": description,
 		"tag":             tag,
 		"blogPosts":       blogPosts,
