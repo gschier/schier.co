@@ -739,7 +739,7 @@ body .CodeMirror .cm-comment {
 /***************/
 
 .clap-button {
-  @apply flex items-center text-sm text-gray-600;
+  @apply flex items-center text-sm text-gray-600 mr-4;
 }
 
 .clap-button button {
