@@ -157,7 +157,7 @@ func routeBlogPostUnlist(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_, err = client.UpdateBlogPost(prisma.BlogPostUpdateParams{
+	blogPost, err = client.UpdateBlogPost(prisma.BlogPostUpdateParams{
 		Data:  prisma.BlogPostUpdateInput{Unlisted: prisma.Bool(!blogPost.Unlisted)},
 		Where: prisma.BlogPostWhereUniqueInput{ID: &id},
 	}).Exec(r.Context())
@@ -167,7 +167,7 @@ func routeBlogPostUnlist(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	http.Redirect(w, r, "/blog", http.StatusSeeOther)
+	http.Redirect(w, r, "/blog/"+blogPost.Slug, http.StatusSeeOther)
 }
 
 func routeBlogPostDelete(w http.ResponseWriter, r *http.Request) {
@@ -495,7 +495,7 @@ func routeBlogDrafts(w http.ResponseWriter, r *http.Request) {
 	}
 
 	renderTemplate(w, r, blogDraftsTemplate(), &pongo2.Context{
-		"drafts": drafts,
+		"drafts":   drafts,
 		"unlisted": unlisted,
 	})
 }
