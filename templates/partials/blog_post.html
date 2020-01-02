@@ -31,6 +31,31 @@
   </div>
   {% include './blog_post_tag.html' with tags=blogPost.Tags %}
 </div>
+<div class="expose-on-clap" data-votes="50">
+  <div class="notice notice--danger">
+    Oops! It seems like you used up all your votes ✋🏻
+  </div>
+</div>
+<div class="expose-on-clap" data-votes="25">
+  <div class="notice notice--warning">
+    Okay, that's enough. You're too kind 😄
+  </div>
+</div>
+<div class="expose-on-clap" data-votes="25">
+  <div class="notice notice--notice">
+    Please consider sharing this post on Hacker News, Reddit, or Twitter 🔥
+  </div>
+</div>
+<div class="expose-on-clap" data-votes="10">
+  <div class="notice notice--info">
+    Woah, thanks for the love! ❤️
+  </div>
+</div>
+<div class="expose-on-clap" data-votes="1">
+  <div class="notice notice--subtle">
+    Thanks, I'm glad you enjoyed it! 😃
+  </div>
+</div>
 
 <hr class="hr--spaced">
 <div>
@@ -48,6 +73,7 @@
     (function () {
       const body = document.body;
       const el = body.querySelector('.clap-button');
+      const showOnCheers = body.querySelectorAll('.expose-on-clap');
       const lbl = el.querySelector('.clap-count');
       const btn = el.querySelector('button');
       const lsKey = 'vote-{{ blogPost.Slug }}';
@@ -81,6 +107,14 @@
           el.setAttribute('data-total', total);
           updateDisabled();
           lbl.innerHTML = total;
+          for (const el of showOnCheers) {
+            if (count + 1  >= parseInt(el.getAttribute('data-votes'))) {
+              el.className += ' expose-on-clap--show';
+
+              // Only show one at a time
+              break;
+            }
+          }
         });
       });
     })();

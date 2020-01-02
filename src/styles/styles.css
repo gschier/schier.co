@@ -786,6 +786,19 @@ body .CodeMirror .cm-comment {
   @apply fill-current text-gray-700;
 }
 
+.expose-on-clap {
+  @apply text-sm hidden opacity-0;
+}
+
+.expose-on-clap > * {
+  @apply mt-6;
+}
+
+.expose-on-clap--show {
+  @apply opacity-100 block;
+  transition: opacity 200ms;
+}
+
 /***********/
 /* HELPERS */
 /***********/
