@@ -58,7 +58,10 @@
 
       updateDisabled();
 
-      btn.addEventListener('click', function () {
+      btn.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
         let count = parseInt(localStorage.getItem(lsKey)) || 0;
         count = isNaN(count) ? 0 : count;
 
