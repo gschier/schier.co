@@ -29,7 +29,7 @@ func AnalyticsRoutes(router *mux.Router) {
 var analyticsTemplate = pageTemplate("analytics/analytics.html")
 
 // Cache analytics renders every hour
-var cachedAnalytics = make(map[time.Time]*pongo2.Context)
+var cachedAnalytics = make(map[string]*pongo2.Context)
 
 func routeAnalyticsLive(w http.ResponseWriter, r *http.Request) {
 	client := ctxPrismaClient(r)
@@ -65,12 +65,6 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 	thisHour := time.Date(now.Year(), now.Month(), now.Day(), now.Hour(), 0, 0, 0, now.Location())
 	endOfToday := time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, now.Location()).Add(time.Hour * 24)
 
-	// Can we serve from cache?
-	if c, ok := cachedAnalytics[thisHour]; ok {
-		renderTemplate(w, r, analyticsTemplate(), c)
-		return
-	}
-
 	days, _ := strconv.Atoi(r.URL.Query().Get("days"))
 	if days == 0 {
 		days = 7
@@ -87,6 +81,14 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 
 	if bucket < 1 {
 		bucket = 1
+	}
+
+	cacheKey := fmt.Sprintf("%s:%d:%d", thisHour.Format(time.RFC3339), days, bucket)
+
+	// Can we serve from cache?
+	if c, ok := cachedAnalytics[cacheKey]; ok {
+		renderTemplate(w, r, analyticsTemplate(), c)
+		return
 	}
 
 	dateBucketSize := time.Hour * time.Duration(bucket)
@@ -281,7 +283,7 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 		"pageDescription":    "Public analytics for schier.co",
 	}
 
-	cachedAnalytics[thisHour] = &c
+	cachedAnalytics[cacheKey] = &c
 
 	renderTemplate(w, r, analyticsTemplate(), &c)
 }
