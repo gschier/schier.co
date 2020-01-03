@@ -213,6 +213,10 @@ details summary:focus {
   @apply mb-10;
 }
 
+.blog-post > header {
+  @apply pb-4;
+}
+
 .blog-post-preview {
   @apply mt-12 pb-6 border-b border-primary-100;
 }
