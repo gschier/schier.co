@@ -41,8 +41,8 @@
         <thead>
         <tr>
           <th>Title</th>
-          <th style="text-align:right;">Words</th>
-          <th><a href="/blog/new" class="btn btn-tiny">New</a></th>
+          <th style="text-align:right;">Views</th>
+          <th style="text-align:right;">Votes</th>
         </tr>
         </thead>
         <tbody>
@@ -54,10 +54,10 @@
               </a>
             </td>
             <td style="width:2rem;text-align:right;">
-              {{ blogPost.Content | words }}
+              {{ blogPost.Views }}
             </td>
-            <td style="width:2rem;">
-              <a href="/blog/{{ blogPost.Slug }}/edit" class="btn btn-gray btn-tiny">Edit</a>
+            <td style="width:2rem;text-align:right;">
+              {{ blogPost.Votes }}
             </td>
           </tr>
         {% endfor %}
