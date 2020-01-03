@@ -5,6 +5,7 @@ import (
 	stripmd "github.com/writeas/go-strip-markdown"
 	"math"
 	"net/http"
+	"os"
 	"regexp"
 	"strconv"
 	"strings"
@@ -146,4 +147,8 @@ func StrToInt(number string, defaultValue int) int {
 
 func StrToInt32(number string, defaultValue int) int32 {
 	return int32(StrToInt(number, defaultValue))
+}
+
+func IsDevelopment() bool {
+	return os.Getenv("DEV_ENVIRONMENT") == "development"
 }

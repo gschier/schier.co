@@ -184,6 +184,10 @@ func init() {
 func pageTemplate(pagePath string) func() *pongo2.Template {
 	var cached *pongo2.Template = nil
 	return func() *pongo2.Template {
+		if IsDevelopment() {
+			cached = nil
+		}
+
 		if cached == nil {
 			cached = pongo2.Must(pongo2.FromFile("templates/pages/" + pagePath))
 		}
@@ -195,6 +199,10 @@ func pageTemplate(pagePath string) func() *pongo2.Template {
 func partialTemplate(partialPath string) func() *pongo2.Template {
 	var cached *pongo2.Template = nil
 	return func() *pongo2.Template {
+		if IsDevelopment() {
+			cached = nil
+		}
+
 		if cached == nil {
 			cached = pongo2.Must(pongo2.FromFile("templates/partials/" + partialPath))
 		}

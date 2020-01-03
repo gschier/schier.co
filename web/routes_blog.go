@@ -11,6 +11,7 @@ import (
 	"github.com/gschier/schier.dev/generated/prisma-client"
 	"log"
 	"net/http"
+	"net/url"
 	"os"
 	"sort"
 	"strconv"
@@ -32,6 +33,7 @@ func BlogRoutes(router *mux.Router) {
 
 	// Tags
 	router.HandleFunc("/blog/tags", routeBlogTags).Methods(http.MethodGet)
+	router.HandleFunc("/blog/{slug}/share/{platform}", routeBlogShare).Methods(http.MethodGet)
 	router.HandleFunc("/blog/tags/{tag}", routeBlogList).Methods(http.MethodGet)
 
 	// Posts
@@ -663,6 +665,37 @@ func routeUploadAsset(w http.ResponseWriter, r *http.Request) {
 	})
 	w.Header().Set("Content-Type", "application/json")
 	_, _ = w.Write(body)
+}
+
+func routeBlogShare(w http.ResponseWriter, r *http.Request) {
+	slug := mux.Vars(r)["slug"]
+	platform := mux.Vars(r)["platform"]
+
+	client := ctxPrismaClient(r)
+
+	post, err := client.BlogPost(prisma.BlogPostWhereUniqueInput{
+		Slug: &slug,
+	}).Exec(r.Context())
+	if err != nil {
+		log.Println("Failed to fetch Post", err)
+		http.Error(w, "Failed to fetch Post", http.StatusInternalServerError)
+		return
+	}
+
+	postURL := url.PathEscape(fmt.Sprintf("%s/blog/%s", os.Getenv("BASE_URL"), post.Slug))
+	title := url.PathEscape(Summary(post.Title))
+
+	var shareUrl string
+	switch platform {
+	case "twitter":
+		shareUrl = fmt.Sprintf("https://twitter.com/share?url=%s&text=%s&via=GregorySchier", postURL, title)
+	case "hn":
+		shareUrl = fmt.Sprintf("https://news.ycombinator.com/submitlink?u=%s&t=%s", postURL, title)
+	case "email":
+		shareUrl = fmt.Sprintf("mailto:?subject=%s&body=%s", postURL, title)
+	}
+
+	http.Redirect(w, r, shareUrl, http.StatusSeeOther)
 }
 
 type postTag struct {

@@ -744,12 +744,13 @@ h6 {
 }
 
 .btn.btn-tiny {
-  padding-top: 0;
-  padding-bottom: 0;
   padding-left: 0.75rem;
   padding-right: 0.75rem;
   font-size: 0.75rem;
   border-radius: 0.125rem;
+  font-weight: 400;
+  padding-top: 0.1em;
+  padding-bottom: 0.1em;
 }
 
 .btn.btn-wide {
@@ -1171,6 +1172,7 @@ details summary:focus {
   background-color: #f5fbff;
   border-radius: 0.25rem;
   margin-top: 2.5rem;
+  position: relative;
 }
 
 .subscription-form small {
@@ -1201,6 +1203,19 @@ details summary:focus {
   padding-bottom: 2.5rem;
   padding-left: 1rem;
   padding-right: 1rem;
+}
+
+.subscription-form__hide {
+  height: 2rem;
+  width: 2rem;
+  opacity: .5;
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.subscription-form__hide:hover {
+  opacity: 1;
 }
 
 /***********************/
@@ -1721,7 +1736,6 @@ body .CodeMirror .cm-comment {
 .expose-on-clap {
   font-size: 0.875rem;
   display: none;
-  opacity: 0;
 }
 
 .expose-on-clap > * {
@@ -1729,10 +1743,62 @@ body .CodeMirror .cm-comment {
 }
 
 .expose-on-clap--show {
-  opacity: 1;
   display: block;
-  -webkit-transition: opacity 200ms;
-  transition: opacity 200ms;
+}
+
+/*********/
+
+/* ICONS */
+
+/*********/
+
+.blog-post__btns {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  display: -webkit-box;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+          flex-direction: row;
+  margin-left: auto;
+  margin-right: auto;
+  -webkit-box-pack: center;
+          justify-content: center;
+}
+
+.blog-post__btns .btn {
+  margin-left: 0.25rem;
+  margin-right: 0.25rem;
+}
+
+.svg-icon {
+  display: -webkit-box;
+  display: flex;
+  -webkit-box-align: center;
+          align-items: center;
+  opacity: 1;
+}
+
+.svg-icon:hover {
+  opacity: .9;
+}
+
+.svg-icon svg {
+  height: 0.75rem;
+  margin-right: 0.25rem;
+  display: inline-block;
+}
+
+.svg-icon--twitter {
+  background-color: #55acee !important;
+}
+
+.svg-icon--hn {
+  background-color: #FF6600 !important;
+}
+
+.svg-icon--email {
+  background-color: #444444 !important;
 }
 
 /***********/

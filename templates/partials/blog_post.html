@@ -46,14 +46,20 @@
     Woah, thanks for the love! ❤️
   </div>
 </div>
-<div class="expose-on-clap" data-votes="8">
-  <div class="notice notice--info">
-    Still here? Feel like sharing on Hacker News, Reddit, or Twitter? 🔥
-  </div>
-</div>
-<div class="expose-on-clap" data-votes="1">
+<div class="expose-on-clap" data-votes="1" style="display:block;">
   <div class="notice notice--subtle">
-    Thanks, I'm glad you enjoyed it! 😃
+    Thanks, glad you enjoyed it! Care to share?
+    <div class="blog-post__btns">
+      <a href="/blog/{{ blogPost.Slug }}/share/twitter" target="_blank" class="btn btn-tiny svg-icon svg-icon--twitter">
+        {{ 'images/icons/twitter.svg' | inlineStatic | safe }} Twitter
+      </a>
+      <a href="/blog/{{ blogPost.Slug }}/share/hn" target="_blank" class="btn btn-tiny svg-icon svg-icon--hn">
+        {{ 'images/icons/hn.svg' | inlineStatic | safe }} HN
+      </a>
+      <a href="/blog/{{ blogPost.Slug }}/share/email" target="_blank" class="btn btn-tiny svg-icon svg-icon--email">
+        {{ 'images/icons/email.svg' | inlineStatic | safe }} Email
+      </a>
+    </div>
   </div>
 </div>
 
@@ -108,7 +114,7 @@
           updateDisabled();
           lbl.innerHTML = total;
           for (const el of showOnCheers) {
-            if (count + 1  >= parseInt(el.getAttribute('data-votes'))) {
+            if (count + 1 >= parseInt(el.getAttribute('data-votes'))) {
               el.className += ' expose-on-clap--show';
 
               // Only show one at a time

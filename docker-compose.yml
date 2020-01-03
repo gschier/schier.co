@@ -1,7 +1,7 @@
 version: "3"
 services:
   web:
-    command: 'reflex -s -r \.(go|html)$$ -d none go run github.com/gschier/schier.dev/cmd/web'
+    command: 'reflex -s -r \.(go)$$ -d none go run github.com/gschier/schier.dev/cmd/web'
     build:
       context: .
       dockerfile: Dockerfile.dev

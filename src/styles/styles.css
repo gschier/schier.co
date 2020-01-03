@@ -103,7 +103,9 @@ h6 {
 }
 
 .btn.btn-tiny {
-  @apply py-0 px-3 text-xs rounded-sm;
+  @apply px-3 text-xs rounded-sm font-normal;
+  padding-top: 0.1em;
+  padding-bottom: 0.1em;
 }
 
 .btn.btn-wide {
@@ -387,6 +389,7 @@ details summary:focus {
 
 .subscription-form {
   @apply border border-dashed border-primary-400 bg-primary-50 rounded mt-10;
+  position: relative;
 }
 
 .subscription-form small {
@@ -408,6 +411,17 @@ details summary:focus {
 
 .subscription-form__inner {
   @apply text-center mx-auto py-10 px-4;
+}
+
+.subscription-form__hide {
+  @apply h-8 w-8 opacity-50;
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.subscription-form__hide:hover {
+  @apply opacity-100;
 }
 
 /***********************/
@@ -795,7 +809,7 @@ body .CodeMirror .cm-comment {
 }
 
 .expose-on-clap {
-  @apply text-sm hidden opacity-0;
+  @apply text-sm hidden;
 }
 
 .expose-on-clap > * {
@@ -803,8 +817,43 @@ body .CodeMirror .cm-comment {
 }
 
 .expose-on-clap--show {
-  @apply opacity-100 block;
-  transition: opacity 200ms;
+  @apply block;
+}
+
+/*********/
+/* ICONS */
+/*********/
+
+.blog-post__btns {
+  @apply my-2 flex flex-row mx-auto justify-center;
+}
+
+.blog-post__btns .btn {
+  @apply mx-1;
+}
+
+.svg-icon {
+  @apply flex items-center opacity-100;
+}
+
+.svg-icon:hover {
+  @apply opacity-90;
+}
+
+.svg-icon svg {
+  @apply h-3 mr-1 inline-block;
+}
+
+.svg-icon--twitter {
+  background-color: #55acee !important;
+}
+
+.svg-icon--hn {
+  background-color: #FF6600 !important;
+}
+
+.svg-icon--email {
+  background-color: #444444 !important;
 }
 
 /***********/
