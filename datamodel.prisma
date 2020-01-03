@@ -32,6 +32,7 @@ type BlogPost {
     content: String!
     tags: String!
     views: Int!
+    shares: Int!
     votesTotal: Int!
     votesUsers: Int!
     unlisted: Boolean!

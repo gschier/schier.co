@@ -697,6 +697,11 @@ func routeBlogShare(w http.ResponseWriter, r *http.Request) {
 		shareUrl = fmt.Sprintf("mailto:?subject=%s&body=%s", postURL, title)
 	}
 
+	_, err = client.UpdateBlogPost(prisma.BlogPostUpdateParams{
+		Where: prisma.BlogPostWhereUniqueInput{ID: &post.ID},
+		Data:  prisma.BlogPostUpdateInput{Shares: prisma.Int32(post.Shares + 1)},
+	}).Exec(r.Context())
+
 	http.Redirect(w, r, shareUrl, http.StatusSeeOther)
 }
 
