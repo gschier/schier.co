@@ -1794,7 +1794,11 @@ body .CodeMirror .cm-comment {
 }
 
 .svg-icon--hn {
-  background-color: #FF6600 !important;
+  background-color: #ff6600 !important;
+}
+
+.svg-icon--reddit {
+  background-color: #ff5700 !important;
 }
 
 .svg-icon--email {

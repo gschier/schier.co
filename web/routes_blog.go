@@ -691,6 +691,8 @@ func routeBlogShare(w http.ResponseWriter, r *http.Request) {
 		shareUrl = fmt.Sprintf("https://twitter.com/share?url=%s&text=%s&via=GregorySchier", postURL, title)
 	case "hn":
 		shareUrl = fmt.Sprintf("https://news.ycombinator.com/submitlink?u=%s&t=%s", postURL, title)
+	case "reddit":
+		shareUrl = fmt.Sprintf("https://reddit.com/submit?url=%s&title=%s", postURL, title)
 	case "email":
 		shareUrl = fmt.Sprintf("mailto:?subject=%s&body=%s", postURL, title)
 	}
