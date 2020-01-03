@@ -34,7 +34,7 @@
       </tbody>
     </table>
 
-    <h2>Unlisted</h2>
+    <h2>Unlisted <code>{{ drafts | length }}</code></h2>
 
     {% if unlisted %}
       <table>
@@ -57,7 +57,7 @@
               {{ blogPost.Views }}
             </td>
             <td style="width:2rem;text-align:right;">
-              {{ blogPost.Votes }}
+              {{ blogPost.VotesTotal }}
             </td>
           </tr>
         {% endfor %}
