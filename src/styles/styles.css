@@ -414,7 +414,7 @@ details summary:focus {
 }
 
 .subscription-form__hide {
-  @apply h-8 w-8 opacity-50;
+  @apply h-8 w-8 opacity-50 text-secondary;
   position: absolute;
   top: 0;
   right: 0;
