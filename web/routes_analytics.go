@@ -28,6 +28,9 @@ func AnalyticsRoutes(router *mux.Router) {
 
 var analyticsTemplate = pageTemplate("analytics/analytics.html")
 
+// Cache analytics renders every hour
+var cachedAnalytics = make(map[time.Time]*pongo2.Context)
+
 func routeAnalyticsLive(w http.ResponseWriter, r *http.Request) {
 	client := ctxPrismaClient(r)
 	now := time.Now()
@@ -59,7 +62,14 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 	client := ctxPrismaClient(r)
 
 	now := time.Now().UTC()
+	thisHour := time.Date(now.Year(), now.Month(), now.Day(), now.Hour(), 0, 0, 0, now.Location())
 	endOfToday := time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, now.Location()).Add(time.Hour * 24)
+
+	// Can we serve from cache?
+	if c, ok := cachedAnalytics[thisHour]; ok {
+		renderTemplate(w, r, analyticsTemplate(), c)
+		return
+	}
 
 	days, _ := strconv.Atoi(r.URL.Query().Get("days"))
 	if days == 0 {
@@ -89,6 +99,7 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 		OrderBy: &orderBy,
 		Where: &prisma.AnalyticsPageViewWhereInput{
 			TimeGte: prisma.Str(endOfToday.Add(-dateRange).Format(time.RFC3339)),
+			TimeLte: prisma.Str(thisHour.Format(time.RFC3339)),
 		},
 	}).Exec(r.Context())
 	if err != nil {
@@ -253,7 +264,7 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	renderTemplate(w, r, analyticsTemplate(), &pongo2.Context{
+	c := pongo2.Context{
 		"avgSessionDuration": FormatTime(avgSessionDuration),
 		"avgBounceRate":      fmt.Sprintf("%.0f%%", avgBounceRate*100),
 		"avgPagesPerSession": fmt.Sprintf("%.1f", avgPagesPerSession),
@@ -268,7 +279,11 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 		"numSubscribers":     len(subscribers),
 		"pageTitle":          "Analytics",
 		"pageDescription":    "Public analytics for schier.co",
-	})
+	}
+
+	cachedAnalytics[thisHour] = &c
+
+	renderTemplate(w, r, analyticsTemplate(), &c)
 }
 
 func routeTrack(w http.ResponseWriter, r *http.Request) {
