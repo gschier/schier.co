@@ -16,7 +16,7 @@ func RecentBlogPosts(limit int32, ignoreID *string) *prisma.BlogPostsParams {
 }
 
 func RecommendedBlogPosts(limit int32, ignoreID *string) *prisma.BlogPostsParams {
-	orderBy := prisma.BlogPostOrderByInputVotesUsersDesc
+	orderBy := prisma.BlogPostOrderByInputScoreDesc
 	return &prisma.BlogPostsParams{
 		Where: &prisma.BlogPostWhereInput{
 			IDNot:     ignoreID,
