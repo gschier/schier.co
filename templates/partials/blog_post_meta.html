@@ -16,7 +16,7 @@
       {% endif %}
     </span>
   {% endif %}
-  {% if loggedIn and blogPost.Published %}
+  {% if not noViews and loggedIn and blogPost.Published %}
     <span {% if loggedIn %}title="{{ blogPost.Score }} score"{% endif %}>
       &bull; {{ blogPost.Views }} views
     </span>
