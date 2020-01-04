@@ -335,7 +335,7 @@ func routeBlogPostYMD(w http.ResponseWriter, r *http.Request) {
 	slug = strings.TrimSuffix(slug, ".html")
 
 	// Redirect away from year/month/day path. Just keeping this here for google
-	http.Redirect(w, r, "/blog/"+slug, http.StatusFound)
+	http.Redirect(w, r, "/blog/"+slug, http.StatusMovedPermanently)
 }
 
 func routeBlogPostSuffix(w http.ResponseWriter, r *http.Request) {
