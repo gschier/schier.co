@@ -20,6 +20,15 @@
     </p>
   {% endif %}
 
+  {% if blogPost.DateUpdated %}
+    <p class="notice notice--subtle">
+      This post received a significant update on
+      <time datetime="{{ blogPost.DateUpdated }}" title="{{ blogPost.DateUpdated }}">
+        <strong>{{ blogPost.DateUpdated | isoformat:'January _2, 2006' }}</strong>
+      </time>
+    </p>
+  {% endif %}
+
   {{ blogPost.Content | markdown }}
 </article>
 

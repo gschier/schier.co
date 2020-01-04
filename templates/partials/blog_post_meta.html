@@ -1,6 +1,6 @@
 <div class="meta {{ class }}">
-  <time datetime{{ blogPost.DateUpdated | default:blogPost.Date }} title="{{ blogPost.DateUpdated | default:blogPost.Date }}">
-    {{ blogPost.DateUpdated | default:blogPost.Date | isoformat }}
+  <time datetime="{{ blogPost.Date }}" title="{{ blogPost.Date }}">
+    {{ blogPost.Date | isoformat }}
   </time>
   <span title="{{ blogPost.Content | words }} words">
     &bull; {{ blogPost.Content | words | readtime }} min read
