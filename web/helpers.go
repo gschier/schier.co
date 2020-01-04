@@ -159,7 +159,7 @@ func IsDevelopment() bool {
 // go down to zero
 func CalculateScore(age time.Duration, votes, views int32) int32 {
 	days := float64(age / time.Hour / 24)
-	score := float64(votes*200+views) / (math.Min(days, 200) + 1)
+	score := float64(votes*200+views) / (math.Min(days, 90) + 1)
 
 	return int32(score)
 }
