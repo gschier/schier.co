@@ -291,7 +291,8 @@ func updateBlogPostScores() {
 		t, _ := time.Parse(time.RFC3339, p.Date)
 
 		// Weight it by age
-		score := web.CalculateScore(time.Now().Sub(t), p.VotesUsers+p.Shares, p.Views)
+		wc := int32(web.WordCount(p.Content))
+		score := web.CalculateScore(time.Now().Sub(t), p.VotesUsers+p.Shares, p.Views, wc)
 
 		_, err := client.UpdateBlogPost(prisma.BlogPostUpdateParams{
 			Where: prisma.BlogPostWhereUniqueInput{ID: &p.ID},

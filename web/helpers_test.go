@@ -73,7 +73,7 @@ func TestCalculateScore(t *testing.T) {
 
 	for _, v := range tests {
 		t.Run(fmt.Sprintf("%d days %d votes %d views", v[0], v[1], v[2]), func(t *testing.T) {
-			assert.Equal(t, v[3], web.CalculateScore(time.Hour*24*time.Duration(v[0]), v[1], v[2]))
+			assert.Equal(t, v[3], web.CalculateScore(time.Hour*24*time.Duration(v[0]), v[1], v[2], 1000))
 		})
 	}
 }

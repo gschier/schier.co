@@ -395,6 +395,7 @@ func routeBlogPost(w http.ResponseWriter, r *http.Request) {
 			newViewCount += 1
 		}
 
+		wc := int32(WordCount(post.Content))
 		d, _ := time.Parse(time.RFC3339, post.Date)
 		_, err := client.UpdateBlogPost(prisma.BlogPostUpdateParams{
 			Where: prisma.BlogPostWhereUniqueInput{
@@ -402,7 +403,7 @@ func routeBlogPost(w http.ResponseWriter, r *http.Request) {
 			},
 			Data: prisma.BlogPostUpdateInput{
 				Views: prisma.Int32(newViewCount),
-				Score: prisma.Int32(CalculateScore(time.Now().Sub(d), post.VotesUsers+post.Shares, post.Views)),
+				Score: prisma.Int32(CalculateScore(time.Now().Sub(d), post.VotesUsers+post.Shares, post.Views, wc)),
 			},
 		}).Exec(context.Background())
 		if err != nil {

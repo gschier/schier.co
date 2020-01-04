@@ -157,9 +157,13 @@ func IsDevelopment() bool {
 // CalculateScore calculates a blog posts score. It sums votes and views,
 // then divides by the age. The age is capped to 𝑥 days so old posts don't
 // go down to zero
-func CalculateScore(age time.Duration, votes, views int32) int32 {
+func CalculateScore(age time.Duration, votes, views, words int32) int32 {
 	days := float64(age / time.Hour / 24)
 	score := float64(votes*400+views) / (math.Min(days, 70) + 1)
+
+	if words < 200 {
+		score /= 2
+	}
 
 	return int32(score)
 }
