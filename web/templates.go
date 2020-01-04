@@ -104,14 +104,14 @@ func init() {
 	}
 
 	err = pongo2.RegisterFilter(
-		"isodatenewerdays",
+		"isodateolderdays",
 		func(in *pongo2.Value, param *pongo2.Value) (*pongo2.Value, *pongo2.Error) {
 			d := time.Now().Add(-time.Hour * 24 * time.Duration(param.Integer()))
-			return pongo2.AsValue(param.String() > d.Format(time.RFC3339)), nil
+			return pongo2.AsValue(in.String() < d.Format(time.RFC3339)), nil
 		},
 	)
 	if err != nil {
-		panic("failed to register isodatenewerdays filter: " + err.Error())
+		panic("failed to register isodateolderdays filter: " + err.Error())
 	}
 
 	err = pongo2.RegisterFilter(

@@ -13,7 +13,7 @@
     </div>
   {% endif %}
 
-  {% if blogPost.Tags | contains:"tutorial" and blogPost.DateUpdated | default:blogPost.Date | isodatenewerdays:365 %}
+  {% if blogPost.DateUpdated | default:blogPost.Date | isodateolderdays:365 %}
     <p class="notice notice--warning">
       This post was last updated <code>{{ blogPost.DateUpdated | default:blogPost.Date | isoformat }}</code> and may
       be out of date

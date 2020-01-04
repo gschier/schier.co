@@ -434,17 +434,20 @@ pre.chroma-chroma {
   font-size: 0.8em;
 }
 
+.chroma-c,
 .chroma-cm,
 .chroma-c1 {
   @apply italic text-syntax4;
 }
 
+.chroma-s,
 .chroma-s1,
 .chroma-sb,
 .chroma-s2 {
   @apply text-syntax1;
 }
 
+.chroma-n,
 .chroma-nt,
 .chroma-nb {
   @apply text-gray-500 text-syntax2;
@@ -455,6 +458,7 @@ pre.chroma-chroma {
   @apply text-syntax3;
 }
 
+.chroma-m,
 .chroma-mi {
   @apply text-syntax1;
 }
