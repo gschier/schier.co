@@ -60,6 +60,7 @@ func TestStringToTags(t *testing.T) {
 
 func TestCalculateScore(t *testing.T) {
 	tests := [][]int32{
+		{0, 0, 0, 0},
 		{0, 0, 100, 100},
 		{1, 0, 500, 250},
 		{7, 0, 1000, 125},
@@ -69,7 +70,7 @@ func TestCalculateScore(t *testing.T) {
 		{7, 10, 1000, 375},
 		{30, 10, 2000, 129},
 		{60, 10, 2000, 65},
-		{500, 10, 8000, 19},
+		{500, 10, 8000, 49},
 	}
 
 	for _, v := range tests {
