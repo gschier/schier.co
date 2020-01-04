@@ -3,7 +3,7 @@ package web
 import "github.com/gschier/schier.dev/generated/prisma-client"
 
 func RecentBlogPosts(limit int32, ignoreID *string) *prisma.BlogPostsParams {
-	blogPostsOrderBy := prisma.BlogPostOrderByInputDateDesc
+	orderBy := prisma.BlogPostOrderByInputDateDesc
 	return &prisma.BlogPostsParams{
 		Where: &prisma.BlogPostWhereInput{
 			IDNot:     ignoreID,
@@ -11,12 +11,12 @@ func RecentBlogPosts(limit int32, ignoreID *string) *prisma.BlogPostsParams {
 			Unlisted:  prisma.Bool(false),
 		},
 		First:   prisma.Int32(limit),
-		OrderBy: &blogPostsOrderBy,
+		OrderBy: &orderBy,
 	}
 }
 
 func RecommendedBlogPosts(limit int32, ignoreID *string) *prisma.BlogPostsParams {
-	blogPostsOrderBy := prisma.BlogPostOrderByInputVotesUsersDesc
+	orderBy := prisma.BlogPostOrderByInputVotesUsersDesc
 	return &prisma.BlogPostsParams{
 		Where: &prisma.BlogPostWhereInput{
 			IDNot:     ignoreID,
@@ -24,6 +24,6 @@ func RecommendedBlogPosts(limit int32, ignoreID *string) *prisma.BlogPostsParams
 			Unlisted:  prisma.Bool(false),
 		},
 		First:   prisma.Int32(limit),
-		OrderBy: &blogPostsOrderBy,
+		OrderBy: &orderBy,
 	}
 }

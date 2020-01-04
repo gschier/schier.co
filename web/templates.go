@@ -65,6 +65,20 @@ func init() {
 	}
 
 	err = pongo2.RegisterFilter(
+		"iterate",
+		func(in *pongo2.Value, param *pongo2.Value) (*pongo2.Value, *pongo2.Error) {
+			l := make([]int, in.Integer())
+			for _, i := range l {
+				l[i] = i
+			}
+			return pongo2.AsValue(l), nil
+		},
+	)
+	if err != nil {
+		panic("failed to register iterate filter: " + err.Error())
+	}
+
+	err = pongo2.RegisterFilter(
 		"isodate",
 		func(in *pongo2.Value, param *pongo2.Value) (*pongo2.Value, *pongo2.Error) {
 			t, err := time.Parse(time.RFC3339, in.String())

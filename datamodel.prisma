@@ -37,6 +37,7 @@ type BlogPost {
     votesUsers: Int!
     unlisted: Boolean!
     stage: Int!
+    score: Int!
 }
 
 type Project {

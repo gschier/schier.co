@@ -9,6 +9,7 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"time"
 )
 
 func Admin(h http.HandlerFunc) http.HandlerFunc {
@@ -151,4 +152,12 @@ func StrToInt32(number string, defaultValue int) int32 {
 
 func IsDevelopment() bool {
 	return os.Getenv("DEV_ENVIRONMENT") == "development"
+}
+
+// CalculateScore calculates a blog posts score. It sums votes and views,
+// then divides by the age. The age is capped to 30 days so old posts don't
+// go down to zero
+func CalculateScore(age time.Duration, votes, views int32) int32 {
+	days := float64(age / time.Hour / 24)
+	return int32(float64(votes * 200 + views) / math.Min(days + 1, 30))
 }

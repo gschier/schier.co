@@ -23,6 +23,8 @@ func main() {
 		sendNewsletter(flag.Args()[1:])
 	} else if name == "fixtures" {
 		installFixtures()
+	} else if name == "score" {
+		updateBlogPostScores()
 	} else {
 		log.Panicln("invalid command", name)
 	}
@@ -54,7 +56,7 @@ func sendNewsletter(args []string) {
 
 	blogPosts, err := client.BlogPosts(&prisma.BlogPostsParams{
 		Where: &prisma.BlogPostWhereInput{
-			Slug: &slug,
+			Slug:      &slug,
 			Published: prisma.Bool(true),
 		},
 	}).Exec(context.Background())
@@ -275,4 +277,30 @@ func processProjects(client *prisma.Client) int {
 	}
 
 	return len(projects)
+}
+
+func updateBlogPostScores() {
+	client := schier.NewPrismaClient()
+
+	posts, err := client.BlogPosts(nil).Exec(context.Background())
+	if err != nil {
+		panic(err)
+	}
+
+	for _, p := range posts {
+		t, _ := time.Parse(time.RFC3339, p.Date)
+
+		// Weight it by age
+		score := web.CalculateScore(time.Now().Sub(t), p.VotesUsers+p.Shares, p.Views)
+
+		_, err := client.UpdateBlogPost(prisma.BlogPostUpdateParams{
+			Where: prisma.BlogPostWhereUniqueInput{ID: &p.ID},
+			Data: prisma.BlogPostUpdateInput{
+				Score: prisma.Int32(score),
+			},
+		}).Exec(context.Background())
+		if err != nil {
+			panic(err)
+		}
+	}
 }
