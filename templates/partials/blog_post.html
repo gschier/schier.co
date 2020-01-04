@@ -31,63 +31,75 @@
   </div>
   {% include './blog_post_tag.html' with tags=blogPost.Tags %}
 </div>
-<div class="expose-on-clap" data-votes="50">
-  <div class="notice notice--danger">
-    Oops! It seems like you used up all your votes ✋🏻
+<div class="vote-messages">
+  <div data-votes="50" data-effect="page-flip">
+    <div class="notice notice--danger">
+      Now look what you've done 🌋
+    </div>
   </div>
-</div>
-<div class="expose-on-clap" data-votes="25">
-  <div class="notice notice--warning">
-    Okay, that's enough. You're too kind 😄
+  <div data-votes="45" data-effect="page-shake">
+    <div class="notice notice--danger">
+      Run for your life! 😱
+    </div>
   </div>
-</div>
-<div class="expose-on-clap" data-votes="14">
-  <div class="notice notice--notice">
-    Woah, thanks for the love! ❤️
+  <div data-votes="40" data-effect="shake">
+    <div class="notice notice--warning">
+      Uh oh, the system can't handle it! 🔥
+    </div>
   </div>
-</div>
-<div class="expose-on-clap" data-votes="1">
-  <div class="notice notice--subtle">
-    Thanks, glad you enjoyed it! Care to share?
-    <div class="blog-post__btns">
-      <a
-              data-href="/blog/{{ blogPost.Slug }}/share/hn"
-              target="_blank"
-              rel="nofollow"
-              class="btn btn-tiny svg-icon svg-icon--hn"
-      >
-        {{ 'images/icons/hn.svg' | inlineStatic | safe }} HN
-      </a>
-      <a
-              data-href="/blog/{{ blogPost.Slug }}/share/twitter"
-              target="_blank"
-              rel="nofollow"
-              class="btn btn-tiny svg-icon svg-icon--twitter"
-      >
-        {{ 'images/icons/twitter.svg' | inlineStatic | safe }} Twitter
-      </a>
-      <a
-              data-href="/blog/{{ blogPost.Slug }}/share/reddit"
-              target="_blank"
-              rel="nofollow"
-              class="btn btn-tiny svg-icon svg-icon--reddit"
-      >
-        {{ 'images/icons/reddit.svg' | inlineStatic | safe }} Reddit
-      </a>
-      <a
-              data-href="/blog/{{ blogPost.Slug }}/share/email"
-              target="_blank"
-              rel="nofollow"
-              class="btn btn-tiny svg-icon svg-icon--email"
-      >
-        {{ 'images/icons/email.svg' | inlineStatic | safe }} Email
-      </a>
-      <script>
-        // Populate href dynamically so bots don't crawl so easily
-        for (const el of document.querySelectorAll('[data-href]')) {
-          el.setAttribute('href', el.getAttribute('data-href'));
-        }
-      </script>
+  <div data-votes="25">
+    <div class="notice notice--warning">
+      Stop it, you're too kind 😄
+    </div>
+  </div>
+  <div data-votes="14">
+    <div class="notice notice--notice">
+      Thanks for the love! ❤️
+    </div>
+  </div>
+  <div data-votes="1">
+    <div class="notice notice--subtle">
+      Thanks, glad you enjoyed it! Care to share?
+      <div class="blog-post__btns">
+        <a
+                data-href="/blog/{{ blogPost.Slug }}/share/hn"
+                target="_blank"
+                rel="nofollow"
+                class="btn btn-tiny svg-icon svg-icon--hn"
+        >
+          {{ 'images/icons/hn.svg' | inlineStatic | safe }} HN
+        </a>
+        <a
+                data-href="/blog/{{ blogPost.Slug }}/share/twitter"
+                target="_blank"
+                rel="nofollow"
+                class="btn btn-tiny svg-icon svg-icon--twitter"
+        >
+          {{ 'images/icons/twitter.svg' | inlineStatic | safe }} Twitter
+        </a>
+        <a
+                data-href="/blog/{{ blogPost.Slug }}/share/reddit"
+                target="_blank"
+                rel="nofollow"
+                class="btn btn-tiny svg-icon svg-icon--reddit"
+        >
+          {{ 'images/icons/reddit.svg' | inlineStatic | safe }} Reddit
+        </a>
+        <a
+                data-href="/blog/{{ blogPost.Slug }}/share/email"
+                target="_blank"
+                rel="nofollow"
+                class="btn btn-tiny svg-icon svg-icon--email"
+        >
+          {{ 'images/icons/email.svg' | inlineStatic | safe }} Email
+        </a>
+        <script>
+          // Populate href dynamically so bots don't crawl so easily
+          for (const el of document.querySelectorAll('[data-href]')) {
+            el.setAttribute('href', el.getAttribute('data-href'));
+          }
+        </script>
+      </div>
     </div>
   </div>
 </div>
@@ -107,20 +119,26 @@
   <script>
     (function () {
       const body = document.body;
-      const el = body.querySelector('.clap-button');
-      const showOnCheers = body.querySelectorAll('.expose-on-clap');
-      const lbl = el.querySelector('.clap-count');
-      const btn = el.querySelector('button');
+      const container = body.querySelector('.clap-button');
+      const msgContainer = body.querySelector('.vote-messages');
+      const msgs = msgContainer.querySelectorAll('[data-votes]');
+      const lbl = container.querySelector('.clap-count');
+      const btn = container.querySelector('button');
       const lsKey = 'vote-{{ blogPost.Slug }}';
 
-      const updateDisabled = function () {
+      function updateDisabled() {
         const count = JSON.parse(localStorage.getItem(lsKey)) || 0;
         if (count >= 50) {
           btn.setAttribute('disabled', 'disabled');
         }
-      };
+      }
 
       updateDisabled();
+
+      // Remove sheers notifications so we can show them later
+      for (const el of msgs) {
+        msgContainer.removeChild(el);
+      }
 
       btn.addEventListener('click', function (e) {
         e.preventDefault();
@@ -138,17 +156,39 @@
           }
         }).then(resp => resp.text()).then(function (total) {
           localStorage.setItem(lsKey, JSON.stringify(count + 1));
-
-          el.setAttribute('data-total', total);
           updateDisabled();
-          lbl.innerHTML = total;
-          for (const el of showOnCheers) {
-            if (count + 1 >= parseInt(el.getAttribute('data-votes'))) {
-              el.className += ' expose-on-clap--show';
 
-              // Only show one at a time
-              break;
+          lbl.innerHTML = total;
+          for (const el of msgs) {
+            if (count + 1 < parseInt(el.getAttribute('data-votes'))) {
+              continue;
             }
+
+            // Append child if it's not already
+            if (!el.parentNode) {
+              msgContainer.prepend(el);
+            }
+
+            el.style.animation = 'fade-in 0.5s';
+
+            if (el.getAttribute('data-effect') === 'shake') {
+              container.style.animation = 'shake 0.5s';
+              container.style.animationIterationCount = 'infinite';
+            }
+
+            if (el.getAttribute('data-effect') === 'page-shake') {
+              body.style.animation = 'shake 0.5s';
+              body.style.animationIterationCount = 'infinite';
+              container.style.animation = '';
+            }
+
+            if (el.getAttribute('data-effect') === 'page-flip') {
+              body.style.animation = 'flip 0.2s';
+              body.style.animationFillMode = 'forwards';
+              container.style.animation = '';
+            }
+
+            break;
           }
         });
       });
