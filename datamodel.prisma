@@ -28,6 +28,7 @@ type BlogPost {
     image: String!
     title: String!
     date: DateTime!
+    dateUpdated: DateTime
     author: User!
     content: String!
     tags: String!

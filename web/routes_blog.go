@@ -383,6 +383,8 @@ func routeBlogPost(w http.ResponseWriter, r *http.Request) {
 		"pageTitle":            post.Title,
 		"pageImage":            post.Image,
 		"pageDescription":      Summary(post.Content),
+		"pagePublishedTime":    post.Date,
+		"pageModifiedTime":     post.DateUpdated,
 		"blogPost":             post,
 		"recommendedBlogPosts": recommendedBlogPosts,
 	})
