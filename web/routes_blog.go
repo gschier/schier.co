@@ -390,12 +390,15 @@ func routeBlogPost(w http.ResponseWriter, r *http.Request) {
 		if !loggedIn {
 			newViewCount += 1
 		}
+
+		d, _ := time.Parse(time.RFC3339, post.Date)
 		_, err := client.UpdateBlogPost(prisma.BlogPostUpdateParams{
 			Where: prisma.BlogPostWhereUniqueInput{
 				ID: &post.ID,
 			},
 			Data: prisma.BlogPostUpdateInput{
 				Views: prisma.Int32(newViewCount),
+				Score: prisma.Int32(CalculateScore(time.Now().Sub(d), post.VotesUsers+post.Shares, post.Views)),
 			},
 		}).Exec(context.Background())
 		if err != nil {
