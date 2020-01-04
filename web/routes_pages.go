@@ -25,6 +25,7 @@ Disallow: /newsletter/unsubscribe/*
 Disallow: /login
 Disallow: /register
 Disallow: /blog/*/share/*
+Disallow: /blog/tags/*
 `)
 
 var robotsNone = strings.TrimSpace(`
