@@ -9,6 +9,7 @@ import (
 	"github.com/gorilla/mux"
 	sluglib "github.com/gosimple/slug"
 	"github.com/gschier/schier.dev/generated/prisma-client"
+	ua "github.com/mileusna/useragent"
 	"log"
 	"net/http"
 	"net/url"
@@ -352,6 +353,7 @@ func routeBlogPost(w http.ResponseWriter, r *http.Request) {
 	loggedIn := ctxGetLoggedIn(r)
 
 	blogPostWhere := &prisma.BlogPostWhereInput{Slug: &slug}
+	userAgent := ua.Parse(r.Header.Get("User-Agent"))
 
 	// Fetch post
 	oneBlogPosts, err := client.BlogPosts(
@@ -387,7 +389,7 @@ func routeBlogPost(w http.ResponseWriter, r *http.Request) {
 
 	go func() {
 		newViewCount := post.Views
-		if !loggedIn {
+		if !loggedIn || userAgent.Bot {
 			newViewCount += 1
 		}
 
