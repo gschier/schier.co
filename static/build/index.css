@@ -1563,10 +1563,6 @@ body .CodeMirror .cm-comment {
 }
 
 .card {
-  font-size: 0.875rem;
-}
-
-.card {
   padding-left: 0.5rem;
   padding-right: 0.5rem;
   width: 100%;

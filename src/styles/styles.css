@@ -687,10 +687,6 @@ body .CodeMirror .cm-comment {
 }
 
 .card {
-  @apply text-sm;
-}
-
-.card {
   @apply px-2 w-full mx-auto block;
 }
 
