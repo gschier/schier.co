@@ -24,7 +24,7 @@
     <p class="notice notice--subtle">
       Updated
       <time datetime="{{ blogPost.DateUpdated }}" title="{{ blogPost.DateUpdated }}">
-        <strong>{{ blogPost.DateUpdated | isoformat }}</strong>
+        <strong>{{ blogPost.DateUpdated | isoformat:'Jan _2, 2006' }}</strong>
       </time>
     </p>
   {% endif %}
