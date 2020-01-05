@@ -8,9 +8,12 @@
   <div class="content container">
     <h1 class="hidden-mobile">🚀 Website Analytics</h1>
     {% if loggedIn %}
-      <a href="?bucket=24&days=7" class="btn btn-tiny btn-gray">1 Week</a>
+      <a href="?bucket=1&days=1" class="btn btn-tiny btn-gray">Today</a>
+      <a href="?bucket=24&days=7" class="btn btn-tiny btn-gray">7 Days</a>
       <a href="?bucket=24&days=14" class="btn btn-tiny btn-gray">2 Weeks</a>
-      <a href="?bucket=24&days=28" class="btn btn-tiny btn-gray">4 Weeks</a>
+      <a href="?bucket=24&days=30" class="btn btn-tiny btn-gray">28 Days</a>
+      <a href="?bucket=168&days=90" class="btn btn-tiny btn-gray">3 Months</a>
+      <a href="?bucket=168&days=365" class="btn btn-tiny btn-gray">12 Months</a>
     {% endif %}
     <div class="cards cards--double-wrap">
       <div class="card">
