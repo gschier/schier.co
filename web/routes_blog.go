@@ -235,6 +235,7 @@ func routeBlogPostSearch(w http.ResponseWriter, r *http.Request) {
 				Or: []prisma.BlogPostWhereInput{
 					{ContentContains: &query},
 					{TitleContains: &query},
+					{TagsContains: &query},
 				},
 			},
 		}).Exec(r.Context())
