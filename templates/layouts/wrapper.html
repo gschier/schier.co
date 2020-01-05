@@ -93,13 +93,7 @@
       }
 
       const prev = sess.prev || '';
-      const age = (Date.now() - sess.start) / 1000;
       const path = location.pathname;
-
-      if (path === prev) {
-        console.log('[analytics] Ignore same page');
-        return;
-      }
 
       // Initialize session properties if new or missing
       sess.id = sess.id || id(10);
@@ -112,6 +106,12 @@
       // Store session
       localStorage.schier = JSON.stringify(sess);
 
+      // Don't send if the page didn't change
+      if (path === prev) {
+        console.log('[analytics] Ignore same page');
+        return;
+      }
+
       const e = encodeURIComponent;
       fetch('{{ analyticsUrl }}/t?' + [
         `path=${e(path)}`,
@@ -120,7 +120,7 @@
         `ref=${e(document.referrer)}`,
         `user=${e(sess.user)}`,
         `sess=${e(sess.id)}`,
-        `age=${e(age)}`,
+        `age=${e(Math.round((Date.now() - sess.start) / 1000))}`,
         `page=${e(sess.pages)}`,
         `lang=${e(navigator.language)}`
       ].join('&'));
