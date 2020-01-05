@@ -635,6 +635,19 @@ body .CodeMirror .cm-variable-2 {
   @apply text-primary;
 }
 
+body .CodeMirror .cm-quote {
+  @apply text-syntax3;
+}
+
+body .CodeMirror .cm-strikethrough {
+  @apply opacity-50;
+}
+
+body .CodeMirror .cm-header-1,
+body .CodeMirror .cm-header-2 {
+  font-size: 1.1em;
+}
+
 body .CodeMirror .cm-link {
   @apply text-syntax1;
 }
