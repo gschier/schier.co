@@ -611,6 +611,10 @@ pre.chroma-chroma {
   line-height: 1.2rem;
 }
 
+.CodeMirror-lines {
+  padding-bottom: 80vh !important;
+}
+
 .CodeMirror .cm-typo {
   background: rgba(255, 137, 0, 0.1) !important;
   border-bottom: 2px dotted #ff5f00;

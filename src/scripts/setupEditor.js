@@ -46,7 +46,7 @@ export function setupEditor(textareaEl, containerEl) {
       viewportMargin: 30, // default 10
       selectionPointer: 'default',
       showCursorWhenSelecting: false,
-      cursorScrollMargin: 12, // NOTE: This is px
+      cursorScrollMargin: 20, // NOTE: This is px
       dragDrop: true,
       allowDropFileTypes: ['image/jpeg', 'image/png', 'image/svg+xml', 'image/gif', 'image/webp'],
       extraKeys: CodeMirror.normalizeKeyMap({
