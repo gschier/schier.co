@@ -1,0 +1,19 @@
+{% extends '../../layouts/base.html' %}
+
+{% block content %}
+  <div class="container content">
+    <form action="/blog/search" method="get">
+      <div class="button-input">
+        <label for="i-query">Search</label>
+        <input id="i-query" name="query" type="text" autofocus="autofocus" value="{{ query }}">
+        <button class="btn">
+          Search
+        </button>
+      </div>
+    </form>
+    <small>{{ results | length }} {{ results | length | pluralize:'Result,Results' }}</small>
+    {% for blogPost in results %}
+      {% include '../../partials/blog_post_preview.html' %}
+    {% endfor %}
+  </div>
+{% endblock %}

@@ -38,6 +38,7 @@ func BlogRoutes(router *mux.Router) {
 	router.HandleFunc("/blog/tags/{tag}", routeBlogList).Methods(http.MethodGet)
 
 	// Posts
+	router.HandleFunc("/blog/search", Admin(routeBlogPostSearch)).Methods(http.MethodGet)
 	router.HandleFunc("/blog/{slug}.html", routeBlogPostSuffix).Methods(http.MethodGet)
 	router.HandleFunc("/blog/{slug}", routeBlogPost).Methods(http.MethodGet)
 	router.HandleFunc("/blog/{year}/{month}/{day}/{slug}", routeBlogPostYMD).Methods(http.MethodGet)
@@ -59,6 +60,7 @@ var blogListTemplate = pageTemplate("blog/list.html")
 var blogDraftsTemplate = pageTemplate("blog/drafts.html")
 var blogPostTemplate = pageTemplate("blog/post.html")
 var blogTagsTemplate = pageTemplate("blog/tags.html")
+var searchTemplate = pageTemplate("blog/search.html")
 var blogPostPartial = partialTemplate("blog_post.html")
 
 func routeBlogTags(w http.ResponseWriter, r *http.Request) {
@@ -204,11 +206,48 @@ func routeBlogPostPublish(w http.ResponseWriter, r *http.Request) {
 	}).Exec(r.Context())
 	if err != nil {
 		log.Println("Failed to publish Post", err)
-		http.Error(w, "Failed to publsh Post", http.StatusInternalServerError)
+		http.Error(w, "Failed to publish Post", http.StatusInternalServerError)
 		return
 	}
 
 	http.Redirect(w, r, "/blog/"+blogPost.Slug, http.StatusSeeOther)
+}
+
+func routeBlogPostSearch(w http.ResponseWriter, r *http.Request) {
+	err := r.ParseForm()
+	if err != nil {
+		http.Error(w, "Failed to parse form", http.StatusInternalServerError)
+		return
+	}
+
+	client := ctxPrismaClient(r)
+
+	var blogPosts []prisma.BlogPost = nil
+
+	query := r.Form.Get("query")
+
+	if query != "" {
+		var err error
+		blogPosts, err = client.BlogPosts(&prisma.BlogPostsParams{
+			First: prisma.Int32(10),
+			Where: &prisma.BlogPostWhereInput{
+				Or: []prisma.BlogPostWhereInput{{
+					// Ugh, Prisma doesn't allow case-insensitive queries
+					ContentContains: &query,
+					TitleContains:   &query,
+				}},
+			},
+		}).Exec(r.Context())
+		if err != nil {
+			http.Error(w, "Failed to search", http.StatusInternalServerError)
+			return
+		}
+	}
+
+	renderTemplate(w, r, searchTemplate(), &pongo2.Context{
+		"results": blogPosts,
+		"query":   query,
+	})
 }
 
 func routeBlogPostEdit(w http.ResponseWriter, r *http.Request) {

@@ -861,6 +861,7 @@ form label {
 
 .CodeMirror,
 form input,
+form select,
 form textarea {
   -webkit-appearance: none;
      -moz-appearance: none;
@@ -901,6 +902,7 @@ input::placeholder {
 }
 
 .CodeMirror-focused,
+form select:focus,
 form input:focus {
   background-color: #fff;
   outline: 0;
@@ -909,8 +911,13 @@ form input:focus {
 }
 
 form textarea:invalid,
+form select:invalid,
 form input:invalid {
   border-color: #f56565;
+}
+
+form select {
+  background: url('/static/build/select.856c80bb.svg') no-repeat 99% 50%;
 }
 
 details summary {
@@ -1293,11 +1300,19 @@ pre.chroma-chroma {
 
 .top-nav a {
   color: #718096;
+  height: 100%;
+  display: block;
 }
 
-.top-nav img {
+.top-nav .logo {
   height: 2.5rem;
   overflow: visible;
+}
+
+.top-nav a svg {
+  height: 1rem;
+  width: 1rem;
+  fill: currentColor;
 }
 
 .top-nav li {

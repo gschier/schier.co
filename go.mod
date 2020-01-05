@@ -30,5 +30,6 @@ require (
 	github.com/ua-parser/uap-go v0.0.0-20190826212731-daf92ba38329 // indirect
 	github.com/writeas/go-strip-markdown v2.0.1+incompatible
 	golang.org/x/crypto v0.0.0-20191111213947-16651526fdb4
+	golang.org/x/net v0.0.0-20190404232315-eb5bcb51f2a3
 	gopkg.in/yaml.v2 v2.2.2
 )

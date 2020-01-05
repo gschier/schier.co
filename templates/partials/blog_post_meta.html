@@ -11,7 +11,7 @@
   {% if blogPost.VotesTotal > 0 %}
     <span title="{{ blogPost.VotesUsers }} readers voted">
       &bull; {{ blogPost.VotesTotal }} votes
-      {% if hot and blogPost.Views > 100 and blogPost.VotesUsers > 9 and blogPost.Date | isodateolderdays:7 %}
+      {% if hot and blogPost.Views > 100 and blogPost.VotesUsers > 9 and not blogPost.Date | isodateolderdays:30 %}
         <span style="opacity:0.5">🔥</span>
       {% endif %}
     </span>

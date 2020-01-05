@@ -3,24 +3,27 @@
     <li>
       <a href="/">
         <img
+                class="logo"
                 src="data:image/svg+xml;base64,{{ 'images/greg-rounded.svg' | inlineStatic:'base64' }}"
                 alt="Gregory Schier vector headshot"
         />
       </a>
     </li>
+    {% if loggedIn %}
+      <li>
+        <a href="/blog/search">
+          {{ 'images/icons/search.svg' | inlineStatic | safe }}
+        </a>
+      </li>
+    {% endif %}
     <li>
-      <a href="/newsletter">Newsletter</a>
+      <a href="/blog/page/1">Blog</a>
     </li>
     <li>
       <a href="/projects">Projects</a>
     </li>
     <li>
-      <a href="/blog/page/1">Blog</a>
+      <a href="/newsletter">Newsletter</a>
     </li>
-    {% if loggedIn %}
-      <li>
-        <a href="/blog/drafts">Drafts</a>
-      </li>
-    {% endif %}
   </ul>
 </nav>

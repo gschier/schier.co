@@ -179,6 +179,7 @@ form label {
 
 .CodeMirror,
 form input,
+form select,
 form textarea {
   @apply appearance-none bg-gray-100 border border-gray-400 rounded w-full py-2 px-3 text-gray-700 leading-tight;
 }
@@ -190,13 +191,19 @@ input::placeholder {
 }
 
 .CodeMirror-focused,
+form select:focus,
 form input:focus {
   @apply bg-background outline-none border border-primary-400;
 }
 
 form textarea:invalid,
+form select:invalid,
 form input:invalid {
   @apply border-danger-500;
+}
+
+form select {
+  background: url('../images/icons/select.svg') no-repeat 99% 50%;
 }
 
 details summary {
@@ -472,11 +479,15 @@ pre.chroma-chroma {
 }
 
 .top-nav a {
-  @apply text-gray-600;
+  @apply text-gray-600 h-full block;
 }
 
-.top-nav img {
+.top-nav .logo {
   @apply h-10 overflow-visible;
+}
+
+.top-nav a svg {
+  @apply h-4 w-4 fill-current;
 }
 
 .top-nav li {
