@@ -231,11 +231,11 @@ func routeBlogPostSearch(w http.ResponseWriter, r *http.Request) {
 		blogPosts, err = client.BlogPosts(&prisma.BlogPostsParams{
 			First: prisma.Int32(10),
 			Where: &prisma.BlogPostWhereInput{
-				Or: []prisma.BlogPostWhereInput{{
-					// Ugh, Prisma doesn't allow case-insensitive queries
-					ContentContains: &query,
-					TitleContains:   &query,
-				}},
+				// Ugh, Prisma doesn't allow case-insensitive queries
+				Or: []prisma.BlogPostWhereInput{
+					{ContentContains: &query},
+					{TitleContains: &query},
+				},
 			},
 		}).Exec(r.Context())
 		if err != nil {
