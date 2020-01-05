@@ -241,6 +241,7 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 	totalSessions := 0.0
 	bouncedSessions := 0.0
 	for _, v := range latestSessionViews {
+		// Old records before page was stored
 		if v.Page == 0 {
 			continue
 		}
@@ -256,16 +257,6 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 	avgBounceRate := bouncedSessions / totalSessions
 	avgPagesPerSession := totalSessionPages / totalSessions
 
-	subscribers, err := client.Subscribers(&prisma.SubscribersParams{
-		Where: &prisma.SubscriberWhereInput{
-			Unsubscribed: prisma.Bool(false),
-		},
-	}).Exec(r.Context())
-	if err != nil {
-		http.Error(w, "Failed to query subscribers", http.StatusInternalServerError)
-		return
-	}
-
 	c := pongo2.Context{
 		"avgSessionDuration": FormatTime(avgSessionDuration),
 		"avgBounceRate":      fmt.Sprintf("%.0f%%", avgBounceRate*100),
@@ -278,7 +269,6 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 		"topPlatforms":       topPlatforms,
 		"topBrowsers":        topBrowsers,
 		"bucketSizeSeconds":  dateBucketSize / time.Second,
-		"numSubscribers":     len(subscribers),
 		"pageTitle":          "Analytics",
 		"pageDescription":    "Public analytics for schier.co",
 	}

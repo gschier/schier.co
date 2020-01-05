@@ -95,6 +95,12 @@
       const prev = sess.prev || '';
       const path = location.pathname;
 
+      // Don't send if the page didn't change
+      if (path === prev) {
+        console.log('[analytics] Ignore same page');
+        return;
+      }
+
       // Initialize session properties if new or missing
       sess.id = sess.id || id(10);
       sess.user = sess.user || id(10);
@@ -105,12 +111,6 @@
 
       // Store session
       localStorage.schier = JSON.stringify(sess);
-
-      // Don't send if the page didn't change
-      if (path === prev) {
-        console.log('[analytics] Ignore same page');
-        return;
-      }
 
       const e = encodeURIComponent;
       fetch('{{ analyticsUrl }}/t?' + [
