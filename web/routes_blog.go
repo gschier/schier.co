@@ -237,6 +237,8 @@ func routeBlogPostSearch(w http.ResponseWriter, r *http.Request) {
 					{TitleContains: &query},
 					{TagsContains: &query},
 				},
+				Published: prisma.Bool(true),
+				Unlisted:  prisma.Bool(false),
 			},
 		}).Exec(r.Context())
 		if err != nil {
