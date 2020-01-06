@@ -6,7 +6,7 @@
     {% include 'blog_post_meta.html' with hot=true %}
   </h2>
   <div>
-    {{ blogPost.Content | summary }}
+    {{ blogPost.Content | summary | truncatechars:340 }}
   </div>
   <div class="blog-post-continue">
     {% include 'blog_post_tag.html' with tags=blogPost.Tags %}
