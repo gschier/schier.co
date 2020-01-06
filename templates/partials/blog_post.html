@@ -47,22 +47,22 @@
       Now look what you've done 🌋
     </div>
   </div>
-  <div data-votes="45" data-effect="page-shake">
-    <div class="notice notice--danger">
-      Run for your life! 😱
+  <div data-votes="42" data-effect="page-shake">
+    <div class="notice notice--danger notice--huge">
+      Stop clicking and run for your life! 😱
     </div>
   </div>
-  <div data-votes="40" data-effect="shake">
-    <div class="notice notice--warning">
-      Uh oh, the system can't handle it! 🔥
+  <div data-votes="35" data-effect="shake">
+    <div class="notice notice--warning notice--big">
+      Uh oh, I don't think the system can't handle it! 🔥
     </div>
   </div>
-  <div data-votes="25">
+  <div data-votes="20">
     <div class="notice notice--warning">
       Stop it, you're too kind 😄
     </div>
   </div>
-  <div data-votes="14">
+  <div data-votes="4">
     <div class="notice notice--notice">
       Thanks for the love! ❤️
     </div>
@@ -187,13 +187,13 @@
             }
 
             if (el.getAttribute('data-effect') === 'page-shake') {
-              body.style.animation = 'shake 0.5s';
+              body.style.animation = 'shake 0.6s';
               body.style.animationIterationCount = 'infinite';
               container.style.animation = '';
             }
 
             if (el.getAttribute('data-effect') === 'page-flip') {
-              body.style.animation = 'flip 0.2s';
+              body.style.animation = 'flip 0.3s';
               body.style.animationFillMode = 'forwards';
               container.style.animation = '';
             }
