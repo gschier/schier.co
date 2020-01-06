@@ -41,78 +41,80 @@
   </div>
   {% include './blog_post_tag.html' with tags=blogPost.Tags %}
 </div>
-<div class="vote-messages">
-  <div data-votes="50" data-effect="page-flip">
-    <div class="notice notice--danger">
-      Now look what you've done 🌋
+{% if not hideVoteEgg %}
+  <div class="vote-messages">
+    <div data-votes="50" data-effect="page-flip">
+      <div class="notice notice--danger">
+        Now look what you've done 🌋
+      </div>
     </div>
-  </div>
-  <div data-votes="42" data-effect="page-shake">
-    <div class="notice notice--danger notice--huge">
-      Stop clicking and run for your life! 😱
+    <div data-votes="42" data-effect="page-shake">
+      <div class="notice notice--danger notice--huge">
+        Stop clicking and run for your life! 😱
+      </div>
     </div>
-  </div>
-  <div data-votes="35" data-effect="shake">
-    <div class="notice notice--warning notice--big">
-      Uh oh, I don't think the system can't handle it! 🔥
+    <div data-votes="35" data-effect="shake">
+      <div class="notice notice--warning notice--big">
+        Uh oh, I don't think the system can't handle it! 🔥
+      </div>
     </div>
-  </div>
-  <div data-votes="20">
-    <div class="notice notice--warning">
-      Stop it, you're too kind 😄
+    <div data-votes="20">
+      <div class="notice notice--warning">
+        Stop it, you're too kind 😄
+      </div>
     </div>
-  </div>
-  <div data-votes="4">
-    <div class="notice notice--notice">
-      Thanks for the love! ❤️
+    <div data-votes="4">
+      <div class="notice notice--notice">
+        Thanks for the love! ❤️
+      </div>
     </div>
-  </div>
-  <div data-votes="1">
-    <div class="notice notice--subtle">
-      Thanks, glad you enjoyed it! Care to share?
-      <div class="blog-post__btns">
-        <a
-                data-href="/blog/{{ blogPost.Slug }}/share/hn"
-                target="_blank"
-                rel="nofollow"
-                class="btn btn-tiny svg-icon svg-icon--hn"
-        >
-          {{ 'images/icons/hn.svg' | inlineStatic | safe }} HN
-        </a>
-        <a
-                data-href="/blog/{{ blogPost.Slug }}/share/twitter"
-                target="_blank"
-                rel="nofollow"
-                class="btn btn-tiny svg-icon svg-icon--twitter"
-        >
-          {{ 'images/icons/twitter.svg' | inlineStatic | safe }} Twitter
-        </a>
-        <a
-                data-href="/blog/{{ blogPost.Slug }}/share/reddit"
-                target="_blank"
-                rel="nofollow"
-                class="btn btn-tiny svg-icon svg-icon--reddit"
-        >
-          {{ 'images/icons/reddit.svg' | inlineStatic | safe }} Reddit
-        </a>
-        <a
-                data-href="/blog/{{ blogPost.Slug }}/share/email"
-                target="_blank"
-                rel="nofollow"
-                class="btn btn-tiny svg-icon svg-icon--email"
-        >
-          {{ 'images/icons/email.svg' | inlineStatic | safe }} Email
-        </a>
-        <script>
-          // Populate href dynamically so bots don't crawl so easily
-          for (const el of document.querySelectorAll('[data-href]')) {
-            el.setAttribute('href', el.getAttribute('data-href'));
-          }
-        </script>
+    <div data-votes="1">
+      <div class="notice notice--subtle">
+        Thanks, glad you enjoyed it! Care to share?
+        <div class="blog-post__btns">
+          <a
+                  data-href="/blog/{{ blogPost.Slug }}/share/hn"
+                  target="_blank"
+                  rel="nofollow"
+                  class="btn btn-tiny svg-icon svg-icon--hn"
+          >
+            {{ 'images/icons/hn.svg' | inlineStatic | safe }} HN
+          </a>
+          <a
+                  data-href="/blog/{{ blogPost.Slug }}/share/twitter"
+                  target="_blank"
+                  rel="nofollow"
+                  class="btn btn-tiny svg-icon svg-icon--twitter"
+          >
+            {{ 'images/icons/twitter.svg' | inlineStatic | safe }} Twitter
+          </a>
+          <a
+                  data-href="/blog/{{ blogPost.Slug }}/share/reddit"
+                  target="_blank"
+                  rel="nofollow"
+                  class="btn btn-tiny svg-icon svg-icon--reddit"
+          >
+            {{ 'images/icons/reddit.svg' | inlineStatic | safe }} Reddit
+          </a>
+          <a
+                  data-href="/blog/{{ blogPost.Slug }}/share/email"
+                  target="_blank"
+                  rel="nofollow"
+                  class="btn btn-tiny svg-icon svg-icon--email"
+          >
+            {{ 'images/icons/email.svg' | inlineStatic | safe }} Email
+          </a>
+          <script>
+            // Populate href dynamically so bots don't crawl so easily
+            for (const el of document.querySelectorAll('[data-href]')) {
+              el.setAttribute('href', el.getAttribute('data-href'));
+            }
+          </script>
+        </div>
       </div>
     </div>
   </div>
-</div>
+{% endif %}
 
 <hr class="hr--spaced">
 <div>

@@ -135,6 +135,7 @@ func routeBlogRender(w http.ResponseWriter, r *http.Request) {
 		"loggedIn":      false,
 		"pageTitle":     title,
 		"showWordCount": true,
+		"hideVoteEgg":   true,
 		"blogPost": prisma.BlogPost{
 			Published: true,
 			Slug:      slug,
