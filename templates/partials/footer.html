@@ -21,6 +21,10 @@
         <p>
           {% if loggedIn %}
             {{ user.Email }} <a href="/logout">Logout</a>
+            <br>
+            <br>
+            <br>
+            <a href="{{ pageUrl }}"><code style="font-size:0.8em">{{ pageUrl }}</code></a>
           {% else %}
             &copy; Greg Schier
           {% endif %}
