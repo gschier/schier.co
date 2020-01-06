@@ -62,8 +62,8 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 	client := ctxPrismaClient(r)
 
 	now := time.Now().UTC()
-	thisHour := time.Date(now.Year(), now.Month(), now.Day(), now.Hour(), 0, 0, 0, now.Location())
-	endOfToday := time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, now.Location()).Add(time.Hour * 24)
+	prevHour := time.Date(now.Year(), now.Month(), now.Day(), now.Hour(), 0, 0, 0, now.Location()).Add(-time.Hour)
+	endOfToday := time.Date(prevHour.Year(), prevHour.Month(), prevHour.Day(), 0, 0, 0, 0, prevHour.Location()).Add(time.Hour * 24)
 
 	days, _ := strconv.Atoi(r.URL.Query().Get("days"))
 	if days == 0 {
@@ -83,7 +83,7 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 		bucket = 1
 	}
 
-	cacheKey := fmt.Sprintf("%s:%d:%d", thisHour.Format(time.RFC3339), days, bucket)
+	cacheKey := fmt.Sprintf("%s:%d:%d", prevHour.Format(time.RFC3339), days, bucket)
 
 	// Can we serve from cache?
 	if c, ok := cachedAnalytics[cacheKey]; ok {
@@ -101,7 +101,7 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 		OrderBy: &orderBy,
 		Where: &prisma.AnalyticsPageViewWhereInput{
 			TimeGte: prisma.Str(endOfToday.Add(-dateRange).Format(time.RFC3339)),
-			TimeLte: prisma.Str(thisHour.Format(time.RFC3339)),
+			TimeLte: prisma.Str(prevHour.Format(time.RFC3339)),
 		},
 	}).Exec(r.Context())
 	if err != nil {
