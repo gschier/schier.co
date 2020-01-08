@@ -34,13 +34,14 @@ func BlogRoutes(router *mux.Router) {
 
 	// Tags
 	router.HandleFunc("/blog/tags", routeBlogTags).Methods(http.MethodGet)
-	router.HandleFunc("/blog/{slug}/share/{platform}", routeBlogShare).Methods(http.MethodGet)
 	router.HandleFunc("/blog/tags/{tag}", routeBlogList).Methods(http.MethodGet)
+	router.HandleFunc("/blog/{slug}/share/{platform}", routeBlogShare).Methods(http.MethodGet)
 
 	// Posts
 	router.HandleFunc("/blog/search", Admin(routeBlogPostSearch)).Methods(http.MethodGet)
 	router.HandleFunc("/blog/{slug}.html", routeBlogPostSuffix).Methods(http.MethodGet)
 	router.HandleFunc("/blog/{slug}", routeBlogPost).Methods(http.MethodGet)
+	router.HandleFunc("/post/{slug}", routeBlogPostOld).Methods(http.MethodGet)
 	router.HandleFunc("/blog/{year}/{month}/{day}/{slug}", routeBlogPostYMD).Methods(http.MethodGet)
 	router.HandleFunc("/blog/{slug}/edit", Admin(routeBlogPostEdit)).Methods(http.MethodGet)
 
@@ -373,6 +374,11 @@ func routeBlogPostCreateOrUpdate(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/blog/"+newPost.Slug, http.StatusSeeOther)
 }
 
+func routeBlogPostOld(w http.ResponseWriter, r *http.Request) {
+	slug := mux.Vars(r)["slug"]
+	http.Redirect(w, r, "/blog/"+slug, http.StatusMovedPermanently)
+}
+
 func routeBlogPostYMD(w http.ResponseWriter, r *http.Request) {
 	slug := mux.Vars(r)["slug"]
 	slug = strings.TrimSuffix(slug, ".html")
@@ -395,12 +401,15 @@ func routeBlogPost(w http.ResponseWriter, r *http.Request) {
 	client := ctxPrismaClient(r)
 	loggedIn := ctxGetLoggedIn(r)
 
-	blogPostWhere := &prisma.BlogPostWhereInput{Slug: &slug}
 	userAgent := ua.Parse(r.Header.Get("User-Agent"))
 
 	// Fetch post
 	oneBlogPosts, err := client.BlogPosts(
-		&prisma.BlogPostsParams{Where: blogPostWhere},
+		&prisma.BlogPostsParams{
+			Where: &prisma.BlogPostWhereInput{
+				Slug: &slug,
+			},
+		},
 	).Exec(r.Context())
 	if err != nil {
 		log.Println("Failed to fetch blog post", err)
@@ -615,11 +624,6 @@ func routeBlogList(w http.ResponseWriter, r *http.Request) {
 	// Remove the n+1 post if it's there
 	if len(blogPosts) > first {
 		blogPosts = blogPosts[:len(blogPosts)-1]
-	}
-
-	if len(blogPosts) == 0 {
-		routeNotFound(w, r)
-		return
 	}
 
 	description := "An archive of blog posts"

@@ -29,6 +29,10 @@
       {% include '../../partials/blog_post_preview.html' %}
     {% endfor %}
 
+    {% if not blogPosts %}
+      <p>No posts found 🧐</p>
+    {% endif %}
+
     <div class="pagination">
       <div class="pagination-left">
         {% if blogPagePrev != blogPage %}
