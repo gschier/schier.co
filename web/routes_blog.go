@@ -34,6 +34,7 @@ func BlogRoutes(router *mux.Router) {
 
 	// Tags
 	router.HandleFunc("/blog/tags", routeBlogTags).Methods(http.MethodGet)
+	router.HandleFunc("/tags/{tag}", routeBlogTagsOld).Methods(http.MethodGet)
 	router.HandleFunc("/blog/tags/{tag}", routeBlogList).Methods(http.MethodGet)
 	router.HandleFunc("/blog/{slug}/share/{platform}", routeBlogShare).Methods(http.MethodGet)
 
@@ -372,6 +373,11 @@ func routeBlogPostCreateOrUpdate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	http.Redirect(w, r, "/blog/"+newPost.Slug, http.StatusSeeOther)
+}
+
+func routeBlogTagsOld(w http.ResponseWriter, r *http.Request) {
+	tag := mux.Vars(r)["tag"]
+	http.Redirect(w, r, "/blog/tags/"+tag, http.StatusMovedPermanently)
 }
 
 func routeBlogPostOld(w http.ResponseWriter, r *http.Request) {
