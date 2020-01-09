@@ -34,7 +34,7 @@
 
 <div class="row-spaced">
   <div class="clap-button">
-    <button>{{ 'images/icons/cheers.svg' | inlineStatic | safe }}</button>
+    <button title="Cheers this post">{{ 'images/icons/cheers.svg' | inlineStatic | safe }}</button>
     <div title="{{ blogPost.VotesUsers }} readers">
       <span class="clap-count">{{ blogPost.VotesTotal | default:"Be the first to" }}</span> cheers
     </div>
