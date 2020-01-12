@@ -692,6 +692,7 @@ body .CodeMirror .cm-comment {
   @apply my-1;
 }
 
+.project h3 > span,
 .project h3 > a {
   @apply flex;
 }

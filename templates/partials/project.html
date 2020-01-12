@@ -6,8 +6,10 @@
         {{ project.Name }}
       </a>
     {% else %}
-      <img src="{{ project.Icon }}" alt="{{ project.Name }} icon" />
-      {{ project.Name }}
+      <span>
+        <img src="{{ project.Icon }}" alt="{{ project.Name }} icon"/>
+        {{ project.Name }}
+      </span>
     {% endif %}
   </h3>
   {{ project.Revenue | markdown }}
