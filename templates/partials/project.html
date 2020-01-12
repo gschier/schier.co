@@ -1,15 +1,13 @@
 <div class="project">
   <h3>
     {% if project.Link %}
-      <a href="{{ project.Link }}"><img
-              src="data:image/png;base64,{{ 'images/app-icons/' | add:project.Icon | inlineStatic:'base64' }}"
-              alt="{{ project.Name }} icon"
-      /> {{ project.Name }}</a>
+      <a href="{{ project.Link }}">
+        <img src="{{ project.Icon }}" alt="{{ project.Name }} icon"/>
+        {{ project.Name }}
+      </a>
     {% else %}
-      <img
-              src="data:image/png;base64,{{ 'images/app-icons/' | add:project.Icon | inlineStatic:'base64' }}"
-              alt="{{ project.Name }} icon"
-      /> {{ project.Name }}
+      <img src="{{ project.Icon }}" alt="{{ project.Name }} icon" />
+      {{ project.Name }}
     {% endif %}
   </h3>
   {{ project.Revenue | markdown }}
