@@ -36,7 +36,7 @@ func BlogRoutes(router *mux.Router) {
 	router.HandleFunc("/blog/tags", routeBlogTags).Methods(http.MethodGet)
 	router.HandleFunc("/tags/{tag}", routeBlogTagsOld).Methods(http.MethodGet)
 	router.HandleFunc("/blog/tags/{tag}", routeBlogList).Methods(http.MethodGet)
-	router.HandleFunc("/blog/{slug}/share/{platform}", routeBlogShare).Methods(http.MethodGet)
+	router.HandleFunc("/blog/share/{slug}/{platform}", routeBlogShare).Methods(http.MethodGet)
 
 	// Posts
 	router.HandleFunc("/blog/search", Admin(routeBlogPostSearch)).Methods(http.MethodGet)
@@ -44,7 +44,7 @@ func BlogRoutes(router *mux.Router) {
 	router.HandleFunc("/blog/{slug}", routeBlogPost).Methods(http.MethodGet)
 	router.HandleFunc("/post/{slug}", routeBlogPostOld).Methods(http.MethodGet)
 	router.HandleFunc("/blog/{year}/{month}/{day}/{slug}", routeBlogPostYMD).Methods(http.MethodGet)
-	router.HandleFunc("/blog/{slug}/edit", Admin(routeBlogPostEdit)).Methods(http.MethodGet)
+	router.HandleFunc("/blog/edit/{id}", Admin(routeBlogPostEdit)).Methods(http.MethodGet)
 
 	// Forms
 	router.HandleFunc("/forms/blog/upsert", Admin(routeBlogPostCreateOrUpdate)).Methods(http.MethodPost)
@@ -257,20 +257,18 @@ func routeBlogPostSearch(w http.ResponseWriter, r *http.Request) {
 }
 
 func routeBlogPostEdit(w http.ResponseWriter, r *http.Request) {
-	slug := mux.Vars(r)["slug"]
+	id := mux.Vars(r)["id"]
 
 	// Slug won't exist if it's a new post
-	if slug == "" {
+	if id == "" {
 		renderTemplate(w, r, blogEditTemplate(), nil)
 		return
 	}
 
-	baseQuery := ctxPrismaClient(r).BlogPost(prisma.BlogPostWhereUniqueInput{
-		Slug: &slug,
-	})
-
 	// Fetch blog posts
-	blogPost, err := baseQuery.Exec(r.Context())
+	blogPost, err := ctxPrismaClient(r).BlogPost(prisma.BlogPostWhereUniqueInput{
+		ID: &id,
+	}).Exec(r.Context())
 	if err != nil {
 		log.Println("Failed to fetch blog post", err)
 		http.Error(w, "Failed to get blog post", http.StatusInternalServerError)
@@ -410,24 +408,18 @@ func routeBlogPost(w http.ResponseWriter, r *http.Request) {
 	userAgent := ua.Parse(r.Header.Get("User-Agent"))
 
 	// Fetch post
-	oneBlogPosts, err := client.BlogPosts(
-		&prisma.BlogPostsParams{
-			Where: &prisma.BlogPostWhereInput{
-				Slug: &slug,
-			},
-		},
-	).Exec(r.Context())
-	if err != nil {
+	post, err := client.BlogPost(prisma.BlogPostWhereUniqueInput{
+		Slug: &slug,
+	}).Exec(r.Context())
+	if err == prisma.ErrNoResult {
+		routeNotFound(w, r)
+		return
+	} else if err != nil {
+		log.Printf("ERROR: %#v\n", err)
 		log.Println("Failed to fetch blog post", err)
 		http.Error(w, "Failed to get blog post", http.StatusInternalServerError)
 		return
 	}
-	if len(oneBlogPosts) == 0 {
-		routeNotFound(w, r)
-		return
-	}
-
-	post := oneBlogPosts[0]
 
 	recommendedBlogPosts, err := client.BlogPosts(RecommendedBlogPosts(7, &post.ID)).Exec(r.Context())
 	if err != nil {

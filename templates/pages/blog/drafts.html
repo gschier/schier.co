@@ -10,14 +10,14 @@
         <th>Title</th>
         <th style="text-align:right;">Wrd</th>
         <th style="text-align:right;">Stg</th>
-        <th><a href="/blog/new" class="btn btn-tiny">New</a></th>
+        <th><a href="/blog/new" class="btn btn--xs">New</a></th>
       </tr>
       </thead>
       <tbody>
       {% for blogPost in drafts %}
         <tr>
           <td>
-            <a href="/blog/{{ blogPost.Slug }}">
+            <a href="/blog/{{ blogPost.ID }}">
               {{ blogPost.Title }}
             </a>
           </td>
@@ -28,7 +28,7 @@
             {{ blogPost.Stage }}
           </td>
           <td style="width:2rem;">
-            <a href="/blog/{{ blogPost.Slug }}/edit" class="btn btn-gray btn-tiny">Edit</a>
+            <a href="/blog/edit/{{ blogPost.ID }}" class="btn btn--gray btn--xs">Edit</a>
           </td>
         </tr>
       {% endfor %}

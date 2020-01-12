@@ -2,7 +2,7 @@
   {{ csrfField | safe }}
   {% include './form-input.html' with type='hidden' name='id' value=blogPost.ID %}
   <button
-          class="btn btn-small btn-gray"
+          class="btn btn--sm btn--gray"
           type="submit"
           {% if blogPost.Content | words > 100 or blogPost.Published or not blogPost.Unlisted %}
           disabled="disabled"

@@ -60,7 +60,7 @@
           <div style="display:flex;align-items:center;">
             <h1 class="text-xl">{{ blogPost.Title | default:"New Post" }}</h1>
             <button
-                    class="btn btn-faint btn-small"
+                    class="btn btn-faint btn--sm"
                     type="button"
                     v-on:click="toggleExpand"
             >
@@ -76,6 +76,11 @@
       <!-- / Blog Post Editor -->
 
       <div class="form-actions">
+        {% if blogPost.ID %}
+          <a class="btn btn--gray" href="/blog/{{ blogPost.Slug }}">
+            Preview
+          </a>
+        {% endif %}
         <button class="btn">
           {% if blogPost %}Save{% else %}Create{% endif %}
         </button>

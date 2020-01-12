@@ -90,26 +90,22 @@ h6 {
   @apply bg-gray-300;
 }
 
-.btn.btn-gray {
-  @apply bg-gray-200 text-gray-600 ml-auto py-1 px-3 text-lg font-semibold;
+.btn.btn--gray {
+  @apply bg-gray-200 text-gray-600;
 }
 
-.btn.btn-gray:hover:not(:disabled) {
+.btn.btn--gray:hover:not(:disabled) {
   @apply bg-gray-300;
 }
 
-.btn.btn-small {
+.btn.btn--sm {
   @apply py-1 px-3 text-xs rounded-sm;
 }
 
-.btn.btn-tiny {
+.btn.btn--xs {
   @apply px-3 text-xs rounded-sm font-normal;
   padding-top: 0.1em;
   padding-bottom: 0.1em;
-}
-
-.btn.btn-wide {
-  @apply w-full;
 }
 
 .btn:disabled {
@@ -174,7 +170,7 @@ h6 {
 }
 
 .form-actions {
-  @apply flex items-center;
+  @apply flex items-center justify-between;
 }
 
 .form-actions > *:last-child {
