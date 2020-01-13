@@ -112,12 +112,15 @@
       // Store session
       localStorage.schier = JSON.stringify(sess);
 
+      // Only set referrer if it's from ann external source
+      const referrer = document.referrer.indexOf(location.origin) === 0 ? '' : document.referrer;
+
       const e = encodeURIComponent;
       fetch('{{ analyticsUrl }}/t?' + [
         `path=${e(path)}`,
         `prev=${e(prev)}`,
         `search=${e(location.search)}`,
-        `ref=${e(document.referrer)}`,
+        `ref=${e(referrer)}`,
         `user=${e(sess.user)}`,
         `sess=${e(sess.id)}`,
         `age=${e(Math.round((Date.now() - sess.start) / 1000))}`,
