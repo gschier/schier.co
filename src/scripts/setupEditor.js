@@ -38,7 +38,6 @@ export function setupEditor(textareaEl, containerEl) {
     {
       value: textareaEl.value,
       mode: 'gfm',
-      placeholder: 'Start Typing...',
       height: 'auto',
       foldGutter: true,
       lineWrapping: true,
