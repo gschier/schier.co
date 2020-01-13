@@ -112,8 +112,14 @@
       // Store session
       localStorage.schier = JSON.stringify(sess);
 
-      // Only set referrer if it's from ann external source
-      const referrer = document.referrer.indexOf(location.origin) === 0 ? '' : document.referrer;
+      let referrer = document.referrer;
+      if (sess.pages > 1) {
+        // Don't set referrer if not first page
+        referrer = '';
+      } else if (referrer.indexOf(location.origin) === 0) {
+        // Don't set referrer if it's an internal source
+        referrer = '';
+      }
 
       const e = encodeURIComponent;
       fetch('{{ analyticsUrl }}/t?' + [

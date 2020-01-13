@@ -238,7 +238,6 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 
 	totalSessionPages := 0.0
 	totalNonBouncedSessionAge := 0.0
-	totalSessions := 0.0
 	totalNonBouncedSessions := 0.0
 	totalBouncedSessions := 0.0
 	for _, v := range latestSessionViews {
@@ -247,7 +246,6 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 			continue
 		}
 
-		totalSessions += 1
 		totalSessionPages += float64(v.Page)
 		if v.Page == 1 {
 			totalBouncedSessions += 1
@@ -256,6 +254,8 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 			totalNonBouncedSessionAge += float64(v.Age)
 		}
 	}
+
+	totalSessions := float64(len(latestSessionViews))
 	avgBounceRate := totalBouncedSessions / totalSessions
 	avgSessionDuration := totalNonBouncedSessionAge / totalNonBouncedSessions
 	avgPagesPerSession := totalSessionPages / totalSessions
