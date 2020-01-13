@@ -237,9 +237,10 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 	}
 
 	totalSessionPages := 0.0
-	totalSessionAge := 0.0
+	totalNonBouncedSessionAge := 0.0
 	totalSessions := 0.0
-	bouncedSessions := 0.0
+	totalNonBouncedSessions := 0.0
+	totalBouncedSessions := 0.0
 	for _, v := range latestSessionViews {
 		// Old records before page was stored
 		if v.Page == 0 {
@@ -247,14 +248,16 @@ func routeAnalytics(w http.ResponseWriter, r *http.Request) {
 		}
 
 		totalSessions += 1
-		totalSessionAge += float64(v.Age)
 		totalSessionPages += float64(v.Page)
 		if v.Page == 1 {
-			bouncedSessions += 1
+			totalBouncedSessions += 1
+		} else {
+			totalNonBouncedSessions += 1
+			totalNonBouncedSessionAge += float64(v.Age)
 		}
 	}
-	avgSessionDuration := totalSessionAge / totalSessions
-	avgBounceRate := bouncedSessions / totalSessions
+	avgBounceRate := totalBouncedSessions / totalSessions
+	avgSessionDuration := totalNonBouncedSessionAge / totalNonBouncedSessions
 	avgPagesPerSession := totalSessionPages / totalSessions
 
 	c := pongo2.Context{
