@@ -55,8 +55,8 @@ func init() {
 			if param.String() != "" {
 				dateStr = t.Format(param.String())
 			} else if time.Now().Sub(t) < time.Hour*24 {
-				// Use short date if less than 200 days ago
-				dateStr = "Just Now"
+				// Use today for today
+				dateStr = "Today"
 			} else if time.Now().Sub(t) < time.Hour*24*200 {
 				// Use short date if less than 200 days ago
 				dateStr = t.Format("Jan _2")
