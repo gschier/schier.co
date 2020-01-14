@@ -159,6 +159,12 @@ func IsDevelopment() bool {
 // go down to zero
 func CalculateScore(age time.Duration, votes, views, words int32) int32 {
 	days := float64(age / time.Hour / 24)
+
+	// New posts on fire!
+	if days < 1 {
+		return 999999
+	}
+
 	score := float64(votes*400+views) / (math.Min(days, 70) + 1)
 
 	if words < 200 {
