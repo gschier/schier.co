@@ -13,7 +13,7 @@
       &bull; {{ blogPost.VotesTotal }} votes
       {% if hot and blogPost.VotesUsers > 10 and not blogPost.Date | isodateolderdays:7 %}
         <span style="opacity:0.5">🔥</span>
-      {% elif hot and blogPost.VotesUsers > 20 and not blogPost.Date | isodateolderdays:30 %}
+      {% elif hot and blogPost.VotesUsers > 30 and not blogPost.Date | isodateolderdays:30 %}
         <span style="opacity:0.5">🔥</span>
       {% endif %}
     </span>
