@@ -22,7 +22,7 @@ var newsletterUnsubscribeTemplate = pageTemplate("page/unsubscribe.html")
 func routeNewsletter(w http.ResponseWriter, r *http.Request) {
 	client := ctxPrismaClient(r)
 
-	orderBy := prisma.SubscriberOrderByInputUpdatedAtDesc
+	orderBy := prisma.SubscriberOrderByInputCreatedAtDesc
 	subscribers, err := client.Subscribers(&prisma.SubscribersParams{
 		OrderBy: &orderBy,
 	}).Exec(r.Context())
