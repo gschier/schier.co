@@ -1,7 +1,0 @@
-endpoint: ${env:PRISMA_ENDPOINT}
-secret: ${env:PRISMA_SECRET}
-generate:
-  - generator: go-client
-    output: ./generated/prisma-client/
-datamodel:
-  - datamodel.prisma
