@@ -65,8 +65,8 @@ job "app.schierco" {
         check {
           type = "http"
           path = "/debug/health"
-          interval = "2s"
-          timeout = "2s"
+          interval = "60s"
+          timeout = "5s"
         }
       }
     }

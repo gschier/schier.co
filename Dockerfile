@@ -19,7 +19,7 @@ FROM alpine:3.11
 WORKDIR /app
 
 # Move app binary to WORKDIR
-COPY --from=builder /go/bin/ .
+COPY --from=builder /go/bin/web ./web
 COPY --from=builder /app/templates ./templates
 COPY --from=builder /app/static ./static
 
