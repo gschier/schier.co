@@ -14,7 +14,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm run format-code && npm run frontend:build"
+      "pre-commit": "npm run format-code"
     }
   },
   "staticFiles": {
