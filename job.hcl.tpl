@@ -47,7 +47,7 @@ job "app.schierco" {
         DO_SPACES_SPACE = "schierco"
         MAILJET_PRV_KEY = "<REPLACE_ME>"
         MAILJET_PUB_KEY = "<REPLACE_ME>"
-        MIGRATE_ON_START = "enable"
+        MIGRATE_ON_START = "disable"
         PORT = "${NOMAD_PORT_web}"
         STATIC_ROOT = "./static"
         STATIC_URL = "/static"

@@ -19,3 +19,11 @@ jobs:
       - uses: actions/setup-go@v2
       - name: Run Tests
         run: cd ./backend && go test ./...
+      - uses: docker/build-push-action@v1
+        with:
+          username: ${{ secrets.DO_REGISTRY_TOKEN }}
+          password: ${{ secrets.DO_REGISTRY_TOKEN }}
+          repository: schierdev
+          registry: registry.digitalocean.com
+          tag_with_sha: true
+          tags: latest
