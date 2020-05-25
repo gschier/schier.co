@@ -1,13 +1,16 @@
 package internal
 
 import (
+	"fmt"
 	"github.com/flosch/pongo2"
 	"github.com/gorilla/mux"
 	"log"
 	"net/http"
+	"strings"
 )
 
-func NotFoundRoutes(router *mux.Router) {
+func MiscRoutes(router *mux.Router) {
+	router.HandleFunc("/debug/headers", routeHeaders).Methods(http.MethodGet)
 	router.NotFoundHandler = http.HandlerFunc(routeNotFound)
 }
 
@@ -30,7 +33,14 @@ func routeNotFound(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	w.WriteHeader(http.StatusNotFound)
 	renderTemplate(w, r, notFoundTemplate(), &pongo2.Context{
-		"blogPosts": blogPosts,
+		"blogPosts":  blogPosts,
 		"doNotTrack": true,
 	})
+}
+
+func routeHeaders(w http.ResponseWriter, r *http.Request) {
+	_, _ = fmt.Fprintf(w, "Host: %s\n", r.Host)
+	for n, v := range r.Header {
+		_, _ = fmt.Fprintf(w, "%s: %s\n", n, strings.Join(v, " --- "))
+	}
 }

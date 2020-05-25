@@ -7,8 +7,8 @@ RUN apk add \
       musl-dev
 
 # Add the project
-ADD ./backend /app
 WORKDIR /app
+ADD ./backend ./
 
 # Run tests and build
 RUN go install ./...
@@ -16,11 +16,12 @@ RUN go install ./...
 # Third stage with only the things needed for the app to run
 FROM alpine:3.11
 
-EXPOSE 8080
-
 WORKDIR /app
 
 # Move app binary to WORKDIR
 COPY --from=builder /go/bin/ .
+COPY --from=builder /app/dumps ./dumps
+COPY --from=builder /app/templates ./templates
+COPY --from=builder /app/static ./static
 
 CMD ["./web"]

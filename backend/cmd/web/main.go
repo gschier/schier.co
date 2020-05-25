@@ -1,8 +1,10 @@
 package main
 
 import (
+	"context"
 	"github.com/gorilla/mux"
 	"github.com/gschier/schier.dev/internal"
+	"github.com/gschier/schier.dev/migrations"
 	"log"
 	"net/http"
 	"os"
@@ -10,6 +12,11 @@ import (
 
 func main() {
 	db := internal.NewStorage()
+
+	// Run migrations
+	if os.Getenv("MIGRATE_ON_START") == "enable" {
+		internal.MigrateForwardAll(context.Background(), migrations.All(), db.DB(), true)
+	}
 
 	// Setup router
 	router := setupRouter(db)
@@ -26,10 +33,9 @@ func setupRouter(db *internal.Storage) *mux.Router {
 	router.Use(internal.NewContextMiddleware(db))
 	router.Use(internal.CSRFMiddleware)
 	router.Use(internal.UserMiddleware)
-	router.Use(internal.NewForceLoginHostMiddleware("schier.dev"))
 
 	// Apply routes
-	internal.NotFoundRoutes(router)
+	internal.MiscRoutes(router)
 	internal.AuthRoutes(router)
 	internal.BlogRoutes(router)
 	internal.BooksRoutes(router)

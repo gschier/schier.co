@@ -16,6 +16,7 @@ services:
       DEV_ENVIRONMENT: development
       DATABASE_URL: 'postgres://user:pass@postgres:5432/postgres?sslmode=disable'
       DO_SPACES_DOMAIN: nyc3.digitaloceanspaces.com
+      MIGRATE_ON_START: enable
       DO_SPACES_SPACE: schierco
       PORT: "8084"
       STATIC_URL: /static

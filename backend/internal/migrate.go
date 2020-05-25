@@ -1,4 +1,4 @@
-package migrations
+package internal
 
 import (
 	"bufio"
@@ -10,7 +10,6 @@ import (
 	"strings"
 	"time"
 )
-
 
 type HistoryModel struct {
 	Id      int       `db:"id"`
@@ -25,7 +24,7 @@ type Migration struct {
 	Reverse func(ctx context.Context, db *sqlx.DB) error
 }
 
-func ForwardAll(ctx context.Context, migrations []Migration, db *sqlx.DB, yesAll bool) {
+func MigrateForwardAll(ctx context.Context, migrations []Migration, db *sqlx.DB, yesAll bool) {
 	// Initialize migrations table
 	err := initTable(ctx, db)
 	if err != nil {
@@ -73,7 +72,7 @@ func ForwardAll(ctx context.Context, migrations []Migration, db *sqlx.DB, yesAll
 
 }
 
-func Undo(ctx context.Context, migrations []Migration, db *sqlx.DB, yesAll bool) {
+func MigrateBackward(ctx context.Context, migrations []Migration, db *sqlx.DB, yesAll bool) {
 	// Initialize migrations table
 	err := initTable(ctx, db)
 	if err != nil {
@@ -128,7 +127,7 @@ func Undo(ctx context.Context, migrations []Migration, db *sqlx.DB, yesAll bool)
 
 }
 
-func Mark(ctx context.Context, db *sqlx.DB, migration Migration) {
+func MarkMigration(ctx context.Context, db *sqlx.DB, migration Migration) {
 	// Initialize migrations table
 	err := initTable(ctx, db)
 	if err != nil {
@@ -148,9 +147,7 @@ func Mark(ctx context.Context, db *sqlx.DB, migration Migration) {
 }
 
 func initTable(ctx context.Context, db *sqlx.DB) error {
-	tx := db.MustBeginTx(ctx, nil)
-
-	_ = tx.MustExecContext(ctx, `
+	_, err := db.ExecContext(ctx, `
 		CREATE TABLE IF NOT EXISTS migrations (
 			id SERIAL PRIMARY KEY,
 			name TEXT NOT NULL UNIQUE,
@@ -158,9 +155,7 @@ func initTable(ctx context.Context, db *sqlx.DB) error {
 		);
 	`)
 
-	err := tx.Commit()
 	if err != nil {
-		_ = tx.Rollback()
 		return err
 	}
 

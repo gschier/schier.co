@@ -1,8 +1,8 @@
-package main
+package migrations
 
 import (
 	"context"
-	"github.com/gschier/schier.dev/internal/migrations"
+	"github.com/gschier/schier.dev/internal"
 	"github.com/jmoiron/sqlx"
 	"github.com/lib/pq"
 	"regexp"
@@ -10,7 +10,7 @@ import (
 )
 
 func init() {
-	allMigrations = append(allMigrations, migrations.Migration{
+	allMigrations = append(allMigrations, internal.Migration{
 		Name: "0003__migrate_tags",
 		Forward: func(ctx context.Context, db *sqlx.DB) error {
 			tx := db.MustBegin()

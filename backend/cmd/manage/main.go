@@ -5,12 +5,10 @@ import (
 	"errors"
 	"fmt"
 	"github.com/gschier/schier.dev/internal"
-	"github.com/gschier/schier.dev/internal/migrations"
+	"github.com/gschier/schier.dev/migrations"
 	"gopkg.in/alecthomas/kingpin.v2"
 	"log"
 	"os"
-	"sort"
-	"strings"
 	"time"
 )
 
@@ -28,34 +26,28 @@ func main() {
 	}
 }
 
-var allMigrations = make([]migrations.Migration, 0)
 func initMigrate(ctx context.Context) {
-	// First, sort migrations by name so they go in the correct order
-	sort.Slice(allMigrations, func(i, j int) bool {
-		return strings.Compare(allMigrations[i].Name, allMigrations[j].Name) < 0
-	})
-
 	cmd := Cmd.Command("migrate", "Run migration commands")
 	yesAll := cmd.Flag("yes", "Confirm all things").Bool()
 
 	cmdForward := cmd.Command("forward", "Apply all pending migrations")
 	cmdForward.Action(func(x *kingpin.ParseContext) error {
-		migrations.ForwardAll(ctx, allMigrations, internal.NewStorage().DB(), *yesAll)
+		internal.MigrateForwardAll(ctx, migrations.All(), internal.NewStorage().DB(), *yesAll)
 		return nil
 	})
 
 	cmdBackward := cmd.Command("backward", "Revert last migration")
 	cmdBackward.Action(func(x *kingpin.ParseContext) error {
-		migrations.Undo(ctx, allMigrations, internal.NewStorage().DB(), *yesAll)
+		internal.MigrateBackward(ctx, migrations.All(), internal.NewStorage().DB(), *yesAll)
 		return nil
 	})
 
 	cmdMark := cmd.Command("mark", "Mark migration as complete")
 	cmdMarkFlagMigrationName := *cmdMark.Arg("migration", "Migration name").Required().String()
 	cmdMark.Action(func(x *kingpin.ParseContext) error {
-		for _, m := range allMigrations {
+		for _, m := range migrations.All() {
 			if m.Name == cmdMarkFlagMigrationName {
-				migrations.Mark(ctx, internal.NewStorage().DB(), m)
+				internal.MarkMigration(ctx, internal.NewStorage().DB(), m)
 				return nil
 			}
 		}

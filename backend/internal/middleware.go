@@ -93,7 +93,7 @@ func CacheHeadersMiddleware(next http.Handler) http.Handler {
 func CSRFMiddleware(next http.Handler) http.Handler {
 	return csrf.Protect(
 		[]byte(os.Getenv("CSRF_KEY")),
-		csrf.MaxAge(3600 * 24 * 7),
+		csrf.MaxAge(3600*24*7),
 		csrf.Secure(false),
 		csrf.HttpOnly(true),
 		csrf.Path("/"),
@@ -138,26 +138,11 @@ func UserMiddleware(next http.Handler) http.Handler {
 	})
 }
 
-// NewForceLoginHostMiddleware adds useful things to the request context
-func NewForceLoginHostMiddleware(host string) mux.MiddlewareFunc {
-	return func(next http.Handler) http.Handler {
-		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			loggedIn := ctxGetLoggedIn(r)
-
-			if host == r.Host && !loggedIn && r.URL.Path != "/login" {
-				http.Redirect(w, r, "/login", http.StatusFound)
-			}
-
-			next.ServeHTTP(w, r)
-		})
-	}
-}
-
 // ContextMiddleware adds useful things to the request context
 func NewContextMiddleware(db *Storage) mux.MiddlewareFunc {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			var emptyUser *User= nil
+			var emptyUser *User = nil
 
 			r = ctxSetDB(r, db)
 			r = ctxSetUserAndLoggedIn(r, emptyUser)

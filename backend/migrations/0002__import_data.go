@@ -1,16 +1,16 @@
-package main
+package migrations
 
 import (
 	"context"
 	"encoding/json"
-	"github.com/gschier/schier.dev/internal/migrations"
+	"github.com/gschier/schier.dev/internal"
 	"github.com/jmoiron/sqlx"
 	"io/ioutil"
 	"log"
 )
 
 func init() {
-	allMigrations = append(allMigrations, migrations.Migration{
+	allMigrations = append(allMigrations, internal.Migration{
 		Name: "0002__import_data",
 		Forward: func(ctx context.Context, db *sqlx.DB) error {
 			tx := db.MustBegin()
