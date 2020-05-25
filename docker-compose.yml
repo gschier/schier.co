@@ -20,7 +20,7 @@ services:
       DO_SPACES_SPACE: schierco
       PORT: "8084"
       STATIC_URL: /static
-      STATIC_ROOT: ../frontend/static
+      STATIC_ROOT: ./static
     depends_on:
       - postgres
   postgres:

@@ -49,7 +49,7 @@ job "app.schierco" {
         MAILJET_PUB_KEY = "<REPLACE_ME>"
         MIGRATE_ON_START = "enable"
         PORT = "${NOMAD_PORT_web}"
-        STATIC_ROOT = "../frontend/static"
+        STATIC_ROOT = "./static"
         STATIC_URL = "/static"
       }
 
