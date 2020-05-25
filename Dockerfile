@@ -20,7 +20,6 @@ WORKDIR /app
 
 # Move app binary to WORKDIR
 COPY --from=builder /go/bin/ .
-COPY --from=builder /app/dumps ./dumps
 COPY --from=builder /app/templates ./templates
 COPY --from=builder /app/static ./static
 

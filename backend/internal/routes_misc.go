@@ -1,16 +1,19 @@
 package internal
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/flosch/pongo2"
 	"github.com/gorilla/mux"
 	"log"
 	"net/http"
+	"os"
 	"strings"
 )
 
 func MiscRoutes(router *mux.Router) {
 	router.HandleFunc("/debug/headers", routeHeaders).Methods(http.MethodGet)
+	router.HandleFunc("/debug/health", routeHealthCheck).Methods(http.MethodGet)
 	router.NotFoundHandler = http.HandlerFunc(routeNotFound)
 }
 
@@ -42,5 +45,25 @@ func routeHeaders(w http.ResponseWriter, r *http.Request) {
 	_, _ = fmt.Fprintf(w, "Host: %s\n", r.Host)
 	for n, v := range r.Header {
 		_, _ = fmt.Fprintf(w, "%s: %s\n", n, strings.Join(v, " --- "))
+	}
+}
+
+func routeHealthCheck(w http.ResponseWriter, r *http.Request) {
+	db := NewStorage()
+
+	blogPostCount := 0
+	pgConns := 0
+
+	_ = db.DB().GetContext(r.Context(), &pgConns, `SELECT sum(numbackends) FROM pg_stat_database`)
+	_ = db.DB().GetContext(r.Context(), &blogPostCount, `SELECT COUNT(id) FROM blog_posts`)
+
+	err := json.NewEncoder(w).Encode(&map[string]interface{}{
+		"blog_posts": blogPostCount,
+		"pg_conns": pgConns,
+		"base_url": os.Getenv("BASE_URL"),
+	})
+
+	if err != nil {
+		panic(err)
 	}
 }
