@@ -23,6 +23,4 @@ COPY --from=builder /go/bin/web ./web
 COPY --from=builder /app/templates ./templates
 COPY --from=builder /app/static ./static
 
-COPY --from=builder /app/dumps ./dumps
-
 CMD ["./web"]
