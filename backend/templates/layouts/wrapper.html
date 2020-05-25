@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+  <meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+  <title>{% if pageTitle %}{{ pageTitle }} – {% endif %}Gregory Schier</title>
+  <meta name="author" content="Gregory Schier">
+  <meta name="description" content="{{ pageDescription }}">
+
+  {# Meta #}
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+  <link rel="canonical" href="{{ pageUrl }}"/>
+
+  {% if pagePublishedTime %}
+    <meta property="article:published_time" content="{{ pagePublishedTime }}"/>
+  {% endif %}
+
+  {% if pageModifiedTime %}
+    <meta property="article:modified_time" content="{{ pageModifiedTime }}"/>
+    <meta property="og:updated_time" content="{{ pageModifiedTime }}"/>
+  {% endif %}
+
+  {# RSS #}
+  <link href="{{ rssUrl }}" rel="alternate" type="application/rss+xml" title="Gregory Schier"/>
+  <link href="{{ rssUrl }}" rel="feed" type="application/rss+xml" title="Gregory Schier"/>
+
+  {# Favicon #}
+  <link rel="apple-touch-icon" sizes="180x180" href="{{ staticUrl }}/favicon/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="{{ staticUrl }}/favicon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="{{ staticUrl }}/favicon/favicon-16x16.png">
+  <link rel="manifest" href="{{ staticUrl }}/favicon/site.webmanifest">
+  <link rel="mask-icon" href="{{ staticUrl }}/favicon/safari-pinned-tab.svg" color="#5bbad5">
+  <link rel="shortcut icon" href="{{ staticUrl }}/favicon/favicon.ico">
+  <meta name="msapplication-TileColor" content="#2d89ef">
+  <meta name="msapplication-config" content="{{ staticUrl }}/favicon/browserconfig.xml">
+  <meta name="theme-color" content="#ffffff">
+
+  {# Social Metadata #}
+  <meta name="twitter:site" content="@GregorySchier"/>
+  <meta name="twitter:creator" content="@GregorySchier"/>
+  <meta property="og:url" content="{{ pageUrl }}"/>
+  <meta property="og:title" content="{% if pageTitle %}{{ pageTitle }}{% else %}Gregory Schier{% endif %}"/>
+  <meta property="og:description" content="{{ pageDescription }}"/>
+  {% if pageImage %}
+    <meta name="twitter:card" content="summary_large_image"/>
+    <meta property="og:image" content="{{ pageImage }}"/>
+  {% else %}
+    <meta name="twitter:card" content="summary"/>
+    <meta property="og:image" content="{{ pageImageDefault }}"/>
+  {% endif %}
+
+  {# Scripts and Styles #}
+  {% if isDev %}
+    {# HMR-able styles/scripts #}
+    <script src="{{ staticUrl }}/index.js"></script>
+    <link rel="stylesheet" href="{{ staticUrl }}/index.css">
+  {% else %}
+    {# inlineable styles #}
+    <style>{{ "index.css" | inlineStatic | safe }}</style>
+  {% endif %}
+
+  {% block extraStyles %}{% endblock %}
+</head>
+<body
+        data-deployed="{{ deployTime }}"
+        data-csrf-token="{{ csrfToken }}"
+        data-csrf-Token-header="{{ csrfTokenHeader }}"
+        data-logged-in="{{ loggedIn | yesno:'yes,no' }}">
+  {% block body %}{% endblock %}
+  {% block extraScripts %}{% endblock %}
+</body>
+</html>

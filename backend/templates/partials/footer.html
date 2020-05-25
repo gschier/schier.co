@@ -1,0 +1,33 @@
+<footer class="bottom-footer">
+  <div class="container">
+    <div>
+      <img
+              src="data:image/svg+xml;base64,{{ 'images/greg-rounded.svg' | inlineStatic:'base64' }}"
+              alt="Gregory Schier vector headshot"
+      />
+
+      <div class="links">
+        <a href="//twitter.com/GregorySchier" rel="noopener">
+          Twitter
+        </a>
+        |
+        <a href="//github.com/gschier" rel="noopener">
+          GitHub
+        </a>
+        |
+        <a href="/newsletter">Newsletter</a>
+        <p>
+          {% if loggedIn %}
+            {{ user.Email }} <a href="/logout">Logout</a>
+            <br>
+            <br>
+            <br>
+            <a href="{{ pageUrl }}"><code style="font-size:0.8em">{{ pageUrl }}</code></a>
+          {% else %}
+            &copy; Greg Schier
+          {% endif %}
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>

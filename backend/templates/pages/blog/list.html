@@ -1,0 +1,58 @@
+{% extends '../../layouts/base.html' %}
+
+{% block content %}
+  <div class="container">
+    <div class="content">
+      <h1>
+        {% if tag %}
+          Posts in <span class="tag">{{ tag }}</span>
+        {% elif blogPage == 1 %}
+          Welcome to the Blog!
+        {% else %}
+          Page {{ blogPage }}
+        {% endif %}
+      </h1>
+      {% if not tag and blogPage == 1 %}
+        <p>
+          This is where I write about life, programming, and other interests.
+        </p>
+        <p>
+          Browse recent posts below, view <a href="/blog/tags">Tags</a>, or subscribe via
+          <a href="/newsletter">Newsletter</a> or <a href="{{ rssUrl }}">RSS</a>.
+
+          {% if loggedIn %}
+            Or, <a href="/blog/drafts">Drafts</a>, or
+            <a href="/blog/new">Create New</a>
+          {% endif %}
+        </p>
+      {% endif %}
+    </div>
+    <hr>
+    {% for blogPost in blogPosts %}
+      {% include '../../partials/blog_post_preview.html' %}
+    {% endfor %}
+
+    {% if not blogPosts %}
+      <p>No posts found 🧐</p>
+    {% endif %}
+
+    <div class="pagination">
+      <div class="pagination-left">
+        {% if blogPagePrev != blogPage %}
+          <a href="/blog/page/{{ blogPagePrev }}" class="left">&laquo; Previous</a>
+        {% endif %}
+      </div>
+
+      <div class="pagination-center">
+        Page {{ blogPage }}
+      </div>
+
+      <div class="pagination-right">
+        {% if blogPageNext != blogPage %}
+          <a href="/blog/page/{{ blogPageNext }}">Next &raquo;</a>
+        {% else %}
+        {% endif %}
+      </div>
+    </div>
+  </div>
+{% endblock %}
