@@ -10,17 +10,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-      - name: Deploy
-        run: |
-          echo "Writing SSH key"
-          mkdir -p ~/.ssh && echo "${SSH_PRIVATE_KEY}" | tr -d '\r' > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
-
-          echo "Adding to known hosts"
-          ssh-keyscan schier.dev >> ~/.ssh/known_hosts
-
-          git remote add dokku dokku@schier.dev:schier.dev
-
-          echo "Deploying schier.dev"
-          git push dokku HEAD:master
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+      - uses: actions/setup-go@v2
+      - name: Run Tests
+        run: cd backend && go test ./...
