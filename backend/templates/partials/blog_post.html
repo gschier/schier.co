@@ -20,7 +20,7 @@
     </p>
   {% endif %}
 
-  {% if not blogPost.CreatedAt | isodatesameday:blogPost.EditedAt %}
+  {% if not blogPost.Date | isodatesamemonth:blogPost.EditedAt %}
     <p class="notice notice--subtle">
       Updated
       <time datetime="{{ blogPost.EditedAt }}" title="{{ blogPost.EditedAt }}">

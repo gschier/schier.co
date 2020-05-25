@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"github.com/flosch/pongo2"
@@ -409,9 +410,9 @@ func routeBlogPost(w http.ResponseWriter, r *http.Request) {
 
 		wc := WordCount(post.Content)
 		newScore := CalculateScore(time.Now().Sub(post.Date), post.VotesUsers+post.Shares, post.Views, wc)
-		err := db.UpdateBlogPostStats(r.Context(), post.ID, newViewCount, newScore)
+		err := db.UpdateBlogPostStats(context.Background(), post.ID, newViewCount, newScore)
 		if err != nil {
-			log.Println("Failed to update blog post views", err.Error())
+			log.Println("Failed to update blog post views", err)
 		}
 	}()
 }
