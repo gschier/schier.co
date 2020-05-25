@@ -41,7 +41,8 @@ func migrateUsers(ctx context.Context, tx *sqlx.Tx) error {
 	log.Println("Importing User.json")
 	bytes, err := ioutil.ReadFile("./dumps/schierdatabase_default_default_User.json")
 	if err != nil {
-		return err
+		log.Println("Dump file not found. Skipping...")
+		return nil
 	}
 
 	var entries []struct {
@@ -75,7 +76,8 @@ func migrateBlogPosts(ctx context.Context, tx *sqlx.Tx) error {
 	log.Println("Importing BlogPost.json")
 	bytes, err := ioutil.ReadFile("./dumps/schierdatabase_default_default_BlogPost.json")
 	if err != nil {
-		return err
+		log.Println("Dump file not found. Skipping...")
+		return nil
 	}
 
 	var entries []struct {
@@ -92,7 +94,7 @@ func migrateBlogPosts(ctx context.Context, tx *sqlx.Tx) error {
 		Image       string `json:"image"`
 		Views       int    `json:"views"`
 		VotesTotal  int    `json:"votesTotal"`
-		VotesUser   int    `json:"votesUser"`
+		VotesUsers  int    `json:"votesUsers"`
 		Unlisted    bool   `json:"unlisted"`
 		Stage       int    `json:"stage"`
 		Shares      int    `json:"shares"`
@@ -117,7 +119,7 @@ func migrateBlogPosts(ctx context.Context, tx *sqlx.Tx) error {
 			VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19)
 			ON CONFLICT DO NOTHING 
 		`, e.ID, e.CreatedAt, e.UpdatedAt, e.Content, e.Date, e.DateUpdated, e.Image, e.Published, e.Score, e.Shares,
-			e.Slug, e.Stage, e.Tags, e.Title, e.Unlisted, e.Author, e.Views, e.VotesTotal, e.VotesUser)
+			e.Slug, e.Stage, e.Tags, e.Title, e.Unlisted, e.Author, e.Views, e.VotesTotal, e.VotesUsers)
 		if err != nil {
 			return err
 		}
@@ -130,7 +132,8 @@ func migrateSubscribers(ctx context.Context, tx *sqlx.Tx) error {
 	log.Println("Importing Subscriber.json")
 	bytes, err := ioutil.ReadFile("./dumps/schierdatabase_default_default_Subscriber.json")
 	if err != nil {
-		return err
+		log.Println("Dump file not found. Skipping...")
+		return nil
 	}
 
 	var entries []struct {
@@ -165,7 +168,8 @@ func migrateProjects(ctx context.Context, tx *sqlx.Tx) error {
 	log.Println("Importing Project.json")
 	bytes, err := ioutil.ReadFile("./dumps/schierdatabase_default_default_Project.json")
 	if err != nil {
-		return err
+		log.Println("Dump file not found. Skipping...")
+		return nil
 	}
 
 	var entries []struct {
@@ -203,7 +207,8 @@ func migrateBooks(ctx context.Context, tx *sqlx.Tx) error {
 	log.Println("Importing Book.json")
 	bytes, err := ioutil.ReadFile("./dumps/schierdatabase_default_default_Book.json")
 	if err != nil {
-		return err
+		log.Println("Dump file not found. Skipping...")
+		return nil
 	}
 
 	var entries []struct {
@@ -237,7 +242,8 @@ func migrateFavoriteThings(ctx context.Context, tx *sqlx.Tx) error {
 	log.Println("Importing FavoriteThing.json")
 	bytes, err := ioutil.ReadFile("./dumps/schierdatabase_default_default_FavoriteThing.json")
 	if err != nil {
-		return err
+		log.Println("Dump file not found. Skipping...")
+		return nil
 	}
 
 	var entries []struct {
@@ -271,7 +277,8 @@ func migrateNewsletterSends(ctx context.Context, tx *sqlx.Tx) error {
 	log.Println("Importing NewsletterSend.json")
 	bytes, err := ioutil.ReadFile("./dumps/schierdatabase_default_default_NewsletterSend.json")
 	if err != nil {
-		return err
+		log.Println("Dump file not found. Skipping...")
+		return nil
 	}
 
 	var entries []struct {

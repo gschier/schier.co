@@ -605,10 +605,11 @@ func routeVote(w http.ResponseWriter, r *http.Request) {
 
 	log.Println("POST", post)
 	votesTotal := post.VotesTotal + 1
+	votesUsers := post.VotesUsers + userInc
 	err = db.UpdateBlogPostVotes(
 		r.Context(),
 		post.ID,
-		userInc,
+		votesUsers,
 		votesTotal,
 	)
 	if err != nil {
