@@ -37,7 +37,7 @@ func BlogRoutes(router *mux.Router) {
 	router.HandleFunc("/blog/share/{slug}/{platform}", routeBlogShare).Methods(http.MethodGet)
 
 	// Posts
-	router.HandleFunc("/blog/search", Admin(routeBlogPostSearch)).Methods(http.MethodGet)
+	router.HandleFunc("/blog/search", routeBlogPostSearch).Methods(http.MethodGet)
 	router.HandleFunc("/blog/{slug}.html", routeBlogPostSuffix).Methods(http.MethodGet)
 	router.HandleFunc("/blog/{slug}", routeBlogPost).Methods(http.MethodGet)
 	router.HandleFunc("/post/{slug}", routeBlogPostOld).Methods(http.MethodGet)
