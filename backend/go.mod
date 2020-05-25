@@ -1,8 +1,5 @@
 module github.com/gschier/schier.dev
 
-// +heroku goVersion go1.13
-// +heroku install ./cmd/...
-
 require (
 	github.com/Depado/bfchroma v1.2.0
 	github.com/alecthomas/chroma v0.6.0
@@ -16,7 +13,9 @@ require (
 	github.com/gorilla/handlers v1.4.2
 	github.com/gorilla/mux v1.7.3
 	github.com/gosimple/slug v1.9.0
-	github.com/machinebox/graphql v0.2.2
+	github.com/jmoiron/sqlx v1.2.0
+	github.com/lib/pq v1.0.0
+	github.com/machinebox/graphql v0.2.2 // indirect
 	github.com/mailjet/mailjet-apiv3-go v0.0.0-20190724151621-55e56f74078c
 	github.com/matryer/is v1.3.0 // indirect
 	github.com/mileusna/useragent v0.0.0-20190129205925-3e331f0949a5
@@ -31,8 +30,9 @@ require (
 	github.com/stretchr/testify v1.4.0
 	github.com/writeas/go-strip-markdown v2.0.1+incompatible
 	golang.org/x/crypto v0.0.0-20191111213947-16651526fdb4
+	google.golang.org/appengine v1.6.6 // indirect
 	gopkg.in/alecthomas/kingpin.v2 v2.2.6
 	gopkg.in/ini.v1 v1.56.0 // indirect
 )
 
-go 1.13
+go 1.14

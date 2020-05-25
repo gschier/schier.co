@@ -1,8 +1,7 @@
-package backend
+package internal
 
 import (
 	"context"
-	"github.com/prisma/prisma-client-lib-go"
 	"net/http"
 )
 
@@ -10,20 +9,20 @@ type contextKey string
 
 var (
 	ctxKeyLoggedIn = contextKey("loggedIn")
-	ctxKeyClient   = contextKey("prisma_client")
+	ctxKeyDB       = contextKey("db")
 	ctxKeyUser     = contextKey("user")
 )
 
-func ctxPrismaClient(r *http.Request) *prisma.Client {
-	if c, ok := r.Context().Value(ctxKeyClient).(*prisma.Client); ok {
+func ctxDB(r *http.Request) *Storage{
+	if c, ok := r.Context().Value(ctxKeyDB).(*Storage); ok {
 		return c
 	}
 
-	panic("Prisma client not set on request context")
+	panic("DB not set on request context")
 }
 
-func ctxGetUser(r *http.Request) *prisma.User {
-	if u, ok := r.Context().Value(ctxKeyUser).(*prisma.User); ok {
+func ctxGetUser(r *http.Request) *User {
+	if u, ok := r.Context().Value(ctxKeyUser).(*User); ok {
 		return u
 	}
 
@@ -38,13 +37,13 @@ func ctxGetLoggedIn(r *http.Request) bool {
 	return false
 }
 
-func ctxSetPrismaClient(r *http.Request, c *prisma.Client) *http.Request {
+func ctxSetDB(r *http.Request, db *Storage) *http.Request {
 	ctx := r.Context()
-	ctx = context.WithValue(ctx, ctxKeyClient, c)
+	ctx = context.WithValue(ctx, ctxKeyDB, db)
 	return r.WithContext(ctx)
 }
 
-func ctxSetUserAndLoggedIn(r *http.Request, u *prisma.User) *http.Request {
+func ctxSetUserAndLoggedIn(r *http.Request, u *User) *http.Request {
 	ctx := r.Context()
 	ctx = context.WithValue(ctx, ctxKeyUser, u)
 	ctx = context.WithValue(ctx, ctxKeyLoggedIn, u != nil)

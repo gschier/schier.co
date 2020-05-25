@@ -1,4 +1,4 @@
-package backend
+package internal
 
 import (
 	"github.com/flosch/pongo2"
@@ -45,23 +45,23 @@ func routeLogin(w http.ResponseWriter, r *http.Request) {
 	password := r.Form.Get("password")
 	email := r.Form.Get("email")
 
-	client := ctxPrismaClient(r)
+	db := ctxDB(r)
 
-	user, err := client.User(prisma.UserWhereUniqueInput{
-		Email: &email,
-	}).Exec(r.Context())
+	user, err := db.UserByEmail(r.Context(), email)
 	if err != nil {
+		log.Println("Failed to get user to login", email, err)
 		render(email, password, "Invalid username or password")
 		return
 	}
 
 	err = bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(password))
 	if err != nil {
+		log.Println("Failed to match password for user", email, err)
 		render(email, password, "Invalid username or password")
 		return
 	}
 
-	login(w, r, user, client, "/")
+	login(w, r, user, db, "/")
 }
 
 func routeRegister(w http.ResponseWriter, r *http.Request) {
@@ -105,7 +105,7 @@ func routeRegister(w http.ResponseWriter, r *http.Request) {
 		render(email, name, password, "registration disabled for non-dev environment")
 	}
 
-	client := ctxPrismaClient(r)
+	db := ctxDB(r)
 
 	// Generate password hash
 	pwdHash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
@@ -116,26 +116,18 @@ func routeRegister(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Create user
-	user, err := client.CreateUser(prisma.UserCreateInput{
-		Email:        email,
-		Name:         name,
-		PasswordHash: string(pwdHash),
-	}).Exec(r.Context())
+	user, err := db.CreateUser(r.Context(), email, name, string(pwdHash))
 	if err != nil {
 		log.Println("Error creating user", err.Error())
 		render(email, name, password, "Error creating account")
 		return
 	}
 
-	login(w, r, user, client, "/")
+	login(w, r, user, db, "/")
 }
 
-func login(w http.ResponseWriter, r *http.Request, user *prisma.User, client *prisma.Client, to string) {
-	session, err := client.CreateSession(prisma.SessionCreateInput{
-		User: prisma.UserCreateOneInput{
-			Connect: &prisma.UserWhereUniqueInput{ID: &user.ID},
-		},
-	}).Exec(r.Context())
+func login(w http.ResponseWriter, r *http.Request, user *User, db *Storage, to string) {
+	sid, err := db.CreateSession(r.Context(), user.ID)
 
 	if err != nil {
 		log.Println("Session creation failed", err.Error())
@@ -143,7 +135,7 @@ func login(w http.ResponseWriter, r *http.Request, user *prisma.User, client *pr
 		return
 	}
 
-	http.SetCookie(w, makeCookie(session.ID))
+	http.SetCookie(w, makeCookie(sid))
 	http.Redirect(w, r, to, http.StatusSeeOther)
 }
 

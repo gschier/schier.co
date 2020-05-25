@@ -1,6 +1,9 @@
 node_modules
 .cache
 .DS_Store
-static/dev
 .env.prod
 *.map
+static
+vendor
+.idea
+dumps

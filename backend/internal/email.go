@@ -1,8 +1,7 @@
-package backend
+package internal
 
 import (
 	"fmt"
-	"github.com/gschier/schier.dev/generated/prisma-client"
 	"github.com/mailjet/mailjet-apiv3-go"
 	"log"
 	"os"
@@ -16,26 +15,26 @@ var mj = mailjet.NewMailjetClient(
 const templateConfirmSubscription = 1147903
 const templateNewPost = 1150884
 
-func SendNewPostTemplate(post *prisma.BlogPost, sub *prisma.Subscriber) error {
+func SendNewPostTemplate(post *BlogPost, sub *Subscriber) error {
 	u := fmt.Sprintf("%s/blog/%s", os.Getenv("BASE_URL"), post.Slug)
 	unsub := fmt.Sprintf("%s/newsletter/unsubscribe/%s", os.Getenv("BASE_URL"), sub.ID)
 	return SendTemplate(templateNewPost, sub, map[string]interface{}{
-		"post_title": post.Title,
-		"post_readtime": ReadTime(WordCount(post.Content)),
-		"post_summary": Summary(post.Content),
-		"post_href": u,
+		"post_title":      post.Title,
+		"post_readtime":   CalculateReadTime(WordCount(post.Content)),
+		"post_summary":    Summary(post.Content),
+		"post_href":       u,
 		"unsubscribe_url": unsub,
 	})
 }
 
-func SendSubscriberTemplate(sub *prisma.Subscriber) error {
+func SendSubscriberTemplate(sub *Subscriber) error {
 	unsub := fmt.Sprintf("%s/newsletter/unsubscribe/%s", os.Getenv("BASE_URL"), sub.ID)
 	return SendTemplate(templateConfirmSubscription, sub, map[string]interface{}{
 		"unsubscribe_url": unsub,
 	})
 }
 
-func SendTemplate(id int, sub *prisma.Subscriber, variables map[string]interface{}) error {
+func SendTemplate(id int, sub *Subscriber, variables map[string]interface{}) error {
 	if os.Getenv("MAILJET_PRV_KEY") == "" {
 		log.Println("Sent no-op email", sub)
 		return nil

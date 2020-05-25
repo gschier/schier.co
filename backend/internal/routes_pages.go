@@ -1,9 +1,8 @@
-package backend
+package internal
 
 import (
 	"github.com/flosch/pongo2"
 	"github.com/gorilla/mux"
-	"github.com/gschier/schier.dev/generated/prisma-client"
 	"log"
 	"net/http"
 	"strings"
@@ -46,12 +45,7 @@ func routeRobotsTxt(w http.ResponseWriter, r *http.Request) {
 }
 
 func routeProjects(w http.ResponseWriter, r *http.Request) {
-	client := ctxPrismaClient(r)
-
-	projectOrderBy := prisma.ProjectOrderByInputPriorityAsc
-	projects, err := client.Projects(
-		&prisma.ProjectsParams{OrderBy: &projectOrderBy},
-	).Exec(r.Context())
+	projects, err := ctxDB(r).AllProjects(r.Context())
 	if err != nil {
 		log.Println("Failed to fetch projects: " + err.Error())
 		http.Error(w, "Failed to fetch projects", http.StatusInternalServerError)
@@ -66,8 +60,7 @@ func routeProjects(w http.ResponseWriter, r *http.Request) {
 }
 
 func routeHome(w http.ResponseWriter, r *http.Request) {
-	client := ctxPrismaClient(r)
-	blogPosts, err := client.BlogPosts(RecommendedBlogPosts(10, nil)).Exec(r.Context())
+	blogPosts, err := ctxDB(r).RecommendedBlogPosts(r.Context(), nil, 10)
 	if err != nil {
 		log.Println("Failed to fetch blog posts: " + err.Error())
 		http.Error(w, "Failed to fetch blog posts", http.StatusInternalServerError)
@@ -81,29 +74,23 @@ func routeHome(w http.ResponseWriter, r *http.Request) {
 }
 
 func routeAbout(w http.ResponseWriter, r *http.Request) {
-	client := ctxPrismaClient(r)
+	client := ctxDB(r)
 
-	projectOrderBy := prisma.ProjectOrderByInputPriorityAsc
-	projects, err := client.Projects(
-		&prisma.ProjectsParams{OrderBy: &projectOrderBy},
-	).Exec(r.Context())
+	projects, err := ctxDB(r).AllProjects(r.Context())
 	if err != nil {
 		log.Println("Failed to fetch projects: " + err.Error())
 		http.Error(w, "Failed to fetch projects", http.StatusInternalServerError)
 		return
 	}
 
-	favoriteThingOrderBy := prisma.FavoriteThingOrderByInputPriorityAsc
-	favoriteThings, err := client.FavoriteThings(
-		&prisma.FavoriteThingsParams{OrderBy: &favoriteThingOrderBy},
-	).Exec(r.Context())
+	favoriteThings, err := client.AllFavoriteThings(r.Context())
 	if err != nil {
 		log.Println("Failed to fetch projects: " + err.Error())
 		http.Error(w, "Failed to fetch projects", http.StatusInternalServerError)
 		return
 	}
 
-	blogPosts, err := client.BlogPosts(RecentBlogPosts(6, nil)).Exec(r.Context())
+	blogPosts, err := client.RecentBlogPosts(r.Context(), 6)
 	if err != nil {
 		log.Println("Failed to fetch blog posts: " + err.Error())
 		http.Error(w, "Failed to fetch blog posts", http.StatusInternalServerError)
@@ -111,10 +98,7 @@ func routeAbout(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Fetch books
-	orderBy := prisma.BookOrderByInputRankAsc
-	books, err := ctxPrismaClient(r).Books(&prisma.BooksParams{
-		OrderBy: &orderBy,
-	}).Exec(r.Context())
+	books, err := ctxDB(r).AllBooks(r.Context())
 	if err != nil {
 		log.Println("Failed to load books", err)
 		http.Error(w, "Failed to load books", http.StatusInternalServerError)

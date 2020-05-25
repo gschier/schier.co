@@ -1,10 +1,9 @@
-package backend
+package internal
 
 import (
 	"github.com/gorilla/csrf"
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
-	"github.com/gschier/schier.dev/generated/prisma-client"
 	"log"
 	"net/http"
 	"os"
@@ -112,7 +111,7 @@ func CORSMiddleware(next http.Handler) http.Handler {
 // UserMiddleware adds the User object to the context if available
 func UserMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		client := ctxPrismaClient(r)
+		db := ctxDB(r)
 
 		c, err := r.Cookie(sessionCookieName)
 
@@ -125,11 +124,9 @@ func UserMiddleware(next http.Handler) http.Handler {
 		http.SetCookie(w, makeCookie(c.Value))
 
 		// Find the user on the session
-		user, err := client.Session(prisma.SessionWhereUniqueInput{
-			ID: &c.Value,
-		}).User().Exec(r.Context())
+		user, err := db.UserBySessionID(r.Context(), c.Value)
 		if err != nil {
-			log.Println("No user found for session. Logging out", err.Error())
+			log.Println("No user found for session", c.Value, err.Error())
 			logout(w, r, "/")
 			return
 		}
@@ -157,12 +154,12 @@ func NewForceLoginHostMiddleware(host string) mux.MiddlewareFunc {
 }
 
 // ContextMiddleware adds useful things to the request context
-func NewContextMiddleware(client *prisma.Client) mux.MiddlewareFunc {
+func NewContextMiddleware(db *Storage) mux.MiddlewareFunc {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			var emptyUser *prisma.User = nil
+			var emptyUser *User= nil
 
-			r = ctxSetPrismaClient(r, client)
+			r = ctxSetDB(r, db)
 			r = ctxSetUserAndLoggedIn(r, emptyUser)
 
 			next.ServeHTTP(w, r)

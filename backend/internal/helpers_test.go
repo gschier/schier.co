@@ -1,60 +1,61 @@
-package backend_test
+package internal_test
 
 import (
 	"fmt"
+	"github.com/gschier/schier.dev/internal"
 	"github.com/stretchr/testify/assert"
 	"testing"
 	"time"
 )
 
 func TestCapitalizeTitle(t *testing.T) {
-	assert.Equal(t, "This Is the Title", CapitalizeTitle("this is the title"))
+	assert.Equal(t, "This Is the Title", internal.CapitalizeTitle("this is the title"))
 }
 
 func TestCapitalizeTitleWithWeirdSpaces(t *testing.T) {
-	assert.Equal(t, "This Is the Title", CapitalizeTitle("this   is\tthe\t  \n title"))
+	assert.Equal(t, "This Is the Title", internal.CapitalizeTitle("this   is\tthe\t  \n title"))
 }
 
 func TestCapitalizeTitleWithWeirdCharacters(t *testing.T) {
-	assert.Equal(t, "I'm Fine That It's Okay", CapitalizeTitle("i'm fine that it's okay"))
+	assert.Equal(t, "I'm Fine That It's Okay", internal.CapitalizeTitle("i'm fine that it's okay"))
 }
 
 func TestCapitalizeTitleWithEmoji(t *testing.T) {
-	assert.Equal(t, "🚀 Example Title 🙆🏻‍♂️🤓!", CapitalizeTitle("🚀 example title 🙆🏻‍♂️🤓!"))
+	assert.Equal(t, "🚀 Example Title 🙆🏻‍♂️🤓!", internal.CapitalizeTitle("🚀 example title 🙆🏻‍♂️🤓!"))
 }
 
 func TestCapitalizeTitleWithFirstLetterAlwaysUpper(t *testing.T) {
-	assert.Equal(t, "A Big Thing", CapitalizeTitle("a big thing"))
-	assert.Equal(t, "The Big Thing", CapitalizeTitle("the big thing"))
-	assert.Equal(t, "🗻 The Big Thing", CapitalizeTitle("🗻 the big thing"))
+	assert.Equal(t, "A Big Thing", internal.CapitalizeTitle("a big thing"))
+	assert.Equal(t, "The Big Thing", internal.CapitalizeTitle("the big thing"))
+	assert.Equal(t, "🗻 The Big Thing", internal.CapitalizeTitle("🗻 the big thing"))
 }
 
 func TestCapitalizeTitlePreserveNonFirstUppers(t *testing.T) {
-	assert.Equal(t, "Hello ThisIsCamelCase", CapitalizeTitle("hello thisIsCamelCase"))
+	assert.Equal(t, "Hello ThisIsCamelCase", internal.CapitalizeTitle("hello thisIsCamelCase"))
 }
 
 func TestCapitalizeTitleWorksWithHyphens(t *testing.T) {
-	assert.Equal(t, "Something-Something", CapitalizeTitle("something-something"))
+	assert.Equal(t, "Something-Something", internal.CapitalizeTitle("something-something"))
 }
 
 func TestCapitalizeTitleWorksWithQuotes(t *testing.T) {
-	assert.Equal(t, "Something \"Quote\" Something", CapitalizeTitle("something \"quote\" something"))
+	assert.Equal(t, "Something \"Quote\" Something", internal.CapitalizeTitle("something \"quote\" something"))
 }
 
-func TestReadTimeRoundUp(t *testing.T) {
-	assert.Equal(t, 1, ReadTime(0))
-	assert.Equal(t, 1, ReadTime(1))
-	assert.Equal(t, 1, ReadTime(99))
-	assert.Equal(t, 1, ReadTime(150))
-	assert.Equal(t, 2, ReadTime(250))
+func TestCalculateReadTime(t *testing.T) {
+	assert.Equal(t, 1, internal.CalculateReadTime(0))
+	assert.Equal(t, 1, internal.CalculateReadTime(1))
+	assert.Equal(t, 1, internal.CalculateReadTime(99))
+	assert.Equal(t, 1, internal.CalculateReadTime(150))
+	assert.Equal(t, 2, internal.CalculateReadTime(250))
 }
 
 func TestStringToTags(t *testing.T) {
-	assert.Equal(t, []string{"foo", "bar"}, StringToTags("|Foo|Bar|"))
-	assert.Equal(t, []string{"foo", "bar"}, StringToTags("Foo|Bar"))
-	assert.Equal(t, []string{"foo", "bar"}, StringToTags("Foo,Bar"))
-	assert.Equal(t, []string{"foo", "bar", "baz"}, StringToTags("Foo, Bar, Baz"))
-	assert.Equal(t, []string{"foo", "bar", "baz"}, StringToTags("Foo, Bar|Baz"))
+	assert.Equal(t, []string{"foo", "bar"}, internal.StringToTags("|Foo|Bar|"))
+	assert.Equal(t, []string{"foo", "bar"}, internal.StringToTags("Foo|Bar"))
+	assert.Equal(t, []string{"foo", "bar"}, internal.StringToTags("Foo,Bar"))
+	assert.Equal(t, []string{"foo", "bar", "baz"}, internal.StringToTags("Foo, Bar, Baz"))
+	assert.Equal(t, []string{"foo", "bar", "baz"}, internal.StringToTags("Foo, Bar|Baz"))
 }
 
 func TestCalculateScore(t *testing.T) {
@@ -72,7 +73,7 @@ func TestCalculateScore(t *testing.T) {
 
 	for _, v := range tests {
 		t.Run(fmt.Sprintf("%d days %d votes %d views", v[0], v[1], v[2]), func(t *testing.T) {
-			assert.Equal(t, v[3], CalculateScore(time.Hour*24*time.Duration(v[0]), v[1], v[2], 1000))
+			assert.Equal(t, v[3], internal.CalculateScore(time.Hour*24*time.Duration(v[0]), v[1], v[2], 1000))
 		})
 	}
 }

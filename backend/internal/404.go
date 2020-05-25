@@ -1,4 +1,4 @@
-package backend
+package internal
 
 import (
 	"github.com/flosch/pongo2"
@@ -15,9 +15,9 @@ var notFoundTemplate = pageTemplate("404.html")
 
 func routeNotFound(w http.ResponseWriter, r *http.Request) {
 	// Can't get from request context because middleware didn't run
-	client := schier.NewPrismaClient()
+	db := NewStorage()
 
-	blogPosts, err := client.BlogPosts(RecentBlogPosts(6, nil)).Exec(r.Context())
+	blogPosts, err := db.RecentBlogPosts(r.Context(), 6)
 	if err != nil {
 		log.Println("Failed to fetch blog posts: " + err.Error())
 		http.Error(w, "Failed to fetch blog posts", http.StatusInternalServerError)

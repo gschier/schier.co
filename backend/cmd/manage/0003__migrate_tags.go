@@ -11,7 +11,7 @@ import (
 
 func init() {
 	allMigrations = append(allMigrations, migrations.Migration{
-		Name: "0002__better_tags",
+		Name: "0003__migrate_tags",
 		Forward: func(ctx context.Context, db *sqlx.DB) error {
 			tx := db.MustBegin()
 			_, err := tx.ExecContext(ctx, `

@@ -1,14 +1,12 @@
-package backend
+package internal
 
 import (
-	"context"
 	"encoding/json"
 	"fmt"
 	"github.com/flosch/pongo2"
 	"github.com/gorilla/feeds"
 	"github.com/gorilla/mux"
 	sluglib "github.com/gosimple/slug"
-	"github.com/gschier/schier.dev/generated/prisma-client"
 	ua "github.com/mileusna/useragent"
 	"log"
 	"net/http"
@@ -66,13 +64,8 @@ var searchTemplate = pageTemplate("blog/search.html")
 var blogPostPartial = partialTemplate("blog_post.html")
 
 func routeBlogTags(w http.ResponseWriter, r *http.Request) {
-	client := ctxPrismaClient(r)
-	blogPosts, err := client.BlogPosts(&prisma.BlogPostsParams{
-		Where: &prisma.BlogPostWhereInput{
-			Published: prisma.Bool(true),
-			TagsNot:   prisma.Str(""),
-		},
-	}).Exec(r.Context())
+	db := ctxDB(r)
+	blogPosts, err := db.AllBlogPosts(r.Context())
 	if err != nil {
 		log.Println("Failed to query Posts", err)
 		http.Error(w, "Failed to query Posts", http.StatusInternalServerError)
@@ -119,11 +112,12 @@ func routeBlogRender(w http.ResponseWriter, r *http.Request) {
 	slug := r.Form.Get("slug")
 	title := r.Form.Get("title")
 	partial := r.Form.Get("partial") == "true"
-	date := r.Form.Get("date")
+	dateStr := r.Form.Get("date")
 	tags := NormalizeTags(r.Form.Get("tags"))
 
-	if date == "" {
-		date = time.Now().Format(time.RFC3339)
+	date := time.Now()
+	if dateStr != "" {
+		date, _ = time.Parse(time.RFC3339, dateStr)
 	}
 
 	var template *pongo2.Template
@@ -138,7 +132,7 @@ func routeBlogRender(w http.ResponseWriter, r *http.Request) {
 		"pageTitle":     title,
 		"showWordCount": true,
 		"hideVoteEgg":   true,
-		"blogPost": prisma.BlogPost{
+		"blogPost": BlogPost{
 			Published: true,
 			Slug:      slug,
 			Title:     title,
@@ -154,21 +148,16 @@ func routeBlogPostUnlist(w http.ResponseWriter, r *http.Request) {
 
 	id := r.Form.Get("id")
 
-	client := ctxPrismaClient(r)
+	db := ctxDB(r)
 
-	blogPost, err := client.BlogPost(prisma.BlogPostWhereUniqueInput{
-		ID: &id,
-	}).Exec(r.Context())
+	blogPost, err := db.BlogPostByID(r.Context(), id)
 	if err != nil {
 		log.Println("Failed to fetch Post", err)
 		http.Error(w, "Failed to fetch Post", http.StatusInternalServerError)
 		return
 	}
 
-	blogPost, err = client.UpdateBlogPost(prisma.BlogPostUpdateParams{
-		Data:  prisma.BlogPostUpdateInput{Unlisted: prisma.Bool(!blogPost.Unlisted)},
-		Where: prisma.BlogPostWhereUniqueInput{ID: &id},
-	}).Exec(r.Context())
+	err = db.UpdateBlogPostUnlisted(r.Context(), id, !blogPost.Unlisted)
 	if err != nil {
 		log.Println("Failed to unlist Post", err)
 		http.Error(w, "Failed to unlist Post", http.StatusInternalServerError)
@@ -183,10 +172,7 @@ func routeBlogPostDelete(w http.ResponseWriter, r *http.Request) {
 
 	id := r.Form.Get("id")
 
-	client := ctxPrismaClient(r)
-	_, err := client.DeleteBlogPost(prisma.BlogPostWhereUniqueInput{
-		ID: &id,
-	}).Exec(r.Context())
+	err := ctxDB(r).DeleteBlogPostByID(r.Context(), id)
 	if err != nil {
 		log.Println("Failed to delete Post", err)
 		http.Error(w, "Failed to delete Post", http.StatusInternalServerError)
@@ -202,14 +188,18 @@ func routeBlogPostPublish(w http.ResponseWriter, r *http.Request) {
 	published := r.Form.Get("published") == "true"
 	id := r.Form.Get("id")
 
-	client := ctxPrismaClient(r)
-	blogPost, err := client.UpdateBlogPost(prisma.BlogPostUpdateParams{
-		Data:  prisma.BlogPostUpdateInput{Published: &published},
-		Where: prisma.BlogPostWhereUniqueInput{ID: &id},
-	}).Exec(r.Context())
+	db := ctxDB(r)
+	err := db.UpdateBlogPostPublished(r.Context(), id, published)
 	if err != nil {
 		log.Println("Failed to publish Post", err)
 		http.Error(w, "Failed to publish Post", http.StatusInternalServerError)
+		return
+	}
+
+	blogPost, err := db.BlogPostByID(r.Context(), id)
+	if err != nil {
+		log.Println("Failed to fetch Post", err)
+		http.Error(w, "Failed to fetch Post", http.StatusInternalServerError)
 		return
 	}
 
@@ -223,31 +213,12 @@ func routeBlogPostSearch(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	client := ctxPrismaClient(r)
-
-	var blogPosts []prisma.BlogPost = nil
-
 	query := r.Form.Get("query")
-
-	if query != "" {
-		var err error
-		blogPosts, err = client.BlogPosts(&prisma.BlogPostsParams{
-			First: prisma.Int32(10),
-			Where: &prisma.BlogPostWhereInput{
-				// Ugh, Prisma doesn't allow case-insensitive queries
-				Or: []prisma.BlogPostWhereInput{
-					{ContentContains: &query},
-					{TitleContains: &query},
-					{TagsContains: &query},
-				},
-				Published: prisma.Bool(true),
-				Unlisted:  prisma.Bool(false),
-			},
-		}).Exec(r.Context())
-		if err != nil {
-			http.Error(w, "Failed to search", http.StatusInternalServerError)
-			return
-		}
+	blogPosts, err := ctxDB(r).BlogPostsSearch(r.Context(), query, 10)
+	if err != nil {
+		log.Println("Search failed", err)
+		http.Error(w, "Failed to search", http.StatusInternalServerError)
+		return
 	}
 
 	renderTemplate(w, r, searchTemplate(), &pongo2.Context{
@@ -266,9 +237,7 @@ func routeBlogPostEdit(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Fetch blog posts
-	blogPost, err := ctxPrismaClient(r).BlogPost(prisma.BlogPostWhereUniqueInput{
-		ID: &id,
-	}).Exec(r.Context())
+	blogPost, err := ctxDB(r).BlogPostByID(r.Context(), id)
 	if err != nil {
 		log.Println("Failed to fetch blog post", err)
 		http.Error(w, "Failed to get blog post", http.StatusInternalServerError)
@@ -291,18 +260,14 @@ func routeBlogPostCreateOrUpdate(w http.ResponseWriter, r *http.Request) {
 	id := r.Form.Get("id")
 	slug := r.Form.Get("slug")
 	content := r.Form.Get("content")
-	title := r.Form.Get("title")
 	image := r.Form.Get("image")
 	tagNames := StringToTags(r.Form.Get("tags"))
-	stage := StrToInt32(r.Form.Get("stage"), 0)
-
-	// Force title capitalization
-	title = CapitalizeTitle(title)
+	stage := StrToInt(r.Form.Get("stage"), 0)
+	title := CapitalizeTitle(r.Form.Get("title"))
 
 	// BlackFriday doesn't like Windows line endings
 	content = strings.Replace(content, "\r\n", "\n", -1)
 
-	client := ctxPrismaClient(r)
 	loggedIn := ctxGetLoggedIn(r)
 	user := ctxGetUser(r)
 
@@ -311,8 +276,11 @@ func routeBlogPostCreateOrUpdate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	existingPost, err := client.BlogPost(prisma.BlogPostWhereUniqueInput{ID: &id}).Exec(r.Context())
-	if err != nil && err != prisma.ErrNoResult {
+	db := ctxDB(r)
+	existingPost, err := db.BlogPostByID(r.Context(), id)
+	if db.IsNoResult(err) {
+		existingPost = nil
+	} else if err != nil {
 		log.Println("Failed to update blog post", err.Error())
 		http.Error(w, "Failed to update blog post", http.StatusInternalServerError)
 		return
@@ -321,11 +289,10 @@ func routeBlogPostCreateOrUpdate(w http.ResponseWriter, r *http.Request) {
 	// Upsert blog post
 	// NOTE: Note using prisma upsert method because updating date is conditional
 	var upsertErr error
-	var newPost *prisma.BlogPost = nil
 	if existingPost != nil {
 		date := existingPost.Date
 		if !existingPost.Published {
-			date = time.Now().Format(time.RFC3339)
+			date = time.Now()
 		}
 
 		if existingPost.Published {
@@ -336,32 +303,29 @@ func routeBlogPostCreateOrUpdate(w http.ResponseWriter, r *http.Request) {
 			slug = sluglib.Make(title)
 		}
 
-		newPost, upsertErr = client.UpdateBlogPost(prisma.BlogPostUpdateParams{
-			Where: prisma.BlogPostWhereUniqueInput{
-				ID: &id,
-			},
-			Data: prisma.BlogPostUpdateInput{
-				Slug:    &slug,
-				Title:   &title,
-				Content: &content,
-				Image:   &image,
-				Date:    &date,
-				Stage:   &stage,
-				Tags:    prisma.Str(TagsToString(tagNames)),
-			},
-		}).Exec(r.Context())
+		upsertErr = db.UpdateBlogPost(
+			r.Context(),
+			id,
+			slug,
+			title,
+			content,
+			image,
+			TagsToString(tagNames),
+			date,
+			stage,
+		)
 	} else {
-		newPost, upsertErr = client.CreateBlogPost(prisma.BlogPostCreateInput{
-			Published: false,
-			Title:     title,
-			Content:   content,
-			Image:     image,
-			Stage:     stage,
-			Slug:      sluglib.Make(title),
-			Date:      time.Now().Format(time.RFC3339),
-			Author:    prisma.UserCreateOneInput{Connect: &prisma.UserWhereUniqueInput{ID: &user.ID}},
-			Tags:      TagsToString(tagNames),
-		}).Exec(r.Context())
+		upsertErr = db.CreateBlogPost(
+			r.Context(),
+			sluglib.Make(title),
+			title,
+			content,
+			image,
+			user.ID,
+			TagsToString(tagNames),
+			time.Now(),
+			stage,
+		)
 	}
 
 	if upsertErr != nil {
@@ -370,7 +334,7 @@ func routeBlogPostCreateOrUpdate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	http.Redirect(w, r, "/blog/"+newPost.Slug, http.StatusSeeOther)
+	http.Redirect(w, r, "/blog/"+slug, http.StatusSeeOther)
 }
 
 func routeBlogTagsOld(w http.ResponseWriter, r *http.Request) {
@@ -402,16 +366,14 @@ func routeBlogPostSuffix(w http.ResponseWriter, r *http.Request) {
 func routeBlogPost(w http.ResponseWriter, r *http.Request) {
 	slug := mux.Vars(r)["slug"]
 
-	client := ctxPrismaClient(r)
+	db := ctxDB(r)
 	loggedIn := ctxGetLoggedIn(r)
 
 	userAgent := ua.Parse(r.Header.Get("User-Agent"))
 
 	// Fetch post
-	post, err := client.BlogPost(prisma.BlogPostWhereUniqueInput{
-		Slug: &slug,
-	}).Exec(r.Context())
-	if err == prisma.ErrNoResult {
+	post, err := db.BlogPostBySlug(r.Context(), slug)
+	if db.IsNoResult(err) {
 		routeNotFound(w, r)
 		return
 	} else if err != nil {
@@ -421,7 +383,7 @@ func routeBlogPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	recommendedBlogPosts, err := client.BlogPosts(RecommendedBlogPosts(7, &post.ID)).Exec(r.Context())
+	recommendedBlogPosts, err := db.RecommendedBlogPosts(r.Context(), &post.ID, 7)
 	if err != nil {
 		log.Println("Failed to fetch recent blog posts: " + err.Error())
 		http.Error(w, "Failed to fetch recent blog posts", http.StatusInternalServerError)
@@ -434,7 +396,7 @@ func routeBlogPost(w http.ResponseWriter, r *http.Request) {
 		"pageImage":            post.Image,
 		"pageDescription":      Summary(post.Content),
 		"pagePublishedTime":    post.Date,
-		"pageModifiedTime":     post.DateUpdated,
+		"pageModifiedTime":     post.UpdatedAt,
 		"blogPost":             post,
 		"recommendedBlogPosts": recommendedBlogPosts,
 	})
@@ -445,17 +407,9 @@ func routeBlogPost(w http.ResponseWriter, r *http.Request) {
 			newViewCount += 1
 		}
 
-		wc := int32(WordCount(post.Content))
-		d, _ := time.Parse(time.RFC3339, post.Date)
-		_, err := client.UpdateBlogPost(prisma.BlogPostUpdateParams{
-			Where: prisma.BlogPostWhereUniqueInput{
-				ID: &post.ID,
-			},
-			Data: prisma.BlogPostUpdateInput{
-				Views: prisma.Int32(newViewCount),
-				Score: prisma.Int32(CalculateScore(time.Now().Sub(d), post.VotesUsers+post.Shares, post.Views, wc)),
-			},
-		}).Exec(context.Background())
+		wc := WordCount(post.Content)
+		newScore := CalculateScore(time.Now().Sub(post.Date), post.VotesUsers+post.Shares, post.Views, wc)
+		err := db.UpdateBlogPostStats(r.Context(), post.ID, newViewCount, newScore)
 		if err != nil {
 			log.Println("Failed to update blog post views", err.Error())
 		}
@@ -471,22 +425,15 @@ func routeBlogRSS(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Fetch blog posts
-	orderBy := prisma.BlogPostOrderByInputCreatedAtDesc
-	blogPosts, err := ctxPrismaClient(r).BlogPosts(&prisma.BlogPostsParams{
-		Where:   &prisma.BlogPostWhereInput{Published: prisma.Bool(true)},
-		OrderBy: &orderBy,
-		First:   prisma.Int32(int32(count)),
-	}).Exec(r.Context())
+	blogPosts, err := ctxDB(r).RecentBlogPosts(r.Context(), count)
 	if err != nil {
 		log.Println("Failed to load blog posts", err)
 		http.Error(w, "Failed to load blog posts", http.StatusInternalServerError)
 		return
 	}
 
-	feedUpdated, _ := time.Parse(time.RFC3339, blogPosts[0].Date)
-
 	feed := &feeds.Feed{
-		Updated:     feedUpdated,
+		Updated:     blogPosts[0].Date,
 		Title:       "Gregory Schier",
 		Subtitle:    "Blog posts",
 		Description: "Recent content from me",
@@ -507,11 +454,10 @@ func routeBlogRSS(w http.ResponseWriter, r *http.Request) {
 	}
 
 	for i, blogPost := range blogPosts {
-		created, _ := time.Parse(time.RFC3339, blogPost.Date)
 		feed.Items[i] = &feeds.Item{
 			Title:   strings.Replace(blogPost.Title, "–", "&ndash;", -1),
 			Id:      os.Getenv("BASE_URL") + "/blog/" + blogPost.ID,
-			Created: created,
+			Created: blogPost.Date,
 			Content: RenderMarkdownStr(blogPost.Content),
 			Link: &feeds.Link{
 				Href: os.Getenv("BASE_URL") + "/blog/" + blogPost.Slug,
@@ -531,13 +477,7 @@ func routeBlogRSS(w http.ResponseWriter, r *http.Request) {
 
 func routeBlogDrafts(w http.ResponseWriter, r *http.Request) {
 	// Fetch blog posts
-	draftsOrderBy := prisma.BlogPostOrderByInputStageDesc
-	drafts, err := ctxPrismaClient(r).BlogPosts(&prisma.BlogPostsParams{
-		Where: &prisma.BlogPostWhereInput{
-			Published: prisma.Bool(false),
-		},
-		OrderBy: &draftsOrderBy,
-	}).Exec(r.Context())
+	drafts, err := ctxDB(r).DraftBlogPosts(r.Context())
 	if err != nil {
 		log.Println("Failed to load blog post blogPostDrafts", err)
 		http.Error(w, "Failed to load blog posts blogPostDrafts", http.StatusInternalServerError)
@@ -545,13 +485,7 @@ func routeBlogDrafts(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Fetch blog posts
-	unlistedOrderBy := prisma.BlogPostOrderByInputUpdatedAtDesc
-	unlisted, err := ctxPrismaClient(r).BlogPosts(&prisma.BlogPostsParams{
-		Where: &prisma.BlogPostWhereInput{
-			Unlisted: prisma.Bool(true),
-		},
-		OrderBy: &unlistedOrderBy,
-	}).Exec(r.Context())
+	unlisted, err := ctxDB(r).UnlistedBlogPosts(r.Context())
 	if err != nil {
 		log.Println("Failed to load unlisted posts", err)
 		http.Error(w, "Failed to load unlisted posts", http.StatusInternalServerError)
@@ -583,27 +517,21 @@ func routeBlogList(w http.ResponseWriter, r *http.Request) {
 		skip = 0
 	}
 
-	var tagsContains *string = nil
-	var tagsEqual *string = nil
+	tagsContains := ""
 	if tag == "-" {
-		tagsEqual = prisma.Str("||")
+		// Untagged
+		tagsContains = "||"
 	} else if tag != "" {
-		tagsContains = prisma.Str(TagsToString([]string{tag}))
+		tagsContains = TagsToString([]string{tag})
 	}
 
 	// Fetch blog posts
-	orderBy := prisma.BlogPostOrderByInputDateDesc
-	blogPosts, err := ctxPrismaClient(r).BlogPosts(&prisma.BlogPostsParams{
-		Where: &prisma.BlogPostWhereInput{
-			Published:    prisma.Bool(true),
-			Unlisted:     prisma.Bool(false),
-			TagsContains: tagsContains,
-			Tags:         tagsEqual,
-		},
-		OrderBy: &orderBy,
-		Skip:    prisma.Int32(int32(skip)),
-		First:   prisma.Int32(int32(first + 1)),
-	}).Exec(r.Context())
+	blogPosts, err := ctxDB(r).TaggedBlogPosts(
+		r.Context(),
+		tagsContains,
+		first+1,
+		skip,
+	)
 	if err != nil {
 		log.Println("Failed to load blog posts", err)
 		http.Error(w, "Failed to load blog posts", http.StatusInternalServerError)
@@ -650,12 +578,12 @@ func routeBlogList(w http.ResponseWriter, r *http.Request) {
 func routeVote(w http.ResponseWriter, r *http.Request) {
 	_ = r.ParseForm()
 
-	count := StrToInt32(r.Form.Get("count"), 0)
+	count := StrToInt(r.Form.Get("count"), 0)
 	slug := r.Form.Get("slug")
 
-	client := ctxPrismaClient(r)
+	db := ctxDB(r)
 
-	post, err := client.BlogPost(prisma.BlogPostWhereUniqueInput{Slug: &slug}).Exec(r.Context())
+	post, err := db.BlogPostBySlug(r.Context(), slug)
 	if err != nil {
 		log.Println("Failed to get blog post", err)
 		http.Error(w, "Failed to get blog post", http.StatusInternalServerError)
@@ -669,18 +597,19 @@ func routeVote(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Only increment user on first vote
-	var userInc int32 = 0
+	userInc := 0
 	if count == 0 {
 		userInc = 1
 	}
 
-	newPost, err := client.UpdateBlogPost(prisma.BlogPostUpdateParams{
-		Data: prisma.BlogPostUpdateInput{
-			VotesTotal: prisma.Int32(post.VotesTotal + 1),
-			VotesUsers: prisma.Int32(post.VotesUsers + userInc),
-		},
-		Where: prisma.BlogPostWhereUniqueInput{ID: &post.ID},
-	}).Exec(r.Context())
+	log.Println("POST", post)
+	votesTotal := post.VotesTotal + 1
+	err = db.UpdateBlogPostVotes(
+		r.Context(),
+		post.ID,
+		userInc,
+		votesTotal,
+	)
 	if err != nil {
 		log.Println("Failed to vote", err)
 		http.Error(w, "Failed to vote", http.StatusInternalServerError)
@@ -688,7 +617,7 @@ func routeVote(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusOK)
-	_, _ = w.Write([]byte(fmt.Sprintf("%d", newPost.VotesTotal)))
+	_, _ = w.Write([]byte(fmt.Sprintf("%d", votesTotal)))
 }
 
 func routeUploadAsset(w http.ResponseWriter, r *http.Request) {
@@ -713,7 +642,9 @@ func routeUploadAsset(w http.ResponseWriter, r *http.Request) {
 		panic(err)
 	}
 
-	body, _ := json.Marshal(struct{ URL string `json:"url"` }{
+	body, _ := json.Marshal(struct {
+		URL string `json:"url"`
+	}{
 		URL: "https://assets.schier.dev/" + uploadPath,
 	})
 	w.Header().Set("Content-Type", "application/json")
@@ -724,11 +655,9 @@ func routeBlogShare(w http.ResponseWriter, r *http.Request) {
 	slug := mux.Vars(r)["slug"]
 	platform := mux.Vars(r)["platform"]
 
-	client := ctxPrismaClient(r)
+	db := ctxDB(r)
 
-	post, err := client.BlogPost(prisma.BlogPostWhereUniqueInput{
-		Slug: &slug,
-	}).Exec(r.Context())
+	post, err := db.BlogPostBySlug(r.Context(), slug)
 	if err != nil {
 		log.Println("Failed to fetch Post", err)
 		http.Error(w, "Failed to fetch Post", http.StatusInternalServerError)
@@ -751,10 +680,7 @@ func routeBlogShare(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if shareUrl != "" {
-		_, err = client.UpdateBlogPost(prisma.BlogPostUpdateParams{
-			Where: prisma.BlogPostWhereUniqueInput{ID: &post.ID},
-			Data:  prisma.BlogPostUpdateInput{Shares: prisma.Int32(post.Shares + 1)},
-		}).Exec(r.Context())
+		err = db.UpdateBlogPostShares(r.Context(), post.ID, post.Shares+1)
 		log.Println("Shared", post.Slug, "to", platform, r.Header.Get("User-Agent"))
 	}
 

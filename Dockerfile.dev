@@ -1,4 +1,4 @@
-FROM golang:1.12-alpine
+FROM golang:1.14-alpine
 
 RUN apk update && apk upgrade && \
     apk add --no-cache bash git openssh && \
@@ -6,10 +6,6 @@ RUN apk update && apk upgrade && \
 
 WORKDIR /app
 
-COPY ./go.mod ./go.sum ./vendor ./
+ADD ./backend ./
 
-RUN go mod download
-
-COPY . .
-
-RUN go install ./..
+RUN go install ./...

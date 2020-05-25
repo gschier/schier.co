@@ -2,42 +2,40 @@ package main
 
 import (
 	"github.com/gorilla/mux"
-	"github.com/gschier/schier.dev/generated/prisma-client"
-	"github.com/gschier/schier.dev/web"
+	"github.com/gschier/schier.dev/internal"
 	"log"
 	"net/http"
 	"os"
 )
 
 func main() {
-	client := schier.NewPrismaClient()
+	db := internal.NewStorage()
 
 	// Setup router
-	router := setupRouter(client)
+	router := setupRouter(db)
 
 	handler := applyMiddleware(router)
 	startServer(handler)
 }
 
-func setupRouter(client *prisma.Client) *mux.Router {
+func setupRouter(db *internal.Storage) *mux.Router {
 	router := mux.NewRouter()
 	router.StrictSlash(true)
 
 	// Route-specific middleware
-	router.Use(web.NewContextMiddleware(client))
-	router.Use(web.CSRFMiddleware)
-	router.Use(web.UserMiddleware)
-	router.Use(web.NewForceLoginHostMiddleware("schier.dev"))
+	router.Use(internal.NewContextMiddleware(db))
+	router.Use(internal.CSRFMiddleware)
+	router.Use(internal.UserMiddleware)
+	router.Use(internal.NewForceLoginHostMiddleware("schier.dev"))
 
 	// Apply routes
-	web.NotFoundRoutes(router)
-	web.AuthRoutes(router)
-	web.BlogRoutes(router)
-	web.BooksRoutes(router)
-	web.PagesRoutes(router)
-	web.NewsletterRoutes(router)
-	web.AnalyticsRoutes(router)
-	web.StaticRoutes(router)
+	internal.NotFoundRoutes(router)
+	internal.AuthRoutes(router)
+	internal.BlogRoutes(router)
+	internal.BooksRoutes(router)
+	internal.PagesRoutes(router)
+	internal.NewsletterRoutes(router)
+	internal.StaticRoutes(router)
 
 	return router
 }
@@ -48,10 +46,10 @@ func applyMiddleware(r *mux.Router) http.Handler {
 	var handler http.Handler = r
 
 	// Global middleware
-	handler = web.CORSMiddleware(handler)
-	handler = web.DeployHeadersMiddleware(handler)
-	handler = web.CacheHeadersMiddleware(handler)
-	handler = web.LoggerMiddleware(handler)
+	handler = internal.CORSMiddleware(handler)
+	handler = internal.DeployHeadersMiddleware(handler)
+	handler = internal.CacheHeadersMiddleware(handler)
+	handler = internal.LoggerMiddleware(handler)
 
 	return handler
 }

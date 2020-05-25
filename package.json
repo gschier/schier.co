@@ -5,11 +5,11 @@
   "scripts": {
     "dev": "run-p frontend:watch backend:run",
     "backend:run": "docker-compose up web",
-    "frontend:watch": "rm -rf ./static/build && parcel watch --global schier --out-dir ./static/build --public-url /static/build/ ./src/editor.js ./src/index.js",
-    "frontend:build": "rm -rf ./static/build && parcel build --global schier --no-source-maps --out-dir ./static/build ./src/editor.js ./src/index.js",
+    "frontend:watch": "rm -rf ./backend/static && parcel watch --global schier --out-dir ./backend/static --public-url /static/ frontend/editor.js frontend/index.js",
+    "frontend:build": "rm -rf ./backend/static && parcel build --global schier --no-source-maps --out-dir ./backend/static frontend/editor.js frontend/index.js",
     "fixtures": "docker-compose run web go run github.com/gschier/schier.dev/cmd/fixtures",
     "deploy": "primsa deploy --force",
-    "format-code": "prettier --write src/**/*.js src/**/*.css",
+    "format-code": "prettier --write frontend/**/*.js frontend/**/*.css",
     "manage": "docker-compose run web go run github.com/gschier/schier.dev/cmd/manage"
   },
   "husky": {
@@ -20,15 +20,15 @@
   "staticFiles": {
     "staticPath": [
       {
-        "staticPath": "src/images",
+        "staticPath": "frontend/images",
         "staticOutDir": "images"
       },
       {
-        "staticPath": "src/dictionaries",
+        "staticPath": "frontend/dictionaries",
         "staticOutDir": "dictionaries"
       },
       {
-        "staticPath": "src/favicon",
+        "staticPath": "frontend/favicon",
         "staticOutDir": "favicon"
       }
     ]
@@ -41,19 +41,19 @@
     "printWidth": 120
   },
   "devDependencies": {
-    "autoprefixer": "^9.7.1",
-    "husky": "^3.0.9",
+    "autoprefixer": "^9.8.0",
+    "husky": "^3.1.0",
     "npm-run-all": "^4.1.5",
     "parcel-bundler": "^1.12.4",
-    "parcel-plugin-static-files-copy": "^2.2.1",
+    "parcel-plugin-static-files-copy": "^2.3.1",
     "prettier": "1.19.1",
     "pretty-quick": "^2.0.1",
     "prisma": "^1.34.10",
-    "tailwindcss": "^1.1.4"
+    "tailwindcss": "^1.4.6"
   },
   "dependencies": {
-    "codemirror": "^5.49.2",
+    "codemirror": "^5.54.0",
     "codemirror-typo": "^1.0.1",
-    "vue": "^2.6.10"
+    "vue": "^2.6.11"
   }
 }

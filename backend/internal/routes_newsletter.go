@@ -1,9 +1,8 @@
-package backend
+package internal
 
 import (
 	"github.com/flosch/pongo2"
 	"github.com/gorilla/mux"
-	"github.com/gschier/schier.dev/generated/prisma-client"
 	"log"
 	"net/http"
 )
@@ -20,12 +19,9 @@ var newsletterThanksTemplate = pageTemplate("page/thanks.html")
 var newsletterUnsubscribeTemplate = pageTemplate("page/unsubscribe.html")
 
 func routeNewsletter(w http.ResponseWriter, r *http.Request) {
-	client := ctxPrismaClient(r)
+	client := ctxDB(r)
 
-	orderBy := prisma.SubscriberOrderByInputCreatedAtDesc
-	subscribers, err := client.Subscribers(&prisma.SubscribersParams{
-		OrderBy: &orderBy,
-	}).Exec(r.Context())
+	subscribers, err := client.RecentSubscribers(r.Context())
 	if err != nil {
 		log.Println("Failed to fetch subscribers", err.Error())
 		http.Error(w, "Internal server error", http.StatusInternalServerError)
@@ -41,7 +37,7 @@ func routeNewsletter(w http.ResponseWriter, r *http.Request) {
 
 func routeThankSubscriber(w http.ResponseWriter, r *http.Request) {
 	renderTemplate(w, r, newsletterThanksTemplate(), &pongo2.Context{
-		"pageTitle": "Thanks!",
+		"pageTitle":       "Thanks!",
 		"pageDescription": "Thank you for signing up to the newsletter!",
 	})
 }
@@ -49,19 +45,16 @@ func routeThankSubscriber(w http.ResponseWriter, r *http.Request) {
 func routeUnsubscribe(w http.ResponseWriter, r *http.Request) {
 	id := mux.Vars(r)["id"]
 
-	client := ctxPrismaClient(r)
+	db := ctxDB(r)
 
-	sub, err := client.Subscriber(prisma.SubscriberWhereUniqueInput{ID: &id}).Exec(r.Context())
+	sub, err := db.SubscriberByID(r.Context(), id)
 	if err != nil {
 		log.Println("Failed to get subscriber", err.Error())
 		http.Error(w, "Failed to unsubscribe", http.StatusInternalServerError)
 		return
 	}
 
-	_, err = client.UpdateSubscriber(prisma.SubscriberUpdateParams{
-		Where: prisma.SubscriberWhereUniqueInput{ID: &id},
-		Data:  prisma.SubscriberUpdateInput{Unsubscribed: prisma.Bool(true)},
-	}).Exec(r.Context())
+	err = db.UnsubscribeSubscriber(r.Context(), id)
 	if err != nil {
 		log.Println("Failed to update subscriber for unsub", err.Error())
 		http.Error(w, "Failed to unsubscribe", http.StatusInternalServerError)
@@ -85,21 +78,18 @@ func routeSubscribe(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	client := ctxPrismaClient(r)
+	db := ctxDB(r)
 
-	sub, err := client.UpsertSubscriber(prisma.SubscriberUpsertParams{
-		Where: prisma.SubscriberWhereUniqueInput{Email: &email},
-		Create: prisma.SubscriberCreateInput{
-			Email:        email,
-			Name:         name,
-			Unsubscribed: false,
-		},
-		Update: prisma.SubscriberUpdateInput{
-			Unsubscribed: prisma.Bool(false),
-		},
-	}).Exec(r.Context())
+	err := db.UpsertNewsletterSubscriber(r.Context(), email, name)
 	if err != nil {
-		log.Println("Failed to create subscriber:", err.Error())
+		log.Println("Failed to upsert subscriber:", err.Error())
+		http.Error(w, "Failed to subscribe", http.StatusInternalServerError)
+		return
+	}
+
+	sub, err := db.NewsletterSubscriberByEmail(r.Context(), email)
+	if err != nil {
+		log.Println("Failed to get subscriber:", err.Error())
 		http.Error(w, "Failed to subscribe", http.StatusInternalServerError)
 		return
 	}

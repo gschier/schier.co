@@ -6,53 +6,32 @@ services:
       context: .
       dockerfile: Dockerfile.dev
     volumes:
-      - .:/app
+      - ./backend:/app
     ports:
       - "8084:8084"
     restart: always
     environment:
-      ANALYTICS_URL: ''
       BASE_URL: http://localhost:8084
       CSRF_KEY: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
       DEV_ENVIRONMENT: development
+      DATABASE_URL: 'postgres://user:pass@postgres:5432/postgres?sslmode=disable'
       DO_SPACES_DOMAIN: nyc3.digitaloceanspaces.com
-      DO_SPACES_KEY: ''
-      DO_SPACES_SECRET: ''
       DO_SPACES_SPACE: schierco
-      MAILJET_PRV_KEY: ''
-      MAILJET_PUB_KEY: ''
       PORT: "8084"
-      PRISMA_ENDPOINT: http://prisma:4488
-      PRISMA_SECRET: development
       STATIC_URL: /static
-      USER_PASSWORD: testing123
+      STATIC_ROOT: ../frontend/static
     depends_on:
-      - prisma
       - postgres
-  prisma:
-    image: prismagraphql/prisma:1.34
-    restart: always
-    ports:
-      - "4488:4488"
-    environment:
-      PRISMA_CONFIG: |
-        port: 4488
-        databases:
-          default:
-            connector: postgres
-            host: postgres
-            port: 5432
-            user: prisma
-            password: prisma
   postgres:
     ports:
       - "5438:5432"
-    image: postgres:10.3
-    restart: always
+    image: postgres:12
     environment:
-      POSTGRES_USER: prisma
-      POSTGRES_PASSWORD: prisma
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pass
+    restart: always
     volumes:
       - postgres:/var/lib/postgresql/data
 volumes:
   postgres: ~
+

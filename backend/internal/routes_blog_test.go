@@ -1,4 +1,4 @@
-package backend_test
+package internal
 
 import (
 	"github.com/stretchr/testify/assert"

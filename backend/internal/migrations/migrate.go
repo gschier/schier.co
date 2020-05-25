@@ -11,7 +11,6 @@ import (
 	"time"
 )
 
-var All = make([]Migration, 0)
 
 type HistoryModel struct {
 	Id      int       `db:"id"`
@@ -152,7 +151,7 @@ func initTable(ctx context.Context, db *sqlx.DB) error {
 	tx := db.MustBeginTx(ctx, nil)
 
 	_ = tx.MustExecContext(ctx, `
-		CREATE TABLE migrations (
+		CREATE TABLE IF NOT EXISTS migrations (
 			id SERIAL PRIMARY KEY,
 			name TEXT NOT NULL UNIQUE,
 			applied TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL

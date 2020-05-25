@@ -28,14 +28,14 @@
   <link href="{{ rssUrl }}" rel="feed" type="application/rss+xml" title="Gregory Schier"/>
 
   {# Favicon #}
-  <link rel="apple-touch-icon" sizes="180x180" href="{{ staticUrl }}/build/favicon/apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="{{ staticUrl }}/build/favicon/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="{{ staticUrl }}/build/favicon/favicon-16x16.png">
-  <link rel="manifest" href="{{ staticUrl }}/build/favicon/site.webmanifest">
-  <link rel="mask-icon" href="{{ staticUrl }}/build/favicon/safari-pinned-tab.svg" color="#5bbad5">
-  <link rel="shortcut icon" href="{{ staticUrl }}/build/favicon/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="{{ staticUrl }}/favicon/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="{{ staticUrl }}/favicon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="{{ staticUrl }}/favicon/favicon-16x16.png">
+  <link rel="manifest" href="{{ staticUrl }}/favicon/site.webmanifest">
+  <link rel="mask-icon" href="{{ staticUrl }}/favicon/safari-pinned-tab.svg" color="#5bbad5">
+  <link rel="shortcut icon" href="{{ staticUrl }}/favicon/favicon.ico">
   <meta name="msapplication-TileColor" content="#2d89ef">
-  <meta name="msapplication-config" content="{{ staticUrl }}/build/favicon/browserconfig.xml">
+  <meta name="msapplication-config" content="{{ staticUrl }}/favicon/browserconfig.xml">
   <meta name="theme-color" content="#ffffff">
 
   {# Social Metadata #}
@@ -55,8 +55,8 @@
   {# Scripts and Styles #}
   {% if isDev %}
     {# HMR-able styles/scripts #}
-    <script src="{{ staticUrl }}/build/index.js"></script>
-    <link rel="stylesheet" href="{{ staticUrl }}/build/index.css">
+    <script src="{{ staticUrl }}/index.js"></script>
+    <link rel="stylesheet" href="{{ staticUrl }}/index.css">
   {% else %}
     {# inlineable styles #}
     <style>{{ "index.css" | inlineStatic | safe }}</style>
@@ -68,75 +68,8 @@
         data-deployed="{{ deployTime }}"
         data-csrf-token="{{ csrfToken }}"
         data-csrf-Token-header="{{ csrfTokenHeader }}"
-        data-logged-in="{{ loggedIn | yesno:'yes,no' }}"
->
-{% block body %}{% endblock %}
-
-{% block extraScripts %}{% endblock %}
-{% if not doNotTrack %}
-  <script>
-    (function () {
-      const id = (len) => {
-        let v = '';
-        const chars = 'abcdefghijklmnopqrstuvwxyz01234567890';
-        for (let i = 0; i < len; i++) {
-          v += chars[Math.floor(Math.random() * chars.length)];
-        }
-        return v;
-      };
-
-      let sess = localStorage.schier ? JSON.parse(localStorage.schier) : {};
-
-      // Check if new session should be created for same user
-      if (Date.now() - sess.last > 20 * 60 * 1000) {
-        sess = { user: sess.user };
-      }
-
-      const prev = sess.prev || '';
-      const path = location.pathname;
-
-      // Don't send if the page didn't change
-      if (path === prev) {
-        console.log('[analytics] Ignore same page');
-        return;
-      }
-
-      // Initialize session properties if new or missing
-      sess.id = sess.id || id(10);
-      sess.user = sess.user || id(10);
-      sess.start = sess.start || Date.now();
-      sess.pages = (sess.pages || 0) + 1;
-      sess.last = Date.now();
-      sess.prev = path;
-
-      // Store session
-      localStorage.schier = JSON.stringify(sess);
-
-      let referrer = document.referrer;
-      if (sess.pages > 1) {
-        // Don't set referrer if not first page
-        referrer = '';
-      } else if (referrer.indexOf(location.origin) === 0) {
-        // Don't set referrer if it's an internal source
-        referrer = '';
-      }
-
-      const e = encodeURIComponent;
-      fetch('{{ analyticsUrl }}/t?' + [
-        `path=${e(path)}`,
-        `prev=${e(prev)}`,
-        `search=${e(location.search)}`,
-        `ref=${e(referrer)}`,
-        `user=${e(sess.user)}`,
-        `sess=${e(sess.id)}`,
-        `age=${e(Math.round((Date.now() - sess.start) / 1000))}`,
-        `page=${e(sess.pages)}`,
-        `lang=${e(navigator.language)}`
-      ].join('&'));
-    })();
-  </script>
-{% else %}
-  <!-- Analytics Disabled -->
-{% endif %}
+        data-logged-in="{{ loggedIn | yesno:'yes,no' }}">
+  {% block body %}{% endblock %}
+  {% block extraScripts %}{% endblock %}
 </body>
 </html>

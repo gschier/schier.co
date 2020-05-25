@@ -1,8 +1,9 @@
-package backend
+package internal
 
 import (
 	"github.com/gorilla/mux"
 	"net/http"
+	"os"
 	"strings"
 )
 
@@ -18,7 +19,7 @@ func routeStatic(w http.ResponseWriter, r *http.Request) {
 
 	// Shortcut to serve images out of static
 	if strings.HasPrefix(r.URL.Path, "/images") {
-		http.ServeFile(w, r, "./static"+path)
+		http.ServeFile(w, r, os.Getenv("STATIC_ROOT")+path)
 		return
 	}
 

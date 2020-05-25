@@ -20,7 +20,10 @@
           Browse recent posts below, view <a href="/blog/tags">Tags</a>, or subscribe via
           <a href="/newsletter">Newsletter</a> or <a href="{{ rssUrl }}">RSS</a>.
 
-          {% if loggedIn %}Or, <a href="/blog/drafts">Drafts.</a>{% endif %}
+          {% if loggedIn %}
+            Or, <a href="/blog/drafts">Drafts</a>, or
+            <a href="/blog/new">Create New</a>
+          {% endif %}
         </p>
       {% endif %}
     </div>

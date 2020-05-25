@@ -1,4 +1,4 @@
-package backend
+package internal
 
 import (
 	"fmt"
@@ -80,7 +80,7 @@ func WordCount(md string) int {
 	return strings.Count(stripmd.Strip(md), " ")
 }
 
-func ReadTime(words int) int {
+func CalculateReadTime(words int) int {
 	return int(float64(words)/200) + 1
 }
 
@@ -146,10 +146,6 @@ func StrToInt(number string, defaultValue int) int {
 	return n
 }
 
-func StrToInt32(number string, defaultValue int) int32 {
-	return int32(StrToInt(number, defaultValue))
-}
-
 func IsDevelopment() bool {
 	return os.Getenv("DEV_ENVIRONMENT") == "development"
 }
@@ -157,7 +153,7 @@ func IsDevelopment() bool {
 // CalculateScore calculates a blog posts score. It sums votes and views,
 // then divides by the age. The age is capped to 𝑥 days so old posts don't
 // go down to zero
-func CalculateScore(age time.Duration, votes, views, words int32) int32 {
+func CalculateScore(age time.Duration, votes, views, words int) int {
 	days := float64(age / time.Hour / 24)
 
 	// New posts on fire!
@@ -171,5 +167,5 @@ func CalculateScore(age time.Duration, votes, views, words int32) int32 {
 		score /= 2
 	}
 
-	return int32(score)
+	return int(score)
 }

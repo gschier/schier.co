@@ -1,4 +1,4 @@
-package backend
+package internal
 
 import (
 	"encoding/base64"
@@ -45,7 +45,8 @@ func init() {
 	err := pongo2.RegisterFilter(
 		"isoformat",
 		func(in *pongo2.Value, param *pongo2.Value) (*pongo2.Value, *pongo2.Error) {
-			t, err := time.Parse(time.RFC3339, in.String())
+			yearMonthDay := strings.SplitN(in.String(), " ", 2)[0]
+			t, err := time.Parse("2006-01-02", yearMonthDay)
 			if err != nil {
 				return nil, &pongo2.Error{OrigError: err}
 			}
@@ -86,7 +87,8 @@ func init() {
 	err = pongo2.RegisterFilter(
 		"isodate",
 		func(in *pongo2.Value, param *pongo2.Value) (*pongo2.Value, *pongo2.Error) {
-			t, err := time.Parse(time.RFC3339, in.String())
+			yearMonthDay := strings.SplitN(in.String(), " ", 2)[0]
+			t, err := time.Parse("2006-01-02", yearMonthDay)
 			if err != nil {
 				return nil, &pongo2.Error{OrigError: err}
 			}
@@ -111,8 +113,14 @@ func init() {
 	err = pongo2.RegisterFilter(
 		"isodateolderdays",
 		func(in *pongo2.Value, param *pongo2.Value) (*pongo2.Value, *pongo2.Error) {
+			yearMonthDay := strings.SplitN(in.String(), " ", 2)[0]
+			t, err := time.Parse("2006-01-02", yearMonthDay)
+			if err != nil {
+				return nil, &pongo2.Error{OrigError: err}
+			}
+
 			d := time.Now().Add(-time.Hour * 24 * time.Duration(param.Integer()))
-			return pongo2.AsValue(in.String() < d.Format(time.RFC3339)), nil
+			return pongo2.AsValue(t.Before(d)), nil
 		},
 	)
 	if err != nil {
@@ -122,7 +130,7 @@ func init() {
 	err = pongo2.RegisterFilter(
 		"readtime",
 		func(in *pongo2.Value, param *pongo2.Value) (*pongo2.Value, *pongo2.Error) {
-			return pongo2.AsValue(ReadTime(in.Integer())), nil
+			return pongo2.AsValue(CalculateReadTime(in.Integer())), nil
 		},
 	)
 	if err != nil {
@@ -132,7 +140,7 @@ func init() {
 	err = pongo2.RegisterFilter(
 		"base64",
 		func(in *pongo2.Value, param *pongo2.Value) (*pongo2.Value, *pongo2.Error) {
-			b, err := ioutil.ReadFile("./static/build/" + in.String())
+			b, err := ioutil.ReadFile("./static/" + in.String())
 			if err != nil {
 				return nil, &pongo2.Error{OrigError: err}
 			}
@@ -147,7 +155,7 @@ func init() {
 	err = pongo2.RegisterFilter(
 		"inlineStatic",
 		func(in *pongo2.Value, param *pongo2.Value) (*pongo2.Value, *pongo2.Error) {
-			b, err := ioutil.ReadFile("./static/build/" + in.String())
+			b, err := ioutil.ReadFile("./static/" + in.String())
 			if err != nil {
 				return nil, &pongo2.Error{OrigError: err}
 			}
@@ -242,7 +250,6 @@ func renderTemplate(w http.ResponseWriter, r *http.Request, template *pongo2.Tem
 	}
 
 	newContext := pongo2.Context{
-		"analyticsUrl":     os.Getenv("ANALYTICS_URL"),
 		"csrfToken":        csrf.Token(r),
 		"csrfTokenHeader":  "X-CSRF-Token",
 		"deployTime":       deployTime,
@@ -251,7 +258,7 @@ func renderTemplate(w http.ResponseWriter, r *http.Request, template *pongo2.Tem
 		"loggedIn":         loggedIn,
 		"pageDescription":  "Thoughts on software and technology, by an independent software developer",
 		"pageImage":        "",
-		"pageImageDefault": os.Getenv("BASE_URL") + "/static/build/images/greg.png",
+		"pageImageDefault": os.Getenv("BASE_URL") + "/static/images/greg.png",
 		"pageTitle":        "",
 		"pageUrl":          os.Getenv("BASE_URL") + r.URL.EscapedPath(),
 		"rssUrl":           "/rss.xml",

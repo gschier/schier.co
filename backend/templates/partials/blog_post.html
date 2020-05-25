@@ -13,18 +13,18 @@
     </div>
   {% endif %}
 
-  {% if blogPost.DateUpdated | default:blogPost.Date | isodateolderdays:365 %}
+  {% if blogPost.EditedAt | default:blogPost.Date | isodateolderdays:365 %}
     <p class="notice notice--warning">
-      This post was last updated <code>{{ blogPost.DateUpdated | default:blogPost.Date | isoformat }}</code> and may
+      This post was last updated <code>{{ blogPost.EditedAt | default:blogPost.Date | isoformat }}</code> and may
       be out of date
     </p>
   {% endif %}
 
-  {% if blogPost.DateUpdated %}
+  {% if blogPost.EditedAt %}
     <p class="notice notice--subtle">
       Updated
-      <time datetime="{{ blogPost.DateUpdated }}" title="{{ blogPost.DateUpdated }}">
-        <strong>{{ blogPost.DateUpdated | isoformat:'Jan _2, 2006' }}</strong>
+      <time datetime="{{ blogPost.EditedAt }}" title="{{ blogPost.EditedAt }}">
+        <strong>{{ blogPost.EditedAt | isoformat:'Jan _2, 2006' }}</strong>
       </time>
     </p>
   {% endif %}
