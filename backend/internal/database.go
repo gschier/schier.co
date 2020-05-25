@@ -78,11 +78,13 @@ func (s *Storage) RecommendedBlogPosts(ctx context.Context, ignoreID *string, li
 	return posts, err
 }
 
-func (s *Storage) TaggedBlogPosts(ctx context.Context, tagContains string, limit, offset int) ([]BlogPost, error) {
+func (s *Storage) TaggedAndPublishedBlogPosts(ctx context.Context, tagContains string, limit, offset int) ([]BlogPost, error) {
 	var posts []BlogPost
 	err := s.db.SelectContext(ctx, &posts, `
 		SELECT * FROM blog_posts
 		WHERE (tags ILIKE '%' || $1 || '%')
+			AND published IS TRUE
+			AND unlisted IS FALSE
 		ORDER BY date DESC
 		LIMIT $2
 		OFFSET $3
@@ -237,7 +239,7 @@ func (s *Storage) CreateBlogPost(ctx context.Context, slug, title, content, imag
 	return err
 }
 
-func (s *Storage) BlogPostsSearch(ctx context.Context, query string, limit int) ([]BlogPost, error) {
+func (s *Storage) SearchPublishedBlogPosts(ctx context.Context, query string, limit int) ([]BlogPost, error) {
 	var posts []BlogPost
 
 	if query == "" {
@@ -246,9 +248,11 @@ func (s *Storage) BlogPostsSearch(ctx context.Context, query string, limit int) 
 
 	err := s.db.SelectContext(ctx, &posts, `
 		SELECT * FROM blog_posts
-		WHERE content ILIKE '%' || $1 || '%'
+		WHERE (content ILIKE '%' || $1 || '%'
 			OR title ILIKE '%' || $1 || '%'
-			OR $1 = ANY(tags2)
+			OR $1 = ANY(tags2))
+			AND published IS TRUE
+			AND unlisted IS FALSE
 		ORDER BY updated_at DESC
 		LIMIT $2
 	`, query, limit)

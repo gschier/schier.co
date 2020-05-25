@@ -101,6 +101,19 @@ func init() {
 	}
 
 	err = pongo2.RegisterFilter(
+		"isodatesameday",
+		func(in *pongo2.Value, param *pongo2.Value) (*pongo2.Value, *pongo2.Error) {
+			yearMonthDayFirst := strings.SplitN(in.String(), " ", 2)[0]
+			yearMonthDaySecond := strings.SplitN(param.String(), " ", 2)[0]
+			log.Println("HELLO", yearMonthDaySecond, yearMonthDayFirst)
+			return pongo2.AsValue(yearMonthDayFirst == yearMonthDaySecond), nil
+		},
+	)
+	if err != nil {
+		panic("failed to register isodatesameday filter: " + err.Error())
+	}
+
+	err = pongo2.RegisterFilter(
 		"contains",
 		func(in *pongo2.Value, param *pongo2.Value) (*pongo2.Value, *pongo2.Error) {
 			return pongo2.AsValue(strings.Contains(in.String(), param.String())), nil

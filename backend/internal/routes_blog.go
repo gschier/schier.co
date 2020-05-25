@@ -214,7 +214,7 @@ func routeBlogPostSearch(w http.ResponseWriter, r *http.Request) {
 	}
 
 	query := r.Form.Get("query")
-	blogPosts, err := ctxDB(r).BlogPostsSearch(r.Context(), query, 10)
+	blogPosts, err := ctxDB(r).SearchPublishedBlogPosts(r.Context(), query, 10)
 	if err != nil {
 		log.Println("Search failed", err)
 		http.Error(w, "Failed to search", http.StatusInternalServerError)
@@ -526,7 +526,7 @@ func routeBlogList(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Fetch blog posts
-	blogPosts, err := ctxDB(r).TaggedBlogPosts(
+	blogPosts, err := ctxDB(r).TaggedAndPublishedBlogPosts(
 		r.Context(),
 		tagsContains,
 		first+1,
