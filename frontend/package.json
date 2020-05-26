@@ -3,14 +3,9 @@
   "name": "schier.dev",
   "version": "1.0.0",
   "scripts": {
-    "dev": "run-p frontend:watch backend:run",
-    "backend:run": "docker-compose up web",
-    "frontend:watch": "rm -rf ./backend/static && parcel watch --global schier --out-dir ./backend/static --public-url /static/ frontend/editor.js frontend/index.js",
-    "frontend:build": "rm -rf ./backend/static && parcel build --global schier --no-source-maps --out-dir ./backend/static frontend/editor.js frontend/index.js",
-    "fixtures": "docker-compose run web go run github.com/gschier/schier.dev/cmd/fixtures",
-    "deploy": "primsa deploy --force",
-    "format-code": "prettier --write frontend/**/*.js frontend/**/*.css",
-    "manage": "docker-compose run web go run github.com/gschier/schier.dev/cmd/manage"
+    "frontend:watch": "rm -rf ./static && parcel watch --global schier --out-dir ./static --public-url /static/ editor.js index.js",
+    "frontend:build": "rm -rf ./static && parcel build --global schier --no-source-maps --out-dir ./static editor.js index.js",
+    "format-code": "prettier --write **/*.js **/*.css"
   },
   "husky": {
     "hooks": {
@@ -20,15 +15,15 @@
   "staticFiles": {
     "staticPath": [
       {
-        "staticPath": "frontend/images",
+        "staticPath": "images",
         "staticOutDir": "images"
       },
       {
-        "staticPath": "frontend/dictionaries",
+        "staticPath": "dictionaries",
         "staticOutDir": "dictionaries"
       },
       {
-        "staticPath": "frontend/favicon",
+        "staticPath": "favicon",
         "staticOutDir": "favicon"
       }
     ]

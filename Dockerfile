@@ -1,10 +1,21 @@
-# First stage for building the app
-FROM golang:1.14-alpine as builder
+# ~~~~~~~~~~~~~~ #
+# Frontend Build #
+# ~~~~~~~~~~~~~~ #
 
-RUN apk add \
-      make \
-      gcc \
-      musl-dev
+FROM node:12-alpine as frontend
+
+# Add the project
+WORKDIR /app
+ADD ./frontend ./
+
+# Run tests and build
+RUN npm install && npm run frontend:build
+
+# ~~~~~~~~~~~~~ #
+# Backend Build #
+# ~~~~~~~~~~~~~ #
+
+FROM golang:1.14-alpine as backend
 
 # Add the project
 WORKDIR /app
@@ -13,15 +24,18 @@ ADD ./backend ./
 # Run tests and build
 RUN go install ./...
 
-# Third stage with only the things needed for the app to run
+# ~~~~~~~~~~~~~~~~ #
+# Production Image #
+# ~~~~~~~~~~~~~~~~ #
+
 FROM alpine:3.11
 
 WORKDIR /app
 
-# Move app binary to WORKDIR
-COPY --from=builder /go/bin/web ./web
-COPY --from=builder /go/bin/manage ./manage
-COPY --from=builder /app/templates ./templates
-COPY --from=builder /app/static ./static
+# Move necessary things to prod image
+COPY --from=frontend /app/static ./static
+COPY --from=backend /go/bin/web ./web
+COPY --from=backend /go/bin/manage ./manage
+COPY --from=backend /app/templates ./templates
 
 CMD ["./web"]
