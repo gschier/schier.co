@@ -152,7 +152,7 @@ func init() {
 	err = pongo2.RegisterFilter(
 		"base64",
 		func(in *pongo2.Value, param *pongo2.Value) (*pongo2.Value, *pongo2.Error) {
-			b, err := ioutil.ReadFile("./static/" + in.String())
+			b, err := ioutil.ReadFile(os.Getenv("STATIC_ROOT") + in.String())
 			if err != nil {
 				return nil, &pongo2.Error{OrigError: err}
 			}
@@ -167,7 +167,7 @@ func init() {
 	err = pongo2.RegisterFilter(
 		"inlineStatic",
 		func(in *pongo2.Value, param *pongo2.Value) (*pongo2.Value, *pongo2.Error) {
-			b, err := ioutil.ReadFile("./static/" + in.String())
+			b, err := ioutil.ReadFile(os.Getenv("STATIC_ROOT") + in.String())
 			if err != nil {
 				return nil, &pongo2.Error{OrigError: err}
 			}
