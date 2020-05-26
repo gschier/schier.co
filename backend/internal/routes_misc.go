@@ -60,11 +60,11 @@ func routeHealthCheck(w http.ResponseWriter, r *http.Request) {
 	_ = db.DB().GetContext(r.Context(), &blogPostCount, `SELECT COUNT(id) FROM blog_posts`)
 
 	err := json.NewEncoder(w).Encode(&map[string]interface{}{
-		"deploy": os.Getenv("DEPLOY_LABEL"),
-		"started": _t.Format(time.RFC3339),
 		"host": r.Host,
-		"pg_conns": pgConns,
 		"base_url": os.Getenv("BASE_URL"),
+		"commit": fmt.Sprintf("https://github.com/%s/commit/%s", os.Getenv("GITHUB_REPOSITORY"), os.Getenv("")),
+		"deployed": fmt.Sprintf("%d seconds ago", time.Now().Sub(_t).Seconds()),
+		"pg_conns": pgConns,
 	})
 
 	if err != nil {
