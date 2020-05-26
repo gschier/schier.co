@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"os"
 	"strings"
+	"time"
 )
 
 func MiscRoutes(router *mux.Router) {
@@ -48,6 +49,7 @@ func routeHeaders(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+var _t = time.Now()
 func routeHealthCheck(w http.ResponseWriter, r *http.Request) {
 	db := NewStorage()
 
@@ -58,6 +60,8 @@ func routeHealthCheck(w http.ResponseWriter, r *http.Request) {
 	_ = db.DB().GetContext(r.Context(), &blogPostCount, `SELECT COUNT(id) FROM blog_posts`)
 
 	err := json.NewEncoder(w).Encode(&map[string]interface{}{
+		"deploy": os.Getenv("DEPLOY_LABEL"),
+		"started": _t.Format(time.RFC3339),
 		"host": r.Host,
 		"pg_conns": pgConns,
 		"base_url": os.Getenv("BASE_URL"),

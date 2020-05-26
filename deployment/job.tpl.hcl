@@ -39,6 +39,7 @@ job "app.schierco" {
       env {
         BASE_URL = "https://schier.co"
         CSRF_KEY = "__CSRF_KEY__"
+        DEPLOY_LABEL = "__DEPLOY_LABEL__"
         DATABASE_URL = "__DATABASE_URL__"
         DEV_ENVIRONMENT = "production"
         DO_SPACES_DOMAIN = "nyc3.digitaloceanspaces.com"
