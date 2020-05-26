@@ -46,7 +46,7 @@ job "app.schierco" {
         DO_SPACES_SECRET = "__DO_SPACES_SECRET__"
         DO_SPACES_SPACE = "schierco"
         GITHUB_REPOSITORY = "__GITHUB_REPOSITORY__"
-        GIT_SHA = "__GIT_SHA__"
+        GITHUB_SHA = "__GITHUB_SHA__"
         MAILJET_PRV_KEY = "__MAILJET_PRV_KEY__"
         MAILJET_PUB_KEY = "__MAILJET_PUB_KEY__"
         MIGRATE_ON_START = "disable"

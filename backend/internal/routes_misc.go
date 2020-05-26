@@ -62,8 +62,8 @@ func routeHealthCheck(w http.ResponseWriter, r *http.Request) {
 	err := json.NewEncoder(w).Encode(&map[string]interface{}{
 		"host": r.Host,
 		"base_url": os.Getenv("BASE_URL"),
-		"commit": fmt.Sprintf("https://github.com/%s/commit/%s", os.Getenv("GITHUB_REPOSITORY"), os.Getenv("")),
-		"deployed": fmt.Sprintf("%d seconds ago", time.Now().Sub(_t).Seconds()),
+		"commit": fmt.Sprintf("https://github.com/%s/commit/%s", os.Getenv("GITHUB_REPOSITORY"), os.Getenv("GITHUB_SHA")),
+		"deployed": fmt.Sprintf("%d seconds ago", int(time.Now().Sub(_t).Seconds())),
 		"pg_conns": pgConns,
 	})
 

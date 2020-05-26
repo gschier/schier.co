@@ -16,7 +16,7 @@ cat ./deployment/job.tpl.hcl | \
   sed "s|__DO_SPACES_KEY__|${DO_SPACES_KEY}|g" | \
   sed "s|__DO_SPACES_SECRET__|${DO_SPACES_SECRET}|g" | \
   sed "s|__GITHUB_REPOSITORY__|${GITHUB_REPOSITORY}|g" | \
-  sed "s|__GIT_SHA__|${GITHUB_SHA}|g" | \
+  sed "s|__GITHUB_SHA__|${GITHUB_SHA}|g" | \
   sed "s|__MAILJET_PRV_KEY__|${MAILJET_PRV_KEY}|g" | \
   sed "s|__MAILJET_PUB_KEY__|${MAILJET_PUB_KEY}|g" | \
   cat > ./job.hcl
