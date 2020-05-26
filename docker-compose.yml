@@ -14,7 +14,7 @@ services:
     environment:
       BASE_URL: http://localhost:8084
       CSRF_KEY: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-      DEV_ENVIRONMENT: production
+      DEV_ENVIRONMENT: development
       DATABASE_URL: 'postgres://user:pass@postgres:5432/postgres?sslmode=disable'
       DO_SPACES_DOMAIN: nyc3.digitaloceanspaces.com
       MIGRATE_ON_START: enable
