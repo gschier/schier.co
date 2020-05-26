@@ -16,9 +16,7 @@ jobs:
           password: ${{ secrets.DO_REGISTRY_TOKEN }}
           repository: schierdev/schier.co
           registry: registry.digitalocean.com
-          tags:
-            - ${{ github.sha }}
-            - latest
+          tags: ${{ github.sha }},latest
       - name: Deploy to Nomad
         run: |
           echo "Writing SSH key"
