@@ -10,4 +10,4 @@ cat "${FILE_PATH}" | \
   sed "s|__DO_SPACES_SECRET__|${DO_SPACES_SECRET}|g" | \
   sed "s|__MAILJET_PRV_KEY__|${MAILJET_PRV_KEY}|g" | \
   sed "s|__MAILJET_PUB_KEY__|${MAILJET_PUB_KEY}|g" | \
-  sed "s|__GITHUB_REF__|${GITHUB_REF}|g"
+  sed "s|__DOCKER_TAG__|${DOCKER_TAG}|g"

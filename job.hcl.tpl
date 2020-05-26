@@ -20,7 +20,7 @@ job "app.schierco" {
       driver = "docker"
 
       config {
-        image = "registry.digitalocean.com/schierdev/schier.co:__GITHUB_REF__"
+        image = "registry.digitalocean.com/schierdev/schier.co:__DOCKER_TAG__"
 
         auth {
           username = "__DO_REGISTRY_TOKEN__"
