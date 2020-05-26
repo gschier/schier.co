@@ -17,17 +17,6 @@ jobs:
           repository: schierdev/schier.co
           registry: registry.digitalocean.com
           tag_with_sha: true
-      - name: Generate Nomad Job
-        run: ./scripts/build-job.sh job.hcl.tpl > job.hcl
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          CSRF_KEY: ${{ secrets.CSRF_KEY }}
-          DO_REGISTRY_TOKEN: ${{ secrets.DO_REGISTRY_TOKEN }}
-          DO_SPACES_KEY: ${{ secrets.DO_SPACES_KEY }}
-          DO_SPACES_SECRET: ${{ secrets.DO_SPACES_SECRET }}
-          MAILJET_PRV_KEY: ${{ secrets.MAILJET_PRV_KEY }}
-          MAILJET_PUB_KEY: ${{ secrets.MAILJET_PUB_KEY }}
-          GITHUB_REF: ${{ github.ref }}
       - name: Deploy to Nomad
         run: |
           echo "Writing SSH key"
@@ -39,6 +28,14 @@ jobs:
           scp ./job.hcl root@nomad.schier.dev:/tmp/schierco.hcl
           ssh root@${NOMAD_IP} nomad job run -address=http://${NOMAD_IP_PRV}:4646 /tmp/schierco.hcl
         env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          CSRF_KEY: ${{ secrets.CSRF_KEY }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DO_REGISTRY_TOKEN: ${{ secrets.DO_REGISTRY_TOKEN }}
+          DO_SPACES_KEY: ${{ secrets.DO_SPACES_KEY }}
+          DO_SPACES_SECRET: ${{ secrets.DO_SPACES_SECRET }}
+          GITHUB_REF: ${{ github.ref }}
+          MAILJET_PRV_KEY: ${{ secrets.MAILJET_PRV_KEY }}
+          MAILJET_PUB_KEY: ${{ secrets.MAILJET_PUB_KEY }}
           NOMAD_IP: ${{ secrets.NOMAD_IP }}
           NOMAD_IP_PRV: ${{ secrets.NOMAD_IP_PRV }}
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
