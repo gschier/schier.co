@@ -24,7 +24,7 @@ jobs:
           echo "Adding to known hosts"
           ssh-keyscan nomad.schier.dev >> ~/.ssh/known_hosts
           echo "Deploying..."
-          ./scripts/build-job.sh job.hcl.tpl > ./schierco.hcl
+          ./scripts/build-job.sh job.tpl.hcl > ./schierco.hcl
           scp ./schierco.hcl root@nomad.schier.dev:/tmp/schierco.hcl
           ssh "root@${NOMAD_IP}" nomad job run -address="http://${NOMAD_IP_PRV}:4646 /tmp/schierco.hcl"
         env:
