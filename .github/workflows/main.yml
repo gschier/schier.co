@@ -22,11 +22,11 @@ jobs:
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           CSRF_KEY: ${{ secrets.CSRF_KEY }}
-          DO_REGISTRY_TOKEN: ${{ DO_REGISTRY_TOKEN }}
-          DO_SPACES_KEY: ${{ DO_SPACES_KEY }}
-          DO_SPACES_SECRET: ${{ DO_SPACES_SECRET }}
-          MAILJET_PRV_KEY: ${{ MAILJET_PRV_KEY }}
-          MAILJET_PUB_KEY: ${{ MAILJET_PUB_KEY }}
+          DO_REGISTRY_TOKEN: ${{ secrets.DO_REGISTRY_TOKEN }}
+          DO_SPACES_KEY: ${{ secrets.DO_SPACES_KEY }}
+          DO_SPACES_SECRET: ${{ secrets.DO_SPACES_SECRET }}
+          MAILJET_PRV_KEY: ${{ secrets.MAILJET_PRV_KEY }}
+          MAILJET_PUB_KEY: ${{ secrets.MAILJET_PUB_KEY }}
           GITHUB_REF: ${{ github.ref }}
       - name: Deploy to Nomad
         run: |
