@@ -20,11 +20,11 @@ job "app.schierco" {
       driver = "docker"
 
       config {
-        image = "registry.digitalocean.com/schierdev/schier.co:<REPLACE_ME>"
+        image = "registry.digitalocean.com/schierdev/schier.co:__GH_REF__"
 
         auth {
-          username = "<REPLACE_ME>"
-          password = "<REPLACE_ME>"
+          username = "__DO_REGISTRY_TOKEN__"
+          password = "__DO_REGISTRY_TOKEN__"
         }
       }
 
@@ -38,15 +38,15 @@ job "app.schierco" {
 
       env {
         BASE_URL = "https://schier.co"
-        CSRF_KEY = "<REPLACE_ME>"
-        DATABASE_URL = "<REPLACE_ME>"
+        CSRF_KEY = "__CSRF_KEY__"
+        DATABASE_URL = "__DATABASE_URL__"
         DEV_ENVIRONMENT = "production"
         DO_SPACES_DOMAIN = "nyc3.digitaloceanspaces.com"
-        DO_SPACES_KEY = "<REPLACE_ME>"
-        DO_SPACES_SECRET = "<REPLACE_ME>"
+        DO_SPACES_KEY = "__DO_SPACES_KEY__"
+        DO_SPACES_SECRET = "__DO_SPACES_SECRET__"
         DO_SPACES_SPACE = "schierco"
-        MAILJET_PRV_KEY = "<REPLACE_ME>"
-        MAILJET_PUB_KEY = "<REPLACE_ME>"
+        MAILJET_PRV_KEY = "__MAILJET_PRV_KEY__"
+        MAILJET_PUB_KEY = "__MAILJET_PUB_KEY__"
         MIGRATE_ON_START = "disable"
         PORT = "${NOMAD_PORT_web}"
         STATIC_ROOT = "./static"
@@ -58,8 +58,7 @@ job "app.schierco" {
         port = "web"
 
         tags = [
-          "urlprefix-schier.co/",
-          "urlprefix-schier.dev/"
+          "urlprefix-schier.co/"
         ]
 
         check {

@@ -58,7 +58,7 @@ func routeHealthCheck(w http.ResponseWriter, r *http.Request) {
 	_ = db.DB().GetContext(r.Context(), &blogPostCount, `SELECT COUNT(id) FROM blog_posts`)
 
 	err := json.NewEncoder(w).Encode(&map[string]interface{}{
-		"blog_posts": blogPostCount,
+		"host": r.Host,
 		"pg_conns": pgConns,
 		"base_url": os.Getenv("BASE_URL"),
 	})
