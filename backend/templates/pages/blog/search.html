@@ -6,12 +6,12 @@
       <div class="button-input">
         <label for="i-query">Search</label>
         <input id="i-query" name="query" type="text" autofocus="autofocus" value="{{ query }}">
-        <button class="btn">
-          Search
-        </button>
+        <button class="btn">Search</button>
       </div>
     </form>
-    <small>{{ results | length }} {{ results | length | pluralize:'Result,Results' }}</small>
+    {% if query %}
+      <small>{{ results | length }} {{ results | length | pluralize:'Result,Results' }}</small>
+    {% endif %}
     {% for blogPost in results %}
       {% include '../../partials/blog_post_preview.html' %}
     {% endfor %}
