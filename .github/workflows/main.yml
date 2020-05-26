@@ -18,15 +18,7 @@ jobs:
           registry: registry.digitalocean.com
           tags: ${{ github.sha }},latest
       - name: Deploy to Nomad
-        run: |
-          echo "Writing SSH key"
-          mkdir -p ~/.ssh && echo "${SSH_PRIVATE_KEY}" | tr -d '\r' > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
-          echo "Adding to known hosts"
-          ssh-keyscan nomad.schier.dev >> ~/.ssh/known_hosts
-          echo "Deploying..."
-          ./scripts/build-job.sh job.tpl.hcl > ./schierco.hcl
-          scp ./schierco.hcl root@nomad.schier.dev:/tmp/schierco.hcl
-          ssh "root@${NOMAD_IP}" nomad job run -address="http://${NOMAD_IP_PRV}:4646 /tmp/schierco.hcl"
+        run: ./deployment/deploy.sh
         env:
           CSRF_KEY: ${{ secrets.CSRF_KEY }}
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
