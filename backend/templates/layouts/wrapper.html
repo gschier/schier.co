@@ -59,7 +59,7 @@
     <link rel="stylesheet" href="{{ staticUrl }}/index.css">
   {% else %}
     {# inlineable styles #}
-    <style>{{ "index.css" | inlineStatic | safe }}</style>
+    <style>{{ "index.css" | inlinestatic | safe }}</style>
   {% endif %}
 
   {% block extraStyles %}{% endblock %}

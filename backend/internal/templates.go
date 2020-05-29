@@ -166,7 +166,7 @@ func init() {
 	}
 
 	err = pongo2.RegisterFilter(
-		"inlineStatic",
+		"inlinestatic",
 		func(in *pongo2.Value, param *pongo2.Value) (*pongo2.Value, *pongo2.Error) {
 			b, err := ioutil.ReadFile(path.Join(os.Getenv("STATIC_ROOT"), in.String()))
 			if err != nil {
@@ -184,7 +184,7 @@ func init() {
 		},
 	)
 	if err != nil {
-		panic("failed to register inlineStatic filter: " + err.Error())
+		panic("failed to register inlinestatic filter: " + err.Error())
 	}
 
 	err = pongo2.RegisterFilter(

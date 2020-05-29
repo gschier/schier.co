@@ -378,7 +378,6 @@ func routeBlogPost(w http.ResponseWriter, r *http.Request) {
 		routeNotFound(w, r)
 		return
 	} else if err != nil {
-		log.Printf("ERROR: %#v\n", err)
 		log.Println("Failed to fetch blog post", err)
 		http.Error(w, "Failed to get blog post", http.StatusInternalServerError)
 		return

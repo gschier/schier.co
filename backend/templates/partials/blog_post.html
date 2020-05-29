@@ -34,7 +34,7 @@
 
 <div class="row-spaced">
   <div class="clap-button">
-    <button title="Cheers this post">{{ 'images/icons/cheers.svg' | inlineStatic | safe }}</button>
+    <button title="Cheers this post">{{ 'images/icons/cheers.svg' | inlinestatic | safe }}</button>
     <div title="{{ blogPost.VotesUsers }} readers">
       <span class="clap-count">{{ blogPost.VotesTotal | default:"Be the first to" }}</span> cheers
     </div>
@@ -78,7 +78,7 @@
                   rel="nofollow"
                   class="btn btn--xs svg-icon svg-icon--hn"
           >
-            {{ 'images/icons/hn.svg' | inlineStatic | safe }} HN
+            {{ 'images/icons/hn.svg' | inlinestatic | safe }} HN
           </a>
           <a
                   data-href="/blog/share/{{ blogPost.Slug }}/twitter"
@@ -86,7 +86,7 @@
                   rel="nofollow"
                   class="btn btn--xs svg-icon svg-icon--twitter"
           >
-            {{ 'images/icons/twitter.svg' | inlineStatic | safe }} Twitter
+            {{ 'images/icons/twitter.svg' | inlinestatic | safe }} Twitter
           </a>
           <a
                   data-href="/blog/share/{{ blogPost.Slug }}/reddit"
@@ -94,7 +94,7 @@
                   rel="nofollow"
                   class="btn btn--xs svg-icon svg-icon--reddit"
           >
-            {{ 'images/icons/reddit.svg' | inlineStatic | safe }} Reddit
+            {{ 'images/icons/reddit.svg' | inlinestatic | safe }} Reddit
           </a>
           <a
                   data-href="/blog/share/{{ blogPost.Slug }}/email"
@@ -102,7 +102,7 @@
                   rel="nofollow"
                   class="btn btn--xs svg-icon svg-icon--email"
           >
-            {{ 'images/icons/email.svg' | inlineStatic | safe }} Email
+            {{ 'images/icons/email.svg' | inlinestatic | safe }} Email
           </a>
           <script>
             // Populate href dynamically so bots don't crawl so easily

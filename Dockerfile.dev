@@ -6,6 +6,6 @@ RUN apk update && apk upgrade && \
 
 WORKDIR /app
 
-ADD ./backend ./
+ADD ./backend/ .
 
 RUN go install ./...

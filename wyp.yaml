@@ -1,0 +1,18 @@
+scripts:
+  start:
+    combine: [ frontend, backend ]
+  frontend:
+    help: start frontend watcher
+    dir: ./frontend
+    run: npm start
+  backend:
+    help: start dev server
+    run: docker-compose up
+    proxy:
+      addr: http://localhost:8084
+      port: 80
+  build:
+    root: true
+    help: build frontend assets
+    dir: ./frontend
+    run: npm run build
