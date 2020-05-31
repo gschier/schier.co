@@ -2,12 +2,12 @@ package migrations
 
 import (
 	"context"
-	"github.com/gschier/schier.dev/internal"
+	"github.com/gschier/schier.dev/internal/migrate"
 	"github.com/jmoiron/sqlx"
 )
 
 func init() {
-	allMigrations = append(allMigrations, internal.Migration{
+	allMigrations = append(allMigrations, migrate.Migration{
 		Name: "0001__create_tables",
 		Forward: func(ctx context.Context, db *sqlx.DB) error {
 			_, err := db.ExecContext(ctx, `

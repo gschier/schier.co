@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/gorilla/mux"
 	"github.com/gschier/schier.dev/internal"
+	"github.com/gschier/schier.dev/internal/migrate"
 	"github.com/gschier/schier.dev/migrations"
 	"log"
 	"net/http"
@@ -15,7 +16,7 @@ func main() {
 
 	// Run migrations
 	if os.Getenv("MIGRATE_ON_START") == "enable" {
-		internal.MigrateForwardAll(context.Background(), migrations.All(), db.DB(), true)
+		migrate.ForwardAll(context.Background(), migrations.All(), db.DB(), true)
 	}
 
 	// Setup router
