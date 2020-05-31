@@ -7,8 +7,7 @@ FROM node:12-alpine as frontend
 WORKDIR /app
 ADD ./frontend ./
 
-RUN npm install \
-    && npm run frontend:build
+RUN npm install && npm run build
 
 # ~~~~~~~~~~~~~ #
 # Backend Build #
