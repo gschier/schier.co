@@ -11,6 +11,9 @@ This is the source code for my personal website [schier.co](https://schier.co).
 ## Development
 
 ```bash
+# Migrate/init database
+wyp migrate
+
 # Run Tests
 wyp test
 
