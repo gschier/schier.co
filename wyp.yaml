@@ -1,5 +1,6 @@
 scripts:
   start:
+    help: start backend and frontend
     combine: [ frontend, backend ]
   frontend:
     help: start frontend watcher
@@ -8,11 +9,7 @@ scripts:
   backend:
     help: start dev server
     run: docker-compose up
-    proxy:
-      addr: http://localhost:8084
-      port: 80
-  build:
-    root: true
-    help: build frontend assets
-    dir: ./frontend
-    run: npm run build
+  test:
+    help: run tests
+    dir: ./backend
+    run: go test ./... | grep -vE '(no test files)'

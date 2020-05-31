@@ -1,4 +1,4 @@
-package internal
+package migrate
 
 import (
 	"bufio"
@@ -11,12 +11,6 @@ import (
 	"time"
 )
 
-type HistoryModel struct {
-	Id      int       `db:"id"`
-	Name    string    `db:"name"`
-	Applied time.Time `db:"applied"`
-}
-
 type Migration struct {
 	Number  int
 	Name    string
@@ -24,7 +18,13 @@ type Migration struct {
 	Reverse func(ctx context.Context, db *sqlx.DB) error
 }
 
-func MigrateForwardAll(ctx context.Context, migrations []Migration, db *sqlx.DB, yesAll bool) {
+type dbRow struct {
+	Id      int       `db:"id"`
+	Name    string    `db:"name"`
+	Applied time.Time `db:"applied"`
+}
+
+func ForwardAll(ctx context.Context, migrations []Migration, db *sqlx.DB, yesAll bool) {
 	// Initialize migrations table
 	err := initTable(ctx, db)
 	if err != nil {
@@ -72,7 +72,7 @@ func MigrateForwardAll(ctx context.Context, migrations []Migration, db *sqlx.DB,
 
 }
 
-func MigrateBackward(ctx context.Context, migrations []Migration, db *sqlx.DB, yesAll bool) {
+func BackwardOne(ctx context.Context, migrations []Migration, db *sqlx.DB, yesAll bool) {
 	// Initialize migrations table
 	err := initTable(ctx, db)
 	if err != nil {
@@ -127,25 +127,6 @@ func MigrateBackward(ctx context.Context, migrations []Migration, db *sqlx.DB, y
 
 }
 
-func MarkMigration(ctx context.Context, db *sqlx.DB, migration Migration) {
-	// Initialize migrations table
-	err := initTable(ctx, db)
-	if err != nil {
-		panic(err)
-	}
-
-	if !askForConfirmation(fmt.Sprintf("Really mark %s as migrated?", migration.Name)) {
-		return
-	}
-
-	err = insertHistoryItem(ctx, db, migration.Name)
-	if err != nil {
-		panic(err)
-	}
-
-	fmt.Printf("[migrate] Marked migration '%s'\n", migration.Name)
-}
-
 func initTable(ctx context.Context, db *sqlx.DB) error {
 	_, err := db.ExecContext(ctx, `
 		CREATE TABLE IF NOT EXISTS migrations (
@@ -163,8 +144,8 @@ func initTable(ctx context.Context, db *sqlx.DB) error {
 	return nil
 }
 
-func getHistory(ctx context.Context, db *sqlx.DB) ([]HistoryModel, error) {
-	var history []HistoryModel
+func getHistory(ctx context.Context, db *sqlx.DB) ([]dbRow, error) {
+	var history []dbRow
 	err := db.SelectContext(ctx, &history, "SELECT id, name, applied FROM migrations ORDER BY id ASC;")
 	return history, err
 }

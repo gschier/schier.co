@@ -508,12 +508,12 @@ func routeBlogList(w http.ResponseWriter, r *http.Request) {
 	tag := mux.Vars(r)["tag"]
 	page := StrToInt(mux.Vars(r)["page"], 1)
 
-	first := 5
+	first := 10
 	skip := (page - 1) * first
 
 	// Show all for tags
 	if tag != "" {
-		first = 999
+		first = 999999
 		skip = 0
 	}
 

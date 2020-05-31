@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/gschier/schier.dev/internal"
+	"github.com/gschier/schier.dev/internal/migrate"
 	"github.com/gschier/schier.dev/migrations"
 	"gopkg.in/alecthomas/kingpin.v2"
 	"log"
@@ -32,26 +33,14 @@ func initMigrate(ctx context.Context) {
 
 	cmdForward := cmd.Command("forward", "Apply all pending migrations")
 	cmdForward.Action(func(x *kingpin.ParseContext) error {
-		internal.MigrateForwardAll(ctx, migrations.All(), internal.NewStorage().DB(), *yesAll)
+		migrate.ForwardAll(ctx, migrations.All(), internal.NewStorage().DB(), *yesAll)
 		return nil
 	})
 
 	cmdBackward := cmd.Command("backward", "Revert last migration")
 	cmdBackward.Action(func(x *kingpin.ParseContext) error {
-		internal.MigrateBackward(ctx, migrations.All(), internal.NewStorage().DB(), *yesAll)
+		migrate.BackwardOne(ctx, migrations.All(), internal.NewStorage().DB(), *yesAll)
 		return nil
-	})
-
-	cmdMark := cmd.Command("mark", "Mark migration as complete")
-	cmdMarkFlagMigrationName := *cmdMark.Arg("migration", "Migration name").Required().String()
-	cmdMark.Action(func(x *kingpin.ParseContext) error {
-		for _, m := range migrations.All() {
-			if m.Name == cmdMarkFlagMigrationName {
-				internal.MarkMigration(ctx, internal.NewStorage().DB(), m)
-				return nil
-			}
-		}
-		return errors.New("Failed to find migration " + cmdMarkFlagMigrationName)
 	})
 }
 
