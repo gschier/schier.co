@@ -16,10 +16,6 @@ body {
   @apply p-0 text-primary;
 }
 
-body[data-logged-in='yes'] {
-  @apply border-t-4 border-danger-500;
-}
-
 main {
   margin-left: auto;
   margin-right: auto;

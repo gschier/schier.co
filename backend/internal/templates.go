@@ -170,15 +170,7 @@ func init() {
 		func(in *pongo2.Value, param *pongo2.Value) (*pongo2.Value, *pongo2.Error) {
 			fullPath := path.Join(os.Getenv("STATIC_ROOT"), in.String())
 			b, err := ioutil.ReadFile(fullPath)
-			if os.IsNotExist(err) {
-				names, _ := ioutil.ReadDir("/")
-				fmt.Printf("%s not found\n", fullPath)
-				for _, n := range names {
-					fmt.Printf("%s ", n.Name())
-				}
-				fmt.Println("")
-				return pongo2.AsValue(""), nil
-			} else if err != nil {
+			if err != nil {
 				return nil, &pongo2.Error{OrigError: err}
 			}
 
@@ -280,7 +272,7 @@ func renderTemplate(w http.ResponseWriter, r *http.Request, template *pongo2.Tem
 		"loggedIn":         loggedIn,
 		"pageDescription":  "Thoughts on software and technology, by an independent software developer",
 		"pageImage":        "",
-		"pageImageDefault": os.Getenv("BASE_URL") + "/static/images/greg.png",
+		"pageImageDefault": os.Getenv("BASE_URL") + "/static/images/social/default.png",
 		"pageTitle":        "",
 		"pageUrl":          os.Getenv("BASE_URL") + r.URL.EscapedPath(),
 		"rssUrl":           "/rss.xml",

@@ -30,10 +30,12 @@ import 'codemirror/addon/lint/lint.css';
 
 import codeMirrorTypo from 'codemirror-typo';
 
-export function setupEditor(textareaEl, containerEl) {
+export function initCodemirror(textareaEl, containerEl) {
   const cm = CodeMirror(
     function(elt) {
-      containerEl.parentNode.replaceChild(elt, containerEl);
+      if (containerEl) {
+        containerEl.parentNode.replaceChild(elt, containerEl);
+      }
     },
     {
       value: textareaEl.value,

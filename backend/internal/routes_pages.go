@@ -25,11 +25,7 @@ Disallow: /login
 Disallow: /register
 Disallow: /blog/*/share/*
 Disallow: /blog/tags/*
-`)
-
-var robotsNone = strings.TrimSpace(`
-User-agent: *
-Disallow: *
+Disallow: /debug/*
 `)
 
 var homeTemplate = pageTemplate("page/home.html")
@@ -37,11 +33,7 @@ var aboutTemplate = pageTemplate("page/about.html")
 var projectsTemplate = pageTemplate("page/projects.html")
 
 func routeRobotsTxt(w http.ResponseWriter, r *http.Request) {
-	if r.Host == "schier.co" {
-		_, _ = w.Write([]byte(robots))
-	} else {
-		_, _ = w.Write([]byte(robotsNone))
-	}
+	_, _ = w.Write([]byte(robots))
 }
 
 func routeProjects(w http.ResponseWriter, r *http.Request) {

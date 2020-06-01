@@ -5,9 +5,12 @@ import (
 	"fmt"
 	"github.com/flosch/pongo2"
 	"github.com/gorilla/mux"
+	"io"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
+	"path/filepath"
 	"strings"
 	"time"
 )
@@ -15,10 +18,12 @@ import (
 func MiscRoutes(router *mux.Router) {
 	router.HandleFunc("/debug/headers", routeHeaders).Methods(http.MethodGet)
 	router.HandleFunc("/debug/health", routeHealthCheck).Methods(http.MethodGet)
+	router.HandleFunc("/debug/static", routeListStatic).Methods(http.MethodGet)
 	router.NotFoundHandler = http.HandlerFunc(routeNotFound)
 }
 
 var notFoundTemplate = pageTemplate("404.html")
+var startTime = time.Now()
 
 func routeNotFound(w http.ResponseWriter, r *http.Request) {
 	// Can't get from request context because middleware didn't run
@@ -49,7 +54,6 @@ func routeHeaders(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-var _t = time.Now()
 func routeHealthCheck(w http.ResponseWriter, r *http.Request) {
 	db := NewStorage()
 
@@ -60,14 +64,30 @@ func routeHealthCheck(w http.ResponseWriter, r *http.Request) {
 	_ = db.DB().GetContext(r.Context(), &blogPostCount, `SELECT COUNT(id) FROM blog_posts`)
 
 	err := json.NewEncoder(w).Encode(&map[string]interface{}{
-		"host": r.Host,
+		"host":     r.Host,
 		"base_url": os.Getenv("BASE_URL"),
-		"commit": fmt.Sprintf("https://github.com/%s/commit/%s", os.Getenv("GITHUB_REPOSITORY"), os.Getenv("GITHUB_SHA")),
-		"deployed": fmt.Sprintf("%d seconds ago", int(time.Now().Sub(_t).Seconds())),
+		"commit":   fmt.Sprintf("https://github.com/%s/commit/%s", os.Getenv("GITHUB_REPOSITORY"), os.Getenv("GITHUB_SHA")),
+		"deployed": fmt.Sprintf("%d seconds ago", int(time.Now().Sub(startTime).Seconds())),
 		"pg_conns": pgConns,
 	})
 
 	if err != nil {
 		panic(err)
+	}
+}
+
+func routeListStatic(w http.ResponseWriter, r *http.Request) {
+	listDirRecursive(w, os.Getenv("STATIC_ROOT"), 0)
+}
+
+func listDirRecursive(w io.Writer, dir string, depth int) {
+	entries, _ := ioutil.ReadDir(dir)
+	for _, e := range entries {
+		fullPath := filepath.Join(dir, e.Name())
+		if e.IsDir() {
+			listDirRecursive(w, fullPath, depth+1)
+			continue
+		}
+		_, _ = fmt.Fprintln(w, fullPath)
 	}
 }
