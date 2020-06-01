@@ -116,6 +116,14 @@ h6 {
   @apply border text-sm py-3 px-4 rounded border-dotted border-primary-200 bg-primary-100 text-center;
 }
 
+.notice a {
+  @apply underline;
+}
+
+.notice a:hover {
+  @apply text-primary;
+}
+
 .notice--big {
   @apply py-4 text-base border-2 font-medium;
 }
