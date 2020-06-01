@@ -59,7 +59,7 @@ export function setupEditor(textareaEl, containerEl) {
     textareaEl.value = c.getValue();
   });
 
-  codeMirrorTypo(cm, 'en_US', '/dictionaries');
+  codeMirrorTypo(cm, 'en_US', '/static/dictionaries');
 
   return cm;
 }

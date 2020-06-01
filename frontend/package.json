@@ -48,7 +48,6 @@
   },
   "dependencies": {
     "codemirror": "^5.54.0",
-    "codemirror-typo": "^1.0.1",
-    "vue": "^2.6.11"
+    "codemirror-typo": "^1.0.1"
   }
 }

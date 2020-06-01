@@ -39,11 +39,7 @@
       <div class="form-row">
         <div style="display:flex">
           <label for="i-content">Content</label>
-          <a
-              href="#"
-              v-on:click="toggleExpand"
-              style="margin-left:auto;font-size:0.8em;"
-          >
+          <a data-toggle-expand href="#" style="margin-left:auto;font-size:0.8em;">
             Full Screen
           </a>
         </div>
@@ -51,19 +47,11 @@
       </div>
 
       <!-- Blog Post Editor -->
-      <div
-          class="blog-post-editor"
-          v-bind:class="{ hide: hideContentEditor }"
-          v-cloak
-      >
+      <div id="editor-container" class="blog-post-editor hide">
         <div class="blog-post-editor__edit">
           <div style="display:flex;align-items:center;">
             <h1 class="text-xl">{{ blogPost.Title | default:"New Post" }}</h1>
-            <button
-                class="btn btn-faint btn--sm"
-                type="button"
-                v-on:click="toggleExpand"
-            >
+            <button data-toggle-expand class="btn btn-faint btn--sm" type="button">
               &times;
             </button>
           </div>
@@ -90,208 +78,220 @@
 {% endblock %}
 
 {% block extraScripts %}
+
+  {# Setup Codemirror Editor#}
   <script src="{{ staticUrl }}/editor.js"></script>
+
+  <!-- Define Editor Behavior -->
   <script>
-    new schier.Vue({
-      // Set delimiter so it doesn't conflict with what's in <textarea>
-      delimiters: ['{[(', ')]}'],
+    (function() {
+      document.body.addEventListener('click', e => {
+        if (!e.target.hasAttribute('data-toggle-expand')) {
+          return;
+        }
 
-      // Render Vue app
-      el: '#editor-app',
-      data: {
-        previewCount: 0,
-        hideContentEditor: true,
-        cm: null,
-      },
-      methods: {
-        onContentChange: function(e) {
-          // Already contains a <!--more-->
-          if (e.target.value.includes('<!--more-->')) {
-            e.target.setCustomValidity('');
-            return;
-          }
+        toggleExpand(e);
+      });
 
-          // Only one paragraph, so doesn't need one
-          if (!e.target.value.includes('\n\n')) {
-            e.target.setCustomValidity('');
-            return;
-          }
+      const contentEl = document.querySelector('textarea[name=content]');
 
-          const validity = 'Missing <!--more--> tag';
-          e.target.setCustomValidity(validity);
-        },
-        toggleExpand: function(e) {
-          e.preventDefault();
+      contentEl.addEventListener('keyup', e => {
+        console.log('CHANGE', e.currentTarget.value);
+        handleChange(e);
+      });
 
-          this.hideContentEditor = !this.hideContentEditor;
+      function handleChange(e) {
+        // Already contains a <!--more-->
+        if (e.target.value.includes('<!--more-->')) {
+          e.target.setCustomValidity('');
+          return;
+        }
 
-          let debounceTimeout = 0;
-          const update = (debounceMillis = 0) => {
-            clearTimeout(debounceTimeout);
-            debounceTimeout = setTimeout(async () => {
-              const p = document.querySelector('.blog-post-editor__preview');
-              if (!p.hasChildNodes()) {
-                for (let i = 0; i < 2; i++) {
-                  const f = document.createElement('iframe');
-                  f.id = `preview-frame-${i}`;
-                  f.style.display = 'none';
-                  p.appendChild(f);
-                }
+        // Only one paragraph, so doesn't need one
+        if (!e.target.value.includes('\n\n')) {
+          e.target.setCustomValidity('');
+          return;
+        }
+
+        const validity = 'Missing <!--more--> tag';
+        e.target.setCustomValidity(validity);
+      }
+
+      function toggleExpand(e) {
+        e.preventDefault();
+
+        const el = document.querySelector('#editor-container');
+        if (el.classList.contains('hide')) el.classList.remove('hide');
+        else el.classList.add('hide');
+
+        let debounceTimeout = 0;
+        let previewCount = 0;
+        const update = (debounceMillis = 0) => {
+          clearTimeout(debounceTimeout);
+          debounceTimeout = setTimeout(async () => {
+            const p = document.querySelector('.blog-post-editor__preview');
+            if (p.querySelectorAll('iframe').length === 0) {
+              for (let i = 0; i < 2; i++) {
+                const f = document.createElement('iframe');
+                f.id = `preview-frame-${i}`;
+                f.style.display = 'none';
+                p.appendChild(f);
+              }
+            }
+
+            // Swap between two i-frames to prevent loading flicker
+            const oldPreviewEl = document.querySelector('#preview-frame-' + (previewCount % 2));
+            const newPreviewEl = document.querySelector('#preview-frame-' + ((previewCount + 1) % 2));
+            previewCount++;
+
+            // If the iFrame already had content, we can just fetch the partial and replace it. This
+            // prevents it from having to re-fetch the scripts and styles and stuff.
+            const partial = newPreviewEl.contentDocument.querySelector('.blog-post-container') ? 'true' : 'false';
+
+            // Fetch the preview from server
+            const formData = new FormData();
+            formData.append('partial', partial);
+
+            for (const el of document.querySelectorAll(
+              '#edit-form input, #edit-form textarea',
+            )) {
+              if (!el.hasAttribute('name')) {
+                continue;
               }
 
-              // Swap between two i-frames to prevent loading flicker
-              const oldPreviewEl = document.querySelector('#preview-frame-' + (this.previewCount % 2));
-              const newPreviewEl = document.querySelector('#preview-frame-' + ((this.previewCount + 1) % 2));
-              this.previewCount++;
+              formData.append(el.getAttribute('name'), el.value);
+            }
 
-              // If the iFrame already had content, we can just fetch the partial and replace it. This
-              // prevents it from having to re-fetch the scripts and styles and stuff.
-              const partial = newPreviewEl.contentDocument.querySelector('.blog-post-container') ? 'true' : 'false';
+            // Send the AJAX request to fetch the render HTML
+            const csrfTokenHeaderName = document.body.getAttribute('data-csrf-token-header');
+            const csrfToken = document.body.getAttribute('data-csrf-token');
+            const resp = await fetch('/blog/render', {
+              method: 'POST',
+              body: formData,
+              headers: { [csrfTokenHeaderName]: csrfToken },
+            });
+            const previewHtml = await resp.text();
 
-              // Fetch the preview from server
-              const formData = new FormData();
-              formData.append('partial', partial);
+            const oldScrollTop =
+              oldPreviewEl.contentDocument.scrollingElement.scrollTop;
 
-              for (const el of document.querySelectorAll(
-                '#edit-form input, #edit-form textarea',
-              )) {
-                if (!el.hasAttribute('name')) {
-                  continue;
-                }
-
-                formData.append(el.getAttribute('name'), el.value);
-              }
-
-              // Send the AJAX request to fetch the render HTML
-              const csrfTokenHeaderName = document.body.getAttribute('data-csrf-token-header');
-              const csrfToken = document.body.getAttribute('data-csrf-token');
-              const resp = await fetch('/blog/render', {
-                method: 'POST',
-                body: formData,
-                headers: { [csrfTokenHeaderName]: csrfToken },
-              });
-              const previewHtml = await resp.text();
-
-              const oldScrollTop =
-                oldPreviewEl.contentDocument.scrollingElement.scrollTop;
-
-              if (partial === 'true') {
-                // Basic swap of blog post inside already-loaded page
-                newPreviewEl.contentDocument.querySelector('.blog-post-container').innerHTML = previewHtml;
+            if (partial === 'true') {
+              // Basic swap of blog post inside already-loaded page
+              newPreviewEl.contentDocument.querySelector('.blog-post-container').innerHTML = previewHtml;
+              oldPreviewEl.style.display = 'none';
+              newPreviewEl.style.display = 'block';
+              newPreviewEl.contentDocument.scrollingElement.scrollTop = oldScrollTop;
+            } else {
+              // Replace entire document
+              newPreviewEl.addEventListener('load', () => {
                 oldPreviewEl.style.display = 'none';
                 newPreviewEl.style.display = 'block';
                 newPreviewEl.contentDocument.scrollingElement.scrollTop = oldScrollTop;
-              } else {
-                // Replace entire document
-                newPreviewEl.addEventListener('load', () => {
-                  oldPreviewEl.style.display = 'none';
-                  newPreviewEl.style.display = 'block';
-                  newPreviewEl.contentDocument.scrollingElement.scrollTop = oldScrollTop;
-                });
-                newPreviewEl.contentWindow.document.open();
-                newPreviewEl.contentWindow.document.write(previewHtml);
-                newPreviewEl.contentWindow.document.close();
-              }
-            }, debounceMillis);
-          };
-
-          setTimeout(() => {
-            if (this.hideContentEditor) {
-              return;
+              });
+              newPreviewEl.contentWindow.document.open();
+              newPreviewEl.contentWindow.document.write(previewHtml);
+              newPreviewEl.contentWindow.document.close();
             }
+          }, debounceMillis);
+        };
 
-            if (this.cm) {
-              this.cm.refresh();
-            } else {
-              const contentEl = document.querySelector('textarea[name=content]');
-              this.cm = schier.setupEditor(contentEl, document.querySelector('#editor'));
-              this.cm.on('change', () => update(500));
+        let cm = null;
+        setTimeout(() => {
+          if (cm) {
+            cm.refresh();
+          } else {
+            const contentEl = document.querySelector('textarea[name=content]');
+            cm = schier.setupEditor(contentEl, document.querySelector('#editor'));
+            cm.on('change', () => update(500));
 
-              const upImg = async (cm, e) => {
-                const { url, name } = await upload(e.dataTransfer || e.clipboardData);
-                const doc = this.cm.getDoc();
-                const cur = doc.getCursor();
-                doc.replaceRange(`\n${mdImage(url, name)}\n`, cur);
-              };
+            const upImg = async (cm, e) => {
+              const { url, name } = await upload(e.dataTransfer || e.clipboardData);
+              const doc = cm.getDoc();
+              const cur = doc.getCursor();
+              doc.replaceRange(`\n${mdImage(url, name)}\n`, cur);
+            };
 
-              this.cm.on('paste', upImg);
-              this.cm.on('drop', upImg);
-              this.cm.focus();
-            }
-
-            update(0);
-          });
-        },
-      },
-    });
-
-    const contentEl = document.querySelector('textarea[name=content]');
-    contentEl.addEventListener('paste', async e => {
-      const { url, name } = await upload(e.clipboardData);
-      const img = mdImage(url, name);
-
-      if (contentEl.selectionStart) {
-        const startPos = contentEl.selectionStart;
-        const endPos = contentEl.selectionEnd;
-        const before = contentEl.value.substring(0, startPos);
-        const after = contentEl.value.substring(endPos, contentEl.value.length);
-
-        //  Update value
-        contentEl.value = before + img + after;
-
-        // Not sure why this can't be done right away
-        setTimeout(() => contentEl.setSelectionRange(startPos, startPos + img.length));
-      } else {
-        contentEl.value += img;
-      }
-    });
-
-    const imageEl = document.querySelector('input[name=image]');
-    imageEl.addEventListener('paste', async e => {
-      const { url } = await upload(e.clipboardData);
-      imageEl.value = url;
-    });
-    imageEl.addEventListener('dragenter', e => e.preventDefault());
-    imageEl.addEventListener('dragover', e => {
-      e.stopPropagation();
-      e.preventDefault();
-      e.dataTransfer.dropEffect = 'copy';
-    });
-    imageEl.addEventListener('drop', async e => {
-      e.preventDefault();
-      const { url } = await upload(e.dataTransfer);
-      imageEl.value = url;
-    });
-
-    function mdImage(url, name) {
-      return `![${name}](${url})`;
-    }
-
-    function upload(data) {
-      return new Promise(resolve => {
-        for (const item of data.items) {
-          if (item.type.indexOf('image/') !== 0) {
-            // Skip non-images
-            continue;
+            cm.on('paste', upImg);
+            cm.on('drop', upImg);
+            cm.focus();
           }
 
-          const csrfTokenHeaderName = document.body.getAttribute('data-csrf-token-header');
-          const csrfToken = document.body.getAttribute('data-csrf-token');
-          const file = item.getAsFile();
-          const reader = new FileReader();
+          update(0);
+        });
+      }
+    })();
+  </script>
 
-          reader.onload = async e => {
-            const body = new FormData();
-            const headers = { [csrfTokenHeaderName]: csrfToken };
-            body.append('file', file);
+  <script>
+    (function() {
+      const contentEl = document.querySelector('textarea[name=content]');
+      contentEl.addEventListener('paste', async e => {
+        const { url, name } = await upload(e.clipboardData);
+        const img = mdImage(url, name);
 
-            const resp = await fetch('/api/blog/assets', { method: 'PUT', body, headers });
-            const { url } = await resp.json();
-            resolve({ url, name: file.name });
-          };
-          reader.readAsArrayBuffer(file);
+        if (contentEl.selectionStart) {
+          const startPos = contentEl.selectionStart;
+          const endPos = contentEl.selectionEnd;
+          const before = contentEl.value.substring(0, startPos);
+          const after = contentEl.value.substring(endPos, contentEl.value.length);
+
+          //  Update value
+          contentEl.value = before + img + after;
+
+          // Not sure why this can't be done right away
+          setTimeout(() => contentEl.setSelectionRange(startPos, startPos + img.length));
+        } else {
+          contentEl.value += img;
         }
       });
-    }
+
+      const imageEl = document.querySelector('input[name=image]');
+      imageEl.addEventListener('paste', async e => {
+        const { url } = await upload(e.clipboardData);
+        imageEl.value = url;
+      });
+      imageEl.addEventListener('dragenter', e => e.preventDefault());
+      imageEl.addEventListener('dragover', e => {
+        e.stopPropagation();
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'copy';
+      });
+      imageEl.addEventListener('drop', async e => {
+        e.preventDefault();
+        const { url } = await upload(e.dataTransfer);
+        imageEl.value = url;
+      });
+
+      function mdImage(url, name) {
+        return `![${name}](${url})`;
+      }
+
+      function upload(data) {
+        return new Promise(resolve => {
+          for (const item of data.items) {
+            if (item.type.indexOf('image/') !== 0) {
+              // Skip non-images
+              continue;
+            }
+
+            const csrfTokenHeaderName = document.body.getAttribute('data-csrf-token-header');
+            const csrfToken = document.body.getAttribute('data-csrf-token');
+            const file = item.getAsFile();
+            const reader = new FileReader();
+
+            reader.onload = async e => {
+              const body = new FormData();
+              const headers = { [csrfTokenHeaderName]: csrfToken };
+              body.append('file', file);
+
+              const resp = await fetch('/api/blog/assets', { method: 'PUT', body, headers });
+              const { url } = await resp.json();
+              resolve({ url, name: file.name });
+            };
+            reader.readAsArrayBuffer(file);
+          }
+        });
+      }
+    })();
   </script>
 {% endblock %}

@@ -138,6 +138,7 @@ func routeBlogRender(w http.ResponseWriter, r *http.Request) {
 			Slug:      slug,
 			Title:     title,
 			Date:      date,
+			EditedAt:  date,
 			Content:   content,
 			Tags:      tags,
 		},
