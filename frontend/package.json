@@ -9,7 +9,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "pretty-quick --staged"
+      "pre-commit": "pretty-quick --pattern scripts/**/*.js styles/**/*.css"
     }
   },
   "staticFiles": {

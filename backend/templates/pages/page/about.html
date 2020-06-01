@@ -1,62 +1,60 @@
 {% extends '../../layouts/base.html' %} {% block content %}
-<div class="container content">
-  <h1>Hey there, I'm Greg!</h1>
-  <p>
-    I'm an independent software developer from Canada 🇨🇦. Web development is my
-    primary focus, but I also like to dabble with mobile apps, games, and
-    design. Check out some of the
-    <strong><a href="/projects">Projects I'm working on 🧰</a></strong>
-  </p>
+  <div class="container content">
+    <h1>Hey there, I'm Greg!</h1>
+    <p>
+      I'm an independent software developer from Canada 🇨🇦. Web development is my
+      primary focus, but I also like to dabble with mobile apps, games, and
+      design. Check out some of the
+      <strong><a href="/projects">Projects I'm working on 🧰</a></strong>
+    </p>
 
-  <hr />
+    <hr />
 
-  <h2>Recent Writing ✍🏻</h2>
-  <p>
-    Here are some things I've written about recently on the
-    <a href="/blog">Blog</a>.
-  </p>
-  <ul>
-    {% for post in blogPosts %}
-    <li>
-      <a href="/blog/{{ post.Slug }}">{{ post.Title }}</a>
-    </li>
-    {% endfor %}
-  </ul>
+    <h2>Recent Writing ✍🏻</h2>
+    <p>
+      Here are some things I've written about recently on the
+      <a href="/blog">Blog</a>. </p>
+    <ul>
+      {% for post in blogPosts %}
+        <li>
+          <a href="/blog/{{ post.Slug }}">{{ post.Title }}</a>
+        </li>
+      {% endfor %}
+    </ul>
 
-  <hr />
+    <hr />
 
-  <h2>Favorite Books 📚</h2>
-  <p>
-    I read mostly non-fiction books as a way to learn new things. Here is my
-    top-10 list.
-  </p>
-  <ol>
-    {% for book in books %}
-    <li>
-      {% if book.Link %}
-      <a href="{{ book.Link }}">
-        {{ book.Title }} ({{ book.Author }})
-      </a>
-      {% else %} {{ book.Title }} ({{ book.Author }}) {% endif %}
-    </li>
-    {% endfor %}
-  </ol>
+    <h2>Favorite Books 📚</h2>
+    <p>
+      I read mostly non-fiction books as a way to learn new things. Here is my
+      top-10 list. </p>
+    <ol>
+      {% for book in books %}
+        <li>
+          {% if book.Link %}
+            <a href="{{ book.Link }}">
+              {{ book.Title }} ({{ book.Author }})
+            </a>
+          {% else %} {{ book.Title }} ({{ book.Author }}) {% endif %}
+        </li>
+      {% endfor %}
+    </ol>
 
-  <hr />
+    <hr />
 
-  <h2>Favorite Things 🌟</h2>
+    <h2>Favorite Things 🌟</h2>
 
-  <p>Here are a few of the things that I can't live without.</p>
+    <p>Here are a few of the things that I can't live without.</p>
 
-  <ul>
-    {% for thing in favoriteThings %}
-    <li>
-      <a href="{{ thing.Link }}">
-        {{ thing.Name }}
-      </a>
-      – {{ thing.Description }}
-    </li>
-    {% endfor %}
-  </ul>
-</div>
+    <ul>
+      {% for thing in favoriteThings %}
+        <li>
+          <a href="{{ thing.Link }}">
+            {{ thing.Name }}
+          </a>
+          – {{ thing.Description }}
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
 {% endblock %}

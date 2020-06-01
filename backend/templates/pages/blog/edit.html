@@ -1,108 +1,80 @@
 {% extends '../../layouts/base.html' %} {% block extraStyles %}
-<link rel="stylesheet" href="{{ staticUrl }}/editor.css" />
-<style>
-  .hide {
-    display: none;
-  }
-
-  #editor-app textarea {
-    font-family: monospace;
-    font-size: 0.8rem;
-  }
-
-  #editor-app h1 {
-    font-size: 1.5rem;
-  }
-</style>
-{% endblock %} {% block content %}
-<div class="content container" id="editor-app">
-  <h1 class="hidden-mobile">
-    {{ blogPost | yesno:'Edit,Create' }} Post {% if blogPost and
-    blogPost.Published %}(Published){% else %}(Draft){% endif %}
-  </h1>
-  <form action="/forms/blog/upsert" method="post" id="edit-form">
-    {{ csrfField | safe }} {% include '../../partials/form-input.html' with
-    type='hidden' name='id' value=blogPost.ID required=true %} {% include
-    '../../partials/form-input.html' with label='Title' type='text' name='title'
-    value=blogPost.Title placeholder='My Blog Post' required=true autofocus=true
-    %}
-    <details>
-      <summary>Other Fields</summary>
-      {% include '../../partials/form-input.html' with label='Slug'
-      type=blogPost.Published|yesno:"hidden,text" name='slug'
-      value=blogPost.Slug placeholder='my-blog-post' %} {% include
-      '../../partials/form-input.html' with label='Image' type='url'
-      name='image' value=blogPost.Image
-      placeholder='https://assets.schier.dev/images/insomnia-growth.png' %} {%
-      include '../../partials/form-input.html' with label='Tags' type='text'
-      name='tags' value=blogPost.Tags placeholder='Tag1, Tag2' %} {% include
-      '../../partials/form-input.html' with label='Stage'
-      type=blogPost.Published|yesno:"hidden,number" name='stage'
-      value=blogPost.Stage placeholder='0' %}
-    </details>
-
-    <div class="form-row">
-      <div style="display:flex">
-        <label for="i-content">Content</label>
-        <a
-          data-toggle-expand
-          href="#"
-          style="margin-left:auto;font-size:0.8em;"
-        >
-          Full Screen
-        </a>
-      </div>
-      <textarea
-        name="content"
-        id="i-content"
-        rows="20"
-        @input="onContentChange"
-      >
-          {{ blogPost.Content }}
-        </textarea
-      >
-    </div>
-
-    <!-- Blog Post Editor -->
-    <div id="editor-container" class="blog-post-editor hide">
-      <div class="blog-post-editor__edit">
-        <div style="display:flex;align-items:center;">
-          <h1 class="text-xl">{{ blogPost.Title | default:"New Post" }}</h1>
-          <button
-            data-toggle-expand
-            class="btn btn-faint btn--sm"
-            type="button"
-          >
-            &times;
-          </button>
-        </div>
-        <div id="editor">Editor here...</div>
-      </div>
-      <div class="blog-post-editor__preview">
-        <!-- Will be filled by script -->
-      </div>
-    </div>
-    <!-- / Blog Post Editor -->
-
-    <div class="form-actions">
-      {% if blogPost.ID %}
-      <a class="btn btn--gray" href="/blog/{{ blogPost.Slug }}">
-        Preview
-      </a>
-      {% endif %}
-      <button class="btn">
-        {% if blogPost %}Save{% else %}Create{% endif %}
-      </button>
-    </div>
-  </form>
-</div>
-{% endblock %} {% block extraScripts %}
-<script>
-  /** Editor-related Code **/
-  {
-    {
-      "index.editor.js" | inlinestatic | safe;
+  <link rel="stylesheet" href="{{ staticUrl }}/editor.css" />
+  <style>
+    .hide {
+      display: none;
     }
-  }
-</script>
+
+    #editor-app textarea {
+      font-family: monospace;
+      font-size: 0.8rem;
+    }
+
+    #editor-app h1 {
+      font-size: 1.5rem;
+    }
+  </style>
+{% endblock %} {% block content %}
+  <div class="content container" id="editor-app">
+    <h1 class="hidden-mobile">
+      {{ blogPost | yesno:'Edit,Create' }} Post
+      {% if blogPost and blogPost.Published %}(Published){% else %}(Draft){% endif %}
+    </h1>
+    <form action="/forms/blog/upsert" method="post" id="edit-form">
+      {{ csrfField | safe }} {% include '../../partials/form-input.html' with type='hidden' name='id' value=blogPost.ID required=true %}
+      {% include '../../partials/form-input.html' with label='Title' type='text' name='title' value=blogPost.Title placeholder='My Blog Post' required=true autofocus=true %}
+      <details>
+        <summary>Other Fields</summary>
+        {% include '../../partials/form-input.html' with label='Slug' type=blogPost.Published|yesno:"hidden,text" name='slug' value=blogPost.Slug placeholder='my-blog-post' %}
+        {% include '../../partials/form-input.html' with label='Image' type='url' name='image' value=blogPost.Image placeholder='https://assets.schier.dev/images/insomnia-growth.png' %}
+        {% include '../../partials/form-input.html' with label='Tags' type='text' name='tags' value=blogPost.Tags placeholder='Tag1, Tag2' %}
+        {% include '../../partials/form-input.html' with label='Stage' type=blogPost.Published|yesno:"hidden,number" name='stage' value=blogPost.Stage placeholder='0' %}
+      </details>
+
+      <div class="form-row">
+        <div style="display:flex">
+          <label for="i-content">Content</label>
+          <a data-toggle-expand href="#" style="margin-left:auto;font-size:0.8em;">
+            Full Screen
+          </a>
+        </div>
+        <textarea name="content" id="i-content" rows="20" @input="onContentChange">
+          {{ blogPost.Content }}
+        </textarea>
+      </div>
+
+      <!-- Blog Post Editor -->
+      <div id="editor-container" class="blog-post-editor hide">
+        <div class="blog-post-editor__edit">
+          <div style="display:flex;align-items:center;">
+            <h1 class="text-xl">{{ blogPost.Title | default:"New Post" }}</h1>
+            <button data-toggle-expand class="btn btn-faint btn--sm" type="button">
+              &times;
+            </button>
+          </div>
+          <div id="editor">Editor here...</div>
+        </div>
+        <div class="blog-post-editor__preview">
+          <!-- Will be filled by script -->
+        </div>
+      </div>
+      <!-- / Blog Post Editor -->
+
+      <div class="form-actions">
+        {% if blogPost.ID %}
+          <a class="btn btn--gray" href="/blog/{{ blogPost.Slug }}">
+            Preview
+          </a>
+        {% endif %}
+        <button class="btn">
+          {% if blogPost %}Save{% else %}Create{% endif %}
+        </button>
+      </div>
+    </form>
+  </div>
+{% endblock %} {% block extraScripts %}
+  <script>
+    /** Editor-related Code **/
+    {{ "index.editor.js" | inlinestatic | safe }}
+  </script>
 {% endblock %}

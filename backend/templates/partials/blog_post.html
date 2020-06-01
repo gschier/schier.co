@@ -5,28 +5,33 @@
   </header>
 
   {% if loggedIn %}
-  <div>
-    <a href="/blog/edit/{{ blogPost.ID }}" class="btn btn--gray btn--sm">
-      Edit
-    </a>
-    {% include './publish_link.html' %} {% include './unlist_link.html' %} {%
-    include './delete_link.html' %}
-  </div>
-  {% endif %} {% if blogPost.EditedAt | default:blogPost.Date |
-  isodateolderdays:365 %}
-  <p class="notice notice--warning">
-    This post was last updated
-    <code>{{ blogPost.EditedAt | default:blogPost.Date | isoformat }}</code> and
-    may be out of date
-  </p>
-  {% endif %} {% if not blogPost.Date | isodatesamemonth:blogPost.EditedAt %}
-  <p class="notice notice--subtle">
-    Updated
-    <time datetime="{{ blogPost.EditedAt }}" title="{{ blogPost.EditedAt }}">
-      <strong>{{ blogPost.EditedAt | isoformat:'Jan _2, 2006' }}</strong>
-    </time>
-  </p>
-  {% endif %} {{ blogPost.Content | markdown }}
+    <div>
+      <a href="/blog/edit/{{ blogPost.ID }}" class="btn btn--gray btn--sm">
+        Edit
+      </a>
+      {% include './publish_link.html' %}
+      {% include './unlist_link.html' %}
+      {% include './delete_link.html' %}
+    </div>
+  {% endif %}
+
+  {% if blogPost.EditedAt | default:blogPost.Date | isodateolderdays:365 %}
+    <p class="notice notice--warning">
+      This post was last updated
+      <code>{{ blogPost.EditedAt | default:blogPost.Date | isoformat }}</code> and
+      may be out of date </p>
+  {% endif %}
+
+  {% if not blogPost.Date | isodatesamemonth:blogPost.EditedAt %}
+    <p class="notice notice--subtle">
+      Updated
+      <time datetime="{{ blogPost.EditedAt }}" title="{{ blogPost.EditedAt }}">
+        <strong>{{ blogPost.EditedAt | isoformat:'Jan _2, 2006' }}</strong>
+      </time>
+    </p>
+  {% endif %}
+
+  {{ blogPost.Content | markdown }}
 </article>
 
 <div class="row-spaced">
@@ -44,171 +49,149 @@
   {% include './blog_post_tag.html' with tags=blogPost.Tags %}
 </div>
 {% if not hideVoteEgg %}
-<div class="vote-messages">
-  <div data-votes="50" data-effect="page-flip">
-    <div class="notice notice--danger">
-      Now look what you've done 🌋
+  <div class="vote-messages">
+    <div data-votes="50" data-effect="page-flip">
+      <div class="notice notice--danger">
+        Now look what you've done 🌋
+      </div>
     </div>
-  </div>
-  <div data-votes="42" data-effect="page-shake">
-    <div class="notice notice--danger notice--huge">
-      Stop clicking and run for your life! 😱
+    <div data-votes="42" data-effect="page-shake">
+      <div class="notice notice--danger notice--huge">
+        Stop clicking and run for your life! 😱
+      </div>
     </div>
-  </div>
-  <div data-votes="35" data-effect="shake">
-    <div class="notice notice--warning notice--big">
-      Uh oh, I don't think the system can't handle it! 🔥
+    <div data-votes="35" data-effect="shake">
+      <div class="notice notice--warning notice--big">
+        Uh oh, I don't think the system can't handle it! 🔥
+      </div>
     </div>
-  </div>
-  <div data-votes="20">
-    <div class="notice notice--warning">
-      Stop it, you're too kind 😄
+    <div data-votes="20">
+      <div class="notice notice--warning">
+        Stop it, you're too kind 😄
+      </div>
     </div>
-  </div>
-  <div data-votes="4">
-    <div class="notice notice--notice">
-      Thanks for the love! ❤️
+    <div data-votes="4">
+      <div class="notice notice--notice">
+        Thanks for the love! ❤️
+      </div>
     </div>
-  </div>
-  <div data-votes="1">
-    <div class="notice notice--subtle">
-      Thanks, glad you enjoyed it! Care to share?
-      <div class="blog-post__btns">
-        <a
-          data-href="/blog/share/{{ blogPost.Slug }}/hn"
-          target="_blank"
-          rel="nofollow"
-          class="btn btn--xs svg-icon svg-icon--hn"
-        >
-          {{ 'images/icons/hn.svg' | inlinestatic | safe }} HN
-        </a>
-        <a
-          data-href="/blog/share/{{ blogPost.Slug }}/twitter"
-          target="_blank"
-          rel="nofollow"
-          class="btn btn--xs svg-icon svg-icon--twitter"
-        >
-          {{ 'images/icons/twitter.svg' | inlinestatic | safe }} Twitter
-        </a>
-        <a
-          data-href="/blog/share/{{ blogPost.Slug }}/reddit"
-          target="_blank"
-          rel="nofollow"
-          class="btn btn--xs svg-icon svg-icon--reddit"
-        >
-          {{ 'images/icons/reddit.svg' | inlinestatic | safe }} Reddit
-        </a>
-        <a
-          data-href="/blog/share/{{ blogPost.Slug }}/email"
-          target="_blank"
-          rel="nofollow"
-          class="btn btn--xs svg-icon svg-icon--email"
-        >
-          {{ 'images/icons/email.svg' | inlinestatic | safe }} Email
-        </a>
-        <script>
-          // Populate href dynamically so bots don't crawl so easily
-          for (const el of document.querySelectorAll("[data-href]")) {
-            el.setAttribute("href", el.getAttribute("data-href"));
-          }
-        </script>
+    <div data-votes="1">
+      <div class="notice notice--subtle">
+        Thanks, glad you enjoyed it! Care to share?
+        <div class="blog-post__btns">
+          <a data-href="/blog/share/{{ blogPost.Slug }}/hn" target="_blank" rel="nofollow" class="btn btn--xs svg-icon svg-icon--hn">
+            {{ 'images/icons/hn.svg' | inlinestatic | safe }} HN
+          </a>
+          <a data-href="/blog/share/{{ blogPost.Slug }}/twitter" target="_blank" rel="nofollow" class="btn btn--xs svg-icon svg-icon--twitter">
+            {{ 'images/icons/twitter.svg' | inlinestatic | safe }} Twitter
+          </a>
+          <a data-href="/blog/share/{{ blogPost.Slug }}/reddit" target="_blank" rel="nofollow" class="btn btn--xs svg-icon svg-icon--reddit">
+            {{ 'images/icons/reddit.svg' | inlinestatic | safe }} Reddit
+          </a>
+          <a data-href="/blog/share/{{ blogPost.Slug }}/email" target="_blank" rel="nofollow" class="btn btn--xs svg-icon svg-icon--email">
+            {{ 'images/icons/email.svg' | inlinestatic | safe }} Email
+          </a>
+          <script>
+            // Populate href dynamically so bots don't crawl so easily
+            for (const el of document.querySelectorAll('[data-href]')) {
+              el.setAttribute('href', el.getAttribute('data-href'));
+            }
+          </script>
+        </div>
       </div>
     </div>
   </div>
-</div>
 {% endif %}
 
 <hr class="hr--spaced" />
 <div>
   <div class="row-spaced">
     <h2 class="row-spaced">More Posts ✍🏻</h2>
-    <small
-      ><a href="/blog" title="See all blog posts">See All &raquo;</a></small
-    >
+    <small><a href="/blog" title="See all blog posts">See All &raquo;</a></small>
   </div>
   {% include './post-cards.html' with blogPosts=recommendedBlogPosts %}
 </div>
 
 {% include './full-subscription-form.html' %} {% block extraScripts %}
-<script>
-  (function() {
-    const msgContainer = document.body.querySelector(".vote-messages");
-    if (!msgContainer) return;
+  <script>
+    (function() {
+      const msgContainer = document.body.querySelector('.vote-messages');
+      if (!msgContainer) return;
 
-    const msgs = msgContainer.querySelectorAll("[data-votes]");
-    const container = document.body.querySelector(".clap-button");
-    const clapCount = container.querySelector(".clap-count");
-    const clapBtn = container.querySelector("button");
-    const lsKey = "vote-{{ blogPost.Slug }}";
+      const msgs = msgContainer.querySelectorAll('[data-votes]');
+      const container = document.body.querySelector('.clap-button');
+      const clapCount = container.querySelector('.clap-count');
+      const clapBtn = container.querySelector('button');
+      const lsKey = "vote-{{ blogPost.Slug }}";
 
-    function updateDisabled() {
-      const count = JSON.parse(localStorage.getItem(lsKey)) || 0;
-      if (count >= 50) {
-        clapBtn.setAttribute("disabled", "disabled");
-      }
-    }
-
-    updateDisabled();
-
-    // Remove sheers notifications so we can show them later
-    for (const el of msgs) {
-      msgContainer.removeChild(el);
-    }
-
-    clapBtn.addEventListener("click", function(e) {
-      e.preventDefault();
-      e.stopPropagation();
-
-      let count = parseInt(localStorage.getItem(lsKey)) || 0;
-      count = isNaN(count) ? 0 : count;
-
-      fetch("/api/blog/vote", {
-        method: "POST",
-        body: `slug={{ blogPost.Slug }}&count=${count}`,
-        headers: {
-          [document.body.getAttribute(
-            "data-csrf-token-header"
-          )]: document.body.getAttribute("data-csrf-token"),
-          "Content-Type": "application/x-www-form-urlencoded"
+      function updateDisabled() {
+        const count = JSON.parse(localStorage.getItem(lsKey)) || 0;
+        if (count >= 50) {
+          clapBtn.setAttribute('disabled', 'disabled');
         }
-      })
-        .then(resp => resp.text())
-        .then(function(total) {
-          localStorage.setItem(lsKey, JSON.stringify(count + 1));
-          updateDisabled();
+      }
 
-          clapCount.innerHTML = total;
-          for (const el of msgs) {
-            if (count + 1 < parseInt(el.getAttribute("data-votes"))) {
-              continue;
+      updateDisabled();
+
+      // Remove sheers notifications so we can show them later
+      for (const el of msgs) {
+        msgContainer.removeChild(el);
+      }
+
+      clapBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        let count = parseInt(localStorage.getItem(lsKey)) || 0;
+        count = isNaN(count) ? 0 : count;
+
+        fetch('/api/blog/vote', {
+          method: 'POST',
+          body: `slug={{ blogPost.Slug }}&count=${count}`,
+          headers: {
+            [document.body.getAttribute(
+              'data-csrf-token-header',
+            )]: document.body.getAttribute('data-csrf-token'),
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+        })
+          .then(resp => resp.text())
+          .then(function(total) {
+            localStorage.setItem(lsKey, JSON.stringify(count + 1));
+            updateDisabled();
+
+            clapCount.innerHTML = total;
+            for (const el of msgs) {
+              if (count + 1 < parseInt(el.getAttribute('data-votes'))) {
+                continue;
+              }
+
+              // Append child if it's not already
+              if (!el.parentNode) {
+                msgContainer.prepend(el);
+              }
+
+              el.style.animation = 'fade-in 0.5s';
+
+              if (el.getAttribute('data-effect') === 'shake') {
+                container.style.animation = 'shake 0.5s';
+                container.style.animationIterationCount = 'infinite';
+              }
+
+              if (el.getAttribute('data-effect') === 'page-shake') {
+                document.body.style.animation = 'shake 0.6s';
+                document.body.style.animationIterationCount = 'infinite';
+                container.style.animation = '';
+              }
+
+              if (el.getAttribute('data-effect') === 'page-flip') {
+                document.body.style.animation = 'flip 0.3s';
+                document.body.style.animationFillMode = 'forwards';
+                container.style.animation = '';
+              }
             }
-
-            // Append child if it's not already
-            if (!el.parentNode) {
-              msgContainer.prepend(el);
-            }
-
-            el.style.animation = "fade-in 0.5s";
-
-            if (el.getAttribute("data-effect") === "shake") {
-              container.style.animation = "shake 0.5s";
-              container.style.animationIterationCount = "infinite";
-            }
-
-            if (el.getAttribute("data-effect") === "page-shake") {
-              document.body.style.animation = "shake 0.6s";
-              document.body.style.animationIterationCount = "infinite";
-              container.style.animation = "";
-            }
-
-            if (el.getAttribute("data-effect") === "page-flip") {
-              document.body.style.animation = "flip 0.3s";
-              document.body.style.animationFillMode = "forwards";
-              container.style.animation = "";
-            }
-          }
-        });
-    });
-  })();
-</script>
+          });
+      });
+    })();
+  </script>
 {% endblock %}
