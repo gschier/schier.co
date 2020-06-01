@@ -4,13 +4,7 @@
   "version": "1.0.0",
   "scripts": {
     "start": "rm -rf ./static/* && parcel watch --global schier --out-dir ./static --public-url /static/ index.*.js",
-    "build": "rm -rf ./static/* && parcel build --global schier --no-source-maps --out-dir ./static index.*.js",
-    "format-code": "prettier --write scripts/**/*.js styles/**/*.css"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "pretty-quick --pattern scripts/**/*.js styles/**/*.css"
-    }
+    "build": "rm -rf ./static/* && parcel build --global schier --no-source-maps --out-dir ./static index.*.js"
   },
   "staticFiles": {
     "staticPath": [
@@ -31,20 +25,10 @@
   "browserslist": [
     "last 1 Chrome versions"
   ],
-  "prettier": {
-    "trailingComma": "es5",
-    "tabWidth": 2,
-    "semi": true,
-    "singleQuote": true,
-    "printWidth": 120
-  },
   "devDependencies": {
     "autoprefixer": "^9.8.0",
-    "husky": "^3.1.0",
     "parcel-bundler": "^1.12.4",
     "parcel-plugin-static-files-copy": "^2.3.1",
-    "prettier": "1.19.1",
-    "pretty-quick": "^2.0.1",
     "tailwindcss": "^1.4.6"
   },
   "dependencies": {
