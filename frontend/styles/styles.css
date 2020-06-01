@@ -1,56 +1,60 @@
 @tailwind base;
 
 html {
-  @apply bg-background text-primary;
-  font-size: 17px;
-  font-family: 'Open Sans', sans-serif;
+    @apply bg-background text-primary;
+    font-size: 17px;
+    font-family: 'Open Sans', sans-serif;
 }
 
 @media only screen and (max-width: 600px) {
-  html {
-    font-size: 16px;
-  }
+    html {
+        font-size: 16px;
+    }
 }
 
 body {
-  @apply p-0 text-primary;
+    @apply p-0 text-primary;
+}
+
+body[data-logged-in='yes'] .top-nav .logo {
+    filter: saturate(8);
 }
 
 main {
-  margin-left: auto;
-  margin-right: auto;
-  min-height: 30vh;
+    margin-left: auto;
+    margin-right: auto;
+    min-height: 30vh;
 }
 
 .container {
-  @apply mx-auto px-4;
-  max-width: 40rem;
+    @apply mx-auto px-4;
+    max-width: 40rem;
 }
 
 .link {
-  -webkit-appearance: initial;
+    -webkit-appearance: initial;
 }
 
 a,
 .link {
-  @apply text-secondary;
+    @apply text-secondary;
 }
 
 a:hover,
 .link:hover {
-  text-decoration: underline;
+    text-decoration: underline;
 }
 
 hr {
-  @apply border-gray-300 border-0 border-b my-8;
+    @apply border-gray-300 border-0 border-b my-8;
 }
 
 small {
-  @apply text-sm;
+    @apply text-sm;
 }
 
 h1 {
-  @apply text-3xl;
+    @apply text-3xl;
 }
 
 h1,
@@ -59,53 +63,53 @@ h3,
 h4,
 h5,
 h6 {
-  @apply font-semibold;
+    @apply font-semibold;
 }
 
 .btn {
-  @apply bg-primary-600 text-gray-100 font-semibold py-2 px-4 text-sm rounded w-auto inline-block;
+    @apply bg-primary-600 text-gray-100 font-semibold py-2 px-4 text-sm rounded w-auto inline-block;
 }
 
 .btn svg {
-  @apply h-4 w-auto;
+    @apply h-4 w-auto;
 }
 
 .btn path {
-  @apply fill-current;
+    @apply fill-current;
 }
 
 .btn:hover:not(:disabled) {
-  @apply bg-primary-500 no-underline;
+    @apply bg-primary-500 no-underline;
 }
 
 .btn.btn-faint {
-  @apply bg-gray-200 text-gray-400 ml-auto py-1 px-3 text-lg;
+    @apply bg-gray-200 text-gray-400 ml-auto py-1 px-3 text-lg;
 }
 
 .btn.btn-faint:hover:not(:disabled) {
-  @apply bg-gray-300;
+    @apply bg-gray-300;
 }
 
 .btn.btn--gray {
-  @apply bg-gray-200 text-gray-600;
+    @apply bg-gray-200 text-gray-600;
 }
 
 .btn.btn--gray:hover:not(:disabled) {
-  @apply bg-gray-300;
+    @apply bg-gray-300;
 }
 
 .btn.btn--sm {
-  @apply py-1 px-3 text-xs rounded-sm;
+    @apply py-1 px-3 text-xs rounded-sm;
 }
 
 .btn.btn--xs {
-  @apply px-3 text-xs rounded-sm font-normal;
-  padding-top: 0.1em;
-  padding-bottom: 0.1em;
+    @apply px-3 text-xs rounded-sm font-normal;
+    padding-top: 0.1em;
+    padding-bottom: 0.1em;
 }
 
 .btn:disabled {
-  @apply opacity-50 cursor-default;
+    @apply opacity-50 cursor-default;
 }
 
 /**********/
@@ -113,47 +117,47 @@ h6 {
 /**********/
 
 .notice {
-  @apply border text-sm py-3 px-4 rounded border-dotted border-primary-200 bg-primary-100 text-center;
+    @apply border text-sm py-3 px-4 rounded border-dotted border-primary-200 bg-primary-100 text-center;
 }
 
 .notice a {
-  @apply underline;
+    @apply underline;
 }
 
 .notice a:hover {
-  @apply text-primary;
+    @apply text-primary;
 }
 
 .notice--big {
-  @apply py-4 text-base border-2 font-medium;
+    @apply py-4 text-base border-2 font-medium;
 }
 
 .notice--huge {
-  @apply py-6 text-xl border-4 font-bold;
+    @apply py-6 text-xl border-4 font-bold;
 }
 
 .notice > code {
-  @apply bg-background border-background !important;
+    @apply bg-background border-background !important;
 }
 
 .notice--danger {
-  @apply border-danger-400 bg-danger-100 text-danger;
+    @apply border-danger-400 bg-danger-100 text-danger;
 }
 
 .notice--warning {
-  @apply border-warning-400 bg-warning-100 text-warning;
+    @apply border-warning-400 bg-warning-100 text-warning;
 }
 
 .notice--notice {
-  @apply border-notice-400 bg-notice-100 text-notice;
+    @apply border-notice-400 bg-notice-100 text-notice;
 }
 
 .notice--info {
-  @apply border-info-400 bg-info-100 text-info;
+    @apply border-info-400 bg-info-100 text-info;
 }
 
 .notice--subtle {
-  @apply border-dotted border-gray-400 bg-gray-100 text-gray-600;
+    @apply border-dotted border-gray-400 bg-gray-100 text-gray-600;
 }
 
 /*********/
@@ -161,65 +165,65 @@ h6 {
 /*********/
 
 .form-wrapper {
-  @apply mx-auto max-w-sm;
+    @apply mx-auto max-w-sm;
 }
 
 .form-wrapper form {
-  @apply my-6;
+    @apply my-6;
 }
 
 .form-row {
-  @apply mb-6;
-  box-sizing: border-box;
+    @apply mb-6;
+    box-sizing: border-box;
 }
 
 .form-actions {
-  @apply flex items-center justify-between;
+    @apply flex items-center justify-between;
 }
 
 .form-actions > *:last-child {
-  @apply ml-auto;
+    @apply ml-auto;
 }
 
 form label {
-  @apply block text-gray-600 text-sm font-bold mb-2;
+    @apply block text-gray-600 text-sm font-bold mb-2;
 }
 
 .CodeMirror,
 form input,
 form select,
 form textarea {
-  @apply appearance-none bg-gray-100 border border-gray-400 rounded w-full py-2 px-3 text-gray-700 leading-tight;
+    @apply appearance-none bg-gray-100 border border-gray-400 rounded w-full py-2 px-3 text-gray-700 leading-tight;
 }
 
 .CodeMirror-placeholder,
 textarea::placeholder,
 input::placeholder {
-  @apply text-gray-400;
+    @apply text-gray-400;
 }
 
 .CodeMirror-focused,
 form select:focus,
 form input:focus {
-  @apply bg-background outline-none border border-primary-400;
+    @apply bg-background outline-none border border-primary-400;
 }
 
 form textarea:invalid,
 form select:invalid,
 form input:invalid {
-  @apply border-danger-500;
+    @apply border-danger-500;
 }
 
 form select {
-  background: url('../images/icons/select.svg') no-repeat 99% 50%;
+    background: url('../images/icons/select.svg') no-repeat 99% 50%;
 }
 
 details summary {
-  @apply cursor-pointer;
+    @apply cursor-pointer;
 }
 
 details summary:focus {
-  @apply outline-none;
+    @apply outline-none;
 }
 
 /*****************/
@@ -227,70 +231,70 @@ details summary:focus {
 /*****************/
 
 .blog-post {
-  @apply mb-10;
+    @apply mb-10;
 }
 
 .blog-post > header {
-  @apply pb-4;
+    @apply pb-4;
 }
 
 .blog-post-preview {
-  @apply mt-12 pb-6 border-b border-primary-100;
+    @apply mt-12 pb-6 border-b border-primary-100;
 }
 
 .blog-post-continue {
-  @apply flex flex-wrap;
+    @apply flex flex-wrap;
 }
 
 .blog-post-continue > a:last-child {
-  @apply ml-auto text-sm;
+    @apply ml-auto text-sm;
 }
 
 .blog-post-preview img {
-  display: none;
+    display: none;
 }
 
 .meta {
-  @apply block text-sm text-gray-600 font-normal;
+    @apply block text-sm text-gray-600 font-normal;
 }
 
 .blog-post-preview h2 {
-  @apply mb-4 text-2xl;
+    @apply mb-4 text-2xl;
 }
 
 .blog-post-preview h2 a:not(:hover) {
-  color: inherit;
+    color: inherit;
 }
 
 .content h1 {
-  @apply text-3xl;
+    @apply text-3xl;
 }
 
 .content h2 {
-  @apply text-2xl pt-2;
+    @apply text-2xl pt-2;
 }
 
 .content h3 {
-  @apply text-xl;
+    @apply text-xl;
 }
 
 .content ul li {
-  @apply list-disc ml-6;
+    @apply list-disc ml-6;
 }
 
 .content ol li {
-  @apply list-decimal ml-6;
+    @apply list-decimal ml-6;
 }
 
 .content dl {
 }
 
 .content dl dt {
-  @apply font-bold;
+    @apply font-bold;
 }
 
 .content dl dt::after {
-  content: ':';
+    content: ':';
 }
 
 .content dl dd {
@@ -317,65 +321,65 @@ details summary:focus {
 .content > p,
 .content > pre,
 .content > ul {
-  @apply my-6;
+    @apply my-6;
 }
 
 .content canvas {
-  @apply block w-full rounded-sm my-8;
+    @apply block w-full rounded-sm my-8;
 }
 
 .content > p {
-  @apply leading-relaxed;
+    @apply leading-relaxed;
 }
 
 .content p > img {
-  @apply block mx-auto rounded-sm my-8;
-  max-height: 50vh;
+    @apply block mx-auto rounded-sm my-8;
+    max-height: 50vh;
 }
 
 .content .footnotes {
-  @apply text-sm opacity-80 my-10 italic;
+    @apply text-sm opacity-80 my-10 italic;
 }
 
 .content .footnotes li {
-  @apply ml-5;
+    @apply ml-5;
 }
 
 .content .footnotes hr {
-  @apply hidden;
+    @apply hidden;
 }
 
 .content :not(pre) code {
-  @apply bg-gray-200 rounded px-1 border-2 border-gray-200 font-mono;
+    @apply bg-gray-200 rounded px-1 border-2 border-gray-200 font-mono;
 
-  /* Relative size so it works in headings and stuff */
-  font-size: 0.8em;
+    /* Relative size so it works in headings and stuff */
+    font-size: 0.8em;
 }
 
 .content table {
-  @apply w-full;
+    @apply w-full;
 }
 
 .content table th {
-  @apply text-left;
+    @apply text-left;
 }
 
 .content table th,
 .content table td {
-  @apply border border-gray-300 px-2 py-1;
+    @apply border border-gray-300 px-2 py-1;
 }
 
 .content table thead tr {
-  @apply bg-gray-200;
+    @apply bg-gray-200;
 }
 
 .content blockquote {
-  @apply border-l-4 border-gray-300 p-3 bg-gray-100 italic text-gray-700 rounded-sm;
+    @apply border-l-4 border-gray-300 p-3 bg-gray-100 italic text-gray-700 rounded-sm;
 }
 
 .blog-post hr {
-  @apply border-gray-300 border-0 border-double border-b-4 my-8 mx-auto;
-  width: 5em;
+    @apply border-gray-300 border-0 border-double border-b-4 my-8 mx-auto;
+    width: 5em;
 }
 
 /**************/
@@ -383,19 +387,19 @@ details summary:focus {
 /**************/
 
 .pagination {
-  @apply mt-10 flex justify-between;
+    @apply mt-10 flex justify-between;
 }
 
 .pagination-center {
-  @apply text-center w-full;
+    @apply text-center w-full;
 }
 
 .pagination-left {
-  @apply w-24 text-left whitespace-no-wrap;
+    @apply w-24 text-left whitespace-no-wrap;
 }
 
 .pagination-right {
-  @apply w-24 text-center;
+    @apply w-24 text-center;
 }
 
 /*********************/
@@ -403,40 +407,40 @@ details summary:focus {
 /*********************/
 
 .subscription-form {
-  @apply border border-dashed border-primary-400 bg-primary-50 rounded mt-10;
-  position: relative;
+    @apply border border-dashed border-primary-400 bg-primary-50 rounded mt-10;
+    position: relative;
 }
 
 .subscription-form small {
-  @apply text-xs italic text-gray-600;
+    @apply text-xs italic text-gray-600;
 }
 
 .subscription-form p {
-  @apply mb-4;
+    @apply mb-4;
 }
 
 .subscription-form input {
-  @apply border-primary-300;
+    @apply border-primary-300;
 }
 
 .subscription-form form {
-  @apply mx-auto;
-  max-width: 24rem;
+    @apply mx-auto;
+    max-width: 24rem;
 }
 
 .subscription-form__inner {
-  @apply text-center mx-auto py-10 px-4;
+    @apply text-center mx-auto py-10 px-4;
 }
 
 .subscription-form__hide {
-  @apply h-8 w-8 opacity-50 text-secondary;
-  position: absolute;
-  top: 0;
-  right: 0;
+    @apply h-8 w-8 opacity-50 text-secondary;
+    position: absolute;
+    top: 0;
+    right: 0;
 }
 
 .subscription-form__hide:hover {
-  @apply opacity-100;
+    @apply opacity-100;
 }
 
 /***********************/
@@ -444,38 +448,38 @@ details summary:focus {
 /***********************/
 
 pre.chroma-chroma {
-  @apply block bg-gray-100 p-6 overflow-auto rounded font-mono border border-gray-200 overflow-x-auto cursor-text;
-  tab-size: 4;
-  font-size: 0.8em;
+    @apply block bg-gray-100 p-6 overflow-auto rounded font-mono border border-gray-200 overflow-x-auto cursor-text;
+    tab-size: 4;
+    font-size: 0.8em;
 }
 
 .chroma-c,
 .chroma-cm,
 .chroma-c1 {
-  @apply italic text-syntax4;
+    @apply italic text-syntax4;
 }
 
 .chroma-s,
 .chroma-s1,
 .chroma-sb,
 .chroma-s2 {
-  @apply text-syntax1;
+    @apply text-syntax1;
 }
 
 .chroma-n,
 .chroma-nt,
 .chroma-nb {
-  @apply text-gray-500 text-syntax2;
+    @apply text-gray-500 text-syntax2;
 }
 
 .chroma-k,
 .chroma-kd {
-  @apply text-syntax3;
+    @apply text-syntax3;
 }
 
 .chroma-m,
 .chroma-mi {
-  @apply text-syntax1;
+    @apply text-syntax1;
 }
 
 /******************/
@@ -483,27 +487,27 @@ pre.chroma-chroma {
 /******************/
 
 .top-nav .container {
-  @apply flex flex-row items-center py-4;
+    @apply flex flex-row items-center py-4;
 }
 
 .top-nav a {
-  @apply text-gray-600 h-full block;
+    @apply text-gray-600 h-full block;
 }
 
 .top-nav .logo {
-  @apply h-10 overflow-visible;
+    @apply h-10 overflow-visible;
 }
 
 .top-nav a svg {
-  @apply h-4 w-4 fill-current;
+    @apply h-4 w-4 fill-current;
 }
 
 .top-nav li {
-  @apply ml-6;
+    @apply ml-6;
 }
 
 .top-nav li:first-child {
-  @apply ml-0 mr-auto;
+    @apply ml-0 mr-auto;
 }
 
 /*****************/
@@ -511,24 +515,24 @@ pre.chroma-chroma {
 /*****************/
 
 .bottom-footer {
-  @apply bg-gray-100 py-32 mt-24;
+    @apply bg-gray-100 py-32 mt-24;
 }
 
 .bottom-footer .links {
-  @apply text-center pt-8 text-sm text-gray-500;
+    @apply text-center pt-8 text-sm text-gray-500;
 }
 
 .bottom-footer .links p {
-  @apply mt-2 mb-0;
+    @apply mt-2 mb-0;
 }
 
 .bottom-footer img {
-  @apply mx-auto;
-  width: 7rem;
+    @apply mx-auto;
+    width: 7rem;
 }
 
 .bottom-footer a i {
-  @apply text-secondary no-underline;
+    @apply text-secondary no-underline;
 }
 
 /****************/
@@ -536,23 +540,23 @@ pre.chroma-chroma {
 /****************/
 
 .button-input {
-  @apply flex;
+    @apply flex;
 }
 
 .button-input label {
-  @apply hidden;
+    @apply hidden;
 }
 
 .button-input input {
-  @apply rounded-r-none border-r-0;
+    @apply rounded-r-none border-r-0;
 }
 
 .button-input input:focus {
-  @apply border-r-0;
+    @apply border-r-0;
 }
 
 .button-input .btn {
-  @apply w-auto text-center text-xs rounded-l-none;
+    @apply w-auto text-center text-xs rounded-l-none;
 }
 
 /********/
@@ -560,17 +564,17 @@ pre.chroma-chroma {
 /********/
 
 .all-tags {
-  @apply flex flex-wrap justify-between;
+    @apply flex flex-wrap justify-between;
 }
 
 .all-tags .tag {
-  @apply mt-2;
+    @apply mt-2;
 }
 
 .tag {
-  @apply mr-2 rounded-full border-primary-400 border uppercase inline-block;
-  font-size: 0.7em;
-  padding: 0 0.6em;
+    @apply mr-2 rounded-full border-primary-400 border uppercase inline-block;
+    font-size: 0.7em;
+    padding: 0 0.6em;
 }
 
 /********************/
@@ -578,98 +582,98 @@ pre.chroma-chroma {
 /********************/
 
 .blog-post-editor {
-  @apply bg-background;
-  display: grid;
-  grid-template-areas: 'editor preview';
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: 100%;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
+    @apply bg-background;
+    display: grid;
+    grid-template-areas: 'editor preview';
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
 }
 
 .blog-post-editor__edit {
-  @apply p-4 mx-auto w-full;
-  grid-area: editor;
-  display: grid;
-  grid-template-rows: auto minmax(0, 1fr);
-  height: 100vh;
-  max-height: 100vh;
-  max-width: 40rem;
+    @apply p-4 mx-auto w-full;
+    grid-area: editor;
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+    height: 100vh;
+    max-height: 100vh;
+    max-width: 40rem;
 }
 
 .blog-post-editor__edit .CodeMirror {
-  width: 100%;
-  height: 100%;
-  max-height: 100%;
+    width: 100%;
+    height: 100%;
+    max-height: 100%;
 }
 
 .blog-post-editor__edit .CodeMirror-focused {
-  @apply shadow-none;
+    @apply shadow-none;
 }
 
 .blog-post-editor__edit .CodeMirror-gutters,
 .blog-post-editor__edit .CodeMirror-gutter-wrapper {
-  @apply hidden;
+    @apply hidden;
 }
 
 .blog-post-editor__preview {
-  grid-area: preview;
+    grid-area: preview;
 }
 
 .blog-post-editor__preview iframe {
-  @apply w-full h-full;
+    @apply w-full h-full;
 }
 
 .CodeMirror {
-  height: 300px;
-  font-family: Monaco, monospace !important;
-  font-size: 0.8rem;
-  line-height: 1.2rem;
+    height: 300px;
+    font-family: Monaco, monospace !important;
+    font-size: 0.8rem;
+    line-height: 1.2rem;
 }
 
 .CodeMirror-lines {
-  padding-bottom: 80vh !important;
+    padding-bottom: 80vh !important;
 }
 
 .CodeMirror .cm-typo {
-  background: rgba(255, 137, 0, 0.1) !important;
-  border-bottom: 2px dotted #ff5f00;
+    background: rgba(255, 137, 0, 0.1) !important;
+    border-bottom: 2px dotted #ff5f00;
 }
 
 body .CodeMirror .cm-variable-2 {
-  @apply text-primary;
+    @apply text-primary;
 }
 
 body .CodeMirror .cm-quote {
-  @apply text-syntax3;
+    @apply text-syntax3;
 }
 
 body .CodeMirror .cm-strikethrough {
-  @apply opacity-50;
+    @apply opacity-50;
 }
 
 body .CodeMirror .cm-header-1,
 body .CodeMirror .cm-header-2 {
-  font-size: 1.1em;
+    font-size: 1.1em;
 }
 
 body .CodeMirror .cm-link {
-  @apply text-syntax1;
+    @apply text-syntax1;
 }
 
 body .CodeMirror .cm-url {
-  @apply text-syntax2;
+    @apply text-syntax2;
 }
 
 body .CodeMirror .cm-header {
-  @apply text-syntax2;
+    @apply text-syntax2;
 }
 
 body .CodeMirror .cm-comment {
-  @apply text-syntax4;
+    @apply text-syntax4;
 }
 
 /***********/
@@ -677,112 +681,112 @@ body .CodeMirror .cm-comment {
 /***********/
 
 .project {
-  @apply mt-10;
+    @apply mt-10;
 }
 
 .project img {
-  @apply h-6 rounded-sm mr-2;
+    @apply h-6 rounded-sm mr-2;
 }
 
 .project h3 {
-  @apply text-xl;
+    @apply text-xl;
 }
 
 .project p {
-  @apply my-1;
+    @apply my-1;
 }
 
 .project h3 > span,
 .project h3 > a {
-  @apply flex;
+    @apply flex;
 }
 
 .project small {
-  @apply text-sm text-gray-600 italic;
+    @apply text-sm text-gray-600 italic;
 }
 
 /* CARDS */
 
 .cards {
-  @apply flex flex-1 -mx-2 items-stretch;
+    @apply flex flex-1 -mx-2 items-stretch;
 }
 
 .cards--2,
 .cards--3,
 .cards--flexy {
-  @apply flex-wrap;
+    @apply flex-wrap;
 }
 
 .cards--2 .card {
-  flex-grow: 1;
+    flex-grow: 1;
 }
 
 .cards--flexy .card {
-  flex-grow: 1;
-  flex-basis: auto;
-  width: auto;
+    flex-grow: 1;
+    flex-basis: auto;
+    width: auto;
 }
 
 .card {
-  @apply text-sm;
+    @apply text-sm;
 }
 
 .card {
-  @apply px-2 w-full mx-auto block;
+    @apply px-2 w-full mx-auto block;
 }
 
 .card__inner {
-  @apply border border-dashed border-gray-400 rounded px-4 py-2 mt-4;
+    @apply border border-dashed border-gray-400 rounded px-4 py-2 mt-4;
 }
 
 .card__inner > *:not(:last-child) {
-  @apply m-0 mb-1 p-0;
+    @apply m-0 mb-1 p-0;
 }
 
 .card__title {
-  @apply text-xs text-gray-500 whitespace-no-wrap;
+    @apply text-xs text-gray-500 whitespace-no-wrap;
 }
 
 .card__body--big {
-  @apply text-3xl font-thin;
+    @apply text-3xl font-thin;
 }
 
 .card--clicky:hover {
-  @apply cursor-pointer;
+    @apply cursor-pointer;
 }
 
 .card--clicky:hover a {
-  @apply underline;
+    @apply underline;
 }
 
 .card--clicky:active {
-  @apply cursor-pointer;
+    @apply cursor-pointer;
 }
 
 .card--clicky:hover .card__inner {
-  @apply border-primary-400;
+    @apply border-primary-400;
 }
 
 @media only screen and (max-width: 600px) {
-  .cards {
-    @apply flex-wrap;
-  }
+    .cards {
+        @apply flex-wrap;
+    }
 
-  .cards .card {
-    @apply w-full;
-  }
+    .cards .card {
+        @apply w-full;
+    }
 
-  .cards.cards--double-wrap .card {
-    width: 50%;
-  }
+    .cards.cards--double-wrap .card {
+        width: 50%;
+    }
 
-  .card__body {
-    @apply text-lg;
-  }
+    .card__body {
+        @apply text-lg;
+    }
 
-  .card__body--big {
-    @apply text-2xl;
-  }
+    .card__body--big {
+        @apply text-2xl;
+    }
 }
 
 /*************/
@@ -790,27 +794,27 @@ body .CodeMirror .cm-comment {
 /*************/
 
 .home-hero {
-  @apply flex items-center justify-between mt-6;
+    @apply flex items-center justify-between mt-6;
 }
 
 .home-hero__avatar {
-  @apply pr-8 mt-6;
+    @apply pr-8 mt-6;
 }
 
 .home-hero__avatar img {
-  @apply rounded-full block mx-auto;
-  width: 18rem;
+    @apply rounded-full block mx-auto;
+    width: 18rem;
 }
 
 @media only screen and (max-width: 600px) {
-  .home-hero {
-    @apply flex-wrap;
-  }
+    .home-hero {
+        @apply flex-wrap;
+    }
 
-  .home-hero__avatar {
-    @apply mx-auto w-auto;
-    max-width: 12rem;
-  }
+    .home-hero__avatar {
+        @apply mx-auto w-auto;
+        max-width: 12rem;
+    }
 }
 
 /***************/
@@ -818,43 +822,43 @@ body .CodeMirror .cm-comment {
 /***************/
 
 .clap-button {
-  @apply flex items-center text-sm text-gray-600 mr-4;
+    @apply flex items-center text-sm text-gray-600 mr-4;
 }
 
 .clap-button button {
-  @apply rounded-full border border-gray-600 mr-3;
-  @apply outline-none !important;
-  width: 3rem;
-  height: 3rem;
-  transition: transform 100ms;
+    @apply rounded-full border border-gray-600 mr-3;
+    @apply outline-none !important;
+    width: 3rem;
+    height: 3rem;
+    transition: transform 100ms;
 }
 
 .clap-button button:disabled {
-  @apply opacity-50 cursor-default;
+    @apply opacity-50 cursor-default;
 }
 
 .clap-button button:not(:disabled):hover {
-  @apply border-gray-800;
+    @apply border-gray-800;
 }
 
 .clap-button button:not(:disabled):active {
-  transform: scale(1.1);
+    transform: scale(1.1);
 }
 
 .clap-button button:not(:disabled):hover svg path {
-  @apply fill-current text-gray-900;
+    @apply fill-current text-gray-900;
 }
 
 .clap-button button svg {
-  padding: 17%;
+    padding: 17%;
 }
 
 .clap-button button svg path {
-  @apply fill-current text-gray-700;
+    @apply fill-current text-gray-700;
 }
 
 .vote-messages > * {
-  @apply text-sm mt-6;
+    @apply text-sm mt-6;
 }
 
 /*********/
@@ -862,39 +866,39 @@ body .CodeMirror .cm-comment {
 /*********/
 
 .blog-post__btns {
-  @apply my-2 flex flex-row mx-auto justify-center;
+    @apply my-2 flex flex-row mx-auto justify-center;
 }
 
 .blog-post__btns .btn {
-  @apply mx-1;
+    @apply mx-1;
 }
 
 .svg-icon {
-  @apply flex items-center opacity-100;
+    @apply flex items-center opacity-100;
 }
 
 .svg-icon:hover {
-  @apply opacity-90;
+    @apply opacity-90;
 }
 
 .svg-icon svg {
-  @apply h-3 mr-1 inline-block;
+    @apply h-3 mr-1 inline-block;
 }
 
 .svg-icon--twitter {
-  background-color: #55acee !important;
+    background-color: #55acee !important;
 }
 
 .svg-icon--hn {
-  background-color: #ff6600 !important;
+    background-color: #ff6600 !important;
 }
 
 .svg-icon--reddit {
-  background-color: #ff5700 !important;
+    background-color: #ff5700 !important;
 }
 
 .svg-icon--email {
-  background-color: #444444 !important;
+    background-color: #444444 !important;
 }
 
 /***********/
@@ -902,21 +906,21 @@ body .CodeMirror .cm-comment {
 /***********/
 
 .row-spaced {
-  @apply flex justify-between items-center;
+    @apply flex justify-between items-center;
 }
 
 .hr--spaced {
-  @apply my-12;
+    @apply my-12;
 }
 
 .inline-form {
-  @apply inline;
+    @apply inline;
 }
 
 @media only screen and (max-width: 600px) {
-  .hidden-mobile {
-    @apply hidden;
-  }
+    .hidden-mobile {
+        @apply hidden;
+    }
 }
 
 /**************/
@@ -924,57 +928,57 @@ body .CodeMirror .cm-comment {
 /**************/
 
 @keyframes shake {
-  0% {
-    transform: translate(1px, 1px) rotate(0deg);
-  }
-  10% {
-    transform: translate(-2px, -1px) rotate(-0.5deg);
-  }
-  20% {
-    transform: translate(-2px, 0px) rotate(0.5deg);
-  }
-  30% {
-    transform: translate(2px, 3px) rotate(0deg);
-  }
-  40% {
-    transform: translate(1px, -1px) rotate(0.5deg);
-  }
-  50% {
-    transform: translate(-1px, 1px) rotate(-0.5deg);
-  }
-  60% {
-    transform: translate(-2px, 1px) rotate(0deg);
-  }
-  70% {
-    transform: translate(3px, 1px) rotate(-0.5deg);
-  }
-  80% {
-    transform: translate(-1px, -1px) rotate(0.5deg);
-  }
-  90% {
-    transform: translate(1px, 1px) rotate(0deg);
-  }
-  100% {
-    transform: translate(1px, -3px) rotate(-0.5deg);
-  }
+    0% {
+        transform: translate(1px, 1px) rotate(0deg);
+    }
+    10% {
+        transform: translate(-2px, -1px) rotate(-0.5deg);
+    }
+    20% {
+        transform: translate(-2px, 0px) rotate(0.5deg);
+    }
+    30% {
+        transform: translate(2px, 3px) rotate(0deg);
+    }
+    40% {
+        transform: translate(1px, -1px) rotate(0.5deg);
+    }
+    50% {
+        transform: translate(-1px, 1px) rotate(-0.5deg);
+    }
+    60% {
+        transform: translate(-2px, 1px) rotate(0deg);
+    }
+    70% {
+        transform: translate(3px, 1px) rotate(-0.5deg);
+    }
+    80% {
+        transform: translate(-1px, -1px) rotate(0.5deg);
+    }
+    90% {
+        transform: translate(1px, 1px) rotate(0deg);
+    }
+    100% {
+        transform: translate(1px, -3px) rotate(-0.5deg);
+    }
 }
 
 @keyframes fade-in {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 100;
-  }
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 100;
+    }
 }
 
 @keyframes flip {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(180deg);
-  }
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(180deg);
+    }
 }
 
 /************************/
@@ -982,5 +986,5 @@ body .CodeMirror .cm-comment {
 /************************/
 
 [v-cloak] {
-  @apply hidden;
+    @apply hidden;
 }
