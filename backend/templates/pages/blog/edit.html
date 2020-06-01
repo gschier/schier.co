@@ -58,7 +58,8 @@
         rows="20"
         @input="onContentChange"
       >
-{{ blogPost.Content }}</textarea
+          {{ blogPost.Content }}
+        </textarea
       >
     </div>
 
@@ -100,7 +101,7 @@
   /** Editor-related Code **/
   {
     {
-      "editor.js" | inlinestatic | safe;
+      "index.editor.js" | inlinestatic | safe;
     }
   }
 </script>

@@ -6,9 +6,9 @@
 
   {% if loggedIn %}
   <div>
-    <a href="/blog/edit/{{ blogPost.ID }}" class="btn btn--gray btn--sm"
-      >Edit</a
-    >
+    <a href="/blog/edit/{{ blogPost.ID }}" class="btn btn--gray btn--sm">
+      Edit
+    </a>
     {% include './publish_link.html' %} {% include './unlist_link.html' %} {%
     include './delete_link.html' %}
   </div>
@@ -35,9 +35,9 @@
       {{ 'images/icons/cheers.svg' | inlinestatic | safe }}
     </button>
     <div title="{{ blogPost.VotesUsers }} readers">
-      <span class="clap-count"
-        >{{ blogPost.VotesTotal | default:"Be the first to" }}</span
-      >
+      <span class="clap-count">
+        {{ blogPost.VotesTotal | default:"Be the first to" }}
+      </span>
       cheers
     </div>
   </div>
@@ -206,8 +206,6 @@
               document.body.style.animationFillMode = "forwards";
               container.style.animation = "";
             }
-
-            break;
           }
         });
     });

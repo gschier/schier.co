@@ -1,21 +1,23 @@
 // JavaScript
-import { initCodemirror } from './editor/codemirror';
-import { upload } from './editor/upload';
-
-// Bind to buttons that toggle fullscreen behavior
-document.body.addEventListener('click', e => {
-  if (e.target.hasAttribute('data-toggle-expand')) {
-    toggleExpand(e);
-  }
-});
+import { initCodemirror } from './codemirror';
+import { upload } from './upload';
 
 // Fetch necessary DOM nodes
 const contentEl = document.querySelector('textarea[name=content]');
 const editorContainerEl = document.querySelector('#editor-container');
 
-contentEl.addEventListener('keyup', e => {
-  handleChange(e);
-});
+export function init() {
+  // Bind to buttons that toggle fullscreen behavior
+  document.body.addEventListener('click', e => {
+    if (e.target.hasAttribute('data-toggle-expand')) {
+      toggleExpand(e);
+    }
+  });
+
+  contentEl.addEventListener('keyup', e => {
+    handleChange(e);
+  });
+}
 
 function handleChange(e) {
   // Already contains a <!--more-->
