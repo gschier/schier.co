@@ -22,7 +22,7 @@
       may be out of date </p>
   {% endif %}
 
-  {% if not blogPost.Date | isodatesamemonth:blogPost.EditedAt %}
+  {% if not blogPost.Date | isodatewithinmonth:blogPost.EditedAt %}
     <p class="notice notice--subtle">
       Updated
       <time datetime="{{ blogPost.EditedAt }}" title="{{ blogPost.EditedAt }}">
@@ -32,6 +32,12 @@
   {% endif %}
 
   {{ blogPost.Content | markdown }}
+
+  {% if not blogPost.Tags | contains:"tutorial" %}
+    <p class="notice notice--subtle">
+      Tutorial
+    </p>
+  {% endif %}
 </article>
 
 <div class="row-spaced">

@@ -75,7 +75,7 @@ func routeBlogTags(w http.ResponseWriter, r *http.Request) {
 
 	tagsMap := make(map[string]int, 0)
 	for _, p := range blogPosts {
-		for _, newTag := range StringToTags(p.Tags) {
+		for _, newTag := range p.Tags {
 			if newTag == "" {
 				continue
 			}
@@ -114,7 +114,7 @@ func routeBlogRender(w http.ResponseWriter, r *http.Request) {
 	title := r.Form.Get("title")
 	partial := r.Form.Get("partial") == "true"
 	dateStr := r.Form.Get("date")
-	tags := NormalizeTags(r.Form.Get("tags"))
+	tags := StringToTags(r.Form.Get("tags"))
 
 	date := time.Now()
 	if dateStr != "" {
@@ -246,9 +246,6 @@ func routeBlogPostEdit(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Convert tags to more editable format
-	blogPost.Tags = TagsToComma(blogPost.Tags)
-
 	renderTemplate(w, r, blogEditTemplate(), &pongo2.Context{
 		"pageTitle": blogPost.Title,
 		"pageImage": blogPost.Image,
@@ -263,7 +260,7 @@ func routeBlogPostCreateOrUpdate(w http.ResponseWriter, r *http.Request) {
 	slug := r.Form.Get("slug")
 	content := r.Form.Get("content")
 	image := r.Form.Get("image")
-	tagNames := StringToTags(r.Form.Get("tags"))
+	tags := StringToTags(r.Form.Get("tags"))
 	stage := StrToInt(r.Form.Get("stage"), 0)
 	title := CapitalizeTitle(r.Form.Get("title"))
 
@@ -312,7 +309,7 @@ func routeBlogPostCreateOrUpdate(w http.ResponseWriter, r *http.Request) {
 			title,
 			content,
 			image,
-			TagsToString(tagNames),
+			tags,
 			date,
 			stage,
 		)
@@ -324,14 +321,14 @@ func routeBlogPostCreateOrUpdate(w http.ResponseWriter, r *http.Request) {
 			content,
 			image,
 			user.ID,
-			TagsToString(tagNames),
+			tags,
 			time.Now(),
 			stage,
 		)
 	}
 
 	if upsertErr != nil {
-		log.Println("Failed to update blog posts", err)
+		log.Println("Failed to update blog posts", upsertErr)
 		http.Error(w, "Failed to update blog post", http.StatusInternalServerError)
 		return
 	}

@@ -1,6 +1,12 @@
 [scripts.start]
+root = true
 help = "start backend and frontend"
 combine = [ "frontend", "backend" ]
+
+[scripts.down]
+root = true
+help = "shut down Docker"
+run = "docker-compose down"
 
 [scripts.production]
 help = "start backend with production frontend builds"
@@ -14,6 +20,7 @@ dir = "./frontend"
 run = "npm start"
 
 [scripts.build]
+root = true
 help = "build frontend"
 dir = "./frontend"
 run = "npm run build"

@@ -10,6 +10,7 @@ import (
 	"github.com/russross/blackfriday/v2"
 	"io/ioutil"
 	"log"
+	"math"
 	"net/http"
 	"os"
 	"path"
@@ -102,11 +103,14 @@ func init() {
 	}
 
 	err = pongo2.RegisterFilter(
-		"isodatesamemonth",
+		"isodatewithinmonth",
 		func(in *pongo2.Value, param *pongo2.Value) (*pongo2.Value, *pongo2.Error) {
-			first := strings.SplitN(in.String(), "-", 3)
-			second := strings.SplitN(param.String(), "-", 3)
-			return pongo2.AsValue(first[0] == second[0] && first[1] == second[1]), nil
+			first := strings.SplitN(in.String(), "-", 4)
+			firstT, _ := time.Parse("2006-01-02", strings.Join(first[0:3], "-"))
+			second := strings.SplitN(param.String(), "-", 4)
+			secondT, _ := time.Parse("2006-01-02", strings.Join(second[0:3], "-"))
+			days := firstT.Sub(secondT).Hours() / 24
+			return pongo2.AsValue(math.Abs(days) < 30), nil
 		},
 	)
 	if err != nil {

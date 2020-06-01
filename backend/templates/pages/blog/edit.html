@@ -27,7 +27,7 @@
         <summary>Other Fields</summary>
         {% include '../../partials/form-input.html' with label='Slug' type=blogPost.Published|yesno:"hidden,text" name='slug' value=blogPost.Slug placeholder='my-blog-post' %}
         {% include '../../partials/form-input.html' with label='Image' type='url' name='image' value=blogPost.Image placeholder='https://assets.schier.dev/images/insomnia-growth.png' %}
-        {% include '../../partials/form-input.html' with label='Tags' type='text' name='tags' value=blogPost.Tags placeholder='Tag1, Tag2' %}
+        {% include '../../partials/form-input.html' with label='Tags' type='text' name='tags' value=blogPost.Tags|join:", " placeholder='Tag1, Tag2' %}
         {% include '../../partials/form-input.html' with label='Stage' type=blogPost.Published|yesno:"hidden,number" name='stage' value=blogPost.Stage placeholder='0' %}
       </details>
 
@@ -38,9 +38,7 @@
             Full Screen
           </a>
         </div>
-        <textarea name="content" id="i-content" rows="20" @input="onContentChange">
-          {{ blogPost.Content }}
-        </textarea>
+        <textarea name="content" id="i-content" rows="20" @input="onContentChange">{{ blogPost.Content }}</textarea>
       </div>
 
       <!-- Blog Post Editor -->

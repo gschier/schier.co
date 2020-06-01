@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"fmt"
 	"github.com/jmoiron/sqlx"
+	"github.com/lib/pq"
 	_ "github.com/lib/pq"
 	"math/rand"
 	"os"
@@ -223,19 +224,19 @@ func (s *Storage) UpdateBlogPostVotes(ctx context.Context, id string, user, tota
 	return err
 }
 
-func (s *Storage) UpdateBlogPost(ctx context.Context, id, slug, title, content, image, tags string, date time.Time, stage int) error {
+func (s *Storage) UpdateBlogPost(ctx context.Context, id, slug, title, content, image string, tags []string, date time.Time, stage int) error {
 	_, err := s.db.ExecContext(ctx, `
 		UPDATE blog_posts 
-		SET (slug, title, content, image, tags, date, stage) = ($2, $3, $4, $5, $6, $7, $8) 
-		WHERE id = $1`, id, slug, title, content, image, tags, date, stage)
+		SET (slug, title, content, image, tags2, date, stage) = ($2, $3, $4, $5, $6, $7, $8) 
+		WHERE id = $1`, id, slug, title, content, image, pq.Array(tags), date, stage)
 	return err
 }
 
-func (s *Storage) CreateBlogPost(ctx context.Context, slug, title, content, image, userID, tags string, date time.Time, stage int) error {
+func (s *Storage) CreateBlogPost(ctx context.Context, slug, title, content, image, userID string, tags []string, date time.Time, stage int) error {
 	_, err := s.db.ExecContext(ctx, `
-		INSERT INTO blog_posts (id, slug, title, content, image, user_id, tags, stage, date)
+		INSERT INTO blog_posts (id, slug, title, content, image, user_id, tags2, stage, date)
 		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) 
-	`, s.newID("pst_"), slug, title, content, image, userID, tags, stage, date)
+	`, s.newID("pst_"), slug, title, content, image, userID, pq.Array(tags), stage, date)
 	return err
 }
 
