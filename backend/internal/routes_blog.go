@@ -515,18 +515,10 @@ func routeBlogList(w http.ResponseWriter, r *http.Request) {
 		skip = 0
 	}
 
-	tagsContains := ""
-	if tag == "-" {
-		// Untagged
-		tagsContains = "||"
-	} else if tag != "" {
-		tagsContains = TagsToString([]string{tag})
-	}
-
 	// Fetch blog posts
 	blogPosts, err := ctxDB(r).TaggedAndPublishedBlogPosts(
 		r.Context(),
-		tagsContains,
+		tag,
 		first+1,
 		skip,
 	)

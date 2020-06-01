@@ -16,7 +16,7 @@ func init() {
 			tx := db.MustBegin()
 			_, err := tx.ExecContext(ctx, `
 				ALTER TABLE blog_posts
-				ADD COLUMN tags2 TEXT[]
+				ADD COLUMN tags2 TEXT[] NOT NULL DEFAULT ARRAY[]::TEXT[]
 			`)
 
 			var rows []struct {

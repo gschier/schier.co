@@ -107,14 +107,6 @@ func Summary(md string) string {
 	return strings.TrimSpace(summary)
 }
 
-func TagsToString(tags []string) string {
-	for i, t := range tags {
-		tags[i] = strings.ToLower(strings.TrimSpace(t))
-	}
-
-	return "|" + strings.Join(tags, "|") + "|"
-}
-
 func StringToTags(tags string) []string {
 	tags = strings.TrimPrefix(tags, "|")
 	tags = strings.TrimSuffix(tags, "|")
@@ -125,16 +117,6 @@ func StringToTags(tags string) []string {
 	}
 
 	return allTags
-}
-
-func TagsToComma(tags string) string {
-	all := StringToTags(tags)
-	return strings.Join(all, ", ")
-}
-
-func NormalizeTags(tags string) string {
-	all := StringToTags(tags)
-	return TagsToString(all)
 }
 
 func StrToInt(number string, defaultValue int) int {

@@ -49,7 +49,7 @@ job "app.schierco" {
         GITHUB_SHA = "__GITHUB_SHA__"
         MAILJET_PRV_KEY = "__MAILJET_PRV_KEY__"
         MAILJET_PUB_KEY = "__MAILJET_PUB_KEY__"
-        MIGRATE_ON_START = "disable"
+        MIGRATE_ON_START = "enable"
         PORT = "${NOMAD_PORT_web}"
         STATIC_ROOT = "./static"
         STATIC_URL = "/static"

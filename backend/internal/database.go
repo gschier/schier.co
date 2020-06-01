@@ -79,17 +79,30 @@ func (s *Storage) RecommendedBlogPosts(ctx context.Context, ignoreID *string, li
 	return posts, err
 }
 
-func (s *Storage) TaggedAndPublishedBlogPosts(ctx context.Context, tagContains string, limit, offset int) ([]BlogPost, error) {
+func (s *Storage) TaggedAndPublishedBlogPosts(ctx context.Context, tag string, limit, offset int) ([]BlogPost, error) {
 	var posts []BlogPost
-	err := s.db.SelectContext(ctx, &posts, `
-		SELECT * FROM blog_posts
-		WHERE (tags ILIKE '%' || $1 || '%')
-			AND published IS TRUE
-			AND unlisted IS FALSE
-		ORDER BY date DESC
-		LIMIT $2
-		OFFSET $3
-	`, tagContains, limit, offset)
+	var err error
+	if tag == "" {
+		err = s.db.SelectContext(ctx, &posts, `
+			SELECT * FROM blog_posts
+			WHERE published IS TRUE 
+			  AND unlisted IS FALSE
+			ORDER BY date DESC
+			LIMIT $1
+			OFFSET $2
+		`, limit, offset)
+	} else {
+		err = s.db.SelectContext(ctx, &posts, `
+			SELECT * FROM blog_posts
+			WHERE $1 = ANY(tags) 
+			  AND published IS TRUE 
+			  AND unlisted IS FALSE
+			ORDER BY date DESC
+			LIMIT $2
+			OFFSET $3
+		`, tag, limit, offset)
+	}
+
 	return posts, err
 }
 
@@ -227,14 +240,14 @@ func (s *Storage) UpdateBlogPostVotes(ctx context.Context, id string, user, tota
 func (s *Storage) UpdateBlogPost(ctx context.Context, id, slug, title, content, image string, tags []string, date time.Time, stage int) error {
 	_, err := s.db.ExecContext(ctx, `
 		UPDATE blog_posts 
-		SET (slug, title, content, image, tags2, date, stage) = ($2, $3, $4, $5, $6, $7, $8) 
+		SET (slug, title, content, image, tags, date, stage) = ($2, $3, $4, $5, $6, $7, $8) 
 		WHERE id = $1`, id, slug, title, content, image, pq.Array(tags), date, stage)
 	return err
 }
 
 func (s *Storage) CreateBlogPost(ctx context.Context, slug, title, content, image, userID string, tags []string, date time.Time, stage int) error {
 	_, err := s.db.ExecContext(ctx, `
-		INSERT INTO blog_posts (id, slug, title, content, image, user_id, tags2, stage, date)
+		INSERT INTO blog_posts (id, slug, title, content, image, user_id, tags, stage, date)
 		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) 
 	`, s.newID("pst_"), slug, title, content, image, userID, pq.Array(tags), stage, date)
 	return err
@@ -251,7 +264,7 @@ func (s *Storage) SearchPublishedBlogPosts(ctx context.Context, query string, li
 		SELECT * FROM blog_posts
 		WHERE (content ILIKE '%' || $1 || '%'
 			OR title ILIKE '%' || $1 || '%'
-			OR $1 = ANY(tags2))
+			OR $1 = ANY(tags))
 			AND published IS TRUE
 			AND unlisted IS FALSE
 		ORDER BY updated_at DESC

@@ -19,8 +19,7 @@ type BlogPost struct {
 	Shares     int            `db:"shares"`
 	Slug       string         `db:"slug"`
 	Stage      int            `db:"stage"`
-	Tags_      string         `db:"tags"`
-	Tags       pq.StringArray `db:"tags2"`
+	Tags       pq.StringArray `db:"tags"`
 	Title      string         `db:"title"`
 	Unlisted   bool           `db:"unlisted"`
 	UserID     string         `db:"user_id"`
