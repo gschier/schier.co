@@ -168,8 +168,17 @@ func init() {
 	err = pongo2.RegisterFilter(
 		"inlinestatic",
 		func(in *pongo2.Value, param *pongo2.Value) (*pongo2.Value, *pongo2.Error) {
-			b, err := ioutil.ReadFile(path.Join(os.Getenv("STATIC_ROOT"), in.String()))
-			if err != nil {
+			fullPath := path.Join(os.Getenv("STATIC_ROOT"), in.String())
+			b, err := ioutil.ReadFile(fullPath)
+			if os.IsNotExist(err) {
+				names, _ := ioutil.ReadDir("/")
+				fmt.Printf("%s not found\n", fullPath)
+				for _, n := range names {
+					fmt.Printf("%s ", n.Name())
+				}
+				fmt.Println("")
+				return pongo2.AsValue(""), nil
+			} else if err != nil {
 				return nil, &pongo2.Error{OrigError: err}
 			}
 

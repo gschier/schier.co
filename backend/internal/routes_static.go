@@ -18,15 +18,11 @@ func routeStatic(w http.ResponseWriter, r *http.Request) {
 	cache := mux.Vars(r)["cache"]
 	p := strings.Replace(r.URL.Path, cache, "", 1)
 
-	// Shortcut to serve images out of static
-	if strings.HasPrefix(r.URL.Path, "/images") {
-		http.ServeFile(w, r, path.Join(os.Getenv("STATIC_ROOT"), p))
-		return
-	}
-
 	// Serve everything else out of static
 	if strings.HasPrefix(r.URL.Path, "/static") {
-		http.ServeFile(w, r, path.Join(".", p))
+		// Here, we go up a directory, to remove /static/static/...
+		fullPath := path.Join(os.Getenv("STATIC_ROOT"), "..", p)
+		http.ServeFile(w, r, fullPath)
 		return
 	}
 

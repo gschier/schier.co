@@ -1,7 +1,7 @@
 {% extends '../../layouts/base.html' %}
 
 {% block extraStyles %}
-  <link rel="stylesheet" href="{{ staticUrl }}/editor.css"/>
+  <link rel="stylesheet" href="{{ staticUrl }}/editor.css" />
   <style>
     .hide {
       display: none;
@@ -40,9 +40,9 @@
         <div style="display:flex">
           <label for="i-content">Content</label>
           <a
-                  href="#"
-                  v-on:click="toggleExpand"
-                  style="margin-left:auto;font-size:0.8em;"
+              href="#"
+              v-on:click="toggleExpand"
+              style="margin-left:auto;font-size:0.8em;"
           >
             Full Screen
           </a>
@@ -52,17 +52,17 @@
 
       <!-- Blog Post Editor -->
       <div
-              class="blog-post-editor"
-              v-bind:class="{ hide: hideContentEditor }"
-              v-cloak
+          class="blog-post-editor"
+          v-bind:class="{ hide: hideContentEditor }"
+          v-cloak
       >
         <div class="blog-post-editor__edit">
           <div style="display:flex;align-items:center;">
             <h1 class="text-xl">{{ blogPost.Title | default:"New Post" }}</h1>
             <button
-                    class="btn btn-faint btn--sm"
-                    type="button"
-                    v-on:click="toggleExpand"
+                class="btn btn-faint btn--sm"
+                type="button"
+                v-on:click="toggleExpand"
             >
               &times;
             </button>
@@ -101,10 +101,10 @@
       data: {
         previewCount: 0,
         hideContentEditor: true,
-        cm: null
+        cm: null,
       },
       methods: {
-        onContentChange: function (e) {
+        onContentChange: function(e) {
           // Already contains a <!--more-->
           if (e.target.value.includes('<!--more-->')) {
             e.target.setCustomValidity('');
@@ -120,7 +120,7 @@
           const validity = 'Missing <!--more--> tag';
           e.target.setCustomValidity(validity);
         },
-        toggleExpand: function (e) {
+        toggleExpand: function(e) {
           e.preventDefault();
 
           this.hideContentEditor = !this.hideContentEditor;
@@ -153,7 +153,7 @@
               formData.append('partial', partial);
 
               for (const el of document.querySelectorAll(
-                      '#edit-form input, #edit-form textarea'
+                '#edit-form input, #edit-form textarea',
               )) {
                 if (!el.hasAttribute('name')) {
                   continue;
@@ -168,12 +168,12 @@
               const resp = await fetch('/blog/render', {
                 method: 'POST',
                 body: formData,
-                headers: { [csrfTokenHeaderName]: csrfToken }
+                headers: { [csrfTokenHeaderName]: csrfToken },
               });
               const previewHtml = await resp.text();
 
               const oldScrollTop =
-                      oldPreviewEl.contentDocument.scrollingElement.scrollTop;
+                oldPreviewEl.contentDocument.scrollingElement.scrollTop;
 
               if (partial === 'true') {
                 // Basic swap of blog post inside already-loaded page
@@ -221,8 +221,8 @@
 
             update(0);
           });
-        }
-      }
+        },
+      },
     });
 
     const contentEl = document.querySelector('textarea[name=content]');
@@ -249,6 +249,17 @@
     const imageEl = document.querySelector('input[name=image]');
     imageEl.addEventListener('paste', async e => {
       const { url } = await upload(e.clipboardData);
+      imageEl.value = url;
+    });
+    imageEl.addEventListener('dragenter', e => e.preventDefault());
+    imageEl.addEventListener('dragover', e => {
+      e.stopPropagation();
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'copy';
+    });
+    imageEl.addEventListener('drop', async e => {
+      e.preventDefault();
+      const { url } = await upload(e.dataTransfer);
       imageEl.value = url;
     });
 

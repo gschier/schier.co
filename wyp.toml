@@ -2,6 +2,12 @@
 help = "start backend and frontend"
 combine = [ "frontend", "backend" ]
 
+[scripts.production]
+help = "start backend with production frontend builds"
+combine = [ "backend" ]
+run = "npm run build"
+dir = "./frontend"
+
 [scripts.frontend]
 help = "start frontend watcher"
 dir = "./frontend"
@@ -9,7 +15,7 @@ run = "npm start"
 
 [scripts.backend]
 help = "start dev server"
-run = "docker-compose up"
+run = "docker-compose up web"
 
 [scripts.test]
 root = true

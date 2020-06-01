@@ -7,7 +7,7 @@ services:
       dockerfile: Dockerfile.dev
     volumes:
       - ./backend:/app
-      - ./frontend/static:/app/static
+      - ./frontend/static:/static
     ports:
       - "8084:8084"
     restart: always
@@ -21,7 +21,7 @@ services:
       DO_SPACES_SPACE: schierco
       PORT: "8084"
       STATIC_URL: /static
-      STATIC_ROOT: ./static
+      STATIC_ROOT: /static
     depends_on:
       - postgres
   postgres:

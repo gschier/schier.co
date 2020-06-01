@@ -3,8 +3,8 @@
   "name": "schier.dev",
   "version": "1.0.0",
   "scripts": {
-    "start": "rm -rf ./static && parcel watch --global schier --out-dir ./static --public-url /static/ editor.js index.js",
-    "build": "rm -rf ./static && parcel build --global schier --no-source-maps --out-dir ./static editor.js index.js",
+    "start": "rm -rf ./static/* && parcel watch --global schier --out-dir ./static --public-url /static/ editor.js index.js",
+    "build": "rm -rf ./static/* && parcel build --global schier --no-source-maps --out-dir ./static editor.js index.js",
     "format-code": "prettier --write **/*.js **/*.css"
   },
   "husky": {
