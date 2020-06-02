@@ -2,8 +2,8 @@
 
 html {
     @apply bg-background text-primary;
-    font-size: 17px;
-    font-family: 'Open Sans', sans-serif;
+    font-size: 18px;
+    font-family: Helvetica, Lato, 'Open Sans', sans-serif;
 }
 
 @media only screen and (max-width: 600px) {
@@ -17,7 +17,7 @@ body {
 }
 
 body[data-logged-in='yes'] .top-nav .logo {
-    filter: saturate(8);
+    transform: rotate(180deg);
 }
 
 main {
@@ -486,16 +486,26 @@ pre.chroma-chroma {
 /* TOP NAVIGATION */
 /******************/
 
+.top-nav {
+    @apply mb-10 text-sm;
+    box-shadow: rgba(0, 0, 0, 0.1) 0 0 0.6rem 0;
+}
+
 .top-nav .container {
-    @apply flex flex-row items-center py-4;
+    @apply flex flex-row items-center;
+    max-width: 70rem;
 }
 
 .top-nav a {
     @apply text-gray-600 h-full block;
 }
 
+.top-nav a:hover {
+    @apply text-gray-800 no-underline;
+}
+
 .top-nav .logo {
-    @apply h-10 overflow-visible;
+    @apply h-8 overflow-visible my-3;
 }
 
 .top-nav a svg {
