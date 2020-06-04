@@ -25,4 +25,4 @@ jobs:
         run: |
           cat job.tpl.hcl | sed "s|__GIT_SHA__|${{ github.SHA }}|g" | cat > job.hcl
           scp job.hcl root@nomad.schier.dev:/tmp/job.hcl
-          ssh root@nomad.schier.dev nomad job run -address="http://10.120.16.2:4646" -token="${{ secrets.NOMAD_TOKEN }}" /tmp/job.hce
+          ssh root@nomad.schier.dev nomad job run -address="http://10.120.16.2:4646" -token="${{ secrets.NOMAD_TOKEN }}" /tmp/job.hcl
