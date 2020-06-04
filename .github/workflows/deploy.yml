@@ -23,16 +23,14 @@ jobs:
           ssh-keyscan nomad.schier.dev >> ~/.ssh/known_hosts
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-      - name: Render Job File
-        run: cat ./deployment/job.tpl.hcl | sed "s|__GIT_SHA__|${GIT_SHA}|g" | cat > ./job.hcl
-        env:
-          GIT_SHA: ${{ github.sha }}
       - name: Deploy to Nomad
         run: |
-          scp ./job.hcl root@nomad.schier.dev:/tmp/schierco.hcl
+          cat job.tpl.hcl | sed "s|__GIT_SHA__|${GIT_SHA}|g" | cat > job.hcl
+          scp job.hcl root@nomad.schier.dev:/tmp/schierco.hcl
           ssh root@nomad.schier.dev nomad job run \
             -address="http://${NOMAD_IP_PRV}:4646" \
             -token="${NOMAD_TOKEN}" /tmp/schierco.hcl
         env:
+          GIT_SHA: ${{ github.sha }}
           NOMAD_IP_PRV: ${{ secrets.NOMAD_IP_PRV }}
           NOMAD_TOKEN: ${{ secrets.NOMAD_TOKEN }}
