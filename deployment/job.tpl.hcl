@@ -19,12 +19,16 @@ job "app.schierco" {
     task "server" {
       driver = "docker"
 
+      vault {
+        policy = ["schier.co"]
+      }
+
       config {
-        image = "registry.digitalocean.com/schierdev/schier.co:__DOCKER_TAG__"
+        image = "registry.digitalocean.com/schierdev/schier.co:${GITHUB_SHA}"
 
         auth {
-          username = "__DO_REGISTRY_TOKEN__"
-          password = "__DO_REGISTRY_TOKEN__"
+          username = "${DO_REGISTRY_TOKEN}"
+          password = "${DO_REGISTRY_TOKEN}"
         }
       }
 
@@ -36,19 +40,30 @@ job "app.schierco" {
         }
       }
 
+      template {
+        data = <<EOH
+{{ with secret "schier.co/env" }}
+CSRF_KEY = "{{ .Data.CSRF_KEY }}"
+DO_REGISTRY_TOKEN = "{{ .Data.DO_REGISTRY_TOKEN }}"
+DO_SPACES_DOMAIN = "{{ .Data.DO_SPACES_DOMAIN }}"
+DO_SPACES_KEY = "{{ .Data.DO_SPACES_KEY }}"
+DO_SPACES_SECRET = "{{ .Data.DO_SPACES_SECRET }}"
+DO_SPACES_SPACE = "{{ .Data.DO_SPACES_SPACE }}"
+MAILJET_PRV_KEY = "{{ .Data.MAILJET_PRV_KEY }}"
+MAILJET_PUB_KEY = "{{ .Data.MAILJET_PUB_KEY }}"
+DATABASE_URL="{{ .Data.DATABASE_URL }}"
+{{ end }}
+EOH
+        env = true
+        destination = "${NOMAD_SECRETS_DIR}/file.env"
+        change_mode = "restart"
+      }
+
       env {
         BASE_URL = "https://schier.co"
-        CSRF_KEY = "__CSRF_KEY__"
-        DATABASE_URL = "__DATABASE_URL__"
         DEV_ENVIRONMENT = "production"
-        DO_SPACES_DOMAIN = "nyc3.digitaloceanspaces.com"
-        DO_SPACES_KEY = "__DO_SPACES_KEY__"
-        DO_SPACES_SECRET = "__DO_SPACES_SECRET__"
-        DO_SPACES_SPACE = "schierco"
         GITHUB_REPOSITORY = "__GITHUB_REPOSITORY__"
         GITHUB_SHA = "__GITHUB_SHA__"
-        MAILJET_PRV_KEY = "__MAILJET_PRV_KEY__"
-        MAILJET_PUB_KEY = "__MAILJET_PUB_KEY__"
         MIGRATE_ON_START = "enable"
         PORT = "${NOMAD_PORT_web}"
         STATIC_ROOT = "./static"

@@ -20,14 +20,7 @@ jobs:
       - name: Deploy to Nomad
         run: ./deployment/deploy.sh
         env:
-          CSRF_KEY: ${{ secrets.CSRF_KEY }}
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          DO_REGISTRY_TOKEN: ${{ secrets.DO_REGISTRY_TOKEN }}
-          DO_SPACES_KEY: ${{ secrets.DO_SPACES_KEY }}
-          DO_SPACES_SECRET: ${{ secrets.DO_SPACES_SECRET }}
           DOCKER_TAG: ${{ github.sha }}
-          MAILJET_PRV_KEY: ${{ secrets.MAILJET_PRV_KEY }}
-          MAILJET_PUB_KEY: ${{ secrets.MAILJET_PUB_KEY }}
           NOMAD_IP: ${{ secrets.NOMAD_IP }}
           NOMAD_IP_PRV: ${{ secrets.NOMAD_IP_PRV }}
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
