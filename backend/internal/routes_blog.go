@@ -36,6 +36,7 @@ func BlogRoutes(router *mux.Router) {
 	router.HandleFunc("/tags/{tag}", routeBlogTagsOld).Methods(http.MethodGet)
 	router.HandleFunc("/blog/tags/{tag}", routeBlogList).Methods(http.MethodGet)
 	router.HandleFunc("/blog/share/{slug}/{platform}", routeBlogShare).Methods(http.MethodGet)
+	router.HandleFunc("/blog/donate/{slug}", routeBlogDonate).Methods(http.MethodGet)
 
 	// Posts
 	router.HandleFunc("/blog/search", routeBlogPostSearch).Methods(http.MethodGet)
@@ -640,6 +641,15 @@ func routeUploadAsset(w http.ResponseWriter, r *http.Request) {
 	})
 	w.Header().Set("Content-Type", "application/json")
 	_, _ = w.Write(body)
+}
+
+func routeBlogDonate(w http.ResponseWriter, r *http.Request) {
+	slug := mux.Vars(r)["slug"]
+
+	_ = ctxDB(r).IncrementBlogPostDonations(r.Context(), slug)
+	log.Println("Clicked donate link on", slug, r.Header.Get("User-Agent"))
+
+	http.Redirect(w, r, "https://github.com/sponsors/gschier", http.StatusSeeOther)
 }
 
 func routeBlogShare(w http.ResponseWriter, r *http.Request) {

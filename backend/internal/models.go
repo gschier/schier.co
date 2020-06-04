@@ -12,6 +12,7 @@ type BlogPost struct {
 
 	Content    string         `db:"content"`
 	Date       time.Time      `db:"date"`
+	Donations  int            `db:"donations"`
 	EditedAt   time.Time      `db:"edited_at"`
 	Image      string         `db:"image"`
 	Published  bool           `db:"published"`

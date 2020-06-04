@@ -190,6 +190,15 @@ func (s *Storage) UpdateBlogPostShares(ctx context.Context, id string, shares in
 	return err
 }
 
+func (s *Storage) IncrementBlogPostDonations(ctx context.Context, slug string) error {
+	_, err := s.db.ExecContext(ctx, `
+		UPDATE blog_posts 
+		SET donations = donations + 1
+		WHERE slug = $1
+	`, slug)
+	return err
+}
+
 func (s *Storage) RankedBooks(ctx context.Context) ([]Book, error) {
 	var books []Book
 	err := s.db.SelectContext(ctx, &books, `
