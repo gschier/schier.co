@@ -20,7 +20,6 @@ jobs:
       - name: Deploy to Nomad
         run: ./deployment/deploy.sh
         env:
-          DOCKER_TAG: ${{ github.sha }}
-          NOMAD_IP: ${{ secrets.NOMAD_IP }}
+          GIT_SHA: ${{ github.sha }}
           NOMAD_IP_PRV: ${{ secrets.NOMAD_IP_PRV }}
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}

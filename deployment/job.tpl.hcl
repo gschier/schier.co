@@ -26,7 +26,7 @@ job "app.schierco" {
       }
 
       config {
-        image = "registry.digitalocean.com/schierdev/schier.co:${GITHUB_SHA}"
+        image = "registry.digitalocean.com/schierdev/schier.co:${GIT_SHA}"
 
         auth {
           username = "${DO_REGISTRY_TOKEN}"
@@ -65,7 +65,7 @@ EOH
         BASE_URL = "https://schier.co"
         DEV_ENVIRONMENT = "production"
         GITHUB_REPOSITORY = "__GITHUB_REPOSITORY__"
-        GITHUB_SHA = "__GITHUB_SHA__"
+        GIT_SHA = "__GIT_SHA__"
         MIGRATE_ON_START = "enable"
         PORT = "${NOMAD_PORT_web}"
         STATIC_ROOT = "./static"
