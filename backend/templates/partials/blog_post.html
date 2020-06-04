@@ -33,7 +33,7 @@
 
   {{ blogPost.Content | markdown }}
 
-  {% if not blogPost.Tags | contains:"tutorial" %}
+  {% if "tutorial" in blogPost.Tags %}
     <p class="notice notice--info">
       If you enjoyed this tutorial, please consider
       <a href="/blog/donate/{{ blogPost.Slug }}">sponsoring my work on GitHub</a> 🤗
