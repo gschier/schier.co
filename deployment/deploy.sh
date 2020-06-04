@@ -9,5 +9,8 @@ cat ./deployment/job.tpl.hcl | \
   cat > ./job.hcl
 
 scp ./job.hcl root@nomad.schier.dev:/tmp/schierco.hcl
-ssh "root@nomad.schier.dev" nomad job run -address="http://${NOMAD_IP_PRV}:4646 /tmp/schierco.hcl"
+ssh "root@nomad.schier.dev" nomad job run \
+  -address="http://${NOMAD_IP_PRV}:4646" \
+  -token="${NOMAD_TOKEN}" \
+  /tmp/schierco.hcl
 

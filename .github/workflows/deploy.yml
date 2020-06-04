@@ -22,4 +22,5 @@ jobs:
         env:
           GIT_SHA: ${{ github.sha }}
           NOMAD_IP_PRV: ${{ secrets.NOMAD_IP_PRV }}
+          NOMAD_TOKEN: ${{ secrets.NOMAD_TOKEN }}
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
