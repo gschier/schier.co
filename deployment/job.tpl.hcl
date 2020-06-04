@@ -20,7 +20,9 @@ job "app.schierco" {
       driver = "docker"
 
       vault {
-        policy = ["schier.co"]
+        policies = [
+          "schier.co",
+        ]
       }
 
       config {
