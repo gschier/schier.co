@@ -4,15 +4,15 @@ job "app.schierco" {
   ]
 
   group "server" {
-    count = 5
+    count = 3
 
     update {
       canary = 1
       max_parallel = 5
       auto_promote = true
       auto_revert = true
-      min_healthy_time = "5s"
-      stagger = "10s"
+      min_healthy_time = "1s"
+      stagger = "1s"
       health_check = "checks"
     }
 
