@@ -45,14 +45,14 @@ job "app.schierco" {
       template {
         data = <<EOH
 {{ with secret "schier.co/env" }}
-CSRF_KEY = "{{ .Data.CSRF_KEY }}"
-DO_REGISTRY_TOKEN = "{{ .Data.DO_REGISTRY_TOKEN }}"
-DO_SPACES_DOMAIN = "{{ .Data.DO_SPACES_DOMAIN }}"
-DO_SPACES_KEY = "{{ .Data.DO_SPACES_KEY }}"
-DO_SPACES_SECRET = "{{ .Data.DO_SPACES_SECRET }}"
-DO_SPACES_SPACE = "{{ .Data.DO_SPACES_SPACE }}"
-MAILJET_PRV_KEY = "{{ .Data.MAILJET_PRV_KEY }}"
-MAILJET_PUB_KEY = "{{ .Data.MAILJET_PUB_KEY }}"
+CSRF_KEY="{{ .Data.CSRF_KEY }}"
+DO_REGISTRY_TOKEN="{{ .Data.DO_REGISTRY_TOKEN }}"
+DO_SPACES_DOMAIN="{{ .Data.DO_SPACES_DOMAIN }}"
+DO_SPACES_KEY="{{ .Data.DO_SPACES_KEY }}"
+DO_SPACES_SECRET="{{ .Data.DO_SPACES_SECRET }}"
+DO_SPACES_SPACE="{{ .Data.DO_SPACES_SPACE }}"
+MAILJET_PRV_KEY="{{ .Data.MAILJET_PRV_KEY }}"
+MAILJET_PUB_KEY="{{ .Data.MAILJET_PUB_KEY }}"
 DATABASE_URL="{{ .Data.DATABASE_URL }}"
 {{ end }}
 EOH
