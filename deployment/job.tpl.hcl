@@ -64,7 +64,6 @@ EOH
       env {
         BASE_URL = "https://schier.co"
         DEV_ENVIRONMENT = "production"
-        GITHUB_REPOSITORY = "__GITHUB_REPOSITORY__"
         GIT_SHA = "__GIT_SHA__"
         MIGRATE_ON_START = "enable"
         PORT = "${NOMAD_PORT_web}"
