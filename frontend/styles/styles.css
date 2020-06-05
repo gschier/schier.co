@@ -16,10 +16,10 @@
     --text-syntax-2: #3182CE;
     --text-syntax-3: #5A67D8;
     --text-syntax-4: #8e9dad;
-    --text-notice: #B7791F;
-    --text-info: #5A67D8;
-    --text-warning: #DD6B20;
-    --text-danger: #E53E3E;
+    --text-notice: var(--color-notice-400);
+    --text-info: var(--color-info-400);
+    --text-warning: var(--color-warning-400);
+    --text-danger: var(--color-danger-400);
 
     /* Generic Colors */
     --color-gray-100: #F7FAFC;
@@ -36,13 +36,17 @@
     --color-danger-400: #FC8181;
     --color-danger-500: #F56565;
 
-    --color-warning-100: #fff5f5;
-    --color-warning-400: #FC8181;
-    --color-warning-500: #F56565;
+    --color-warning-100: #FFFAF0;
+    --color-warning-400: #F6AD55;
+    --color-warning-500: #ED8936;
 
-    --color-info-100: #fff5f5;
-    --color-info-400: #FC8181;
-    --color-info-500: #F56565;
+    --color-notice-100: #FFFFF0;
+    --color-notice-400: #ECC94B;
+    --color-notice-500: #D69E2E;
+
+    --color-info-100: #EBF8FF;
+    --color-info-400: #63B3ED;
+    --color-info-500: #4299E1;
 
     --color-primary-050: #3082cf11;
     --color-primary-100: #3082cf55;
@@ -68,10 +72,10 @@ html[theme="dark"] {
     --text-syntax-2: #71baff;
     --text-syntax-3: #7785ff;
     --text-syntax-4: #717884;
-    --text-notice: #B7791F;
-    --text-info: #5A67D8;
-    --text-warning: #DD6B20;
-    --text-danger: #E53E3E;
+    --text-notice: var(--color-notice-400);
+    --text-info: var(--color-info-400);
+    --text-warning: var(--color-warning-400);
+    --text-danger: var(--color-danger-400);
 
     /* Generic Colors */
     --color-gray-100: #252525;
@@ -84,17 +88,17 @@ html[theme="dark"] {
     --color-gray-800: #ccc;
     --color-gray-900: #ddd;
 
-    --color-danger-100: #fff5f5;
-    --color-danger-400: #FC8181;
-    --color-danger-500: #F56565;
+    --color-danger-100: #fff5f511;
+    --color-danger-400: #FC8181CC;
+    --color-danger-500: #FC8181FF;
 
-    --color-warning-100: #fff5f5;
-    --color-warning-400: #FC8181;
-    --color-warning-500: #F56565;
+    --color-warning-100: #F6AD5511;
+    --color-warning-400: #F6AD55CC;
+    --color-warning-500: #F6AD55FF;
 
-    --color-info-100: #fff5f5;
-    --color-info-400: #FC8181;
-    --color-info-500: #F56565;
+    --color-info-100: #63B3ED11;
+    --color-info-400: #63B3EDCC;
+    --color-info-500: #63B3EDFF;
 }
 
 html {
@@ -239,6 +243,10 @@ h2 {
 
 .notice > code {
     @apply bg-background border-background !important;
+}
+
+.notice a {
+    color: inherit;
 }
 
 .notice--danger {
