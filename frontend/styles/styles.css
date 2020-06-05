@@ -1,7 +1,116 @@
 @tailwind base;
 
+:root {
+    /* Background */
+    --bg: #fff;
+
+    /* Button */
+    --bg-btn: --color-primary-500;
+
+    /* Text */
+    --text-link: #3182ce;
+    --text-syntax-1: #805AD5;
+    --text-syntax-2: #3182CE;
+    --text-syntax-3: #5A67D8;
+    --text-syntax-4: #8e9dad;
+    --text-notice: #B7791F;
+    --text-info: #5A67D8;
+    --text-warning: #DD6B20;
+    --text-danger: #E53E3E;
+
+    /* Generic Colors */
+    --color-gray-100: #F7FAFC;
+    --color-gray-200: #EDF2F7;
+    --color-gray-300: #E2E8F0;
+    --color-gray-400: #CBD5E0;
+    --color-gray-500: #A0AEC0;
+    --color-gray-600: #718096;
+    --color-gray-700: #4A5568;
+    --color-gray-800: #2D3748;
+    --color-gray-900: #1A202C;
+
+    --color-danger-100: #fff5f5;
+    --color-danger-400: #FC8181;
+    --color-danger-500: #F56565;
+
+    --color-warning-100: #fff5f5;
+    --color-warning-400: #FC8181;
+    --color-warning-500: #F56565;
+
+    --color-info-100: #fff5f5;
+    --color-info-400: #FC8181;
+    --color-info-500: #F56565;
+
+    --color-primary-900: hsl(209, 62%, 30%);
+    --color-primary-800: hsl(209, 62%, 35%);
+    --color-primary-700: hsl(209, 62%, 40%);
+    --color-primary-600: hsl(209, 62%, 45%);
+    --color-primary-500: hsl(209, 62%, 50%);
+    --color-primary-400: hsl(209, 62%, 70%);
+    --color-primary-300: hsl(209, 62%, 75%);
+    --color-primary-200: hsl(209, 62%, 80%);
+    --color-primary-100: hsl(209, 62%, 90%);
+    --color-primary-050: hsl(209, 62%, 95%);
+}
+
+html[theme="dark"] {
+    /* Background */
+    --bg: #222;
+
+    /* Button */
+    --bg-btn: var(--color-primary-400);
+    --bg-btn-hover: var(--color-primary-500);
+    --text-btn: var(--color-gray-900);
+    --text-btn-hover: var(--color-gray-800);
+
+    /* Text */
+    --text-link: #57a4ec;
+    --text-syntax-1: #a983ff;
+    --text-syntax-2: #71baff;
+    --text-syntax-3: #7785ff;
+    --text-syntax-4: #717884;
+    --text-notice: #B7791F;
+    --text-info: #5A67D8;
+    --text-warning: #DD6B20;
+    --text-danger: #E53E3E;
+
+    /* Generic Colors */
+    --color-gray-100: #252525;
+    --color-gray-200: #333;
+    --color-gray-300: #444;
+    --color-gray-400: #666;
+    --color-gray-500: #888;
+    --color-gray-600: #999;
+    --color-gray-700: #bbb;
+    --color-gray-800: #ccc;
+    --color-gray-900: #ddd;
+
+    --color-danger-100: #fff5f5;
+    --color-danger-400: #FC8181;
+    --color-danger-500: #F56565;
+
+    --color-warning-100: #fff5f5;
+    --color-warning-400: #FC8181;
+    --color-warning-500: #F56565;
+
+    --color-info-100: #fff5f5;
+    --color-info-400: #FC8181;
+    --color-info-500: #F56565;
+
+    --color-primary-050: hsl(209, 62%, 30%);
+    --color-primary-100: hsl(209, 62%, 35%);
+    --color-primary-200: hsl(209, 62%, 40%);
+    --color-primary-300: hsl(209, 62%, 45%);
+    --color-primary-400: hsl(209, 62%, 50%);
+    --color-primary-500: hsl(209, 62%, 70%);
+    --color-primary-600: hsl(209, 62%, 75%);
+    --color-primary-700: hsl(209, 62%, 80%);
+    --color-primary-800: hsl(209, 62%, 90%);
+    --color-primary-900: hsl(209, 62%, 95%);
+}
+
 html {
-    @apply bg-background text-primary;
+    @apply bg-background text-gray-700;
     font-size: 18px;
     font-family: Helvetica, Lato, 'Open Sans', sans-serif;
 }
@@ -13,7 +122,7 @@ html {
 }
 
 body {
-    @apply p-0 text-primary;
+    @apply p-0 text-gray-700;
 }
 
 body[data-logged-in='yes'] .top-nav .logo {
@@ -37,7 +146,7 @@ main {
 
 a,
 .link {
-    @apply text-secondary;
+    @apply text-link;
 }
 
 a:hover,
@@ -46,15 +155,11 @@ a:hover,
 }
 
 hr {
-    @apply border-gray-300 border-0 border-b my-8;
+    @apply border-gray-200 border-0 border-b my-8;
 }
 
 small {
     @apply text-sm;
-}
-
-h1 {
-    @apply text-3xl;
 }
 
 h1,
@@ -63,11 +168,19 @@ h3,
 h4,
 h5,
 h6 {
-    @apply font-semibold;
+    @apply font-semibold text-gray-700;
+}
+
+h1 {
+    @apply text-3xl text-gray-900;
+}
+
+h2 {
+    @apply text-3xl text-gray-800;
 }
 
 .btn {
-    @apply bg-primary-600 text-gray-100 font-semibold py-2 px-4 text-sm rounded w-auto inline-block;
+    @apply bg-btn text-btn font-semibold py-2 px-4 text-sm rounded w-auto inline-block;
 }
 
 .btn svg {
@@ -125,7 +238,7 @@ h6 {
 }
 
 .notice a:hover {
-    @apply text-primary;
+    @apply text-gray-700;
 }
 
 .notice--big {
@@ -239,7 +352,7 @@ details summary:focus {
 }
 
 .blog-post-preview {
-    @apply mt-12 pb-6 border-b border-primary-100;
+    @apply mt-12 pb-6 border-b border-gray-200;
 }
 
 .blog-post-continue {
@@ -407,7 +520,7 @@ details summary:focus {
 /*********************/
 
 .subscription-form {
-    @apply border border-dashed border-primary-400 bg-primary-50 rounded mt-10;
+    @apply border border-dashed border-primary-400 bg-primary-050 rounded mt-10;
     position: relative;
 }
 
@@ -433,7 +546,7 @@ details summary:focus {
 }
 
 .subscription-form__hide {
-    @apply h-8 w-8 opacity-50 text-secondary;
+    @apply h-8 w-8 opacity-50 text-link;
     position: absolute;
     top: 0;
     right: 0;
@@ -487,8 +600,7 @@ pre.chroma-chroma {
 /******************/
 
 .top-nav {
-    @apply mb-10 text-sm;
-    box-shadow: rgba(0, 0, 0, 0.15) 0 0 0.25rem 0;
+    @apply mb-10 text-sm border-b border-gray-200;
 }
 
 .top-nav .container {
@@ -497,7 +609,7 @@ pre.chroma-chroma {
 }
 
 .top-nav a {
-    @apply text-gray-600 h-full block;
+    @apply text-gray-500 h-full block;
 }
 
 .top-nav a:hover {
@@ -542,7 +654,7 @@ pre.chroma-chroma {
 }
 
 .bottom-footer a i {
-    @apply text-secondary no-underline;
+    @apply text-link no-underline;
 }
 
 /****************/
@@ -654,7 +766,7 @@ pre.chroma-chroma {
 }
 
 body .CodeMirror .cm-variable-2 {
-    @apply text-primary;
+    @apply text-gray-700;
 }
 
 body .CodeMirror .cm-quote {
