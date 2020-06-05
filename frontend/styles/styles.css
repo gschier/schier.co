@@ -5,7 +5,10 @@
     --bg: #fff;
 
     /* Button */
-    --bg-btn: --color-primary-500;
+    --bg-btn: var(--color-primary-400);
+    --bg-btn-hover: var(--color-primary-500);
+    --text-btn: var(--color-gray-100);
+    --text-btn-hover: var(--color-gray-200);
 
     /* Text */
     --text-link: #3182ce;
@@ -41,16 +44,12 @@
     --color-info-400: #FC8181;
     --color-info-500: #F56565;
 
-    --color-primary-900: hsl(209, 62%, 30%);
-    --color-primary-800: hsl(209, 62%, 35%);
-    --color-primary-700: hsl(209, 62%, 40%);
-    --color-primary-600: hsl(209, 62%, 45%);
-    --color-primary-500: hsl(209, 62%, 50%);
-    --color-primary-400: hsl(209, 62%, 70%);
-    --color-primary-300: hsl(209, 62%, 75%);
-    --color-primary-200: hsl(209, 62%, 80%);
-    --color-primary-100: hsl(209, 62%, 90%);
-    --color-primary-050: hsl(209, 62%, 95%);
+    --color-primary-050: #3082cf11;
+    --color-primary-100: #3082cf55;
+    --color-primary-200: #3082cf88;
+    --color-primary-300: #3082cfAA;
+    --color-primary-400: #3082cfDD;
+    --color-primary-500: #3082cfFF;
 }
 
 html[theme="dark"] {
@@ -60,8 +59,8 @@ html[theme="dark"] {
     /* Button */
     --bg-btn: var(--color-primary-400);
     --bg-btn-hover: var(--color-primary-500);
-    --text-btn: var(--color-gray-900);
-    --text-btn-hover: var(--color-gray-800);
+    --text-btn: var(--color-gray-800);
+    --text-btn-hover: var(--color-gray-900);
 
     /* Text */
     --text-link: #57a4ec;
@@ -96,17 +95,6 @@ html[theme="dark"] {
     --color-info-100: #fff5f5;
     --color-info-400: #FC8181;
     --color-info-500: #F56565;
-
-    --color-primary-050: hsl(209, 62%, 30%);
-    --color-primary-100: hsl(209, 62%, 35%);
-    --color-primary-200: hsl(209, 62%, 40%);
-    --color-primary-300: hsl(209, 62%, 45%);
-    --color-primary-400: hsl(209, 62%, 50%);
-    --color-primary-500: hsl(209, 62%, 70%);
-    --color-primary-600: hsl(209, 62%, 75%);
-    --color-primary-700: hsl(209, 62%, 80%);
-    --color-primary-800: hsl(209, 62%, 90%);
-    --color-primary-900: hsl(209, 62%, 95%);
 }
 
 html {
@@ -192,7 +180,7 @@ h2 {
 }
 
 .btn:hover:not(:disabled) {
-    @apply bg-primary-500 no-underline;
+    @apply bg-btn-hover text-btn-hover no-underline;
 }
 
 .btn.btn-faint {
@@ -608,8 +596,16 @@ pre.chroma-chroma {
     max-width: 70rem;
 }
 
+.top-nav ul {
+    @apply flex flex-row items-center;
+}
+
+.top-nav ul:first-child {
+    @apply mr-auto;
+}
+
 .top-nav a {
-    @apply text-gray-500 h-full block;
+    @apply text-gray-600 h-full block;
 }
 
 .top-nav a:hover {
@@ -621,7 +617,7 @@ pre.chroma-chroma {
 }
 
 .top-nav a svg {
-    @apply h-4 w-4 fill-current;
+    @apply h-4 w-4 fill-current float-left;
 }
 
 .top-nav li {
