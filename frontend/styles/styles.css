@@ -905,6 +905,10 @@ body .CodeMirror .cm-comment {
     .card__body--big {
         @apply text-2xl;
     }
+
+    .hide-mobile {
+        display: none;
+    }
 }
 
 /*************/
