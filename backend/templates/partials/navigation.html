@@ -2,8 +2,9 @@
   <div class="container">
     <ul>
       <li>
-        <a href="/">
-          <img class="logo" src="data:image/svg+xml;base64,{{ 'images/greg-rounded.svg' | inlinestatic:'base64' }}" alt="Gregory Schier vector headshot" />
+        <a href="/" class="logo">
+          {{ 'images/greg-rounded.svg' | inlinestatic | safe }}
+{#          <img class="logo" src="data:image/svg+xml;base64,{{ 'images/greg-rounded.svg' | inlinestatic:'base64' }}" alt="Gregory Schier vector headshot" />#}
         </a>
       </li>
       {% if loggedIn %}

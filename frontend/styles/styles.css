@@ -620,8 +620,8 @@ pre.chroma-chroma {
     @apply text-gray-800 no-underline;
 }
 
-.top-nav .logo {
-    @apply h-8 overflow-visible my-3;
+.top-nav a.logo svg {
+    @apply h-8 w-8 overflow-visible my-3;
 }
 
 .top-nav a svg {
