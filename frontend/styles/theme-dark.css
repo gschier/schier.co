@@ -1,0 +1,45 @@
+[theme="dark"] {
+    /* Background */
+    --bg: #222;
+
+    /* Button */
+    --bg-btn: var(--color-primary-400);
+    --bg-btn-hover: var(--color-primary-500);
+    --text-btn: var(--color-gray-800);
+    --text-btn-hover: var(--color-gray-900);
+
+    /* Text */
+    --text-link: #57a4ec;
+    --text-syntax-1: #a983ff;
+    --text-syntax-2: #71baff;
+    --text-syntax-3: #7785ff;
+    --text-syntax-4: #717884;
+    --text-notice: var(--color-notice-400);
+    --text-info: var(--color-info-400);
+    --text-warning: var(--color-warning-400);
+    --text-danger: var(--color-danger-400);
+
+    /* Generic Colors */
+    --color-gray-100: #252525;
+    --color-gray-200: #333;
+    --color-gray-300: #444;
+    --color-gray-400: #666;
+    --color-gray-500: #888;
+    --color-gray-600: #999;
+    --color-gray-700: #bbb;
+    --color-gray-800: #ccc;
+    --color-gray-900: #ddd;
+
+    --color-danger-100: #fff5f511;
+    --color-danger-400: #FC8181CC;
+    --color-danger-500: #FC8181FF;
+
+    --color-warning-100: #F6AD5511;
+    --color-warning-400: #F6AD55CC;
+    --color-warning-500: #F6AD55FF;
+
+    --color-info-100: #63B3ED11;
+    --color-info-400: #63B3EDCC;
+    --color-info-500: #63B3EDFF;
+}
+

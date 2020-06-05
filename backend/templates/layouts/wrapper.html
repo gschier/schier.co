@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en-US" theme="light">
+<html lang="en-US">
 <head>
   <meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -67,7 +67,18 @@
 <body data-deployed="{{ deployTime }}" data-csrf-token="{{ csrfToken }}" data-csrf-Token-header="{{ csrfTokenHeader }}" data-logged-in="{{ loggedIn | yesno:'yes,no' }}">
 
 {# Set theme as soon as possible #}
-<script>document.querySelector('html').setAttribute('theme', localStorage.getItem('theme') || 'light');</script>
+<script>
+  (function() {
+    const theme = localStorage.getItem('theme') || '';
+    if (theme) {
+      document.querySelector('html').setAttribute('theme', theme);
+    } else {
+      const preferDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const autoTheme = preferDark ? 'dark-auto' : 'light-auto';
+      document.querySelector('html').setAttribute('theme', autoTheme);
+    }
+  })();
+</script>
 
 {% block body %}{% endblock %}
 
