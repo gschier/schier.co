@@ -1,4 +1,4 @@
-:root, [theme="light"] {
+:root, [theme="light"], [theme="light-auto"] {
     /* Background */
     --bg: #fff;
 

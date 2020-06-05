@@ -10,12 +10,8 @@
         </p>
       {% endif %}
       {{ csrfField | safe }}
-      <div class="form-row">
-        {% include '../../partials/form-input.html' with label='Email' type='email' name='email' placeholder='me@example.com' autofocus=true value=email %}
-      </div>
-      <div class="form-row">
-        {% include '../../partials/form-input.html' with label='Password' type='password' name='password' placeholder='•••••••••••••••••' value=password %}
-      </div>
+      {% include '../../partials/form-input.html' with label='Email' type='email' name='email' placeholder='me@example.com' autofocus=true value=email %}
+      {% include '../../partials/form-input.html' with label='Password' type='password' name='password' placeholder='•••••••••••••••••' value=password %}
       <div class="form-actions">
         <a href="/register">or signup</a>
         <button class="btn">

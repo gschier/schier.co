@@ -1,4 +1,4 @@
-[theme="dark"] {
+[theme="dark"], [theme="dark-auto"] {
     /* Background */
     --bg: #222;
 
