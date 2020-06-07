@@ -3,7 +3,7 @@ package migrations
 import (
 	"context"
 	"encoding/json"
-	"github.com/gschier/schier.dev/internal/migrate"
+	"github.com/gschier/schier.co/internal/migrate"
 	"github.com/jmoiron/sqlx"
 	"io/ioutil"
 	"log"

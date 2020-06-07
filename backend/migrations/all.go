@@ -1,7 +1,7 @@
 package migrations
 
 import (
-	"github.com/gschier/schier.dev/internal/migrate"
+	"github.com/gschier/schier.co/internal/migrate"
 	"sort"
 	"strings"
 )

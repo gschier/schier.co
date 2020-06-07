@@ -104,7 +104,6 @@ func CSRFMiddleware(next http.Handler) http.Handler {
 func CORSMiddleware(next http.Handler) http.Handler {
 	return handlers.CORS(handlers.AllowedOrigins([]string{
 		"https://schier.co",
-		"https://schier.dev",
 	}))(next)
 }
 

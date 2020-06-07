@@ -2,7 +2,7 @@ package migrations
 
 import (
 	"context"
-	"github.com/gschier/schier.dev/internal/migrate"
+	"github.com/gschier/schier.co/internal/migrate"
 	"github.com/jmoiron/sqlx"
 	"github.com/lib/pq"
 	"regexp"

@@ -1,4 +1,4 @@
-module github.com/gschier/schier.dev
+module github.com/gschier/schier.co
 
 require (
 	github.com/Depado/bfchroma v1.2.0

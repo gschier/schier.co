@@ -2,7 +2,7 @@ package internal_test
 
 import (
 	"fmt"
-	"github.com/gschier/schier.dev/internal"
+	"github.com/gschier/schier.co/internal"
 	"github.com/stretchr/testify/assert"
 	"testing"
 	"time"

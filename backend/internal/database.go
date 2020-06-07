@@ -285,7 +285,7 @@ func (s *Storage) SearchPublishedBlogPosts(ctx context.Context, query string, li
 func (s *Storage) UpdateBlogPostPublished(ctx context.Context, id string, published bool) error {
 	_, err := s.db.ExecContext(ctx, `
 		UPDATE blog_posts SET published = $2 WHERE id = $1
-	`, published, id)
+	`, id, published)
 	return err
 }
 
