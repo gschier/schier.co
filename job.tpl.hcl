@@ -56,6 +56,7 @@ EOH
       }
 
       env {
+        GIT_SHA = "__GIT_SHA__"
         PORT = "${NOMAD_PORT_web}"
       }
 
