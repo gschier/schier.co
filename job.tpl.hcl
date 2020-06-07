@@ -44,7 +44,7 @@ job "app.schierco" {
 
       template {
         data = <<EOH
-{{ with secret "schier.dev/env" }}
+{{ with secret "schier.co/env" }}
 {{ range $key, $val := .Data }}
 {{ $key }}="{{ $val }}"
 {{ end }}
