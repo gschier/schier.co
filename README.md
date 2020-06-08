@@ -20,10 +20,3 @@ wyp test
 # Run backend and frontend
 wyp start
 ```
-
-Navigate to http://localhost:8084 in your browser.
-
-## Deployment
-
-schier.co runs on my personal [Nomad](https://nomadproject.io) cluster on
-[DigitalOcean](https://www.digitalocean.com). See also [`gschier/digitalocean-nomad-terraform`](https://github.com/gschier/digitalocean-nomad-terraform) to see how the cluster is configured.
