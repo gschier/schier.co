@@ -1,0 +1,7 @@
+{
+  "name": "schierco",
+  "host": "schier.co",
+  "vault": "schier.co",
+  "image": "registry.digitalocean.com/schierdev/schier.co",
+  "scale": 1
+}
