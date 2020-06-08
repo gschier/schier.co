@@ -367,13 +367,6 @@ func (s *Storage) CreateSession(ctx context.Context, userID string) (string, err
 	return id, err
 }
 
-func (s *Storage) DeleteOldGuestSessions(ctx context.Context) error {
-	_, err := s.db.ExecContext(ctx, `
-		DELETE FROM sessions WHERE user_id IS NULL and created_at < now()-'1 hour'::interval;
-	`)
-	return err
-}
-
 func (s *Storage) CreateUser(ctx context.Context, email, name, pwHash string) (*User, error) {
 	u := User{
 		ID:           s.newID("usr_"),

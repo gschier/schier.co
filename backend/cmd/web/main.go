@@ -19,12 +19,6 @@ func main() {
 		migrate.ForwardAll(context.Background(), migrations.All(), db.DB(), true)
 	}
 
-	// Delete stale sessions
-	err := db.DeleteOldGuestSessions(context.Background())
-	if err != nil {
-		log.Println("Failed to delete old guest sessions", err)
-	}
-
 	// Setup router
 	router := setupRouter(db)
 
