@@ -202,7 +202,7 @@ func (s *Storage) IncrementBlogPostDonations(ctx context.Context, slug string) e
 func (s *Storage) RankedBooks(ctx context.Context) ([]Book, error) {
 	var books []Book
 	err := s.db.SelectContext(ctx, &books, `
-		SELECT * FROM books ORDER BY rank DESC
+		SELECT * FROM books ORDER BY rank ASC
 	`)
 	return books, err
 }
