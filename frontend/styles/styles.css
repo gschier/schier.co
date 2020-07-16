@@ -100,6 +100,26 @@ h2 {
     @apply bg-gray-300;
 }
 
+.btn.btn--twitter {
+    color: #fff;
+    background-color: #55acee !important;
+}
+
+.btn.btn--hn {
+    color: #fff;
+    background-color: #ff6600 !important;
+}
+
+.btn.btn--reddit {
+    color: #fff;
+    background-color: #ff5700 !important;
+}
+
+.btn.btn--email {
+    color: #fff;
+    background-color: #555 !important;
+}
+
 .btn.btn--sm {
     @apply py-1 px-3 text-xs rounded-sm;
 }
@@ -122,7 +142,7 @@ h2 {
     @apply border text-sm py-3 px-4 rounded border-dotted border-primary-200 bg-primary-100 text-center;
 }
 
-.notice a {
+.notice a:not(.btn) {
     @apply underline;
 }
 
@@ -906,22 +926,6 @@ body .CodeMirror .cm-comment {
 
 .svg-icon svg {
     @apply h-3 mr-1 inline-block;
-}
-
-.svg-icon--twitter {
-    background-color: #55acee !important;
-}
-
-.svg-icon--hn {
-    background-color: #ff6600 !important;
-}
-
-.svg-icon--reddit {
-    background-color: #ff5700 !important;
-}
-
-.svg-icon--email {
-    background-color: #444444 !important;
 }
 
 /***********/

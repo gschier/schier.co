@@ -2,8 +2,9 @@ package migrations
 
 import (
 	"context"
-	"github.com/gschier/schier.co/internal/migrate"
 	"github.com/jmoiron/sqlx"
+
+	"github.com/gschier/schier.co/internal/migrate"
 )
 
 func init() {
