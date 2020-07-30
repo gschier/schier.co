@@ -6,7 +6,7 @@ services:
       context: .
       dockerfile: Dockerfile.dev
     volumes:
-      - ./backend:/app
+      - .:/app
       - ./frontend/static:/static
     ports:
       - "8084:8084"

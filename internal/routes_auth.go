@@ -67,11 +67,11 @@ func routeLogin(w http.ResponseWriter, r *http.Request) {
 func routeRegister(w http.ResponseWriter, r *http.Request) {
 	render := func(email, name, password, error string) {
 		renderTemplate(w, r, registerTemplate(), &pongo2.Context{
-			"pageTitle": "Register",
-			"email":     email,
-			"password":  password,
-			"name":      name,
-			"error":     error,
+			"pageTitle":  "Register",
+			"email":      email,
+			"password":   password,
+			"name":       name,
+			"error":      error,
 			"doNotTrack": true,
 		})
 	}

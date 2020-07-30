@@ -47,7 +47,7 @@ func SendTemplate(id int, sub *Subscriber, variables map[string]interface{}) err
 				Name:  sub.Name,
 				Email: sub.Email,
 			}},
-			Variables: variables,
+			Variables:            variables,
 			TemplateErrorDeliver: true,
 			TemplateErrorReporting: &mailjet.RecipientV31{
 				Email: "greg@schier.co",

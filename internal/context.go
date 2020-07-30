@@ -13,7 +13,7 @@ var (
 	ctxKeyUser     = contextKey("user")
 )
 
-func ctxDB(r *http.Request) *Storage{
+func ctxDB(r *http.Request) *Storage {
 	if c, ok := r.Context().Value(ctxKeyDB).(*Storage); ok {
 		return c
 	}

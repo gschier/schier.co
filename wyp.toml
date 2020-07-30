@@ -32,7 +32,6 @@ run = "docker-compose up web"
 [scripts.test]
 root = true
 help = "run tests"
-dir = "./backend"
 run = "go test ./... | grep -vE '(no test files)'"
 
 [scripts.migrate]

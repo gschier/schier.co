@@ -39,6 +39,7 @@ export function initCodemirror(textareaEl, containerEl) {
     },
     {
       value: textareaEl.value,
+      theme: 'none',
       mode: 'gfm',
       height: 'auto',
       foldGutter: true,

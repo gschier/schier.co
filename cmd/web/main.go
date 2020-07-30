@@ -2,13 +2,15 @@ package main
 
 import (
 	"context"
-	"github.com/gorilla/mux"
-	"github.com/gschier/schier.co/internal"
-	"github.com/gschier/schier.co/internal/migrate"
-	"github.com/gschier/schier.co/migrations"
 	"log"
 	"net/http"
 	"os"
+
+	"github.com/gorilla/mux"
+
+	"github.com/gschier/schier.co/internal"
+	"github.com/gschier/schier.co/internal/migrate"
+	"github.com/gschier/schier.co/migrations"
 )
 
 func main() {

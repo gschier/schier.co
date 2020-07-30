@@ -16,7 +16,7 @@ RUN npm install && npm run build
 FROM golang:1.14-alpine as backend
 
 WORKDIR /app
-ADD ./backend ./
+ADD . .
 
 RUN go install ./...
 
