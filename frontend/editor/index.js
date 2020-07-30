@@ -6,6 +6,11 @@ import { upload } from './upload';
 const contentEl = document.querySelector('textarea[name=content]');
 const editorContainerEl = document.querySelector('#editor-container');
 
+// Store body overflow so we can reset it later. When the full-screen modal
+// shows it will set body's overflow to hidden to prevent scrolling from
+// behind the modal.
+const bodyOverflowDefault = document.body.style.overflow;
+
 export function init() {
   // Bind to buttons that toggle fullscreen behavior
   document.body.addEventListener('click', e => {
@@ -41,8 +46,10 @@ function toggleExpand(e) {
 
   if (editorContainerEl.classList.contains('hide')) {
     editorContainerEl.classList.remove('hide');
+    document.body.style.overflow = 'hidden';
   } else {
     editorContainerEl.classList.add('hide');
+    document.body.style.overflow = bodyOverflowDefault; // Reset overflow
   }
 
   let debounceTimeout = 0;
