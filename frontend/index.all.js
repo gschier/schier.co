@@ -6,13 +6,7 @@ document.querySelectorAll('[data-toggle-theme]').forEach((el) => {
   el.addEventListener('click', e => {
     e.preventDefault();
     let theme = htmlEl.getAttribute('theme') || 'auto';
-    let newTheme = theme;
-
-    if (e.metaKey || e.ctrlKey) {
-      newTheme = '';
-    } else {
-      newTheme = theme.includes('dark') ? 'light' : 'dark';
-    }
+    let newTheme = e.metaKey || e.ctrlKey ? '' : theme.includes('dark') ? 'light' : 'dark';
 
     localStorage.setItem('theme', newTheme);
     htmlEl.setAttribute('theme', newTheme);

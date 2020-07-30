@@ -3,10 +3,11 @@ package migrations
 import (
 	"context"
 	"encoding/json"
-	"github.com/gschier/schier.co/internal/migrate"
 	"github.com/jmoiron/sqlx"
 	"io/ioutil"
 	"log"
+
+	"github.com/gschier/schier.co/internal/migrate"
 )
 
 func init() {
