@@ -5,6 +5,8 @@ import (
 	"github.com/stretchr/testify/assert"
 	"testing"
 	"time"
+
+	. "github.com/gschier/schier.co/internal"
 )
 
 func TestCapitalizeTitle(t *testing.T) {

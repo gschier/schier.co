@@ -22,35 +22,35 @@ import (
 func BlogRoutes(router *mux.Router) {
 	// RSS
 	router.Handle("/rss.xml", http.RedirectHandler("/blog/rss.xml", http.StatusSeeOther)).Methods(http.MethodGet)
-	router.HandleFunc("/blog/rss.xml", routeBlogRSS).Methods(http.MethodGet)
+	router.HandleFunc("/blog/rss.xml", renderBlogPostRSS).Methods(http.MethodGet)
 
 	// Blog Static
-	router.HandleFunc("/blog/new", Admin(routeBlogPostEdit)).Methods(http.MethodGet)
-	router.HandleFunc("/blog/render", routeBlogRender).Methods(http.MethodPost)
-	router.HandleFunc("/blog/drafts", Admin(routeBlogDrafts)).Methods(http.MethodGet)
-	router.HandleFunc("/blog", routeBlogList).Methods(http.MethodGet)
-	router.HandleFunc("/blog/page/{page:[0-9]+}", routeBlogList).Methods(http.MethodGet)
+	router.HandleFunc("/blog/new", Admin(renderBlogPostEditor)).Methods(http.MethodGet)
+	router.HandleFunc("/blog/render", renderBlogPostPreview).Methods(http.MethodPost)
+	router.HandleFunc("/blog/drafts", Admin(renderBlogPostDrafts)).Methods(http.MethodGet)
+	router.HandleFunc("/blog", renderBlogPosts).Methods(http.MethodGet)
+	router.HandleFunc("/blog/page/{page:[0-9]+}", renderBlogPosts).Methods(http.MethodGet)
 
 	// Tags
 	router.HandleFunc("/blog/tags", routeBlogTags).Methods(http.MethodGet)
-	router.HandleFunc("/tags/{tag}", routeBlogTagsOld).Methods(http.MethodGet)
-	router.HandleFunc("/blog/tags/{tag}", routeBlogList).Methods(http.MethodGet)
+	router.HandleFunc("/tags/{tag}", redirectBlogPostTagsOldPrefix).Methods(http.MethodGet)
+	router.HandleFunc("/blog/tags/{tag}", renderBlogPosts).Methods(http.MethodGet)
 	router.HandleFunc("/blog/share/{slug}/{platform}", routeBlogShare).Methods(http.MethodGet)
 	router.HandleFunc("/blog/donate/{slug}", routeBlogDonate).Methods(http.MethodGet)
 
 	// Posts
 	router.HandleFunc("/blog/search", routeBlogPostSearch).Methods(http.MethodGet)
-	router.HandleFunc("/blog/{slug}.html", routeBlogPostSuffix).Methods(http.MethodGet)
-	router.HandleFunc("/blog/{slug}", routeBlogPost).Methods(http.MethodGet)
-	router.HandleFunc("/post/{slug}", routeBlogPostOld).Methods(http.MethodGet)
-	router.HandleFunc("/blog/{year}/{month}/{day}/{slug}", routeBlogPostYMD).Methods(http.MethodGet)
-	router.HandleFunc("/blog/edit/{id}", Admin(routeBlogPostEdit)).Methods(http.MethodGet)
+	router.HandleFunc("/blog/{slug}.html", redirectBlogPostWithFileExtension).Methods(http.MethodGet)
+	router.HandleFunc("/blog/{slug}", renderBlogPost).Methods(http.MethodGet)
+	router.HandleFunc("/post/{slug}", redirectBlogPostOldPrefix).Methods(http.MethodGet)
+	router.HandleFunc("/blog/{year}/{month}/{day}/{slug}", redirectBlogPostYearMonthDay).Methods(http.MethodGet)
+	router.HandleFunc("/blog/edit/{id}", Admin(renderBlogPostEditor)).Methods(http.MethodGet)
 
 	// Forms
-	router.HandleFunc("/forms/blog/upsert", Admin(routeBlogPostCreateOrUpdate)).Methods(http.MethodPost)
-	router.HandleFunc("/forms/blog/publish", Admin(routeBlogPostPublish)).Methods(http.MethodPost)
-	router.HandleFunc("/forms/blog/delete", Admin(routeBlogPostDelete)).Methods(http.MethodPost)
-	router.HandleFunc("/forms/blog/unlist", Admin(routeBlogPostUnlist)).Methods(http.MethodPost)
+	router.HandleFunc("/forms/blog/upsert", Admin(formBlogPostCreateOrUpdate)).Methods(http.MethodPost)
+	router.HandleFunc("/forms/blog/publish", Admin(formBlogPostPublish)).Methods(http.MethodPost)
+	router.HandleFunc("/forms/blog/delete", Admin(formBlogPostDelete)).Methods(http.MethodPost)
+	router.HandleFunc("/forms/blog/unlist", Admin(formBlogPostUnlist)).Methods(http.MethodPost)
 
 	// API
 	router.HandleFunc("/api/blog/assets", Admin(routeUploadAsset)).Methods(http.MethodPut)
@@ -89,15 +89,24 @@ func routeBlogTags(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	tags := make([]postTag, 0)
-	for tag, count := range tagsMap {
-		tags = append(tags, postTag{
-			Name:  tag,
-			Count: count,
-		})
+	type postTag struct {
+		Name  string
+		Count int
 	}
 
-	sort.Sort(ByTag(tags))
+	tags := make([]postTag, 0)
+	for tag, count := range tagsMap {
+		tags = append(tags, postTag{Name: tag, Count: count})
+	}
+
+	// Sort tags by highest count
+	sort.Slice(tags, func(i, j int) bool {
+		if tags[i].Count == tags[j].Count {
+			return tags[i].Name > tags[j].Name
+		}
+		return tags[i].Count > tags[j].Count
+	})
+
 	renderTemplate(w, r, blogTagsTemplate(), &pongo2.Context{
 		"pageTitle":       "Post Tags",
 		"pageDescription": "Browse blog posts by tag category",
@@ -105,7 +114,7 @@ func routeBlogTags(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-func routeBlogRender(w http.ResponseWriter, r *http.Request) {
+func renderBlogPostPreview(w http.ResponseWriter, r *http.Request) {
 	_ = r.ParseMultipartForm(0)
 
 	content := r.Form.Get("content")
@@ -146,7 +155,7 @@ func routeBlogRender(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-func routeBlogPostUnlist(w http.ResponseWriter, r *http.Request) {
+func formBlogPostUnlist(w http.ResponseWriter, r *http.Request) {
 	_ = r.ParseForm()
 
 	id := r.Form.Get("id")
@@ -170,7 +179,7 @@ func routeBlogPostUnlist(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/blog/"+blogPost.Slug, http.StatusSeeOther)
 }
 
-func routeBlogPostDelete(w http.ResponseWriter, r *http.Request) {
+func formBlogPostDelete(w http.ResponseWriter, r *http.Request) {
 	_ = r.ParseForm()
 
 	id := r.Form.Get("id")
@@ -185,7 +194,7 @@ func routeBlogPostDelete(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/blog", http.StatusSeeOther)
 }
 
-func routeBlogPostPublish(w http.ResponseWriter, r *http.Request) {
+func formBlogPostPublish(w http.ResponseWriter, r *http.Request) {
 	_ = r.ParseForm()
 
 	published := r.Form.Get("published") == "true"
@@ -230,7 +239,7 @@ func routeBlogPostSearch(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-func routeBlogPostEdit(w http.ResponseWriter, r *http.Request) {
+func renderBlogPostEditor(w http.ResponseWriter, r *http.Request) {
 	id := mux.Vars(r)["id"]
 
 	// Slug won't exist if it's a new post
@@ -254,7 +263,7 @@ func routeBlogPostEdit(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-func routeBlogPostCreateOrUpdate(w http.ResponseWriter, r *http.Request) {
+func formBlogPostCreateOrUpdate(w http.ResponseWriter, r *http.Request) {
 	_ = r.ParseForm()
 
 	id := r.Form.Get("id")
@@ -337,17 +346,20 @@ func routeBlogPostCreateOrUpdate(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/blog/"+slug, http.StatusSeeOther)
 }
 
-func routeBlogTagsOld(w http.ResponseWriter, r *http.Request) {
+// redirectBlogPostTagsOldPrefix redirects to the new tag format /blog/tags/:tag
+func redirectBlogPostTagsOldPrefix(w http.ResponseWriter, r *http.Request) {
 	tag := mux.Vars(r)["tag"]
 	http.Redirect(w, r, "/blog/tags/"+tag, http.StatusMovedPermanently)
 }
 
-func routeBlogPostOld(w http.ResponseWriter, r *http.Request) {
+// redirectBlogPostOldPrefix redirects to the new /blog/:slug format
+func redirectBlogPostOldPrefix(w http.ResponseWriter, r *http.Request) {
 	slug := mux.Vars(r)["slug"]
 	http.Redirect(w, r, "/blog/"+slug, http.StatusMovedPermanently)
 }
 
-func routeBlogPostYMD(w http.ResponseWriter, r *http.Request) {
+// redirectBlogPostYearMonthDay redirects to new post format
+func redirectBlogPostYearMonthDay(w http.ResponseWriter, r *http.Request) {
 	slug := mux.Vars(r)["slug"]
 	slug = strings.TrimSuffix(slug, ".html")
 
@@ -355,7 +367,7 @@ func routeBlogPostYMD(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/blog/"+slug, http.StatusMovedPermanently)
 }
 
-func routeBlogPostSuffix(w http.ResponseWriter, r *http.Request) {
+func redirectBlogPostWithFileExtension(w http.ResponseWriter, r *http.Request) {
 	slug := mux.Vars(r)["slug"]
 	slug = strings.TrimSuffix(slug, ".html")
 
@@ -363,7 +375,7 @@ func routeBlogPostSuffix(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/blog/"+slug, http.StatusFound)
 }
 
-func routeBlogPost(w http.ResponseWriter, r *http.Request) {
+func renderBlogPost(w http.ResponseWriter, r *http.Request) {
 	slug := mux.Vars(r)["slug"]
 
 	db := ctxDB(r)
@@ -415,7 +427,7 @@ func routeBlogPost(w http.ResponseWriter, r *http.Request) {
 	}()
 }
 
-func routeBlogRSS(w http.ResponseWriter, r *http.Request) {
+func renderBlogPostRSS(w http.ResponseWriter, r *http.Request) {
 	countStr := r.URL.Query().Get("limit")
 
 	count := 20
@@ -474,7 +486,7 @@ func routeBlogRSS(w http.ResponseWriter, r *http.Request) {
 	_, _ = w.Write([]byte(rss))
 }
 
-func routeBlogDrafts(w http.ResponseWriter, r *http.Request) {
+func renderBlogPostDrafts(w http.ResponseWriter, r *http.Request) {
 	// Fetch blog posts
 	drafts, err := ctxDB(r).DraftBlogPosts(r.Context())
 	if err != nil {
@@ -497,7 +509,7 @@ func routeBlogDrafts(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-func routeBlogList(w http.ResponseWriter, r *http.Request) {
+func renderBlogPosts(w http.ResponseWriter, r *http.Request) {
 	// Redirect /blog = /blog/page/1
 	if mux.Vars(r)["page"] == "" && mux.Vars(r)["tag"] == "" {
 		http.Redirect(w, r, "/blog/page/1", http.StatusSeeOther)
@@ -686,21 +698,4 @@ func routeBlogShare(w http.ResponseWriter, r *http.Request) {
 	}
 
 	http.Redirect(w, r, shareUrl, http.StatusSeeOther)
-}
-
-type postTag struct {
-	Name  string
-	Count int
-}
-
-type ByTag []postTag
-
-func (t ByTag) Len() int      { return len(t) }
-func (t ByTag) Swap(i, j int) { t[i], t[j] = t[j], t[i] }
-func (t ByTag) Less(i, j int) bool {
-	if t[i].Count == t[j].Count {
-		return t[i].Name > t[j].Name
-	}
-
-	return t[i].Count > t[j].Count
 }
