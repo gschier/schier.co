@@ -52,7 +52,7 @@ func (s *Storage) RecentBlogPosts(ctx context.Context, limit int) ([]BlogPost, e
 	err := s.db.SelectContext(ctx, &posts, `
 		SELECT * FROM blog_posts
 		WHERE published IS TRUE AND
-		   	  unlisted IS FALSE 
+			unlisted IS FALSE 
 		ORDER BY date DESC
 		LIMIT $1
 	`, limit)
@@ -69,9 +69,9 @@ func (s *Storage) RecommendedBlogPosts(ctx context.Context, ignoreID *string, li
 
 	err := s.db.SelectContext(ctx, &posts, `
 		SELECT * FROM blog_posts
-		WHERE published IS TRUE AND
-		   	  unlisted IS FALSE AND
-			  id != $1
+		WHERE published IS TRUE
+			AND unlisted IS FALSE
+			AND id != $1
 		ORDER BY score DESC
 		LIMIT $2
 	`, *ignoreID, limit)
@@ -86,7 +86,7 @@ func (s *Storage) TaggedAndPublishedBlogPosts(ctx context.Context, tag string, l
 		err = s.db.SelectContext(ctx, &posts, `
 			SELECT * FROM blog_posts
 			WHERE published IS TRUE 
-			  AND unlisted IS FALSE
+			  	AND unlisted IS FALSE
 			ORDER BY date DESC
 			LIMIT $1
 			OFFSET $2
@@ -95,8 +95,8 @@ func (s *Storage) TaggedAndPublishedBlogPosts(ctx context.Context, tag string, l
 		err = s.db.SelectContext(ctx, &posts, `
 			SELECT * FROM blog_posts
 			WHERE $1 = ANY(tags) 
-			  AND published IS TRUE 
-			  AND unlisted IS FALSE
+				AND published IS TRUE 
+				AND unlisted IS FALSE
 			ORDER BY date DESC
 			LIMIT $2
 			OFFSET $3
@@ -271,9 +271,9 @@ func (s *Storage) SearchPublishedBlogPosts(ctx context.Context, query string, li
 
 	err := s.db.SelectContext(ctx, &posts, `
 		SELECT * FROM blog_posts
-		WHERE (content ILIKE '%' || $1 || '%'
-			OR title ILIKE '%' || $1 || '%'
-			OR $1 = ANY(tags))
+		WHERE ( content ILIKE '%' || $1 || '%'
+				OR title ILIKE '%' || $1 || '%'
+				OR $1 = ANY(tags) )
 			AND published IS TRUE
 			AND unlisted IS FALSE
 		ORDER BY updated_at DESC

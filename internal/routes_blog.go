@@ -418,6 +418,10 @@ func renderBlogPost(w http.ResponseWriter, r *http.Request) {
 			newViewCount += 1
 		}
 
+		if !post.Published {
+			return
+		}
+
 		wc := WordCount(post.Content)
 		newScore := CalculateScore(time.Now().Sub(post.Date), post.VotesUsers+post.Shares, post.Views, wc)
 		err := db.UpdateBlogPostStats(context.Background(), post.ID, newViewCount, newScore)
