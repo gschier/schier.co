@@ -87,7 +87,7 @@
         Thanks, glad you enjoyed it! Care to share?
         <div class="blog-post__btns">
           <a data-href="/blog/share/{{ blogPost.Slug }}/hn" target="_blank" rel="nofollow" class="btn btn--xs svg-icon btn--hn">
-            {{ 'images/icons/hn.svg' | inlinestatic | safe }} HN
+            {{ 'images/icons/hn.svg' | inlinestatic | safe }} Hacker News
           </a>
           <a data-href="/blog/share/{{ blogPost.Slug }}/twitter" target="_blank" rel="nofollow" class="btn btn--xs svg-icon btn--twitter">
             {{ 'images/icons/twitter.svg' | inlinestatic | safe }} Twitter
@@ -145,7 +145,7 @@
         msgContainer.removeChild(el);
       }
 
-      clapBtn.addEventListener('cslick', function(e) {
+      clapBtn.addEventListener('click', function(e) {
         e.preventDefault();
         e.stopPropagation();
 

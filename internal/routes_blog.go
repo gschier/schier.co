@@ -7,8 +7,8 @@ import (
 	"github.com/flosch/pongo2"
 	"github.com/gorilla/feeds"
 	"github.com/gorilla/mux"
-	sluglib "github.com/gosimple/slug"
-	ua "github.com/mileusna/useragent"
+	slugLib "github.com/gosimple/slug"
+	"github.com/mileusna/useragent"
 	"log"
 	"net/http"
 	"net/url"
@@ -32,7 +32,7 @@ func BlogRoutes(router *mux.Router) {
 	router.HandleFunc("/blog/page/{page:[0-9]+}", renderBlogPosts).Methods(http.MethodGet)
 
 	// Tags
-	router.HandleFunc("/blog/tags", routeBlogTags).Methods(http.MethodGet)
+	router.HandleFunc("/blog/tags", renderBlogPostTags).Methods(http.MethodGet)
 	router.HandleFunc("/tags/{tag}", redirectBlogPostTagsOldPrefix).Methods(http.MethodGet)
 	router.HandleFunc("/blog/tags/{tag}", renderBlogPosts).Methods(http.MethodGet)
 	router.HandleFunc("/blog/share/{slug}/{platform}", routeBlogShare).Methods(http.MethodGet)
@@ -65,9 +65,9 @@ var blogTagsTemplate = pageTemplate("blog/tags.html")
 var searchTemplate = pageTemplate("blog/search.html")
 var blogPostPartial = partialTemplate("blog_post.html")
 
-func routeBlogTags(w http.ResponseWriter, r *http.Request) {
+func renderBlogPostTags(w http.ResponseWriter, r *http.Request) {
 	db := ctxDB(r)
-	blogPosts, err := db.AllBlogPosts(r.Context())
+	blogPosts, err := db.AllPublicBlogPosts(r.Context())
 	if err != nil {
 		log.Println("Failed to query Posts", err)
 		http.Error(w, "Failed to query Posts", http.StatusInternalServerError)
@@ -309,7 +309,7 @@ func formBlogPostCreateOrUpdate(w http.ResponseWriter, r *http.Request) {
 			slug = existingPost.Slug
 		} else if slug == "" {
 			// Update slug if draft and no slug provided
-			slug = sluglib.Make(title)
+			slug = slugLib.Make(title)
 		}
 
 		upsertErr = db.UpdateBlogPost(
@@ -326,7 +326,7 @@ func formBlogPostCreateOrUpdate(w http.ResponseWriter, r *http.Request) {
 	} else {
 		upsertErr = db.CreateBlogPost(
 			r.Context(),
-			sluglib.Make(title),
+			slugLib.Make(title),
 			title,
 			content,
 			image,

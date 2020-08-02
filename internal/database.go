@@ -296,10 +296,13 @@ func (s *Storage) DeleteBlogPostByID(ctx context.Context, id string) error {
 	return err
 }
 
-func (s *Storage) AllBlogPosts(ctx context.Context) ([]BlogPost, error) {
+func (s *Storage) AllPublicBlogPosts(ctx context.Context) ([]BlogPost, error) {
 	var blogPosts []BlogPost
 	err := s.db.SelectContext(ctx, &blogPosts, `
-		SELECT * FROM blog_posts ORDER BY created_at DESC
+		SELECT * FROM blog_posts 
+		WHERE published IS TRUE
+			AND unlisted IS FALSE
+		ORDER BY created_at DESC
 	`)
 	return blogPosts, err
 }

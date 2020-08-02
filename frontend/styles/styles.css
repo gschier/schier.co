@@ -97,26 +97,38 @@ h2 {
 }
 
 .btn.btn--gray:hover:not(:disabled) {
-    @apply bg-gray-300;
+    @apply bg-gray-300 text-gray-800;
+}
+
+.btn.btn--twitter,
+.btn.btn--hn,
+.btn.btn--reddit,
+.btn.btn--email {
+    text-shadow: 0 0 0.2em rgba(0, 0, 0, 0.2);
+    color: #fff;
+}
+
+.btn.btn--twitter:hover,
+.btn.btn--hn:hover,
+.btn.btn--reddit:hover,
+.btn.btn--email:hover {
+    box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.1);
+    color: #fff !important;
 }
 
 .btn.btn--twitter {
-    color: #fff;
     background-color: #55acee !important;
 }
 
 .btn.btn--hn {
-    color: #fff;
     background-color: #ff6600 !important;
 }
 
 .btn.btn--reddit {
-    color: #fff;
     background-color: #ff5700 !important;
 }
 
 .btn.btn--email {
-    color: #fff;
     background-color: #555 !important;
 }
 
