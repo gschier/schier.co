@@ -16,8 +16,8 @@ RUN npm install && npm run build
 
 FROM golang:1.14-alpine as backend
 
-# Run first so it's cached
-RUN go get github.com/markbates/pkger/cmd/pkger
+RUN apk add --no-cache git \
+    && go get github.com/markbates/pkger/cmd/pkger
 
 WORKDIR /app
 ADD . .
