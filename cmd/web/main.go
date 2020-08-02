@@ -8,6 +8,9 @@ import (
 
 	"github.com/gorilla/mux"
 
+	// Import root, where pkger.go will be
+	_ "github.com/gschier/schier.co"
+
 	"github.com/gschier/schier.co/internal"
 	"github.com/gschier/schier.co/internal/migrate"
 	"github.com/gschier/schier.co/migrations"

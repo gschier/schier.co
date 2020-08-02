@@ -16,11 +16,15 @@ RUN npm install && npm run build
 
 FROM golang:1.14-alpine as backend
 
+# Run first so it's cached
+RUN go get github.com/markbates/pkger/cmd/pkger
+
 WORKDIR /app
 ADD . .
 
 COPY --from=frontend /app/frontend/static ./frontend/static
-RUN go get github.com/markbates/pkger/cmd/pkger \
+
+RUN pkger list \
     && pkger \
     && go install ./...
 
