@@ -20,9 +20,10 @@ WORKDIR /app
 ADD . .
 
 COPY --from=frontend /app/frontend/static ./frontend/static
-RUN go install ./... \
-    && go get github.com/markbates/pkger/cmd/pkger \
-    && pkger
+RUN go get github.com/markbates/pkger/cmd/pkger \
+    && pkger \
+    && go install ./...
+
 
 # ~~~~~~~~~~~~~~~~ #
 # Production Image #
