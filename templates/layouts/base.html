@@ -1,10 +1,10 @@
-{% extends './wrapper.html' %}
+{% extends 'layouts/wrapper.html' %}
 
 {% block body %}
-  {% include '../partials/navigation.html' %}
+  {% include 'partials/navigation.html' %}
   <main>
     {% block content %}
     {% endblock %}
   </main>
-  {% include '../partials/footer.html' %}
+  {% include 'partials/footer.html' %}
 {% endblock %}

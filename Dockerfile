@@ -4,8 +4,9 @@
 
 FROM node:12-alpine as frontend
 
-WORKDIR /app
-ADD ./frontend ./
+ADD . ./app
+
+WORKDIR /app/frontend
 
 RUN npm install && npm run build
 
@@ -18,7 +19,10 @@ FROM golang:1.14-alpine as backend
 WORKDIR /app
 ADD . .
 
-RUN go install ./...
+COPY --from=frontend /app/frontend/static ./frontend/static
+RUN go install ./... \
+    && go get github.com/markbates/pkger/cmd/pkger \
+    && pkger
 
 # ~~~~~~~~~~~~~~~~ #
 # Production Image #
@@ -28,9 +32,7 @@ FROM alpine:3.11
 
 WORKDIR /app
 
-COPY --from=frontend /app/static ./static
 COPY --from=backend /go/bin/web ./web
 COPY --from=backend /go/bin/manage ./manage
-COPY --from=backend /app/templates ./templates
 
 CMD ["./web"]

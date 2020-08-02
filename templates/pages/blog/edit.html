@@ -1,4 +1,4 @@
-{% extends '../../layouts/base.html' %} {% block extraStyles %}
+{% extends 'layouts/base.html' %} {% block extraStyles %}
   <link rel="stylesheet" href="{{ staticUrl }}/index.editor.css" />
   <style>
     .hide {
@@ -21,14 +21,14 @@
       {% if blogPost and blogPost.Published %}(Published){% else %}(Draft){% endif %}
     </h1>
     <form action="/forms/blog/upsert" method="post" id="edit-form">
-      {{ csrfField | safe }} {% include '../../partials/form-input.html' with type='hidden' name='id' value=blogPost.ID required=true %}
-      {% include '../../partials/form-input.html' with label='Title' type='text' name='title' value=blogPost.Title placeholder='My Blog Post' required=true autofocus=true %}
+      {{ csrfField | safe }} {% include 'partials/form-input.html' with type='hidden' name='id' value=blogPost.ID required=true %}
+      {% include 'partials/form-input.html' with label='Title' type='text' name='title' value=blogPost.Title placeholder='My Blog Post' required=true autofocus=true %}
       <details>
         <summary>Other Fields</summary>
-        {% include '../../partials/form-input.html' with label='Slug' type=blogPost.Published|yesno:"hidden,text" name='slug' value=blogPost.Slug placeholder='my-blog-post' %}
-        {% include '../../partials/form-input.html' with label='Image' type='url' name='image' value=blogPost.Image placeholder='https://assets.schier.dev/images/insomnia-growth.png' %}
-        {% include '../../partials/form-input.html' with label='Tags' type='text' name='tags' value=blogPost.Tags|join:", " placeholder='Tag1, Tag2' %}
-        {% include '../../partials/form-input.html' with label='Stage' type=blogPost.Published|yesno:"hidden,number" name='stage' value=blogPost.Stage placeholder='0' %}
+        {% include 'partials/form-input.html' with label='Slug' type=blogPost.Published|yesno:"hidden,text" name='slug' value=blogPost.Slug placeholder='my-blog-post' %}
+        {% include 'partials/form-input.html' with label='Image' type='url' name='image' value=blogPost.Image placeholder='https://assets.schier.dev/images/insomnia-growth.png' %}
+        {% include 'partials/form-input.html' with label='Tags' type='text' name='tags' value=blogPost.Tags|join:", " placeholder='Tag1, Tag2' %}
+        {% include 'partials/form-input.html' with label='Stage' type=blogPost.Published|yesno:"hidden,number" name='stage' value=blogPost.Stage placeholder='0' %}
       </details>
 
       <div class="form-row">

@@ -1,4 +1,4 @@
-{% extends '../../layouts/base.html' %}
+{% extends 'layouts/base.html' %}
 
 {% block content %}
   <div class="container content">
@@ -9,7 +9,7 @@
 
     {% for project in projects %}
       {% if not project.Retired %}
-        {% include '../../partials/project.html' with project=project %}
+        {% include 'partials/project.html' with project=project %}
       {% endif %}
     {% endfor %}
 
@@ -24,7 +24,7 @@
 
     {% for project in projects %}
       {% if project.Retired %}
-        {% include '../../partials/project.html' with project=project %}
+        {% include 'partials/project.html' with project=project %}
       {% endif %}
     {% endfor %}
   </div>

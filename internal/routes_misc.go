@@ -77,7 +77,7 @@ func routeHealthCheck(w http.ResponseWriter, r *http.Request) {
 }
 
 func routeListStatic(w http.ResponseWriter, r *http.Request) {
-	listDirRecursive(w, os.Getenv("STATIC_ROOT"), 0)
+	listDirRecursive(w, staticRoot, 0)
 }
 
 func listDirRecursive(w io.Writer, dir string, depth int) {

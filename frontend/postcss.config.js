@@ -5,6 +5,7 @@ module.exports = {
     require('postcss-import'),
     require('tailwindcss')({
       important: true,
+      purge: false,
       theme: require('./tailwind/theme'),
     }),
   ],

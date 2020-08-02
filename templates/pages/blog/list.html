@@ -1,4 +1,4 @@
-{% extends '../../layouts/base.html' %}
+{% extends 'layouts/base.html' %}
 
 {% block content %}
   <div class="container">
@@ -29,7 +29,7 @@
     </div>
     <hr>
     {% for blogPost in blogPosts %}
-      {% include '../../partials/blog_post_preview.html' %}
+      {% include 'partials/blog_post_preview.html' %}
     {% endfor %}
 
     {% if not blogPosts %}

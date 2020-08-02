@@ -1,6 +1,6 @@
 <form class="inline-form" action="/forms/blog/publish" method="post">
   {{ csrfField | safe }}
-  {% include './form-input.html' with id='pi' type='hidden' name='id' value=blogPost.ID %}
-  {% include './form-input.html' with id='pp' type='hidden' name='published' value=blogPost.Published | yesno:"false,true" %}
+  {% include 'partials/form-input.html' with id='pi' type='hidden' name='id' value=blogPost.ID %}
+  {% include 'partials/form-input.html' with id='pp' type='hidden' name='published' value=blogPost.Published | yesno:"false,true" %}
   <button class="btn btn--gray btn--sm" type="submit">{{ blogPost.Published | yesno:"Unpublish,Publish" }}</button>
 </form>

@@ -7,13 +7,16 @@ import (
 	"github.com/alecthomas/chroma/formatters/html"
 	"github.com/flosch/pongo2"
 	"github.com/gorilla/csrf"
+	"github.com/markbates/pkger"
 	"github.com/russross/blackfriday/v2"
+	"io"
 	"io/ioutil"
 	"log"
 	"math"
 	"net/http"
 	"os"
 	"path"
+	"path/filepath"
 	"strings"
 	"time"
 )
@@ -43,7 +46,12 @@ var bfExtensions = blackfriday.WithExtensions(
 		blackfriday.NoEmptyLineBeforeBlock,
 )
 
+var pongo2Set = pongo2.NewSet("foo", pkgerLoader{})
+
 func init() {
+	pkger.Include("/templates")
+
+	// pongo2.DefaultLoader
 	err := pongo2.RegisterFilter(
 		"isoformat",
 		func(in *pongo2.Value, param *pongo2.Value) (*pongo2.Value, *pongo2.Error) {
@@ -157,11 +165,10 @@ func init() {
 	err = pongo2.RegisterFilter(
 		"base64",
 		func(in *pongo2.Value, param *pongo2.Value) (*pongo2.Value, *pongo2.Error) {
-			b, err := ioutil.ReadFile(path.Join(os.Getenv("STATIC_ROOT"), in.String()))
+			b, err := readFile(path.Join(staticRoot, in.String()))
 			if err != nil {
 				return nil, &pongo2.Error{OrigError: err}
 			}
-
 			return pongo2.AsSafeValue(string(b)), nil
 		},
 	)
@@ -172,8 +179,8 @@ func init() {
 	err = pongo2.RegisterFilter(
 		"inlinestatic",
 		func(in *pongo2.Value, param *pongo2.Value) (*pongo2.Value, *pongo2.Error) {
-			fullPath := path.Join(os.Getenv("STATIC_ROOT"), in.String())
-			b, err := ioutil.ReadFile(fullPath)
+			fullPath := path.Join(staticRoot, in.String())
+			b, err := readFile(fullPath)
 			if err != nil {
 				return nil, &pongo2.Error{OrigError: err}
 			}
@@ -234,7 +241,16 @@ func pageTemplate(pagePath string) func() *pongo2.Template {
 		}
 
 		if cached == nil {
-			cached = pongo2.Must(pongo2.FromFile("templates/pages/" + pagePath))
+			f, err := pkger.Open("/templates/pages/" + pagePath)
+			if err != nil {
+				panic(err)
+			}
+			b, err := ioutil.ReadAll(f)
+			if err != nil {
+				panic(err)
+			}
+
+			cached = pongo2.Must(pongo2Set.FromBytes(b))
 		}
 
 		return cached
@@ -303,4 +319,34 @@ func RenderMarkdown(md string) []byte {
 
 func RenderMarkdownStr(md string) string {
 	return string(RenderMarkdown(md))
+}
+
+// pkgerLoader implements pongo2.Loader in order to read templates
+// from pkger instead of from the filesystem
+type pkgerLoader struct{}
+
+func (t pkgerLoader) Abs(_, name string) string {
+	if filepath.IsAbs(name) {
+		return name
+	}
+	abs := filepath.Join("/templates", name)
+	return abs
+}
+
+func (t pkgerLoader) Get(path string) (io.Reader, error) {
+	return pkger.Open(path)
+}
+
+func readFile(path string) ([]byte, error) {
+	f, err := pkger.Open(path)
+	if err != nil {
+		return nil, err
+	}
+
+	b, err := ioutil.ReadAll(f)
+	if err != nil {
+		return nil, err
+	}
+
+	return b, nil
 }

@@ -2,7 +2,7 @@
   {% for blogPost in blogPosts %}
     <div class="card card--clicky" onclick="window.location='/blog/{{ blogPost.Slug }}'">
       <div class="card__inner">
-        {% include './blog_post_meta.html' with class='card__title' hot=true noViews=true %}
+        {% include 'partials/blog_post_meta.html' with class='card__title' hot=true noViews=true %}
         <div class="card__body">{{ blogPost.Title | truncatechars:"50" }}</div>
         <a href="/blog/{{ blogPost.Slug }}">Read Post &raquo;</a>
       </div>

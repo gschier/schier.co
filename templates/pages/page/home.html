@@ -1,4 +1,4 @@
-{% extends '../../layouts/base.html' %} {% block content %}
+{% extends 'layouts/base.html' %} {% block content %}
 <div class="container">
   <div class="home-hero">
     <div class="home-hero__avatar">
@@ -32,9 +32,9 @@
       from my <a href="/blog">Blog</a>.
     </p>
   </div>
-  {% include '../../partials/post-cards.html' %}
+  {% include 'partials/post-cards.html' %}
   <br />
 
-  {% include '../../partials/full-subscription-form.html' %}
+  {% include 'partials/full-subscription-form.html' %}
 </div>
 {% endblock %}

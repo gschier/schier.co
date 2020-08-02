@@ -3,13 +3,13 @@
     <a href="/blog/{{ blogPost.Slug }}">
       {{ blogPost.Title }}
     </a>
-    {% include 'blog_post_meta.html' with hot=true %}
+    {% include 'partials/blog_post_meta.html' with hot=true %}
   </h2>
   <div>
     {{ blogPost.Content | summary | truncatechars:340 }}
   </div>
   <div class="blog-post-continue">
-    {% include 'blog_post_tag.html' with tags=blogPost.Tags %}
+    {% include 'partials/blog_post_tag.html' with tags=blogPost.Tags %}
     <a href="/blog/{{ blogPost.Slug }}">
       Continue Reading &raquo;
     </a>

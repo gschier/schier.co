@@ -1,4 +1,4 @@
-{% extends '../../layouts/base.html' %}
+{% extends 'layouts/base.html' %}
 
 {% block content %}
   <div class="container content">
@@ -13,7 +13,7 @@
       <small>{{ results | length }} {{ results | length | pluralize:'Result,Results' }}</small>
     {% endif %}
     {% for blogPost in results %}
-      {% include '../../partials/blog_post_preview.html' %}
+      {% include 'partials/blog_post_preview.html' %}
     {% endfor %}
   </div>
 {% endblock %}

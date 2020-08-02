@@ -15,6 +15,7 @@ require (
 	github.com/jmoiron/sqlx v1.2.0
 	github.com/lib/pq v1.0.0
 	github.com/mailjet/mailjet-apiv3-go v0.0.0-20190724151621-55e56f74078c
+	github.com/markbates/pkger v0.17.0
 	github.com/mileusna/useragent v0.0.0-20190129205925-3e331f0949a5
 	github.com/minio/minio-go v6.0.14+incompatible
 	github.com/mitchellh/go-homedir v1.1.0 // indirect

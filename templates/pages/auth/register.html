@@ -1,4 +1,4 @@
-{% extends '../../layouts/base.html' %}
+{% extends 'layouts/base.html' %}
 
 {% block content %}
   <div class="container form-wrapper">
@@ -10,9 +10,9 @@
         </p>
       {% endif %}
       {{ csrfField | safe }}
-      {% include '../../partials/form-input.html' with label='Email' type='email' name='email' placeholder='me@example.com' autofocus=true %}
-      {% include '../../partials/form-input.html' with label='Name' name='name' placeholder='Tim Burton' %}
-      {% include '../../partials/form-input.html' with label='Password' type='password' name='password' placeholder='•••••••••••••••••' %}
+      {% include 'partials/form-input.html' with label='Email' type='email' name='email' placeholder='me@example.com' autofocus=true %}
+      {% include 'partials/form-input.html' with label='Name' name='name' placeholder='Tim Burton' %}
+      {% include 'partials/form-input.html' with label='Password' type='password' name='password' placeholder='•••••••••••••••••' %}
       <div class="form-actions">
         <a href="/login">or login</a>
         <button class="btn">

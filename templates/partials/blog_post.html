@@ -1,7 +1,7 @@
 <article class="content blog-post">
   <header>
     <h1>{{ blogPost.Title }}</h1>
-    {% include './blog_post_meta.html' %}
+    {% include 'partials/blog_post_meta.html' %}
   </header>
 
   {% if loggedIn %}
@@ -9,9 +9,9 @@
       <a href="/blog/edit/{{ blogPost.ID }}" class="btn btn--gray btn--sm">
         Edit
       </a>
-      {% include './publish_link.html' %}
-      {% include './unlist_link.html' %}
-      {% include './delete_link.html' %}
+      {% include 'partials/publish_link.html' %}
+      {% include 'partials/unlist_link.html' %}
+      {% include 'partials/delete_link.html' %}
     </div>
   {% endif %}
 
@@ -53,7 +53,7 @@
       cheers
     </div>
   </div>
-  {% include './blog_post_tag.html' with tags=blogPost.Tags %}
+  {% include 'partials/blog_post_tag.html' with tags=blogPost.Tags %}
 </div>
 {% if not hideVoteEgg %}
   <div class="vote-messages">
@@ -116,10 +116,10 @@
     <h2 class="row-spaced">More Posts ✍🏻</h2>
     <small><a href="/blog" title="See all blog posts">See All &raquo;</a></small>
   </div>
-  {% include './post-cards.html' with blogPosts=recommendedBlogPosts %}
+  {% include 'partials/post-cards.html' with blogPosts=recommendedBlogPosts %}
 </div>
 
-{% include './full-subscription-form.html' %} {% block extraScripts %}
+{% include 'partials/full-subscription-form.html' %} {% block extraScripts %}
   <script>
     (function() {
       const msgContainer = document.body.querySelector('.vote-messages');
