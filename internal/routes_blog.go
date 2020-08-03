@@ -17,7 +17,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/gschier/schier.co/internal/db"
+	models "github.com/gschier/schier.co/internal/db"
 )
 
 func BlogRoutes(router *mux.Router) {
@@ -144,7 +144,7 @@ func renderBlogPostPreview(w http.ResponseWriter, r *http.Request) {
 		"pageTitle":     title,
 		"showWordCount": true,
 		"hideVoteEgg":   true,
-		"blogPost": db.BlogPost{
+		"blogPost": models.BlogPost{
 			Published: true,
 			Slug:      slug,
 			Title:     title,
@@ -322,7 +322,7 @@ func formBlogPostCreateOrUpdate(w http.ResponseWriter, r *http.Request) {
 		existingPost.Stage = stage
 		upsertErr = db.store.BlogPosts.Update(existingPost)
 	} else {
-		upsertErr = db.CreateBlogPost(r.Context(), slugLib.Make(title), title, content, image, user.ID, tags, time.Now(), stage)
+		existingPost, upsertErr = db.CreateBlogPost(r.Context(), slugLib.Make(title), title, content, image, user.ID, tags, time.Now(), stage)
 	}
 
 	if upsertErr != nil {
@@ -331,7 +331,7 @@ func formBlogPostCreateOrUpdate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	http.Redirect(w, r, "/blog/"+slug, http.StatusSeeOther)
+	http.Redirect(w, r, "/blog/"+existingPost.Slug, http.StatusSeeOther)
 }
 
 // redirectBlogPostTagsOldPrefix redirects to the new tag format /blog/tags/:tag

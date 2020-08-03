@@ -71,10 +71,14 @@ func (s *Storage) Subscribers(ctx context.Context) ([]Subscriber, error) {
 }
 
 func (s *Storage) RecentBlogPosts(ctx context.Context, limit uint64) ([]db.BlogPost, error) {
-	return s.store.BlogPosts.Filter(
-		db.Where.BlogPost.Published.Eq(true),
-		db.Where.BlogPost.Unlisted.Eq(false),
-	).Limit(limit).Sort(db.OrderBy.BlogPost.Date.Desc).All()
+	return s.store.BlogPosts.
+		Filter(
+			db.Where.BlogPost.Published.Eq(true),
+			db.Where.BlogPost.Unlisted.Eq(false),
+		).
+		Sort(db.OrderBy.BlogPost.Date.Desc).
+		Limit(limit).
+		All()
 }
 
 func (s *Storage) RecommendedBlogPosts(ctx context.Context, ignoreID *string, limit uint64) ([]db.BlogPost, error) {
@@ -83,11 +87,15 @@ func (s *Storage) RecommendedBlogPosts(ctx context.Context, ignoreID *string, li
 		ignoreID = &v
 	}
 
-	return s.store.BlogPosts.Filter(
-		db.Where.BlogPost.Published.Eq(true),
-		db.Where.BlogPost.Unlisted.Eq(false),
-		db.Where.BlogPost.ID.NotEq(*ignoreID),
-	).Limit(limit).Sort(db.OrderBy.BlogPost.Score.Desc).All()
+	return s.store.BlogPosts.
+		Filter(
+			db.Where.BlogPost.Published.Eq(true),
+			db.Where.BlogPost.Unlisted.Eq(false),
+			db.Where.BlogPost.ID.NotEq(*ignoreID),
+		).
+		Limit(limit).
+		Sort(db.OrderBy.BlogPost.Score.Desc).
+		All()
 }
 
 func (s *Storage) TaggedAndPublishedBlogPosts(ctx context.Context, tag string, limit, offset int) ([]db.BlogPost, error) {
@@ -182,8 +190,8 @@ func (s *Storage) UnsubscribeSubscriber(ctx context.Context, id string) error {
 	return err
 }
 
-func (s *Storage) CreateBlogPost(ctx context.Context, slug, title, content, image, userID string, tags []string, date time.Time, stage int64) error {
-	_, err := s.store.BlogPosts.Insert(
+func (s *Storage) CreateBlogPost(ctx context.Context, slug, title, content, image, userID string, tags []string, date time.Time, stage int64) (*db.BlogPost, error) {
+	return s.store.BlogPosts.Insert(
 		db.Set.BlogPost.ID(s.newID("pst_")),
 		db.Set.BlogPost.Slug(slug),
 		db.Set.BlogPost.Title(title),
@@ -194,7 +202,6 @@ func (s *Storage) CreateBlogPost(ctx context.Context, slug, title, content, imag
 		db.Set.BlogPost.Date(date),
 		db.Set.BlogPost.Stage(stage),
 	)
-	return err
 }
 
 func (s *Storage) SearchPublishedBlogPosts(ctx context.Context, query string, limit uint64) ([]db.BlogPost, error) {
