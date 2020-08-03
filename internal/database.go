@@ -100,7 +100,10 @@ func (s *Storage) TaggedAndPublishedBlogPosts(ctx context.Context, tag string, l
 		q = q.Filter(db.Where.BlogPost.Tags.Contains([]string{tag}))
 	}
 
-	return q.Limit(uint64(limit)).Offset(uint64(offset)).All()
+	return q.Limit(uint64(limit)).
+		Offset(uint64(offset)).
+		Sort(db.OrderBy.BlogPost.Date.Desc).
+		All()
 }
 
 func (s *Storage) DraftBlogPosts(ctx context.Context) ([]db.BlogPost, error) {
