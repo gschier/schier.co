@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/gschier/schier.co/internal"
+	models "github.com/gschier/schier.co/internal/db"
 	"github.com/gschier/schier.co/internal/migrate"
 	"github.com/gschier/schier.co/migrations"
 	"gopkg.in/alecthomas/kingpin.v2"
@@ -68,7 +69,7 @@ func initSendNewsletter(ctx context.Context) {
 			}
 		}
 
-		blogPost, err := db.BlogPostBySlug(ctx, slug)
+		blogPost, err := db.Store.BlogPosts.Filter(models.Where.BlogPost.Slug.Eq(slug)).One()
 		if err != nil {
 			return err
 		}

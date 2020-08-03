@@ -17,9 +17,10 @@ import (
 var _s *Storage
 
 type Storage struct {
-	db    *sqlx.DB
-	store *db.Store
-	rand  *rand.Source
+	db   *sqlx.DB
+	rand *rand.Source
+
+	Store *db.Store
 }
 
 func NewStorage() *Storage {
@@ -53,7 +54,7 @@ func NewStorageWithSource(source *rand.Source) *Storage {
 	})
 	return &Storage{
 		db:    sqlxDB,
-		store: store,
+		Store: store,
 		rand:  source,
 	}
 }
@@ -71,7 +72,7 @@ func (s *Storage) Subscribers(ctx context.Context) ([]Subscriber, error) {
 }
 
 func (s *Storage) RecentBlogPosts(ctx context.Context, limit uint64) ([]db.BlogPost, error) {
-	return s.store.BlogPosts.
+	return s.Store.BlogPosts.
 		Filter(
 			db.Where.BlogPost.Published.Eq(true),
 			db.Where.BlogPost.Unlisted.Eq(false),
@@ -87,7 +88,7 @@ func (s *Storage) RecommendedBlogPosts(ctx context.Context, ignoreID *string, li
 		ignoreID = &v
 	}
 
-	return s.store.BlogPosts.
+	return s.Store.BlogPosts.
 		Filter(
 			db.Where.BlogPost.Published.Eq(true),
 			db.Where.BlogPost.Unlisted.Eq(false),
@@ -99,7 +100,7 @@ func (s *Storage) RecommendedBlogPosts(ctx context.Context, ignoreID *string, li
 }
 
 func (s *Storage) TaggedAndPublishedBlogPosts(ctx context.Context, tag string, limit, offset int) ([]db.BlogPost, error) {
-	q := s.store.BlogPosts.Filter(
+	q := s.Store.BlogPosts.Filter(
 		db.Where.BlogPost.Published.Eq(true),
 		db.Where.BlogPost.Unlisted.Eq(false),
 	)
@@ -115,7 +116,7 @@ func (s *Storage) TaggedAndPublishedBlogPosts(ctx context.Context, tag string, l
 }
 
 func (s *Storage) DraftBlogPosts(ctx context.Context) ([]db.BlogPost, error) {
-	return s.store.BlogPosts.Filter(
+	return s.Store.BlogPosts.Filter(
 		db.Where.BlogPost.Published.Eq(false),
 	).Sort(
 		db.OrderBy.BlogPost.Stage.Desc,
@@ -124,7 +125,7 @@ func (s *Storage) DraftBlogPosts(ctx context.Context) ([]db.BlogPost, error) {
 }
 
 func (s *Storage) UnlistedBlogPosts(ctx context.Context) ([]db.BlogPost, error) {
-	return s.store.BlogPosts.Filter(
+	return s.Store.BlogPosts.Filter(
 		db.Where.BlogPost.Unlisted.Eq(true),
 	).Sort(
 		db.OrderBy.BlogPost.UpdatedAt.Desc,
@@ -142,14 +143,6 @@ func (s *Storage) NewsletterSendByKey(ctx context.Context, key string) (*Newslet
 	}
 
 	return &send, nil
-}
-
-func (s *Storage) BlogPostByID(ctx context.Context, id string) (*db.BlogPost, error) {
-	return s.store.BlogPosts.Get(id)
-}
-
-func (s *Storage) BlogPostBySlug(ctx context.Context, slug string) (*db.BlogPost, error) {
-	return s.store.BlogPosts.Filter(db.Where.BlogPost.Slug.Eq(slug)).One()
 }
 
 func (s *Storage) RankedBooks(ctx context.Context) ([]Book, error) {
@@ -190,26 +183,12 @@ func (s *Storage) UnsubscribeSubscriber(ctx context.Context, id string) error {
 	return err
 }
 
-func (s *Storage) CreateBlogPost(ctx context.Context, slug, title, content, image, userID string, tags []string, date time.Time, stage int64) (*db.BlogPost, error) {
-	return s.store.BlogPosts.Insert(
-		db.Set.BlogPost.ID(s.newID("pst_")),
-		db.Set.BlogPost.Slug(slug),
-		db.Set.BlogPost.Title(title),
-		db.Set.BlogPost.Content(content),
-		db.Set.BlogPost.Image(image),
-		db.Set.BlogPost.UserID(userID),
-		db.Set.BlogPost.Tags(tags),
-		db.Set.BlogPost.Date(date),
-		db.Set.BlogPost.Stage(stage),
-	)
-}
-
 func (s *Storage) SearchPublishedBlogPosts(ctx context.Context, query string, limit uint64) ([]db.BlogPost, error) {
 	if query == "" {
-		return s.store.BlogPosts.None()
+		return s.Store.BlogPosts.None()
 	}
 
-	return s.store.BlogPosts.Filter(
+	return s.Store.BlogPosts.Filter(
 		db.Where.BlogPost.Published.Eq(true),
 		db.Where.BlogPost.Unlisted.Eq(false),
 		db.Where.BlogPost.Or(
@@ -220,12 +199,8 @@ func (s *Storage) SearchPublishedBlogPosts(ctx context.Context, query string, li
 	).Sort(db.OrderBy.BlogPost.UpdatedAt.Desc).Limit(limit).All()
 }
 
-func (s *Storage) DeleteBlogPostByID(ctx context.Context, id string) error {
-	return s.store.BlogPosts.Filter(db.Where.BlogPost.ID.Eq(id)).Delete()
-}
-
 func (s *Storage) AllPublicBlogPosts(ctx context.Context) ([]db.BlogPost, error) {
-	return s.store.BlogPosts.Filter(
+	return s.Store.BlogPosts.Filter(
 		db.Where.BlogPost.Published.Eq(true),
 		db.Where.BlogPost.Unlisted.Eq(false),
 	).Sort(db.OrderBy.BlogPost.CreatedAt.Desc).All()
@@ -274,7 +249,7 @@ func (s *Storage) UpsertNewsletterSubscriber(ctx context.Context, email, name st
 		VALUES ($1, $2, $3)
 		ON CONFLICT ON CONSTRAINT newsletter_subscribers_email_key 
 		    DO UPDATE SET (email, name) = ($2, $3)
-	`, s.newID("sub_"), email, name)
+	`, newID("sub_"), email, name)
 	return err
 }
 
@@ -282,12 +257,12 @@ func (s *Storage) CreateNewsletterSend(ctx context.Context, key string, recipien
 	_, err := s.db.ExecContext(ctx, `
 		INSERT INTO newsletter_sends (id, key, recipients, description) 
 		VALUES ($1, $2, $3, $4)
-	`, s.newID("snd_"), key, recipients, description)
+	`, newID("snd_"), key, recipients, description)
 	return err
 }
 
 func (s *Storage) CreateSession(ctx context.Context, userID string) (string, error) {
-	id := s.newID("ses_")
+	id := newID("ses_")
 	_, err := s.db.ExecContext(ctx, `
 		INSERT INTO sessions (id, user_id) VALUES ($1, $2)
 	`, id, userID)
@@ -296,7 +271,7 @@ func (s *Storage) CreateSession(ctx context.Context, userID string) (string, err
 
 func (s *Storage) CreateUser(ctx context.Context, email, name, pwHash string) (*User, error) {
 	u := User{
-		ID:           s.newID("usr_"),
+		ID:           newID("usr_"),
 		CreatedAt:    time.Now(),
 		Email:        email,
 		Name:         name,
@@ -355,7 +330,7 @@ func (s *Storage) IsNoResult(err error) bool {
 	return err == sql.ErrNoRows
 }
 
-func (s *Storage) newID(prefix string) string {
+func newID(prefix string) string {
 	var id []byte
 	const letters = "abcdefghijklmnopqrstuvwxyz0123456789"
 
