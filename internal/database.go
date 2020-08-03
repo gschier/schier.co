@@ -74,8 +74,8 @@ func (s *Storage) Subscribers(ctx context.Context) ([]Subscriber, error) {
 func (s *Storage) RecentBlogPosts(ctx context.Context, limit uint64) ([]db.BlogPost, error) {
 	return s.Store.BlogPosts.
 		Filter(
-			db.Where.BlogPost.Published.Eq(true),
-			db.Where.BlogPost.Unlisted.Eq(false),
+			db.Where.BlogPost.Published.True(),
+			db.Where.BlogPost.Unlisted.False(),
 		).
 		Sort(db.OrderBy.BlogPost.Date.Desc).
 		Limit(limit).
@@ -90,8 +90,8 @@ func (s *Storage) RecommendedBlogPosts(ctx context.Context, ignoreID *string, li
 
 	return s.Store.BlogPosts.
 		Filter(
-			db.Where.BlogPost.Published.Eq(true),
-			db.Where.BlogPost.Unlisted.Eq(false),
+			db.Where.BlogPost.Published.True(),
+			db.Where.BlogPost.Unlisted.False(),
 			db.Where.BlogPost.ID.NotEq(*ignoreID),
 		).
 		Limit(limit).
@@ -101,8 +101,8 @@ func (s *Storage) RecommendedBlogPosts(ctx context.Context, ignoreID *string, li
 
 func (s *Storage) TaggedAndPublishedBlogPosts(ctx context.Context, tag string, limit, offset int) ([]db.BlogPost, error) {
 	q := s.Store.BlogPosts.Filter(
-		db.Where.BlogPost.Published.Eq(true),
-		db.Where.BlogPost.Unlisted.Eq(false),
+		db.Where.BlogPost.Published.True(),
+		db.Where.BlogPost.Unlisted.False(),
 	)
 
 	if tag != "" {
@@ -117,7 +117,7 @@ func (s *Storage) TaggedAndPublishedBlogPosts(ctx context.Context, tag string, l
 
 func (s *Storage) DraftBlogPosts(ctx context.Context) ([]db.BlogPost, error) {
 	return s.Store.BlogPosts.Filter(
-		db.Where.BlogPost.Published.Eq(false),
+		db.Where.BlogPost.Published.False(),
 	).Sort(
 		db.OrderBy.BlogPost.Stage.Desc,
 		db.OrderBy.BlogPost.EditedAt.Desc,
@@ -126,7 +126,7 @@ func (s *Storage) DraftBlogPosts(ctx context.Context) ([]db.BlogPost, error) {
 
 func (s *Storage) UnlistedBlogPosts(ctx context.Context) ([]db.BlogPost, error) {
 	return s.Store.BlogPosts.Filter(
-		db.Where.BlogPost.Unlisted.Eq(true),
+		db.Where.BlogPost.Unlisted.True(),
 	).Sort(
 		db.OrderBy.BlogPost.UpdatedAt.Desc,
 	).All()
@@ -189,8 +189,8 @@ func (s *Storage) SearchPublishedBlogPosts(ctx context.Context, query string, li
 	}
 
 	return s.Store.BlogPosts.Filter(
-		db.Where.BlogPost.Published.Eq(true),
-		db.Where.BlogPost.Unlisted.Eq(false),
+		db.Where.BlogPost.Published.True(),
+		db.Where.BlogPost.Unlisted.False(),
 		db.Where.BlogPost.Or(
 			db.Where.BlogPost.Content.IContains(query),
 			db.Where.BlogPost.Title.IContains(query),
@@ -201,8 +201,8 @@ func (s *Storage) SearchPublishedBlogPosts(ctx context.Context, query string, li
 
 func (s *Storage) AllPublicBlogPosts(ctx context.Context) ([]db.BlogPost, error) {
 	return s.Store.BlogPosts.Filter(
-		db.Where.BlogPost.Published.Eq(true),
-		db.Where.BlogPost.Unlisted.Eq(false),
+		db.Where.BlogPost.Published.True(),
+		db.Where.BlogPost.Unlisted.False(),
 	).Sort(db.OrderBy.BlogPost.CreatedAt.Desc).All()
 }
 
