@@ -1,7 +1,6 @@
 package internal
 
 import (
-	"context"
 	"encoding/json"
 	"fmt"
 	"github.com/flosch/pongo2"
@@ -17,6 +16,8 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/gschier/schier.co/internal/db"
 )
 
 func BlogRoutes(router *mux.Router) {
@@ -143,7 +144,7 @@ func renderBlogPostPreview(w http.ResponseWriter, r *http.Request) {
 		"pageTitle":     title,
 		"showWordCount": true,
 		"hideVoteEgg":   true,
-		"blogPost": BlogPost{
+		"blogPost": db.BlogPost{
 			Published: true,
 			Slug:      slug,
 			Title:     title,
@@ -162,21 +163,22 @@ func formBlogPostUnlist(w http.ResponseWriter, r *http.Request) {
 
 	db := ctxDB(r)
 
-	blogPost, err := db.BlogPostByID(r.Context(), id)
+	post, err := db.BlogPostByID(r.Context(), id)
 	if err != nil {
 		log.Println("Failed to fetch Post", err)
 		http.Error(w, "Failed to fetch Post", http.StatusInternalServerError)
 		return
 	}
 
-	err = db.UpdateBlogPostUnlisted(r.Context(), id, !blogPost.Unlisted)
+	post.Unlisted = !post.Unlisted
+	err = db.store.BlogPosts.Update(post)
 	if err != nil {
 		log.Println("Failed to unlist Post", err)
 		http.Error(w, "Failed to unlist Post", http.StatusInternalServerError)
 		return
 	}
 
-	http.Redirect(w, r, "/blog/"+blogPost.Slug, http.StatusSeeOther)
+	http.Redirect(w, r, "/blog/"+post.Slug, http.StatusSeeOther)
 }
 
 func formBlogPostDelete(w http.ResponseWriter, r *http.Request) {
@@ -201,21 +203,23 @@ func formBlogPostPublish(w http.ResponseWriter, r *http.Request) {
 	id := r.Form.Get("id")
 
 	db := ctxDB(r)
-	err := db.UpdateBlogPostPublished(r.Context(), id, published)
-	if err != nil {
-		log.Println("Failed to publish Post", err)
-		http.Error(w, "Failed to publish Post", http.StatusInternalServerError)
-		return
-	}
 
-	blogPost, err := db.BlogPostByID(r.Context(), id)
+	post, err := db.BlogPostByID(r.Context(), id)
 	if err != nil {
 		log.Println("Failed to fetch Post", err)
 		http.Error(w, "Failed to fetch Post", http.StatusInternalServerError)
 		return
 	}
 
-	http.Redirect(w, r, "/blog/"+blogPost.Slug, http.StatusSeeOther)
+	post.Published = published
+	err = db.store.BlogPosts.Update(post)
+	if err != nil {
+		log.Println("Failed to publish Post", err)
+		http.Error(w, "Failed to publish Post", http.StatusInternalServerError)
+		return
+	}
+
+	http.Redirect(w, r, "/blog/"+post.Slug, http.StatusSeeOther)
 }
 
 func routeBlogPostSearch(w http.ResponseWriter, r *http.Request) {
@@ -226,7 +230,7 @@ func routeBlogPostSearch(w http.ResponseWriter, r *http.Request) {
 	}
 
 	query := r.Form.Get("query")
-	blogPosts, err := ctxDB(r).SearchPublishedBlogPosts(r.Context(), query, 10)
+	blogPosts, err := ctxDB(r).SearchPublishedBlogPosts(r.Context(), query, 20)
 	if err != nil {
 		log.Println("Search failed", err)
 		http.Error(w, "Failed to search", http.StatusInternalServerError)
@@ -271,7 +275,7 @@ func formBlogPostCreateOrUpdate(w http.ResponseWriter, r *http.Request) {
 	content := r.Form.Get("content")
 	image := r.Form.Get("image")
 	tags := StringToTags(r.Form.Get("tags"))
-	stage := StrToInt(r.Form.Get("stage"), 0)
+	stage := StrToInt64(r.Form.Get("stage"), 0)
 	title := CapitalizeTitle(r.Form.Get("title"))
 
 	// BlackFriday doesn't like Windows line endings
@@ -299,42 +303,26 @@ func formBlogPostCreateOrUpdate(w http.ResponseWriter, r *http.Request) {
 	// NOTE: Note using prisma upsert method because updating date is conditional
 	var upsertErr error
 	if existingPost != nil {
-		date := existingPost.Date
 		if !existingPost.Published {
-			date = time.Now()
+			existingPost.Date = time.Now()
 		}
 
-		if existingPost.Published {
-			// Never update slug if published
-			slug = existingPost.Slug
-		} else if slug == "" {
+		if !existingPost.Published && slug != "" {
+			// Only update slug if
+			existingPost.Slug = slug
+		} else if !existingPost.Published && slug == "" {
 			// Update slug if draft and no slug provided
-			slug = slugLib.Make(title)
+			existingPost.Slug = slugLib.Make(title)
 		}
 
-		upsertErr = db.UpdateBlogPost(
-			r.Context(),
-			id,
-			slug,
-			title,
-			content,
-			image,
-			tags,
-			date,
-			stage,
-		)
+		existingPost.Title = title
+		existingPost.Content = content
+		existingPost.Image = image
+		existingPost.Tags = tags
+		existingPost.Stage = stage
+		upsertErr = db.store.BlogPosts.Update(existingPost)
 	} else {
-		upsertErr = db.CreateBlogPost(
-			r.Context(),
-			slugLib.Make(title),
-			title,
-			content,
-			image,
-			user.ID,
-			tags,
-			time.Now(),
-			stage,
-		)
+		upsertErr = db.CreateBlogPost(r.Context(), slugLib.Make(title), title, content, image, user.ID, tags, time.Now(), stage)
 	}
 
 	if upsertErr != nil {
@@ -413,18 +401,14 @@ func renderBlogPost(w http.ResponseWriter, r *http.Request) {
 	})
 
 	go func() {
-		newViewCount := post.Views
-		if !loggedIn || userAgent.Bot {
-			newViewCount += 1
-		}
-
-		if !post.Published {
+		if !post.Published || userAgent.Bot || loggedIn {
 			return
 		}
 
 		wc := WordCount(post.Content)
-		newScore := CalculateScore(time.Now().Sub(post.Date), post.VotesUsers+post.Shares, post.Views, wc)
-		err := db.UpdateBlogPostStats(context.Background(), post.ID, newViewCount, newScore)
+		post.Views += 1
+		post.Score = CalculateScore(time.Now().Sub(post.Date), post.VotesUsers+post.Shares, post.Views, wc)
+		err := db.store.BlogPosts.Update(post)
 		if err != nil {
 			log.Println("Failed to update blog post views", err)
 		}
@@ -440,7 +424,7 @@ func renderBlogPostRSS(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Fetch blog posts
-	blogPosts, err := ctxDB(r).RecentBlogPosts(r.Context(), count)
+	blogPosts, err := ctxDB(r).RecentBlogPosts(r.Context(), uint64(count))
 	if err != nil {
 		log.Println("Failed to load blog posts", err)
 		http.Error(w, "Failed to load blog posts", http.StatusInternalServerError)
@@ -604,20 +588,14 @@ func routeVote(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Only increment user on first vote
-	userInc := 0
+	userInc := int64(0)
 	if count == 0 {
 		userInc = 1
 	}
 
-	log.Println("POST", post)
-	votesTotal := post.VotesTotal + 1
-	votesUsers := post.VotesUsers + userInc
-	err = db.UpdateBlogPostVotes(
-		r.Context(),
-		post.ID,
-		votesUsers,
-		votesTotal,
-	)
+	post.VotesTotal = post.VotesTotal + 1
+	post.VotesUsers = post.VotesUsers + userInc
+	err = db.store.BlogPosts.Update(post)
 	if err != nil {
 		log.Println("Failed to vote", err)
 		http.Error(w, "Failed to vote", http.StatusInternalServerError)
@@ -625,7 +603,7 @@ func routeVote(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusOK)
-	_, _ = w.Write([]byte(fmt.Sprintf("%d", votesTotal)))
+	_, _ = w.Write([]byte(fmt.Sprintf("%d", post.VotesTotal)))
 }
 
 func routeUploadAsset(w http.ResponseWriter, r *http.Request) {
@@ -660,11 +638,31 @@ func routeUploadAsset(w http.ResponseWriter, r *http.Request) {
 }
 
 func routeBlogDonate(w http.ResponseWriter, r *http.Request) {
+	db := ctxDB(r)
 	slug := mux.Vars(r)["slug"]
 
-	_ = ctxDB(r).IncrementBlogPostDonations(r.Context(), slug)
-	log.Println("Clicked donate link on", slug, r.Header.Get("User-Agent"))
+	userAgent := ua.Parse(r.Header.Get("User-Agent"))
+	post, err := db.BlogPostBySlug(r.Context(), slug)
+	if err != nil {
+		log.Println("Failed to fetch Post", err)
+		http.Error(w, "Failed to fetch Post", http.StatusInternalServerError)
+		return
+	}
 
+	if userAgent.Bot {
+		http.Error(w, "Bots can't donate", http.StatusNoContent)
+		return
+	}
+
+	post.Shares += 1
+	err = db.store.BlogPosts.Update(post)
+	if err != nil {
+		log.Println("Failed to fetch Post", err)
+		http.Error(w, "Failed to fetch Post", http.StatusInternalServerError)
+		return
+	}
+
+	log.Println("Clicked donate link on", slug, r.Header.Get("User-Agent"))
 	http.Redirect(w, r, "https://github.com/sponsors/gschier", http.StatusSeeOther)
 }
 
@@ -696,8 +694,10 @@ func routeBlogShare(w http.ResponseWriter, r *http.Request) {
 		shareUrl = fmt.Sprintf("mailto:?subject=%s&body=%s", postURL, title)
 	}
 
-	if shareUrl != "" {
-		err = db.UpdateBlogPostShares(r.Context(), post.ID, post.Shares+1)
+	userAgent := ua.Parse(r.Header.Get("User-Agent"))
+	if shareUrl != "" && !userAgent.Bot {
+		post.Shares++
+		_ = db.store.BlogPosts.Update(post)
 		log.Println("Shared", post.Slug, "to", platform, r.Header.Get("User-Agent"))
 	}
 

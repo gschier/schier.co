@@ -54,6 +54,9 @@ func TestCalculateReadTime(t *testing.T) {
 }
 
 func TestStringToTags(t *testing.T) {
+	assert.Equal(t, []string{}, StringToTags(""))
+	assert.Equal(t, []string{}, StringToTags("  "))
+	assert.Equal(t, []string{}, StringToTags(", "))
 	assert.Equal(t, []string{"foo", "bar"}, StringToTags("|Foo|Bar|"))
 	assert.Equal(t, []string{"foo", "bar"}, StringToTags("Foo|Bar"))
 	assert.Equal(t, []string{"foo", "bar"}, StringToTags("Foo,Bar"))
@@ -76,7 +79,7 @@ func TestCalculateScore(t *testing.T) {
 
 	for _, v := range tests {
 		t.Run(fmt.Sprintf("%d days %d votes %d views", v[0], v[1], v[2]), func(t *testing.T) {
-			assert.Equal(t, v[3], CalculateScore(time.Hour*24*time.Duration(v[0]), v[1], v[2], 1000))
+			assert.EqualValues(t, v[3], CalculateScore(time.Hour*24*time.Duration(v[0]), int64(v[1]), int64(v[2]), 1000))
 		})
 	}
 }

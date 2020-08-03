@@ -5,6 +5,8 @@ import (
 	"github.com/mailjet/mailjet-apiv3-go"
 	"log"
 	"os"
+
+	"github.com/gschier/schier.co/internal/db"
 )
 
 var mj = mailjet.NewMailjetClient(
@@ -15,7 +17,7 @@ var mj = mailjet.NewMailjetClient(
 const templateConfirmSubscription = 1147903
 const templateNewPost = 1150884
 
-func SendNewPostTemplate(post *BlogPost, sub *Subscriber) error {
+func SendNewPostTemplate(post *db.BlogPost, sub *Subscriber) error {
 	u := fmt.Sprintf("%s/blog/%s", os.Getenv("BASE_URL"), post.Slug)
 	unsub := fmt.Sprintf("%s/newsletter/unsubscribe/%s", os.Getenv("BASE_URL"), sub.ID)
 	return SendTemplate(templateNewPost, sub, map[string]interface{}{

@@ -1,33 +1,8 @@
 package internal
 
 import (
-	"github.com/lib/pq"
 	"time"
 )
-
-type BlogPost struct {
-	ID        string    `db:"id"`
-	CreatedAt time.Time `db:"created_at"`
-	UpdatedAt time.Time `db:"updated_at"`
-
-	Content    string         `db:"content"`
-	Date       time.Time      `db:"date"`
-	Donations  int            `db:"donations"`
-	EditedAt   time.Time      `db:"edited_at"`
-	Image      string         `db:"image"`
-	Published  bool           `db:"published"`
-	Score      int            `db:"score"`
-	Shares     int            `db:"shares"`
-	Slug       string         `db:"slug"`
-	Stage      int            `db:"stage"`
-	Tags       pq.StringArray `db:"tags"`
-	Title      string         `db:"title"`
-	Unlisted   bool           `db:"unlisted"`
-	UserID     string         `db:"user_id"`
-	Views      int            `db:"views"`
-	VotesTotal int            `db:"votes_total"`
-	VotesUsers int            `db:"votes_users"`
-}
 
 type Book struct {
 	ID string `db:"id"`

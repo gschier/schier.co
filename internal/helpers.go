@@ -108,15 +108,17 @@ func Summary(md string) string {
 }
 
 func StringToTags(tags string) []string {
-	tags = strings.TrimPrefix(tags, "|")
-	tags = strings.TrimSuffix(tags, "|")
-
 	allTags := regexp.MustCompile("[|,]").Split(tags, -1)
-	for i, t := range allTags {
-		allTags[i] = strings.ToLower(strings.TrimSpace(t))
+	finalTags := make([]string, 0)
+	for _, t := range allTags {
+		tag := strings.ToLower(strings.TrimSpace(t))
+		if tag == "" {
+			continue
+		}
+		finalTags = append(finalTags, tag)
 	}
 
-	return allTags
+	return finalTags
 }
 
 func StrToInt(number string, defaultValue int) int {
@@ -128,6 +130,15 @@ func StrToInt(number string, defaultValue int) int {
 	return n
 }
 
+func StrToInt64(number string, defaultValue int64) int64 {
+	n, err := strconv.Atoi(number)
+	if err != nil {
+		return defaultValue
+	}
+
+	return int64(n)
+}
+
 func IsDevelopment() bool {
 	return os.Getenv("DEV_ENVIRONMENT") == "development"
 }
@@ -135,7 +146,7 @@ func IsDevelopment() bool {
 // CalculateScore calculates a blog posts score. It sums votes and views,
 // then divides by the age. The age is capped to 𝑥 days so old posts don't
 // go down to zero
-func CalculateScore(age time.Duration, votes, views, words int) int {
+func CalculateScore(age time.Duration, votes, views int64, words int) int64 {
 	days := float64(age / time.Hour / 24)
 
 	// New posts on fire!
@@ -149,5 +160,5 @@ func CalculateScore(age time.Duration, votes, views, words int) int {
 		score /= 2
 	}
 
-	return int(score)
+	return int64(score)
 }
