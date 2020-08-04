@@ -1,6 +1,8 @@
 :root, [theme="light"], [theme="light-auto"] {
+    --hue: 212;
+
     /* Background */
-    --bg: #fff;
+    --bg: hsl(var(--hue), 10%, 100%);
 
     /* Button */
     --bg-btn: var(--color-primary-400);
@@ -9,7 +11,7 @@
     --text-btn-hover: var(--color-gray-200);
 
     /* Text */
-    --text-link: #3182ce;
+    --text-link: hsl(var(--hue), 68%, 55%);
     --text-syntax-1: #805AD5;
     --text-syntax-2: #3182CE;
     --text-syntax-3: #5A67D8;
@@ -20,15 +22,15 @@
     --text-danger: var(--color-danger-400);
 
     /* Generic Colors */
-    --color-gray-100: #F7FAFC;
-    --color-gray-200: #EDF2F7;
-    --color-gray-300: #E2E8F0;
-    --color-gray-400: #CBD5E0;
-    --color-gray-500: #A0AEC0;
-    --color-gray-600: #718096;
-    --color-gray-700: #4A5568;
-    --color-gray-800: #2D3748;
-    --color-gray-900: #1A202C;
+    --color-gray-100: hsl(var(--hue), 80%, 98%);
+    --color-gray-200: hsl(var(--hue), 62%, 95%);
+    --color-gray-300: hsl(var(--hue), 52%, 91%);
+    --color-gray-400: hsl(var(--hue), 42%, 84%);
+    --color-gray-500: hsl(var(--hue), 32%, 69%);
+    --color-gray-600: hsl(var(--hue), 25%, 52%);
+    --color-gray-700: hsl(var(--hue), 20%, 35%);
+    --color-gray-800: hsl(var(--hue), 18%, 23%);
+    --color-gray-900: hsl(var(--hue), 12%, 14%);
 
     --color-danger-100: #fff5f5;
     --color-danger-400: #FC8181;
@@ -46,10 +48,10 @@
     --color-info-400: #63B3ED;
     --color-info-500: #4299E1;
 
-    --color-primary-050: #3082cf11;
-    --color-primary-100: #3082cf55;
-    --color-primary-200: #3082cf88;
-    --color-primary-300: #3082cfAA;
-    --color-primary-400: #3082cfDD;
-    --color-primary-500: #3082cfFF;
+    --color-primary-050: hsla(var(--hue), 62%, 50%, 0.07);
+    --color-primary-100: hsla(var(--hue), 62%, 50%, 0.33);
+    --color-primary-200: hsla(var(--hue), 62%, 50%, 0.53);
+    --color-primary-300: hsla(var(--hue), 62%, 50%, 0.67);
+    --color-primary-400: hsla(var(--hue), 62%, 50%, 0.87);
+    --color-primary-500: hsla(var(--hue), 62%, 50%, 1);
 }
