@@ -875,6 +875,7 @@ body .CodeMirror .cm-comment {
 .home-hero__avatar img {
     @apply rounded-full block mx-auto;
     max-width: 100%;
+    width: 18rem;
 }
 
 @media only screen and (max-width: 600px) {
