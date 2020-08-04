@@ -128,30 +128,30 @@
       const container = document.body.querySelector('.clap-button');
       const clapCount = container.querySelector('.clap-count');
       const clapBtn = container.querySelector('button');
-      const lsKey = "vote-{{ blogPost.Slug }}";
+      const localStorageKey = "vote-{{ blogPost.Slug }}";
 
-      function updateDisabled() {
-        const count = JSON.parse(localStorage.getItem(lsKey)) || 0;
+      function updateDisabledAttr() {
+        const count = JSON.parse(localStorage.getItem(localStorageKey)) || 0;
         if (count >= 50) {
           clapBtn.setAttribute('disabled', 'disabled');
         }
       }
 
-      updateDisabled();
+      updateDisabledAttr();
 
       // Remove sheers notifications so we can show them later
       for (const el of msgs) {
         msgContainer.removeChild(el);
       }
 
-      clapBtn.addEventListener('click', function(e) {
+      clapBtn.addEventListener('click', async function(e) {
         e.preventDefault();
         e.stopPropagation();
 
-        let count = parseInt(localStorage.getItem(lsKey)) || 0;
+        let count = parseInt(localStorage.getItem(localStorageKey)) || 0;
         count = isNaN(count) ? 0 : count;
 
-        fetch('/api/blog/vote', {
+        const resp = await fetch('/api/blog/vote', {
           method: 'POST',
           body: `slug={{ blogPost.Slug }}&count=${count}`,
           headers: {
@@ -160,43 +160,45 @@
             )]: document.body.getAttribute('data-csrf-token'),
             'Content-Type': 'application/x-www-form-urlencoded',
           },
-        })
-          .then(resp => resp.text())
-          .then(function(total) {
-            localStorage.setItem(lsKey, JSON.stringify(count + 1));
-            updateDisabled();
+        });
+        const total = await resp.text();
+        localStorage.setItem(localStorageKey, JSON.stringify(count + 1));
+        updateDisabledAttr();
 
-            clapCount.innerHTML = total;
-            for (const el of msgs) {
-              if (count + 1 < parseInt(el.getAttribute('data-votes'))) {
-                continue;
-              }
+        clapCount.innerHTML = total;
+        console.log(msgs);
+        for (const el of msgs) {
+          if (count + 1 < parseInt(el.getAttribute('data-votes'))) {
+            continue;
+          }
 
-              // Append child if it's not already
-              if (!el.parentNode) {
-                msgContainer.prepend(el);
-              }
+          // Append child if it's not already
+          if (!el.parentNode) {
+            msgContainer.prepend(el);
+          } else {
+            // Already there, so no need to do the rest
+            continue;
+          }
 
-              el.style.animation = 'fade-in 0.5s';
+          el.style.animation = 'fade-in 0.5s';
 
-              if (el.getAttribute('data-effect') === 'shake') {
-                container.style.animation = 'shake 0.5s';
-                container.style.animationIterationCount = 'infinite';
-              }
+          if (el.getAttribute('data-effect') === 'shake') {
+            container.style.animation = 'shake 0.5s';
+            container.style.animationIterationCount = 'infinite';
+          }
 
-              if (el.getAttribute('data-effect') === 'page-shake') {
-                document.body.style.animation = 'shake 0.6s';
-                document.body.style.animationIterationCount = 'infinite';
-                container.style.animation = '';
-              }
+          if (el.getAttribute('data-effect') === 'page-shake') {
+            document.body.style.animation = 'shake 0.6s';
+            document.body.style.animationIterationCount = 'infinite';
+            container.style.animation = '';
+          }
 
-              if (el.getAttribute('data-effect') === 'page-flip') {
-                document.body.style.animation = 'flip 0.3s';
-                document.body.style.animationFillMode = 'forwards';
-                container.style.animation = '';
-              }
-            }
-          });
+          if (el.getAttribute('data-effect') === 'page-flip') {
+            document.body.style.animation = 'flip 0.3s';
+            document.body.style.animationFillMode = 'forwards';
+            container.style.animation = '';
+          }
+        }
       });
     })();
   </script>
