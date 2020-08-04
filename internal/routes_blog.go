@@ -229,7 +229,7 @@ func routeBlogPostSearch(w http.ResponseWriter, r *http.Request) {
 				gen.Where.BlogPost.Title.IContains(query),
 				gen.Where.BlogPost.Tags.Contains([]string{strings.ToLower(query)}),
 			),
-		).Sort(gen.OrderBy.BlogPost.UpdatedAt.Desc).Limit(20).AllP()
+		).Sort(gen.OrderBy.BlogPost.Date.Desc).Limit(20).AllP()
 	}
 
 	renderTemplate(w, r, pageTemplate("blog/search.html"), &pongo2.Context{
