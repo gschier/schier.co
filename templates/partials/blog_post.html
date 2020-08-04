@@ -36,14 +36,13 @@
   {% if "tutorial" in blogPost.Tags %}
     <p class="notice notice--info">
       If you enjoyed this tutorial, please consider
-      <a href="/blog/donate/{{ blogPost.Slug }}">sponsoring my work on GitHub</a> 🤗
-    </p>
+      <a href="/blog/donate/{{ blogPost.Slug }}">sponsoring my work on GitHub</a> 🤗 </p>
   {% endif %}
 </article>
 
 <div class="row-spaced">
   <div class="clap-button">
-    <button title="Cheers this post">
+    <button title="Cheers this post" {% if not blogPost.Published %}disabled="disabled"{% endif %}>
       {{ 'images/icons/cheers.svg' | inlinestatic | safe }}
     </button>
     <div title="{{ blogPost.VotesUsers }} readers">

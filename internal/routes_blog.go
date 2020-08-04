@@ -524,6 +524,12 @@ func routeBlogPosts(w http.ResponseWriter, r *http.Request) {
 		Offset(uint64(skip)).
 		AllP()
 
+	// 404 if no posts found for page
+	if len(blogPosts) == 0 {
+		routeNotFound(w, r)
+		return
+	}
+
 	pageNext := page
 	pagePrevious := page
 	if len(blogPosts) > first {
@@ -567,12 +573,7 @@ func routeVote(w http.ResponseWriter, r *http.Request) {
 	count := StrToInt(r.Form.Get("count"), 0)
 	slug := r.Form.Get("slug")
 
-	post, err := ctxDB(r).Store.BlogPosts.Filter(gen.Where.BlogPost.Slug.Eq(slug)).One()
-	if err != nil {
-		log.Println("Failed to get blog post", err)
-		http.Error(w, "Failed to get blog post", http.StatusInternalServerError)
-		return
-	}
+	post := ctxDB(r).Store.BlogPosts.Filter(gen.Where.BlogPost.Slug.Eq(slug)).OneP()
 
 	// Don't allow these conditions to vote
 	if count > 50 || !post.Published {
@@ -588,12 +589,7 @@ func routeVote(w http.ResponseWriter, r *http.Request) {
 
 	post.VotesTotal = post.VotesTotal + 1
 	post.VotesUsers = post.VotesUsers + userInc
-	err = ctxDB(r).Store.BlogPosts.Update(post)
-	if err != nil {
-		log.Println("Failed to vote", err)
-		http.Error(w, "Failed to vote", http.StatusInternalServerError)
-		return
-	}
+	ctxDB(r).Store.BlogPosts.UpdateP(post)
 
 	w.WriteHeader(http.StatusOK)
 	_, _ = w.Write([]byte(fmt.Sprintf("%d", post.VotesTotal)))
