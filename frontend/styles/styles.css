@@ -1,10 +1,23 @@
-@tailwind base;
 @import "./theme-light.css";
 @import "./theme-dark.css";
+
+/* Reset */
+*, :after, :before {
+    box-sizing: border-box;
+    border: 0 solid var(--color-gray-300);
+    padding: 0;
+    margin: 0;
+    background-color: transparent;
+    font-size: 100%;
+    border-collapse: collapse;
+    line-height: inherit;
+    font-weight: 400;
+}
 
 html {
     @apply bg-background text-gray-700;
     font-size: 18px;
+    line-height: 1.5;
     font-family: Helvetica, Lato, 'Open Sans', sans-serif;
 }
 
@@ -15,13 +28,17 @@ html {
 }
 
 body {
-    @apply p-0 text-gray-700;
+    @apply text-gray-700;
 }
 
 main {
     margin-left: auto;
     margin-right: auto;
     min-height: 30vh;
+}
+
+strong {
+    @apply font-bold;
 }
 
 .container {
@@ -35,7 +52,7 @@ main {
 
 a,
 .link {
-    @apply text-link;
+    @apply text-link no-underline;
 }
 
 a:hover,
@@ -69,7 +86,7 @@ h2 {
 }
 
 .btn {
-    @apply bg-btn text-btn font-semibold py-2 px-4 text-sm rounded w-auto inline-block;
+    @apply bg-btn text-btn font-semibold py-2 px-4 text-sm rounded w-auto inline-block cursor-pointer;
 }
 
 .btn svg {
@@ -538,7 +555,7 @@ pre.chroma-chroma {
 }
 
 .top-nav ul {
-    @apply flex flex-row items-center;
+    @apply flex flex-row items-center list-none;
 }
 
 .top-nav ul:first-child {
@@ -585,8 +602,8 @@ pre.chroma-chroma {
     @apply mt-2 mb-0;
 }
 
-.bottom-footer img {
-    @apply mx-auto;
+.bottom-footer svg {
+    @apply mx-auto block;
     width: 7rem;
 }
 
@@ -857,7 +874,7 @@ body .CodeMirror .cm-comment {
 
 .home-hero__avatar img {
     @apply rounded-full block mx-auto;
-    width: 18rem;
+    max-width: 100%;
 }
 
 @media only screen and (max-width: 600px) {
