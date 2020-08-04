@@ -21,7 +21,7 @@ func main() {
 
 	// Run migrations
 	if os.Getenv("MIGRATE_ON_START") == "enable" {
-		migrate.ForwardAll(context.Background(), migrations.All(), db.DB(), true)
+		migrate.ForwardAll(context.Background(), migrations.All(), db.Store.DB, true)
 	}
 
 	// Setup router

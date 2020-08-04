@@ -21,13 +21,8 @@ var newsletterThanksTemplate = pageTemplate("page/thanks.html")
 var newsletterUnsubscribeTemplate = pageTemplate("page/unsubscribe.html")
 
 func routeNewsletter(w http.ResponseWriter, r *http.Request) {
-	subscribers, err := ctxDB(r).Store.NewsletterSubscribers.Filter().
-		Sort(gen.OrderBy.NewsletterSubscriber.CreatedAt.Desc).All()
-	if err != nil {
-		log.Println("Failed to fetch subscribers", err.Error())
-		http.Error(w, "Internal server error", http.StatusInternalServerError)
-		return
-	}
+	subscribers := ctxDB(r).Store.NewsletterSubscribers.Filter().
+		Sort(gen.OrderBy.NewsletterSubscriber.CreatedAt.Desc).AllP()
 
 	renderTemplate(w, r, newsletterTemplate(), &pongo2.Context{
 		"pageTitle":       "Email Newsletter",

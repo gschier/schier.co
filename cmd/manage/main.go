@@ -35,13 +35,13 @@ func initMigrate(ctx context.Context) {
 
 	cmdForward := cmd.Command("forward", "Apply all pending migrations")
 	cmdForward.Action(func(x *kingpin.ParseContext) error {
-		migrate.ForwardAll(ctx, migrations.All(), internal.NewStorage().DB(), *yesAll)
+		migrate.ForwardAll(ctx, migrations.All(), internal.NewStorage().Store.DB, *yesAll)
 		return nil
 	})
 
 	cmdBackward := cmd.Command("backward", "Revert last migration")
 	cmdBackward.Action(func(x *kingpin.ParseContext) error {
-		migrate.BackwardOne(ctx, migrations.All(), internal.NewStorage().DB(), *yesAll)
+		migrate.BackwardOne(ctx, migrations.All(), internal.NewStorage().Store.DB, *yesAll)
 		return nil
 	})
 }
@@ -58,7 +58,7 @@ func initSendNewsletter(ctx context.Context) {
 			s, err := internal.NewStorage().Store.NewsletterSubscribers.Filter(
 				gen.Where.NewsletterSubscriber.Email.Eq(*email),
 			).One()
-			if err != nil || s == nil {
+			if err != nil {
 				return errors.New("failed to get subscriber by email")
 			}
 			subscribers = append(subscribers, *s)

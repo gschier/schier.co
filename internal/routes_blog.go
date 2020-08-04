@@ -381,7 +381,6 @@ func renderBlogPost(w http.ResponseWriter, r *http.Request) {
 	slug := mux.Vars(r)["slug"]
 
 	loggedIn := ctxGetLoggedIn(r)
-
 	userAgent := ua.Parse(r.Header.Get("User-Agent"))
 
 	// Fetch post
@@ -395,12 +394,7 @@ func renderBlogPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	recommendedBlogPosts, err := ctxDB(r).RecommendedBlogPosts(r.Context(), &post.ID, 7)
-	if err != nil {
-		log.Println("Failed to fetch recent blog posts: " + err.Error())
-		http.Error(w, "Failed to fetch recent blog posts", http.StatusInternalServerError)
-		return
-	}
+	recommendedBlogPosts := recommendedBlogPosts(ctxDB(r).Store, &post.ID, 7).AllP()
 
 	// Render template
 	renderTemplate(w, r, blogPostTemplate(), &pongo2.Context{
@@ -437,12 +431,7 @@ func renderBlogPostRSS(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Fetch blog posts
-	blogPosts, err := ctxDB(r).RecentBlogPosts(r.Context(), uint64(count))
-	if err != nil {
-		log.Println("Failed to load blog posts", err)
-		http.Error(w, "Failed to load blog posts", http.StatusInternalServerError)
-		return
-	}
+	blogPosts := recentBlogPosts(ctxDB(r).Store, uint64(count)).AllP()
 
 	feed := &feeds.Feed{
 		Updated:     blogPosts[0].Date,
@@ -481,9 +470,13 @@ func renderBlogPostRSS(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	w.Header().Set("Content-Type", "application/xml")
 	rss, err := feed.ToRss()
+	if err != nil {
+		http.Error(w, "failed to generate RSS", http.StatusInternalServerError)
+		return
+	}
 
+	w.Header().Set("Content-Type", "application/xml")
 	_, _ = w.Write([]byte(rss))
 }
 
@@ -522,24 +515,22 @@ func renderBlogPosts(w http.ResponseWriter, r *http.Request) {
 	first := 10
 	skip := (page - 1) * first
 
-	// Show all for tags
+	query := ctxDB(r).Store.BlogPosts.Filter(
+		gen.Where.BlogPost.Published.True(),
+		gen.Where.BlogPost.Unlisted.False(),
+	)
+
 	if tag != "" {
-		first = 999999
-		skip = 0
+		query.Filter(gen.Where.BlogPost.Tags.Contains([]string{tag}))
+	} else {
+		// ONly limit when filtering not by tags
+		query.Limit(uint64(first + 1)).Offset(uint64(skip))
 	}
 
-	// Fetch blog posts
-	blogPosts, err := ctxDB(r).TaggedAndPublishedBlogPosts(
-		r.Context(),
-		tag,
-		first+1,
-		skip,
-	)
-	if err != nil {
-		log.Println("Failed to load blog posts", err)
-		http.Error(w, "Failed to load blog posts", http.StatusInternalServerError)
-		return
-	}
+	blogPosts := query.Sort(gen.OrderBy.BlogPost.Date.Desc).
+		Limit(uint64(first + 1)).
+		Offset(uint64(skip)).
+		AllP()
 
 	pageNext := page
 	pagePrevious := page

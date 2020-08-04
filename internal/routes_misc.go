@@ -7,7 +7,6 @@ import (
 	"github.com/gorilla/mux"
 	"io"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -27,12 +26,7 @@ var startTime = time.Now()
 
 func routeNotFound(w http.ResponseWriter, r *http.Request) {
 	// Can't get from request context because middleware didn't run
-	blogPosts, err := NewStorage().RecentBlogPosts(r.Context(), 6)
-	if err != nil {
-		log.Println("Failed to fetch blog posts: " + err.Error())
-		http.Error(w, "Failed to fetch blog posts", http.StatusInternalServerError)
-		return
-	}
+	blogPosts := recentBlogPosts(NewStorage().Store, 6).AllP()
 
 	// A Content-Type header has to be set before calling w.WriteHeader,
 	// otherwise WriteHeader is called twice (from this handler and
@@ -56,8 +50,8 @@ func routeHealthCheck(w http.ResponseWriter, r *http.Request) {
 	blogPostCount := 0
 	pgConns := 0
 
-	_ = ctxDB(r).DB().QueryRowContext(r.Context(), `SELECT sum(numbackends) FROM pg_stat_database`).Scan(&pgConns)
-	_ = ctxDB(r).DB().QueryRowContext(r.Context(), `SELECT COUNT(id) FROM blog_posts`).Scan(&blogPostCount)
+	_ = ctxDB(r).Store.DB.QueryRowContext(r.Context(), `SELECT sum(numbackends) FROM pg_stat_database`).Scan(&pgConns)
+	_ = ctxDB(r).Store.DB.QueryRowContext(r.Context(), `SELECT COUNT(id) FROM blog_posts`).Scan(&blogPostCount)
 
 	err := json.NewEncoder(w).Encode(&map[string]interface{}{
 		"host":     r.Host,
