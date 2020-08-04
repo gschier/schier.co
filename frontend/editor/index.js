@@ -22,6 +22,7 @@ export function init() {
   contentEl.addEventListener('keyup', e => {
     handleChange(e);
   });
+  setupInitialForm();
 }
 
 function handleChange(e) {
@@ -140,7 +141,9 @@ function toggleExpand(e) {
 
     update(0);
   });
+}
 
+function setupInitialForm() {
   const contentEl = document.querySelector('textarea[name=content]');
   contentEl.addEventListener('paste', async e => {
     const { url, name } = await upload(e.clipboardData);

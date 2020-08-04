@@ -6,8 +6,6 @@ import (
 	"github.com/flosch/pongo2"
 	"github.com/gorilla/mux"
 	"github.com/markbates/pkger"
-	"io"
-	"io/ioutil"
 	"mime"
 	"net/http"
 	"os"
@@ -40,10 +38,10 @@ func BaseRoutes(router *mux.Router) {
 	router.HandleFunc("/", routeHome).Methods(http.MethodGet)
 	router.HandleFunc("/books", routeBooks).Methods(http.MethodGet)
 	router.HandleFunc("/projects", routeProjects).Methods(http.MethodGet)
-	router.HandleFunc("/robots.txt", routeRobotsTxt).Methods(http.MethodGet)
+	router.HandleFunc("/robots.txt", routeRobotsText).Methods(http.MethodGet)
 
 	// Debug routes
-	router.HandleFunc("/debug/health", routeHealthCheck).Methods(http.MethodGet)
+	router.HandleFunc("/debug/health", routeHealthCheck()).Methods(http.MethodGet)
 
 	// Static file serving
 	router.PathPrefix("/static/").HandlerFunc(routeStatic)
@@ -53,51 +51,49 @@ func BaseRoutes(router *mux.Router) {
 	router.NotFoundHandler = http.HandlerFunc(routeNotFound)
 }
 
-var startTime = time.Now()
-
-func routeNotFound(w http.ResponseWriter, r *http.Request) {
-	// Can't get from request context because middleware didn't run
-	blogPosts := recentBlogPosts(NewStorage().Store, 6).AllP()
-
-	// A Content-Type header has to be set before calling w.WriteHeader,
-	// otherwise WriteHeader is called twice (from this handler and
-	// the compression handler) and the response breaks.
-	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	w.WriteHeader(http.StatusNotFound)
-	renderTemplate(w, r, pageTemplate("404.html"), &pongo2.Context{
-		"blogPosts":  blogPosts,
-		"doNotTrack": true,
+func routeProjects(w http.ResponseWriter, r *http.Request) {
+	renderTemplate(w, r, pageTemplate("page/projects.html"), &pongo2.Context{
+		"pageTitle":       "Projects",
+		"pageDescription": "Projects I'm currently working on",
 	})
 }
 
-func routeHealthCheck(w http.ResponseWriter, r *http.Request) {
-	blogPostCount := 0
-	pgConns := 0
-
-	_ = ctxDB(r).Store.DB.QueryRowContext(r.Context(), `SELECT sum(numbackends) FROM pg_stat_database`).Scan(&pgConns)
-	_ = ctxDB(r).Store.DB.QueryRowContext(r.Context(), `SELECT COUNT(id) FROM blog_posts`).Scan(&blogPostCount)
-
-	err := json.NewEncoder(w).Encode(&map[string]interface{}{
-		"host":     r.Host,
-		"base_url": os.Getenv("BASE_URL"),
-		"deployed": fmt.Sprintf("%d seconds ago", int(time.Now().Sub(startTime).Seconds())),
-		"pg_conns": pgConns,
+func routeHome(w http.ResponseWriter, r *http.Request) {
+	renderTemplate(w, r, pageTemplate("page/home.html"), &pongo2.Context{
+		"blogPosts": recommendedBlogPosts(ctxDB(r).Store, nil, 10).AllP(),
+		"pageTitle": "Gregory Schier",
 	})
-
-	if err != nil {
-		panic(err)
-	}
 }
 
-func listDirRecursive(w io.Writer, dir string, depth int) {
-	entries, _ := ioutil.ReadDir(dir)
-	for _, e := range entries {
-		fullPath := filepath.Join(dir, e.Name())
-		if e.IsDir() {
-			listDirRecursive(w, fullPath, depth+1)
-			continue
+func routeBooks(w http.ResponseWriter, r *http.Request) {
+	renderTemplate(w, r, pageTemplate("page/books.html"), &pongo2.Context{
+		"pageTitle": "Books",
+	})
+}
+
+func routeRobotsText(w http.ResponseWriter, r *http.Request) {
+	_, _ = w.Write([]byte(robots))
+}
+
+func routeHealthCheck() http.HandlerFunc {
+	startTime := time.Now()
+	return func(w http.ResponseWriter, r *http.Request) {
+		blogPostCount := 0
+		pgConns := 0
+
+		_ = ctxDB(r).Store.DB.QueryRowContext(r.Context(), `SELECT sum(numbackends) FROM pg_stat_database`).Scan(&pgConns)
+		_ = ctxDB(r).Store.DB.QueryRowContext(r.Context(), `SELECT COUNT(id) FROM blog_posts`).Scan(&blogPostCount)
+
+		err := json.NewEncoder(w).Encode(&map[string]interface{}{
+			"host":     r.Host,
+			"base_url": os.Getenv("BASE_URL"),
+			"deployed": fmt.Sprintf("%d seconds ago", int(time.Now().Sub(startTime).Seconds())),
+			"pg_conns": pgConns,
+		})
+
+		if err != nil {
+			http.Error(w, "JSON failure", http.StatusInternalServerError)
 		}
-		_, _ = fmt.Fprintln(w, fullPath)
 	}
 }
 
@@ -124,26 +120,17 @@ func routeStatic(w http.ResponseWriter, r *http.Request) {
 	http.NotFound(w, r)
 }
 
-func routeRobotsTxt(w http.ResponseWriter, r *http.Request) {
-	_, _ = w.Write([]byte(robots))
-}
+func routeNotFound(w http.ResponseWriter, r *http.Request) {
+	// Can't get from request context because middleware didn't run
+	blogPosts := recentBlogPosts(NewStorage().Store, 6).AllP()
 
-func routeProjects(w http.ResponseWriter, r *http.Request) {
-	renderTemplate(w, r, pageTemplate("page/projects.html"), &pongo2.Context{
-		"pageTitle":       "Projects",
-		"pageDescription": "Projects I'm currently working on",
-	})
-}
-
-func routeHome(w http.ResponseWriter, r *http.Request) {
-	renderTemplate(w, r, pageTemplate("page/home.html"), &pongo2.Context{
-		"blogPosts": recommendedBlogPosts(ctxDB(r).Store, nil, 10).AllP(),
-		"pageTitle": "Gregory Schier",
-	})
-}
-
-func routeBooks(w http.ResponseWriter, r *http.Request) {
-	renderTemplate(w, r, pageTemplate("page/books.html"), &pongo2.Context{
-		"pageTitle": "Books",
+	// A Content-Type header has to be set before calling w.WriteHeader,
+	// otherwise WriteHeader is called twice (from this handler and
+	// the compression handler) and the response breaks.
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	w.WriteHeader(http.StatusNotFound)
+	renderTemplate(w, r, pageTemplate("404.html"), &pongo2.Context{
+		"blogPosts":  blogPosts,
+		"doNotTrack": true,
 	})
 }
