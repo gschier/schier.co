@@ -233,43 +233,36 @@ func init() {
 	}
 }
 
-func pageTemplate(pagePath string) func() *pongo2.Template {
-	var cached *pongo2.Template = nil
-	return func() *pongo2.Template {
-		if IsDevelopment() {
-			cached = nil
-		}
+var templateCache = make(map[string]*pongo2.Template)
 
-		if cached == nil {
-			f, err := pkger.Open("/templates/pages/" + pagePath)
-			if err != nil {
-				panic(err)
-			}
-			b, err := ioutil.ReadAll(f)
-			if err != nil {
-				panic(err)
-			}
-
-			cached = pongo2.Must(pongo2Set.FromBytes(b))
-		}
-
+func pageTemplate(pagePath string) *pongo2.Template {
+	if cached, hit := templateCache[pagePath]; hit {
 		return cached
 	}
+
+	tpl := pongo2.Must(pongo2Set.FromFile(filepath.Join("/templates/pages/", pagePath)))
+
+	// Never cache in dev mode
+	if !IsDevelopment() {
+		templateCache[pagePath] = tpl
+	}
+
+	return tpl
 }
 
-func partialTemplate(partialPath string) func() *pongo2.Template {
-	var cached *pongo2.Template = nil
-	return func() *pongo2.Template {
-		if IsDevelopment() {
-			cached = nil
-		}
-
-		if cached == nil {
-			cached = pongo2.Must(pongo2.FromFile("templates/partials/" + partialPath))
-		}
-
+func partialTemplate(partialPath string) *pongo2.Template {
+	if cached, hit := templateCache[partialPath]; hit {
 		return cached
 	}
+
+	tpl := pongo2.Must(pongo2Set.FromFile(filepath.Join("/templates/partials/", partialPath)))
+
+	// Never cache in dev mode
+	if !IsDevelopment() {
+		templateCache[partialPath] = tpl
+	}
+
+	return tpl
 }
 
 func renderTemplate(w http.ResponseWriter, r *http.Request, template *pongo2.Template, context *pongo2.Context) {

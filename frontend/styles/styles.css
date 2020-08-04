@@ -84,12 +84,12 @@ h2 {
     @apply bg-btn-hover text-btn-hover no-underline;
 }
 
-.btn.btn-faint {
+.btn.btn--faint {
     @apply bg-gray-200 text-gray-400 ml-auto py-1 px-3 text-lg;
 }
 
-.btn.btn-faint:hover:not(:disabled) {
-    @apply bg-gray-300;
+.btn.btn--faint:hover:not(:disabled) {
+    @apply bg-gray-300 text-gray-500;
 }
 
 .btn.btn--gray {

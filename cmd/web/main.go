@@ -41,13 +41,10 @@ func setupRouter(db *internal.Storage) *mux.Router {
 	router.Use(internal.UserMiddleware)
 
 	// Apply routes
-	internal.MiscRoutes(router)
+	internal.BaseRoutes(router)
 	internal.AuthRoutes(router)
 	internal.BlogRoutes(router)
-	internal.BooksRoutes(router)
-	internal.PagesRoutes(router)
 	internal.NewsletterRoutes(router)
-	internal.StaticRoutes(router)
 
 	return router
 }

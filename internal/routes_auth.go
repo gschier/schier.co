@@ -13,14 +13,9 @@ import (
 
 func AuthRoutes(router *mux.Router) {
 	router.HandleFunc("/logout", routeLogout).Methods(http.MethodGet).Name("logout")
-
-	// Forms
 	router.HandleFunc("/login", routeLogin).Methods(http.MethodPost, http.MethodGet).Name("login")
 	router.HandleFunc("/register", routeRegister).Methods(http.MethodPost, http.MethodGet).Name("register")
 }
-
-var loginTemplate = pageTemplate("auth/login.html")
-var registerTemplate = pageTemplate("auth/register.html")
 
 func routeLogout(w http.ResponseWriter, r *http.Request) {
 	logout(w, r, "/")
@@ -28,7 +23,7 @@ func routeLogout(w http.ResponseWriter, r *http.Request) {
 
 func routeLogin(w http.ResponseWriter, r *http.Request) {
 	render := func(email, password, error string) {
-		renderTemplate(w, r, loginTemplate(), &pongo2.Context{
+		renderTemplate(w, r, pageTemplate("auth/login.html"), &pongo2.Context{
 			"pageTitle":  "Login",
 			"email":      email,
 			"password":   password,
@@ -66,7 +61,7 @@ func routeLogin(w http.ResponseWriter, r *http.Request) {
 
 func routeRegister(w http.ResponseWriter, r *http.Request) {
 	render := func(email, name, password, error string) {
-		renderTemplate(w, r, registerTemplate(), &pongo2.Context{
+		renderTemplate(w, r, pageTemplate("auth/register.html"), &pongo2.Context{
 			"pageTitle":  "Register",
 			"email":      email,
 			"password":   password,

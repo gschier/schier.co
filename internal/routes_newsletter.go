@@ -16,15 +16,11 @@ func NewsletterRoutes(router *mux.Router) {
 	router.HandleFunc("/forms/newsletter/subscribe", routeSubscribe).Methods(http.MethodPost)
 }
 
-var newsletterTemplate = pageTemplate("page/newsletter.html")
-var newsletterThanksTemplate = pageTemplate("page/thanks.html")
-var newsletterUnsubscribeTemplate = pageTemplate("page/unsubscribe.html")
-
 func routeNewsletter(w http.ResponseWriter, r *http.Request) {
 	subscribers := ctxDB(r).Store.NewsletterSubscribers.Filter().
 		Sort(gen.OrderBy.NewsletterSubscriber.CreatedAt.Desc).AllP()
 
-	renderTemplate(w, r, newsletterTemplate(), &pongo2.Context{
+	renderTemplate(w, r, pageTemplate("page/newsletter.html"), &pongo2.Context{
 		"pageTitle":       "Email Newsletter",
 		"pageDescription": "Subscribe to the newsletter to be the first to hear about new posts",
 		"subscribers":     subscribers,
@@ -32,7 +28,7 @@ func routeNewsletter(w http.ResponseWriter, r *http.Request) {
 }
 
 func routeThankSubscriber(w http.ResponseWriter, r *http.Request) {
-	renderTemplate(w, r, newsletterThanksTemplate(), &pongo2.Context{
+	renderTemplate(w, r, pageTemplate("page/thanks.html"), &pongo2.Context{
 		"pageTitle":       "Thanks!",
 		"pageDescription": "Thank you for signing up to the newsletter!",
 	})
@@ -56,7 +52,7 @@ func routeUnsubscribe(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	renderTemplate(w, r, newsletterUnsubscribeTemplate(), &pongo2.Context{
+	renderTemplate(w, r, pageTemplate("page/unsubscribe.html"), &pongo2.Context{
 		"pageTitle": "Unsubscribed",
 		"email":     sub.Email,
 	})

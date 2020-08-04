@@ -59,14 +59,6 @@ func BlogRoutes(router *mux.Router) {
 	router.HandleFunc("/api/blog/vote", routeVote).Methods(http.MethodPost)
 }
 
-var blogEditTemplate = pageTemplate("blog/edit.html")
-var blogListTemplate = pageTemplate("blog/list.html")
-var blogDraftsTemplate = pageTemplate("blog/drafts.html")
-var blogPostTemplate = pageTemplate("blog/post.html")
-var blogTagsTemplate = pageTemplate("blog/tags.html")
-var searchTemplate = pageTemplate("blog/search.html")
-var blogPostPartial = partialTemplate("blog_post.html")
-
 func renderBlogPostTags(w http.ResponseWriter, r *http.Request) {
 	blogPosts := ctxDB(r).Store.BlogPosts.Filter(
 		gen.Where.BlogPost.Published.True(),
@@ -108,7 +100,7 @@ func renderBlogPostTags(w http.ResponseWriter, r *http.Request) {
 		return tags[i].Count > tags[j].Count
 	})
 
-	renderTemplate(w, r, blogTagsTemplate(), &pongo2.Context{
+	renderTemplate(w, r, pageTemplate("blog/tags.html"), &pongo2.Context{
 		"pageTitle":       "Post Tags",
 		"pageDescription": "Browse blog posts by tag category",
 		"tags":            tags,
@@ -134,9 +126,9 @@ func renderBlogPostPreview(w http.ResponseWriter, r *http.Request) {
 
 	var template *pongo2.Template
 	if partial {
-		template = blogPostPartial()
+		template = partialTemplate("blog_post.html")
 	} else {
-		template = blogPostTemplate()
+		template = pageTemplate("blog/post.html")
 	}
 
 	renderTemplate(w, r, template, &pongo2.Context{
@@ -240,7 +232,7 @@ func routeBlogPostSearch(w http.ResponseWriter, r *http.Request) {
 		).Sort(gen.OrderBy.BlogPost.UpdatedAt.Desc).Limit(20).AllP()
 	}
 
-	renderTemplate(w, r, searchTemplate(), &pongo2.Context{
+	renderTemplate(w, r, pageTemplate("blog/search.html"), &pongo2.Context{
 		"results": blogPosts,
 		"query":   query,
 	})
@@ -251,7 +243,7 @@ func renderBlogPostEditor(w http.ResponseWriter, r *http.Request) {
 
 	// Slug won't exist if it's a new post
 	if id == "" {
-		renderTemplate(w, r, blogEditTemplate(), nil)
+		renderTemplate(w, r, pageTemplate("blog/edit.html"), nil)
 		return
 	}
 
@@ -263,7 +255,7 @@ func renderBlogPostEditor(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	renderTemplate(w, r, blogEditTemplate(), &pongo2.Context{
+	renderTemplate(w, r, pageTemplate("blog/edit.html"), &pongo2.Context{
 		"pageTitle": blogPost.Title,
 		"pageImage": blogPost.Image,
 		"blogPost":  blogPost,
@@ -397,7 +389,7 @@ func renderBlogPost(w http.ResponseWriter, r *http.Request) {
 	recommendedBlogPosts := recommendedBlogPosts(ctxDB(r).Store, &post.ID, 7).AllP()
 
 	// Render template
-	renderTemplate(w, r, blogPostTemplate(), &pongo2.Context{
+	renderTemplate(w, r, pageTemplate("blog/post.html"), &pongo2.Context{
 		"pageTitle":            post.Title,
 		"pageImage":            post.Image,
 		"pageDescription":      Summary(post.Content),
@@ -496,7 +488,7 @@ func renderBlogPostDrafts(w http.ResponseWriter, r *http.Request) {
 		gen.OrderBy.BlogPost.UpdatedAt.Desc,
 	).AllP()
 
-	renderTemplate(w, r, blogDraftsTemplate(), &pongo2.Context{
+	renderTemplate(w, r, pageTemplate("blog/drafts.html"), &pongo2.Context{
 		"drafts":   drafts,
 		"unlisted": unlisted,
 	})
@@ -558,7 +550,7 @@ func renderBlogPosts(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Render template
-	renderTemplate(w, r, blogListTemplate(), &pongo2.Context{
+	renderTemplate(w, r, pageTemplate("blog/list.html"), &pongo2.Context{
 		"pageTitle":       title,
 		"pageDescription": description,
 		"tag":             tag,
