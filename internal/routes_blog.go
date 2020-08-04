@@ -323,7 +323,6 @@ func formBlogPostCreateOrUpdate(w http.ResponseWriter, r *http.Request) {
 		upsertErr = db.Store.BlogPosts.Update(existingPost)
 	} else {
 		existingPost, upsertErr = db.Store.BlogPosts.Insert(
-			models.Set.BlogPost.ID(newID("pst_")),
 			models.Set.BlogPost.Slug(slug),
 			models.Set.BlogPost.Title(title),
 			models.Set.BlogPost.Content(content),

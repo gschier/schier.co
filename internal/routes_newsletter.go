@@ -5,6 +5,8 @@ import (
 	"github.com/gorilla/mux"
 	"log"
 	"net/http"
+
+	gen "github.com/gschier/schier.co/internal/db"
 )
 
 func NewsletterRoutes(router *mux.Router) {
@@ -19,9 +21,10 @@ var newsletterThanksTemplate = pageTemplate("page/thanks.html")
 var newsletterUnsubscribeTemplate = pageTemplate("page/unsubscribe.html")
 
 func routeNewsletter(w http.ResponseWriter, r *http.Request) {
-	client := ctxDB(r)
+	db := ctxDB(r)
 
-	subscribers, err := client.RecentSubscribers(r.Context())
+	subscribers, err := db.Store.NewsletterSubscribers.Filter().
+		Sort(gen.OrderBy.NewsletterSubscriber.CreatedAt.Desc).All()
 	if err != nil {
 		log.Println("Failed to fetch subscribers", err.Error())
 		http.Error(w, "Internal server error", http.StatusInternalServerError)
@@ -47,14 +50,15 @@ func routeUnsubscribe(w http.ResponseWriter, r *http.Request) {
 
 	db := ctxDB(r)
 
-	sub, err := db.SubscriberByID(r.Context(), id)
+	sub, err := db.Store.NewsletterSubscribers.Get(id)
 	if err != nil {
 		log.Println("Failed to get subscriber", err.Error())
 		http.Error(w, "Failed to unsubscribe", http.StatusInternalServerError)
 		return
 	}
 
-	err = db.UnsubscribeSubscriber(r.Context(), id)
+	sub.Unsubscribed = true
+	err = db.Store.NewsletterSubscribers.Update(sub)
 	if err != nil {
 		log.Println("Failed to update subscriber for unsub", err.Error())
 		http.Error(w, "Failed to unsubscribe", http.StatusInternalServerError)
@@ -80,21 +84,19 @@ func routeSubscribe(w http.ResponseWriter, r *http.Request) {
 
 	db := ctxDB(r)
 
-	err := db.UpsertNewsletterSubscriber(r.Context(), email, name)
-	if err != nil {
-		log.Println("Failed to upsert subscriber:", err.Error())
-		http.Error(w, "Failed to subscribe", http.StatusInternalServerError)
-		return
+	subs := db.Store.NewsletterSubscribers.
+		Filter(gen.Where.NewsletterSubscriber.Email.Eq(email)).AllP()
+
+	// Create a subscriber if none exist
+	if len(subs) == 0 {
+		subs = append(subs, *db.Store.NewsletterSubscribers.InsertP(
+			gen.Set.NewsletterSubscriber.Email(email),
+			gen.Set.NewsletterSubscriber.Name(name),
+		))
 	}
 
-	sub, err := db.NewsletterSubscriberByEmail(r.Context(), email)
-	if err != nil {
-		log.Println("Failed to get subscriber:", err.Error())
-		http.Error(w, "Failed to subscribe", http.StatusInternalServerError)
-		return
-	}
-
-	err = SendSubscriberTemplate(sub)
+	// Send the confirmation email
+	err := SendSubscriberTemplate(&subs[0])
 	if err != nil {
 		log.Println("Failed to send subscription confirmation:", err.Error())
 		http.Error(w, "Failed to send email", http.StatusInternalServerError)

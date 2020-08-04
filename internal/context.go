@@ -3,6 +3,8 @@ package internal
 import (
 	"context"
 	"net/http"
+
+	"github.com/gschier/schier.co/internal/db"
 )
 
 type contextKey string
@@ -21,8 +23,8 @@ func ctxDB(r *http.Request) *Storage {
 	panic("DB not set on request context")
 }
 
-func ctxGetUser(r *http.Request) *User {
-	if u, ok := r.Context().Value(ctxKeyUser).(*User); ok {
+func ctxGetUser(r *http.Request) *gen.User {
+	if u, ok := r.Context().Value(ctxKeyUser).(*gen.User); ok {
 		return u
 	}
 
@@ -43,7 +45,7 @@ func ctxSetDB(r *http.Request, db *Storage) *http.Request {
 	return r.WithContext(ctx)
 }
 
-func ctxSetUserAndLoggedIn(r *http.Request, u *User) *http.Request {
+func ctxSetUserAndLoggedIn(r *http.Request, u *gen.User) *http.Request {
 	ctx := r.Context()
 	ctx = context.WithValue(ctx, ctxKeyUser, u)
 	ctx = context.WithValue(ctx, ctxKeyLoggedIn, u != nil)

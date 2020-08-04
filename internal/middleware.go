@@ -9,6 +9,8 @@ import (
 	"os"
 	"regexp"
 	"time"
+
+	"github.com/gschier/schier.co/internal/db"
 )
 
 const sessionCookieName = "sid"
@@ -141,7 +143,7 @@ func UserMiddleware(next http.Handler) http.Handler {
 func NewContextMiddleware(db *Storage) mux.MiddlewareFunc {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			var emptyUser *User = nil
+			var emptyUser *gen.User = nil
 
 			r = ctxSetDB(r, db)
 			r = ctxSetUserAndLoggedIn(r, emptyUser)

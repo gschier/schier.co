@@ -43,27 +43,3 @@ type Project struct {
 	Revenue     string `db:"revenue"`
 	Reason      string `db:"reason"`
 }
-
-type Session struct {
-	ID        string    `db:"id"`
-	CreatedAt time.Time `db:"created_at"`
-}
-
-type Subscriber struct {
-	ID        string    `db:"id"`
-	CreatedAt time.Time `db:"created_at"`
-	UpdatedAt time.Time `db:"updated_at"`
-
-	Email        string `db:"email"`
-	Name         string `db:"name"`
-	Unsubscribed bool   `db:"unsubscribed"`
-}
-
-type User struct {
-	ID        string    `db:"id"`
-	CreatedAt time.Time `db:"created_at"`
-
-	Email        string `db:"email"`
-	Name         string `db:"name"`
-	PasswordHash string `db:"password_hash"`
-}

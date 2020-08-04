@@ -7,6 +7,8 @@ import (
 	"log"
 	"net/http"
 	"os"
+
+	"github.com/gschier/schier.co/internal/db"
 )
 
 func AuthRoutes(router *mux.Router) {
@@ -47,7 +49,7 @@ func routeLogin(w http.ResponseWriter, r *http.Request) {
 
 	db := ctxDB(r)
 
-	user, err := db.UserByEmail(r.Context(), email)
+	user, err := db.Store.Users.Filter(gen.Where.User.Email.Eq(email)).One()
 	if err != nil {
 		log.Println("Failed to get user to login", email, err)
 		render(email, password, "Invalid username or password")
@@ -116,7 +118,11 @@ func routeRegister(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Create user
-	user, err := db.CreateUser(r.Context(), email, name, string(pwdHash))
+	user, err := db.Store.Users.Insert(
+		gen.Set.User.Email(email),
+		gen.Set.User.Name(name),
+		gen.Set.User.PasswordHash(string(pwdHash)),
+	)
 	if err != nil {
 		log.Println("Error creating user", err.Error())
 		render(email, name, password, "Error creating account")
@@ -126,7 +132,7 @@ func routeRegister(w http.ResponseWriter, r *http.Request) {
 	login(w, r, user, db, "/")
 }
 
-func login(w http.ResponseWriter, r *http.Request, user *User, db *Storage, to string) {
+func login(w http.ResponseWriter, r *http.Request, user *gen.User, db *Storage, to string) {
 	sid, err := db.CreateSession(r.Context(), user.ID)
 
 	if err != nil {

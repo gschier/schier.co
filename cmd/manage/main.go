@@ -4,14 +4,15 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/gschier/schier.co/internal"
-	models "github.com/gschier/schier.co/internal/db"
-	"github.com/gschier/schier.co/internal/migrate"
-	"github.com/gschier/schier.co/migrations"
 	"gopkg.in/alecthomas/kingpin.v2"
 	"log"
 	"os"
 	"time"
+
+	"github.com/gschier/schier.co/internal"
+	"github.com/gschier/schier.co/internal/db"
+	"github.com/gschier/schier.co/internal/migrate"
+	"github.com/gschier/schier.co/migrations"
 )
 
 var Cmd = kingpin.New("manage", "")
@@ -53,23 +54,25 @@ func initSendNewsletter(ctx context.Context) {
 	cmd.Action(func(x *kingpin.ParseContext) error {
 		db := internal.NewStorage()
 
-		subscribers := make([]internal.Subscriber, 0)
+		subscribers := make([]gen.NewsletterSubscriber, 0)
 		if email != nil {
-			var s *internal.Subscriber
-			s, err := db.NewsletterSubscriberByEmail(ctx, *email)
+			var s *gen.NewsletterSubscriber
+			s, err := db.Store.NewsletterSubscribers.Filter(
+				gen.Where.NewsletterSubscriber.Email.Eq(*email),
+			).One()
 			if err != nil || s == nil {
 				return errors.New("failed to get subscriber by email")
 			}
 			subscribers = append(subscribers, *s)
 		} else {
 			var err error
-			subscribers, err = db.Subscribers(ctx)
+			subscribers, err = db.Store.NewsletterSubscribers.All()
 			if err != nil {
 				return err
 			}
 		}
 
-		blogPost, err := db.Store.BlogPosts.Filter(models.Where.BlogPost.Slug.Eq(slug)).One()
+		blogPost, err := db.Store.BlogPosts.Filter(gen.Where.BlogPost.Slug.Eq(slug)).One()
 		if err != nil {
 			return err
 		}

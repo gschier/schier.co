@@ -17,7 +17,7 @@ var mj = mailjet.NewMailjetClient(
 const templateConfirmSubscription = 1147903
 const templateNewPost = 1150884
 
-func SendNewPostTemplate(post *db.BlogPost, sub *Subscriber) error {
+func SendNewPostTemplate(post *gen.BlogPost, sub *gen.NewsletterSubscriber) error {
 	u := fmt.Sprintf("%s/blog/%s", os.Getenv("BASE_URL"), post.Slug)
 	unsub := fmt.Sprintf("%s/newsletter/unsubscribe/%s", os.Getenv("BASE_URL"), sub.ID)
 	return SendTemplate(templateNewPost, sub, map[string]interface{}{
@@ -29,14 +29,14 @@ func SendNewPostTemplate(post *db.BlogPost, sub *Subscriber) error {
 	})
 }
 
-func SendSubscriberTemplate(sub *Subscriber) error {
+func SendSubscriberTemplate(sub *gen.NewsletterSubscriber) error {
 	unsub := fmt.Sprintf("%s/newsletter/unsubscribe/%s", os.Getenv("BASE_URL"), sub.ID)
 	return SendTemplate(templateConfirmSubscription, sub, map[string]interface{}{
 		"unsubscribe_url": unsub,
 	})
 }
 
-func SendTemplate(id int, sub *Subscriber, variables map[string]interface{}) error {
+func SendTemplate(id int, sub *gen.NewsletterSubscriber, variables map[string]interface{}) error {
 	if os.Getenv("MAILJET_PRV_KEY") == "" {
 		log.Println("Sent no-op email", sub)
 		return nil
