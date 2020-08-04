@@ -166,7 +166,6 @@
         updateDisabledAttr();
 
         clapCount.innerHTML = total;
-        console.log(msgs);
         for (const el of msgs) {
           if (count + 1 < parseInt(el.getAttribute('data-votes'))) {
             continue;
