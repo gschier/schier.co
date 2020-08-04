@@ -21,9 +21,7 @@ var newsletterThanksTemplate = pageTemplate("page/thanks.html")
 var newsletterUnsubscribeTemplate = pageTemplate("page/unsubscribe.html")
 
 func routeNewsletter(w http.ResponseWriter, r *http.Request) {
-	db := ctxDB(r)
-
-	subscribers, err := db.Store.NewsletterSubscribers.Filter().
+	subscribers, err := ctxDB(r).Store.NewsletterSubscribers.Filter().
 		Sort(gen.OrderBy.NewsletterSubscriber.CreatedAt.Desc).All()
 	if err != nil {
 		log.Println("Failed to fetch subscribers", err.Error())
@@ -48,9 +46,7 @@ func routeThankSubscriber(w http.ResponseWriter, r *http.Request) {
 func routeUnsubscribe(w http.ResponseWriter, r *http.Request) {
 	id := mux.Vars(r)["id"]
 
-	db := ctxDB(r)
-
-	sub, err := db.Store.NewsletterSubscribers.Get(id)
+	sub, err := ctxDB(r).Store.NewsletterSubscribers.Get(id)
 	if err != nil {
 		log.Println("Failed to get subscriber", err.Error())
 		http.Error(w, "Failed to unsubscribe", http.StatusInternalServerError)
@@ -58,7 +54,7 @@ func routeUnsubscribe(w http.ResponseWriter, r *http.Request) {
 	}
 
 	sub.Unsubscribed = true
-	err = db.Store.NewsletterSubscribers.Update(sub)
+	err = ctxDB(r).Store.NewsletterSubscribers.Update(sub)
 	if err != nil {
 		log.Println("Failed to update subscriber for unsub", err.Error())
 		http.Error(w, "Failed to unsubscribe", http.StatusInternalServerError)
@@ -82,14 +78,12 @@ func routeSubscribe(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	db := ctxDB(r)
-
-	subs := db.Store.NewsletterSubscribers.
+	subs := ctxDB(r).Store.NewsletterSubscribers.
 		Filter(gen.Where.NewsletterSubscriber.Email.Eq(email)).AllP()
 
 	// Create a subscriber if none exist
 	if len(subs) == 0 {
-		subs = append(subs, *db.Store.NewsletterSubscribers.InsertP(
+		subs = append(subs, *ctxDB(r).Store.NewsletterSubscribers.InsertP(
 			gen.Set.NewsletterSubscriber.Email(email),
 			gen.Set.NewsletterSubscriber.Name(name),
 		))

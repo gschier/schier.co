@@ -2,7 +2,7 @@ package migrations
 
 import (
 	"context"
-	"github.com/jmoiron/sqlx"
+	"database/sql"
 
 	"github.com/gschier/schier.co/internal/migrate"
 )
@@ -10,10 +10,13 @@ import (
 func init() {
 	allMigrations = append(allMigrations, migrate.Migration{
 		Name: "0004__remove_old_tags_col",
-		Forward: func(ctx context.Context, db *sqlx.DB) error {
-			tx := db.MustBegin()
+		Forward: func(ctx context.Context, db *sql.DB) error {
+			tx, err := db.BeginTx(ctx, nil)
+			if err != nil {
+				return err
+			}
 
-			_, err := tx.ExecContext(ctx, `
+			_, err = tx.ExecContext(ctx, `
 				ALTER TABLE blog_posts
 				DROP COLUMN tags
 			`)
@@ -31,10 +34,13 @@ func init() {
 
 			return tx.Commit()
 		},
-		Reverse: func(ctx context.Context, db *sqlx.DB) error {
-			tx := db.MustBegin()
+		Reverse: func(ctx context.Context, db *sql.DB) error {
+			tx, err := db.BeginTx(ctx, nil)
+			if err != nil {
+				return err
+			}
 
-			_, err := tx.ExecContext(ctx, `
+			_, err = tx.ExecContext(ctx, `
 				ALTER TABLE blog_posts
 				RENAME COLUMN tags TO tags2
 			`)

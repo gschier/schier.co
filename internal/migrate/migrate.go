@@ -3,8 +3,8 @@ package migrate
 import (
 	"bufio"
 	"context"
+	"database/sql"
 	"fmt"
-	"github.com/jmoiron/sqlx"
 	"log"
 	"os"
 	"strings"
@@ -14,8 +14,8 @@ import (
 type Migration struct {
 	Number  int
 	Name    string
-	Forward func(ctx context.Context, db *sqlx.DB) error
-	Reverse func(ctx context.Context, db *sqlx.DB) error
+	Forward func(ctx context.Context, db *sql.DB) error
+	Reverse func(ctx context.Context, db *sql.DB) error
 }
 
 type dbRow struct {
@@ -24,7 +24,7 @@ type dbRow struct {
 	Applied time.Time `db:"applied"`
 }
 
-func ForwardAll(ctx context.Context, migrations []Migration, db *sqlx.DB, yesAll bool) {
+func ForwardAll(ctx context.Context, migrations []Migration, db *sql.DB, yesAll bool) {
 	// Initialize migrations table
 	err := initTable(ctx, db)
 	if err != nil {
@@ -72,7 +72,7 @@ func ForwardAll(ctx context.Context, migrations []Migration, db *sqlx.DB, yesAll
 
 }
 
-func BackwardOne(ctx context.Context, migrations []Migration, db *sqlx.DB, yesAll bool) {
+func BackwardOne(ctx context.Context, migrations []Migration, db *sql.DB, yesAll bool) {
 	// Initialize migrations table
 	err := initTable(ctx, db)
 	if err != nil {
@@ -127,7 +127,7 @@ func BackwardOne(ctx context.Context, migrations []Migration, db *sqlx.DB, yesAl
 
 }
 
-func initTable(ctx context.Context, db *sqlx.DB) error {
+func initTable(ctx context.Context, db *sql.DB) error {
 	_, err := db.ExecContext(ctx, `
 		CREATE TABLE IF NOT EXISTS migrations (
 			id SERIAL PRIMARY KEY,
@@ -144,18 +144,31 @@ func initTable(ctx context.Context, db *sqlx.DB) error {
 	return nil
 }
 
-func getHistory(ctx context.Context, db *sqlx.DB) ([]dbRow, error) {
+func getHistory(ctx context.Context, db *sql.DB) ([]dbRow, error) {
 	var history []dbRow
-	err := db.SelectContext(ctx, &history, "SELECT id, name, applied FROM migrations ORDER BY id ASC;")
+	rows, err := db.QueryContext(ctx, "SELECT id, name, applied FROM migrations ORDER BY id ASC;")
+	if err != nil {
+		return nil, err
+	}
+
+	for rows.Next() {
+		var h dbRow
+		err := rows.Scan(&h.Id, &h.Name, &h.Applied)
+		if err != nil {
+			return nil, err
+		}
+		history = append(history, h)
+	}
+
 	return history, err
 }
 
-func insertHistoryItem(ctx context.Context, db *sqlx.DB, name string) error {
+func insertHistoryItem(ctx context.Context, db *sql.DB, name string) error {
 	_, err := db.ExecContext(ctx, "INSERT INTO migrations (name) VALUES ($1)", name)
 	return err
 }
 
-func deleteHistoryItem(ctx context.Context, db *sqlx.DB, name string) error {
+func deleteHistoryItem(ctx context.Context, db *sql.DB, name string) error {
 	_, err := db.ExecContext(ctx, "DELETE FROM migrations WHERE name=$1", name)
 	return err
 }

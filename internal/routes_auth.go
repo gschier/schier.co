@@ -47,9 +47,7 @@ func routeLogin(w http.ResponseWriter, r *http.Request) {
 	password := r.Form.Get("password")
 	email := r.Form.Get("email")
 
-	db := ctxDB(r)
-
-	user, err := db.Store.Users.Filter(gen.Where.User.Email.Eq(email)).One()
+	user, err := ctxDB(r).Store.Users.Filter(gen.Where.User.Email.Eq(email)).One()
 	if err != nil {
 		log.Println("Failed to get user to login", email, err)
 		render(email, password, "Invalid username or password")
@@ -63,7 +61,7 @@ func routeLogin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	login(w, r, user, db, "/")
+	login(w, r, user, ctxDB(r), "/")
 }
 
 func routeRegister(w http.ResponseWriter, r *http.Request) {
@@ -107,8 +105,6 @@ func routeRegister(w http.ResponseWriter, r *http.Request) {
 		render(email, name, password, "registration disabled for non-dev environment")
 	}
 
-	db := ctxDB(r)
-
 	// Generate password hash
 	pwdHash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
@@ -118,7 +114,7 @@ func routeRegister(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Create user
-	user, err := db.Store.Users.Insert(
+	user, err := ctxDB(r).Store.Users.Insert(
 		gen.Set.User.Email(email),
 		gen.Set.User.Name(name),
 		gen.Set.User.PasswordHash(string(pwdHash)),
@@ -129,11 +125,13 @@ func routeRegister(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	login(w, r, user, db, "/")
+	login(w, r, user, ctxDB(r), "/")
 }
 
 func login(w http.ResponseWriter, r *http.Request, user *gen.User, db *Storage, to string) {
-	sid, err := db.CreateSession(r.Context(), user.ID)
+	sess, err := db.Store.Sessions.Insert(
+		gen.Set.Session.UserID(user.ID),
+	)
 
 	if err != nil {
 		log.Println("Session creation failed", err.Error())
@@ -141,7 +139,7 @@ func login(w http.ResponseWriter, r *http.Request, user *gen.User, db *Storage, 
 		return
 	}
 
-	http.SetCookie(w, makeCookie(sid))
+	http.SetCookie(w, makeCookie(sess.ID))
 	http.Redirect(w, r, to, http.StatusSeeOther)
 }
 

@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"database/sql"
 	"encoding/json"
 	"fmt"
 	"github.com/flosch/pongo2"
@@ -17,7 +18,7 @@ import (
 	"strings"
 	"time"
 
-	models "github.com/gschier/schier.co/internal/db"
+	"github.com/gschier/schier.co/internal/db"
 )
 
 func BlogRoutes(router *mux.Router) {
@@ -67,13 +68,12 @@ var searchTemplate = pageTemplate("blog/search.html")
 var blogPostPartial = partialTemplate("blog_post.html")
 
 func renderBlogPostTags(w http.ResponseWriter, r *http.Request) {
-	db := ctxDB(r)
-	blogPosts, err := db.AllPublicBlogPosts(r.Context())
-	if err != nil {
-		log.Println("Failed to query Posts", err)
-		http.Error(w, "Failed to query Posts", http.StatusInternalServerError)
-		return
-	}
+	blogPosts := ctxDB(r).Store.BlogPosts.Filter(
+		gen.Where.BlogPost.Published.True(),
+		gen.Where.BlogPost.Unlisted.False(),
+	).Sort(
+		gen.OrderBy.BlogPost.CreatedAt.Desc,
+	).AllP()
 
 	tagsMap := make(map[string]int, 0)
 	for _, p := range blogPosts {
@@ -144,7 +144,7 @@ func renderBlogPostPreview(w http.ResponseWriter, r *http.Request) {
 		"pageTitle":     title,
 		"showWordCount": true,
 		"hideVoteEgg":   true,
-		"blogPost": models.BlogPost{
+		"blogPost": gen.BlogPost{
 			Published: true,
 			Slug:      slug,
 			Title:     title,
@@ -161,9 +161,7 @@ func formBlogPostUnlist(w http.ResponseWriter, r *http.Request) {
 
 	id := r.Form.Get("id")
 
-	db := ctxDB(r)
-
-	post, err := db.Store.BlogPosts.Get(id)
+	post, err := ctxDB(r).Store.BlogPosts.Get(id)
 	if err != nil {
 		log.Println("Failed to fetch Post", err)
 		http.Error(w, "Failed to fetch Post", http.StatusInternalServerError)
@@ -171,7 +169,7 @@ func formBlogPostUnlist(w http.ResponseWriter, r *http.Request) {
 	}
 
 	post.Unlisted = !post.Unlisted
-	err = db.Store.BlogPosts.Update(post)
+	err = ctxDB(r).Store.BlogPosts.Update(post)
 	if err != nil {
 		log.Println("Failed to unlist Post", err)
 		http.Error(w, "Failed to unlist Post", http.StatusInternalServerError)
@@ -186,7 +184,7 @@ func formBlogPostDelete(w http.ResponseWriter, r *http.Request) {
 
 	id := r.Form.Get("id")
 
-	err := ctxDB(r).Store.BlogPosts.Filter(models.Where.BlogPost.ID.Eq(id)).Delete()
+	err := ctxDB(r).Store.BlogPosts.Filter(gen.Where.BlogPost.ID.Eq(id)).Delete()
 	if err != nil {
 		log.Println("Failed to delete Post", err)
 		http.Error(w, "Failed to delete Post", http.StatusInternalServerError)
@@ -202,9 +200,7 @@ func formBlogPostPublish(w http.ResponseWriter, r *http.Request) {
 	published := r.Form.Get("published") == "true"
 	id := r.Form.Get("id")
 
-	db := ctxDB(r)
-
-	post, err := db.Store.BlogPosts.Get(id)
+	post, err := ctxDB(r).Store.BlogPosts.Get(id)
 	if err != nil {
 		log.Println("Failed to fetch Post", err)
 		http.Error(w, "Failed to fetch Post", http.StatusInternalServerError)
@@ -212,7 +208,7 @@ func formBlogPostPublish(w http.ResponseWriter, r *http.Request) {
 	}
 
 	post.Published = published
-	err = db.Store.BlogPosts.Update(post)
+	err = ctxDB(r).Store.BlogPosts.Update(post)
 	if err != nil {
 		log.Println("Failed to publish Post", err)
 		http.Error(w, "Failed to publish Post", http.StatusInternalServerError)
@@ -230,11 +226,18 @@ func routeBlogPostSearch(w http.ResponseWriter, r *http.Request) {
 	}
 
 	query := r.Form.Get("query")
-	blogPosts, err := ctxDB(r).SearchPublishedBlogPosts(r.Context(), query, 20)
-	if err != nil {
-		log.Println("Search failed", err)
-		http.Error(w, "Failed to search", http.StatusInternalServerError)
-		return
+	blogPosts := make([]gen.BlogPost, 0)
+
+	if query != "" {
+		blogPosts = ctxDB(r).Store.BlogPosts.Filter(
+			gen.Where.BlogPost.Published.True(),
+			gen.Where.BlogPost.Unlisted.False(),
+			gen.Where.BlogPost.Or(
+				gen.Where.BlogPost.Content.IContains(query),
+				gen.Where.BlogPost.Title.IContains(query),
+				gen.Where.BlogPost.Tags.Contains([]string{strings.ToLower(query)}),
+			),
+		).Sort(gen.OrderBy.BlogPost.UpdatedAt.Desc).Limit(20).AllP()
 	}
 
 	renderTemplate(w, r, searchTemplate(), &pongo2.Context{
@@ -289,9 +292,8 @@ func formBlogPostCreateOrUpdate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	db := ctxDB(r)
-	existingPost, err := db.Store.BlogPosts.Get(id)
-	if db.IsNoResult(err) {
+	existingPost, err := ctxDB(r).Store.BlogPosts.Get(id)
+	if err == sql.ErrNoRows {
 		existingPost = nil
 	} else if err != nil {
 		log.Println("Failed to update blog post", err.Error())
@@ -320,17 +322,20 @@ func formBlogPostCreateOrUpdate(w http.ResponseWriter, r *http.Request) {
 		existingPost.Image = image
 		existingPost.Tags = tags
 		existingPost.Stage = stage
-		upsertErr = db.Store.BlogPosts.Update(existingPost)
+		upsertErr = ctxDB(r).Store.BlogPosts.Update(existingPost)
 	} else {
-		existingPost, upsertErr = db.Store.BlogPosts.Insert(
-			models.Set.BlogPost.Slug(slug),
-			models.Set.BlogPost.Title(title),
-			models.Set.BlogPost.Content(content),
-			models.Set.BlogPost.Image(image),
-			models.Set.BlogPost.UserID(user.ID),
-			models.Set.BlogPost.Tags(tags),
-			models.Set.BlogPost.Date(time.Now()),
-			models.Set.BlogPost.Stage(stage),
+		if slug == "" {
+			slug = slugLib.Make(title)
+		}
+		existingPost, upsertErr = ctxDB(r).Store.BlogPosts.Insert(
+			gen.Set.BlogPost.Slug(slug),
+			gen.Set.BlogPost.Title(title),
+			gen.Set.BlogPost.Content(content),
+			gen.Set.BlogPost.Image(image),
+			gen.Set.BlogPost.UserID(user.ID),
+			gen.Set.BlogPost.Tags(tags),
+			gen.Set.BlogPost.Date(time.Now()),
+			gen.Set.BlogPost.Stage(stage),
 		)
 	}
 
@@ -375,14 +380,13 @@ func redirectBlogPostWithFileExtension(w http.ResponseWriter, r *http.Request) {
 func renderBlogPost(w http.ResponseWriter, r *http.Request) {
 	slug := mux.Vars(r)["slug"]
 
-	db := ctxDB(r)
 	loggedIn := ctxGetLoggedIn(r)
 
 	userAgent := ua.Parse(r.Header.Get("User-Agent"))
 
 	// Fetch post
-	post, err := db.Store.BlogPosts.Filter(models.Where.BlogPost.Slug.Eq(slug)).One()
-	if db.IsNoResult(err) {
+	post, err := ctxDB(r).Store.BlogPosts.Filter(gen.Where.BlogPost.Slug.Eq(slug)).One()
+	if err == sql.ErrNoRows {
 		routeNotFound(w, r)
 		return
 	} else if err != nil {
@@ -391,7 +395,7 @@ func renderBlogPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	recommendedBlogPosts, err := db.RecommendedBlogPosts(r.Context(), &post.ID, 7)
+	recommendedBlogPosts, err := ctxDB(r).RecommendedBlogPosts(r.Context(), &post.ID, 7)
 	if err != nil {
 		log.Println("Failed to fetch recent blog posts: " + err.Error())
 		http.Error(w, "Failed to fetch recent blog posts", http.StatusInternalServerError)
@@ -417,7 +421,7 @@ func renderBlogPost(w http.ResponseWriter, r *http.Request) {
 		wc := WordCount(post.Content)
 		post.Views += 1
 		post.Score = CalculateScore(time.Now().Sub(post.Date), post.VotesUsers+post.Shares, post.Views, wc)
-		err := db.Store.BlogPosts.Update(post)
+		err := ctxDB(r).Store.BlogPosts.Update(post)
 		if err != nil {
 			log.Println("Failed to update blog post views", err)
 		}
@@ -485,20 +489,19 @@ func renderBlogPostRSS(w http.ResponseWriter, r *http.Request) {
 
 func renderBlogPostDrafts(w http.ResponseWriter, r *http.Request) {
 	// Fetch blog posts
-	drafts, err := ctxDB(r).DraftBlogPosts(r.Context())
-	if err != nil {
-		log.Println("Failed to load blog post blogPostDrafts", err)
-		http.Error(w, "Failed to load blog posts blogPostDrafts", http.StatusInternalServerError)
-		return
-	}
+	drafts := ctxDB(r).Store.BlogPosts.Filter(
+		gen.Where.BlogPost.Published.False(),
+	).Sort(
+		gen.OrderBy.BlogPost.Stage.Desc,
+		gen.OrderBy.BlogPost.EditedAt.Desc,
+	).AllP()
 
 	// Fetch blog posts
-	unlisted, err := ctxDB(r).UnlistedBlogPosts(r.Context())
-	if err != nil {
-		log.Println("Failed to load unlisted posts", err)
-		http.Error(w, "Failed to load unlisted posts", http.StatusInternalServerError)
-		return
-	}
+	unlisted := ctxDB(r).Store.BlogPosts.Filter(
+		gen.Where.BlogPost.Unlisted.True(),
+	).Sort(
+		gen.OrderBy.BlogPost.UpdatedAt.Desc,
+	).AllP()
 
 	renderTemplate(w, r, blogDraftsTemplate(), &pongo2.Context{
 		"drafts":   drafts,
@@ -581,9 +584,7 @@ func routeVote(w http.ResponseWriter, r *http.Request) {
 	count := StrToInt(r.Form.Get("count"), 0)
 	slug := r.Form.Get("slug")
 
-	db := ctxDB(r)
-
-	post, err := db.Store.BlogPosts.Filter(models.Where.BlogPost.Slug.Eq(slug)).One()
+	post, err := ctxDB(r).Store.BlogPosts.Filter(gen.Where.BlogPost.Slug.Eq(slug)).One()
 	if err != nil {
 		log.Println("Failed to get blog post", err)
 		http.Error(w, "Failed to get blog post", http.StatusInternalServerError)
@@ -604,7 +605,7 @@ func routeVote(w http.ResponseWriter, r *http.Request) {
 
 	post.VotesTotal = post.VotesTotal + 1
 	post.VotesUsers = post.VotesUsers + userInc
-	err = db.Store.BlogPosts.Update(post)
+	err = ctxDB(r).Store.BlogPosts.Update(post)
 	if err != nil {
 		log.Println("Failed to vote", err)
 		http.Error(w, "Failed to vote", http.StatusInternalServerError)
@@ -647,11 +648,10 @@ func routeUploadAsset(w http.ResponseWriter, r *http.Request) {
 }
 
 func routeBlogDonate(w http.ResponseWriter, r *http.Request) {
-	db := ctxDB(r)
 	slug := mux.Vars(r)["slug"]
 
 	userAgent := ua.Parse(r.Header.Get("User-Agent"))
-	post, err := db.Store.BlogPosts.Filter(models.Where.BlogPost.Slug.Eq(slug)).One()
+	post, err := ctxDB(r).Store.BlogPosts.Filter(gen.Where.BlogPost.Slug.Eq(slug)).One()
 	if err != nil {
 		log.Println("Failed to fetch Post", err)
 		http.Error(w, "Failed to fetch Post", http.StatusInternalServerError)
@@ -664,7 +664,7 @@ func routeBlogDonate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	post.Shares += 1
-	err = db.Store.BlogPosts.Update(post)
+	err = ctxDB(r).Store.BlogPosts.Update(post)
 	if err != nil {
 		log.Println("Failed to fetch Post", err)
 		http.Error(w, "Failed to fetch Post", http.StatusInternalServerError)
@@ -679,9 +679,7 @@ func routeBlogShare(w http.ResponseWriter, r *http.Request) {
 	slug := mux.Vars(r)["slug"]
 	platform := mux.Vars(r)["platform"]
 
-	db := ctxDB(r)
-
-	post, err := db.Store.BlogPosts.Filter(models.Where.BlogPost.Slug.Eq(slug)).One()
+	post, err := ctxDB(r).Store.BlogPosts.Filter(gen.Where.BlogPost.Slug.Eq(slug)).One()
 	if err != nil {
 		log.Println("Failed to fetch Post", err)
 		http.Error(w, "Failed to fetch Post", http.StatusInternalServerError)
@@ -706,7 +704,7 @@ func routeBlogShare(w http.ResponseWriter, r *http.Request) {
 	userAgent := ua.Parse(r.Header.Get("User-Agent"))
 	if shareUrl != "" && !userAgent.Bot {
 		post.Shares++
-		_ = db.Store.BlogPosts.Update(post)
+		_ = ctxDB(r).Store.BlogPosts.Update(post)
 		log.Println("Shared", post.Slug, "to", platform, r.Header.Get("User-Agent"))
 	}
 

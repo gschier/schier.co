@@ -112,8 +112,6 @@ func CORSMiddleware(next http.Handler) http.Handler {
 // UserMiddleware adds the User object to the context if available
 func UserMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		db := ctxDB(r)
-
 		c, err := r.Cookie(sessionCookieName)
 
 		// No session header, not logged in I guess!
@@ -125,9 +123,16 @@ func UserMiddleware(next http.Handler) http.Handler {
 		http.SetCookie(w, makeCookie(c.Value))
 
 		// Find the user on the session
-		user, err := db.UserBySessionID(r.Context(), c.Value)
+		session, err := ctxDB(r).Store.Sessions.Get(c.Value)
 		if err != nil {
-			log.Println("No user found for session", c.Value, err.Error())
+			log.Println("No session found for ID", c.Value, err.Error())
+			logout(w, r, "/")
+			return
+		}
+
+		user, err := ctxDB(r).Store.Users.Get(session.UserID)
+		if err != nil {
+			log.Println("No user found for ID", session.UserID, err.Error())
 			logout(w, r, "/")
 			return
 		}

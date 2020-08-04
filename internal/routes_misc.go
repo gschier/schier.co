@@ -27,9 +27,7 @@ var startTime = time.Now()
 
 func routeNotFound(w http.ResponseWriter, r *http.Request) {
 	// Can't get from request context because middleware didn't run
-	db := NewStorage()
-
-	blogPosts, err := db.RecentBlogPosts(r.Context(), 6)
+	blogPosts, err := NewStorage().RecentBlogPosts(r.Context(), 6)
 	if err != nil {
 		log.Println("Failed to fetch blog posts: " + err.Error())
 		http.Error(w, "Failed to fetch blog posts", http.StatusInternalServerError)
@@ -55,13 +53,11 @@ func routeHeaders(w http.ResponseWriter, r *http.Request) {
 }
 
 func routeHealthCheck(w http.ResponseWriter, r *http.Request) {
-	db := NewStorage()
-
 	blogPostCount := 0
 	pgConns := 0
 
-	_ = db.DB().GetContext(r.Context(), &pgConns, `SELECT sum(numbackends) FROM pg_stat_database`)
-	_ = db.DB().GetContext(r.Context(), &blogPostCount, `SELECT COUNT(id) FROM blog_posts`)
+	_ = ctxDB(r).DB().QueryRowContext(r.Context(), `SELECT sum(numbackends) FROM pg_stat_database`).Scan(&pgConns)
+	_ = ctxDB(r).DB().QueryRowContext(r.Context(), `SELECT COUNT(id) FROM blog_posts`).Scan(&blogPostCount)
 
 	err := json.NewEncoder(w).Encode(&map[string]interface{}{
 		"host":     r.Host,

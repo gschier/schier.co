@@ -2,7 +2,7 @@ package migrations
 
 import (
 	"context"
-	"github.com/jmoiron/sqlx"
+	"database/sql"
 
 	"github.com/gschier/schier.co/internal/migrate"
 )
@@ -10,7 +10,7 @@ import (
 func init() {
 	allMigrations = append(allMigrations, migrate.Migration{
 		Name: "0001__create_tables",
-		Forward: func(ctx context.Context, db *sqlx.DB) error {
+		Forward: func(ctx context.Context, db *sql.DB) error {
 			_, err := db.ExecContext(ctx, `
 				CREATE TABLE users (
 					id            VARCHAR(25)  NOT NULL PRIMARY KEY,
@@ -67,12 +67,9 @@ func init() {
 			`)
 			return err
 		},
-		Reverse: func(ctx context.Context, db *sqlx.DB) error {
+		Reverse: func(ctx context.Context, db *sql.DB) error {
 			_, err := db.Exec(`
 				-- Too dangerous to leave in here
-				-- DROP TABLE if EXISTS projects CASCADE;
-				-- DROP TABLE if EXISTS favorite_thingss CASCADE;
-				-- DROP TABLE if EXISTS books CASCADE;
 				-- DROP TABLE if EXISTS users CASCADE;
 				-- DROP TABLE if EXISTS sessions CASCADE;
 				-- DROP TABLE if EXISTS blog_posts CASCADE;

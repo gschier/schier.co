@@ -4,11 +4,9 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 	"math/rand"
 	"os"
-	"strings"
 	"time"
 
 	"github.com/gschier/schier.co/internal/db"
@@ -17,7 +15,7 @@ import (
 var _s *Storage
 
 type Storage struct {
-	db   *sqlx.DB
+	db   *sql.DB
 	rand *rand.Source
 
 	Store *gen.Store
@@ -33,8 +31,12 @@ func NewStorage() *Storage {
 }
 
 func NewStorageWithSource(source *rand.Source) *Storage {
-	sqlxDB := sqlx.MustConnect("postgres", os.Getenv("DATABASE_URL"))
-	store := gen.NewStore(sqlxDB.DB, gen.StoreConfig{
+	sqlDB, err := sql.Open("postgres", os.Getenv("DATABASE_URL"))
+	if err != nil {
+		panic(err)
+	}
+
+	store := gen.NewStore(sqlDB, gen.StoreConfig{
 		BlogPostConfig: gen.BlogPostConfig{
 			HookPreInsert: func(m *gen.BlogPost) {
 				m.ID = newID("pst_")
@@ -53,6 +55,18 @@ func NewStorageWithSource(source *rand.Source) *Storage {
 				m.CreatedAt = time.Now()
 			},
 		},
+		SessionConfig: gen.SessionConfig{
+			HookPreInsert: func(m *gen.Session) {
+				m.ID = newID("ses_")
+				m.CreatedAt = time.Now()
+			},
+		},
+		NewsletterSendConfig: gen.NewsletterSendConfig{
+			HookPreInsert: func(m *gen.NewsletterSend) {
+				m.ID = newID("snd_")
+				m.CreatedAt = time.Now()
+			},
+		},
 		NewsletterSubscriberConfig: gen.NewsletterSubscriberConfig{
 			HookPreInsert: func(m *gen.NewsletterSubscriber) {
 				m.ID = newID("sub_")
@@ -65,13 +79,13 @@ func NewStorageWithSource(source *rand.Source) *Storage {
 		},
 	})
 	return &Storage{
-		db:    sqlxDB,
+		db:    sqlDB,
 		Store: store,
 		rand:  source,
 	}
 }
 
-func (s *Storage) DB() *sqlx.DB {
+func (s *Storage) DB() *sql.DB {
 	return s.db
 }
 
@@ -117,88 +131,6 @@ func (s *Storage) TaggedAndPublishedBlogPosts(ctx context.Context, tag string, l
 		Offset(uint64(offset)).
 		Sort(gen.OrderBy.BlogPost.Date.Desc).
 		All()
-}
-
-func (s *Storage) DraftBlogPosts(ctx context.Context) ([]gen.BlogPost, error) {
-	return s.Store.BlogPosts.Filter(
-		gen.Where.BlogPost.Published.False(),
-	).Sort(
-		gen.OrderBy.BlogPost.Stage.Desc,
-		gen.OrderBy.BlogPost.EditedAt.Desc,
-	).All()
-}
-
-func (s *Storage) UnlistedBlogPosts(ctx context.Context) ([]gen.BlogPost, error) {
-	return s.Store.BlogPosts.Filter(
-		gen.Where.BlogPost.Unlisted.True(),
-	).Sort(
-		gen.OrderBy.BlogPost.UpdatedAt.Desc,
-	).All()
-}
-
-func (s *Storage) NewsletterSendByKey(ctx context.Context, key string) (*NewsletterSend, error) {
-	var send NewsletterSend
-	err := s.db.GetContext(ctx, &send, `
-		SELECT * FROM newsletter_sends WHERE key = $1
-	`, key)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return &send, nil
-}
-
-func (s *Storage) SearchPublishedBlogPosts(ctx context.Context, query string, limit uint64) ([]gen.BlogPost, error) {
-	if query == "" {
-		return s.Store.BlogPosts.None()
-	}
-
-	return s.Store.BlogPosts.Filter(
-		gen.Where.BlogPost.Published.True(),
-		gen.Where.BlogPost.Unlisted.False(),
-		gen.Where.BlogPost.Or(
-			gen.Where.BlogPost.Content.IContains(query),
-			gen.Where.BlogPost.Title.IContains(query),
-			gen.Where.BlogPost.Tags.Contains([]string{strings.ToLower(query)}),
-		),
-	).Sort(gen.OrderBy.BlogPost.UpdatedAt.Desc).Limit(limit).All()
-}
-
-func (s *Storage) AllPublicBlogPosts(ctx context.Context) ([]gen.BlogPost, error) {
-	return s.Store.BlogPosts.Filter(
-		gen.Where.BlogPost.Published.True(),
-		gen.Where.BlogPost.Unlisted.False(),
-	).Sort(gen.OrderBy.BlogPost.CreatedAt.Desc).All()
-}
-
-func (s *Storage) CreateNewsletterSend(ctx context.Context, key string, recipients int, description string) error {
-	_, err := s.db.ExecContext(ctx, `
-		INSERT INTO newsletter_sends (id, key, recipients, description) 
-		VALUES ($1, $2, $3, $4)
-	`, newID("snd_"), key, recipients, description)
-	return err
-}
-
-func (s *Storage) CreateSession(ctx context.Context, userID string) (string, error) {
-	id := newID("ses_")
-	_, err := s.db.ExecContext(ctx, `
-		INSERT INTO sessions (id, user_id) VALUES ($1, $2)
-	`, id, userID)
-	return id, err
-}
-
-func (s *Storage) UserBySessionID(ctx context.Context, sessionID string) (*gen.User, error) {
-	session, err := s.Store.Sessions.Get(sessionID)
-	if err != nil {
-		return nil, err
-	}
-
-	return s.Store.Users.Get(session.UserID)
-}
-
-func (s *Storage) IsNoResult(err error) bool {
-	return err == sql.ErrNoRows
 }
 
 func newID(prefix string) string {

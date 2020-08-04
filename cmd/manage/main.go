@@ -52,12 +52,10 @@ func initSendNewsletter(ctx context.Context) {
 	email := cmd.Arg("email", "Specify an email to send to").String()
 
 	cmd.Action(func(x *kingpin.ParseContext) error {
-		db := internal.NewStorage()
-
 		subscribers := make([]gen.NewsletterSubscriber, 0)
 		if email != nil {
 			var s *gen.NewsletterSubscriber
-			s, err := db.Store.NewsletterSubscribers.Filter(
+			s, err := internal.NewStorage().Store.NewsletterSubscribers.Filter(
 				gen.Where.NewsletterSubscriber.Email.Eq(*email),
 			).One()
 			if err != nil || s == nil {
@@ -66,13 +64,13 @@ func initSendNewsletter(ctx context.Context) {
 			subscribers = append(subscribers, *s)
 		} else {
 			var err error
-			subscribers, err = db.Store.NewsletterSubscribers.All()
+			subscribers, err = internal.NewStorage().Store.NewsletterSubscribers.All()
 			if err != nil {
 				return err
 			}
 		}
 
-		blogPost, err := db.Store.BlogPosts.Filter(gen.Where.BlogPost.Slug.Eq(slug)).One()
+		blogPost, err := internal.NewStorage().Store.BlogPosts.Filter(gen.Where.BlogPost.Slug.Eq(slug)).One()
 		if err != nil {
 			return err
 		}
@@ -84,9 +82,9 @@ func initSendNewsletter(ctx context.Context) {
 		if email != nil {
 			newsletterKey = fmt.Sprintf("TEST:%s:%d:%s", *email, time.Now().Unix(), newsletterKey)
 		}
-		newsletter, err := db.NewsletterSendByKey(ctx, newsletterKey)
-		if newsletter != nil {
-			log.Println("Newsletter already sent for post", newsletter.ID, blogPost.Slug)
+		newsletterSend, err := internal.NewStorage().Store.NewsletterSends.Filter(gen.Where.NewsletterSend.Key.Eq(newsletterKey)).One()
+		if newsletterSend != nil {
+			log.Println("Newsletter already sent for post", newsletterSend.ID, blogPost.Slug)
 			return nil
 		}
 
@@ -106,11 +104,10 @@ func initSendNewsletter(ctx context.Context) {
 			sent++
 		}
 
-		err = db.CreateNewsletterSend(
-			ctx,
-			newsletterKey,
-			len(subscribers),
-			fmt.Sprintf("Blog Post: %s", blogPost.Title),
+		_, err = internal.NewStorage().Store.NewsletterSends.Insert(
+			gen.Set.NewsletterSend.Key(newsletterKey),
+			gen.Set.NewsletterSend.Recipients(int64(len(subscribers))),
+			gen.Set.NewsletterSend.Description(fmt.Sprintf("Blog Post: %s", blogPost.Title)),
 		)
 		if err != nil {
 			return err
