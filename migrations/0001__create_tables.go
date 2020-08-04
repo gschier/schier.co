@@ -12,34 +12,6 @@ func init() {
 		Name: "0001__create_tables",
 		Forward: func(ctx context.Context, db *sqlx.DB) error {
 			_, err := db.ExecContext(ctx, `
-				CREATE TABLE projects (
-					id          VARCHAR(25) NOT NULL PRIMARY KEY,
-					description TEXT        NOT NULL,
-					icon        TEXT        NOT NULL,
-					link        TEXT        NOT NULL,
-					name        TEXT        NOT NULL,
-					priority    INTEGER     NOT NULL,
-					reason      TEXT        NOT NULL,
-					retired     BOOLEAN     NOT NULL,
-					revenue     TEXT        NOT NULL
-				);
-
-				CREATE TABLE favorite_things (
-					id          VARCHAR(25) NOT NULL PRIMARY KEY,
-					description TEXT        NOT NULL,
-					link        TEXT        NOT NULL,
-					name        TEXT        NOT NULL,
-					priority    INTEGER     NOT NULL
-				);
-
-				CREATE TABLE books (
-					id     VARCHAR(25) NOT NULL PRIMARY KEY,
-					author TEXT        NOT NULL,
-					link   TEXT        NOT NULL,
-					rank   INTEGER     NOT NULL,
-					title  TEXT        NOT NULL
-				);
-
 				CREATE TABLE users (
 					id            VARCHAR(25)  NOT NULL PRIMARY KEY,
 					created_at    TIMESTAMP(3) NOT NULL DEFAULT NOW(),

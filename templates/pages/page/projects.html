@@ -4,28 +4,99 @@
   <div class="container content">
     <h1>Projects</h1>
     <p>
-      I love building things. Here are some of the projects I currently maintain.
-    </p>
-
-    {% for project in projects %}
-      {% if not project.Retired %}
-        {% include 'partials/project.html' with project=project %}
-      {% endif %}
-    {% endfor %}
-
+      I love building things. Here are some of the projects I currently maintain. </p>
+    <div class="project">
+      <h3>
+        <a href="https://insomnia.rest">
+          <img src="https://assets.schier.dev/images/app-icons/insomnia.png" alt="Insomnia icon">
+          Insomnia
+        </a>
+      </h3>
+      <p><strong>
+        <del>$20k/month</del>
+      </strong> <a href="/blog/indie-to-acquisition">Acquired</a>! 🎉
+      </p>
+      <p>A cross-platform desktop app to help software developers interact
+        with HTTP-based APIs.</p>
+    </div>
+    <div class="project">
+      <h3>
+        <a href="https://platformpixels.com">
+          <img src="https://assets.schier.dev/images/app-icons/platformpixels.png" alt="Platform Pixels icon">
+          Platform Pixels
+        </a>
+      </h3>
+      <p><strong>$??/month</strong></p>
+      <p>A 2D cross-platform adventure game with high difficulty because
+        games are too easy these days.</p>
+    </div>
+    <div class="project">
+      <h3>
+        <a href="https://play.google.com/store/apps/details?id=com.gregschier.toread">
+          <img src="https://assets.schier.dev/images/app-icons/toread.png" alt="To Read icon">
+          To Read
+        </a>
+      </h3>
+      <p><strong>$100/month</strong> ads + IAP</p>
+      <p>An Android app for tracking the books you want to read. Basically,
+        a to-do list specific to books.</p>
+    </div>
+    <div class="project">
+      <h3>
+        <a href="https://gohemlock.com/">
+          <img src="https://assets.schier.dev/images/app-icons/hemlock.png" alt="Hemlock icon">
+          Hemlock
+        </a>
+      </h3>
+      <p><strong>Open Source</strong></p>
+      <p>A Go web framework that makes use of dependency-injection for a
+        delightful developer experience.</p>
+    </div>
     <hr>
-
     <h2>Retired Projects 🏚</h2>
-
     <p>
       Some projects don't stand the test of time. Here are a few that I've had to shut down for
-      various reasons.
-    </p>
-
-    {% for project in projects %}
-      {% if project.Retired %}
-        {% include 'partials/project.html' with project=project %}
-      {% endif %}
-    {% endfor %}
+      various reasons. </p>
+    <div class="project">
+      <h3>
+        <a href="https://www.youtube.com/watch?v=vwnVEIfIfOU">
+          <img src="https://assets.schier.dev/images/app-icons/forkjoy.png" alt="Forkjoy icon">
+          Forkjoy
+        </a>
+      </h3>
+      <p><strong>$0/month</strong></p>
+      <p>A mobile/web app to help people find the best food in the city. It
+        contained full restaurant menus, prices, etc, and users could upload photos.</p>
+      <small>
+        Shut down because we ran out of funding and couldn’t generate revenue
+      </small>
+    </div>
+    <div class="project">
+      <h3><span>
+        <img src="https://assets.schier.dev/images/app-icons/vicbus.png" alt="Victoria Bus icon">
+        Victoria Bus
+      </span></h3>
+      <p><strong>$50/month</strong></p>
+      <p>An Android app for my hometown of Victoria to access public transit schedules, before
+        Google Maps took over</p>
+      <small>
+        Shut down because Google Maps offered something way better
+      </small>
+    </div>
+    <div class="project">
+      <h3>
+        <a href="https://www.youtube.com/watch?v=GH7L61jILYk">
+          <img src="https://assets.schier.dev/images/app-icons/plans4ramps.png" alt="Plans4Ramps icon">
+          Plans4Ramps
+        </a>
+      </h3>
+      <p><strong>$40/month</strong> ads</p>
+      <p>The first real website I made. I built many BMX ramps growing up made this
+        site to teach others how to do the same. It had step-by-step instructions,
+        materials lists, and 3D renders of each step.</p>
+      <small>
+        Shut down because I lost the code
+      </small>
+    </div>
   </div>
 {% endblock %}

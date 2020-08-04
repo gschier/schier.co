@@ -149,14 +149,6 @@ func (s *Storage) NewsletterSendByKey(ctx context.Context, key string) (*Newslet
 	return &send, nil
 }
 
-func (s *Storage) RankedBooks(ctx context.Context) ([]Book, error) {
-	var books []Book
-	err := s.db.SelectContext(ctx, &books, `
-		SELECT * FROM books ORDER BY rank ASC
-	`)
-	return books, err
-}
-
 func (s *Storage) SearchPublishedBlogPosts(ctx context.Context, query string, limit uint64) ([]gen.BlogPost, error) {
 	if query == "" {
 		return s.Store.BlogPosts.None()
@@ -178,30 +170,6 @@ func (s *Storage) AllPublicBlogPosts(ctx context.Context) ([]gen.BlogPost, error
 		gen.Where.BlogPost.Published.True(),
 		gen.Where.BlogPost.Unlisted.False(),
 	).Sort(gen.OrderBy.BlogPost.CreatedAt.Desc).All()
-}
-
-func (s *Storage) AllProjects(ctx context.Context) ([]Project, error) {
-	var projects []Project
-	err := s.db.SelectContext(ctx, &projects, `
-		SELECT * FROM projects ORDER BY priority ASC
-	`)
-	return projects, err
-}
-
-func (s *Storage) AllFavoriteThings(ctx context.Context) ([]FavoriteThing, error) {
-	var things []FavoriteThing
-	err := s.db.SelectContext(ctx, &things, `
-		SELECT * FROM favorite_things ORDER BY priority ASC
-	`)
-	return things, err
-}
-
-func (s *Storage) AllBooks(ctx context.Context) ([]Book, error) {
-	var books []Book
-	err := s.db.SelectContext(ctx, &books, `
-		SELECT * FROM books ORDER BY rank ASC
-	`)
-	return books, err
 }
 
 func (s *Storage) CreateNewsletterSend(ctx context.Context, key string, recipients int, description string) error {
