@@ -1,4 +1,4 @@
-import './styles/editor.css';
+import './editor/editor.css';
 import { init } from './editor';
 
 init();

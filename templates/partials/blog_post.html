@@ -23,7 +23,7 @@
   {% endif %}
 
   {% if not blogPost.Date | isodatewithinmonth:blogPost.EditedAt %}
-    <p class="notice notice--subtle">
+    <p class="notice">
       Updated
       <time datetime="{{ blogPost.EditedAt }}" title="{{ blogPost.EditedAt }}">
         <strong>{{ blogPost.EditedAt | isoformat:'Jan _2, 2006' }}</strong>
@@ -82,7 +82,7 @@
       </div>
     </div>
     <div data-votes="1">
-      <div class="notice notice--subtle">
+      <div class="notice">
         Thanks, glad you enjoyed it! Care to share?
         <div class="blog-post__btns">
           <a data-href="/blog/share/{{ blogPost.Slug }}/hn" target="_blank" rel="nofollow" class="btn btn--xs svg-icon btn--hn">
@@ -118,17 +118,19 @@
   {% include 'partials/post-cards.html' with blogPosts=recommendedBlogPosts %}
 </div>
 
-{% include 'partials/full-subscription-form.html' %} {% block extraScripts %}
-  <script>
-    (function() {
-      const msgContainer = document.body.querySelector('.vote-messages');
-      if (!msgContainer) return;
+{% include 'partials/full-subscription-form.html' %}
 
-      const msgs = msgContainer.querySelectorAll('[data-votes]');
-      const container = document.body.querySelector('.clap-button');
-      const clapCount = container.querySelector('.clap-count');
-      const clapBtn = container.querySelector('button');
-      const localStorageKey = "vote-{{ blogPost.Slug }}";
+{% block extraScripts %}
+  <script> {# Script for voting #}
+  (function() {
+    const msgContainer = document.body.querySelector('.vote-messages');
+    if (!msgContainer) return;
+
+    const msgs = msgContainer.querySelectorAll('[data-votes]');
+    const container = document.body.querySelector('.clap-button');
+    const clapCount = container.querySelector('.clap-count');
+    const clapBtn = container.querySelector('button');
+    const localStorageKey = "vote-{{ blogPost.Slug }}";
 
       function updateDisabledAttr() {
         const count = JSON.parse(localStorage.getItem(localStorageKey)) || 0;

@@ -16,14 +16,14 @@
     --txt-syntax-2: #3182CE;
     --txt-syntax-3: #5A67D8;
     --txt-syntax-4: #8e9dad;
-    --txt-notice: var(--notice-400);
-    --txt-info: var(--info-400);
-    --txt-warning: var(--warning-400);
-    --txt-danger: var(--danger-400);
+    --txt-notice: var(--notice-500);
+    --txt-info: var(--info-500);
+    --txt-warning: var(--warning-500);
+    --txt-danger: var(--danger-500);
 
     /* Generic Colors */
     --gray-100: hsl(var(--hue), 80%, 98%);
-    --gray-200: hsl(var(--hue), 62%, 95%);
+    --gray-200: hsl(var(--hue), 62%, 94%);
     --gray-300: hsl(var(--hue), 52%, 91%);
     --gray-400: hsl(var(--hue), 42%, 84%);
     --gray-500: hsl(var(--hue), 32%, 69%);

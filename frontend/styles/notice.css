@@ -1,0 +1,43 @@
+.notice {
+    @apply border text-sm py-3 px-4 rounded border-dotted border-gray-400 bg-gray-100 text-gray-600 text-center;
+
+    a {
+        color: inherit;
+
+        &:not(.btn) {
+            @apply underline;
+        }
+
+        &:hover {
+            @apply text-gray-700;
+        }
+    }
+
+    & > code {
+        @apply bg-background border-background !important;
+    }
+
+    &--big {
+        @apply py-4 text-base border-2 font-medium;
+    }
+
+    &--huge {
+        @apply py-6 text-xl border-4 font-bold;
+    }
+
+    &--danger {
+        @apply border-danger-400 bg-danger-100 text-danger;
+    }
+
+    &--warning {
+        @apply border-warning-400 bg-warning-100 text-warning;
+    }
+
+    &--notice {
+        @apply border-notice-400 bg-notice-100 text-notice;
+    }
+
+    &--info {
+        @apply border-info-400 bg-info-100 text-info;
+    }
+}

@@ -1,3 +1,5 @@
+import './styles/styles.css';
+
 // Handle theme toggling
 const htmlEl = document.querySelector('html');
 document.querySelectorAll('[data-toggle-theme]').forEach((el) => {
@@ -29,3 +31,12 @@ function showIcon() {
 }
 
 showIcon();
+
+// Handle header linking
+document.querySelectorAll('.blog-post h1,.blog-post h2,.blog-post h3,.blog-post h4,.blog-post h5').forEach(el => {
+  const a = document.createElement('a');
+  a.classList.add('header-link');
+  a.href = '#' + el.id;
+  el.parentNode.replaceChild(a, el);
+  a.appendChild(el);
+});

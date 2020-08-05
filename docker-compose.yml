@@ -1,12 +1,25 @@
 version: "3"
 services:
   web:
-    command: 'reflex -s -r \.(go)$$ -d none go run github.com/gschier/schier.co/cmd/web'
+    command: >
+      reflex
+        --start-service
+        --regex=\.(go)$$
+        --decoration=none
+        go run github.com/gschier/schier.co/cmd/web
     build:
       context: .
       dockerfile: Dockerfile.dev
     volumes:
-      - .:/app
+      # Only add the things we absolutely need
+      - ./internal:/app/internal
+      - ./migrations:/app/migrations
+      - ./templates:/app/templates
+      - ./cmd:/app/cmd
+      - ./frontend/static:/app/frontend/static
+      - ./go.mod:/app/go.mod
+      - ./go.sum:/app/go.sum
+      - ./schier.go:/app/schier.go
     ports:
       - "8084:8084"
     restart: always

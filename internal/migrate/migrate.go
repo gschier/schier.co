@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"sort"
 	"strings"
 	"time"
 )
@@ -24,7 +25,23 @@ type dbRow struct {
 	Applied time.Time `db:"applied"`
 }
 
-func ForwardAll(ctx context.Context, migrations []Migration, db *sql.DB, yesAll bool) {
+var allMigrations = make([]Migration, 0)
+
+func Register(m Migration) {
+	allMigrations = append(allMigrations, m)
+
+	// Sort them
+	sort.Slice(allMigrations, func(i, j int) bool {
+		return strings.Compare(allMigrations[i].Name, allMigrations[j].Name) < 0
+	})
+}
+
+func ForwardAll(ctx context.Context, db *sql.DB, yesAll bool) {
+	if len(allMigrations) == 0 {
+		fmt.Println("[migrate] No migrations registered")
+		return
+	}
+
 	// Initialize migrations table
 	err := initTable(ctx, db)
 	if err != nil {
@@ -38,8 +55,8 @@ func ForwardAll(ctx context.Context, migrations []Migration, db *sql.DB, yesAll 
 	}
 
 	// Run migrations
-	fmt.Printf("[migrate] Attempting to migrate\n")
-	for i, m := range migrations {
+	fmt.Println("[migrate] Attempting to migrate")
+	for i, m := range allMigrations {
 		if i < len(history) {
 			h := history[i]
 			if h.Name == m.Name {
@@ -72,7 +89,7 @@ func ForwardAll(ctx context.Context, migrations []Migration, db *sql.DB, yesAll 
 
 }
 
-func BackwardOne(ctx context.Context, migrations []Migration, db *sql.DB, yesAll bool) {
+func BackwardOne(ctx context.Context, db *sql.DB, yesAll bool) {
 	// Initialize migrations table
 	err := initTable(ctx, db)
 	if err != nil {
@@ -94,7 +111,7 @@ func BackwardOne(ctx context.Context, migrations []Migration, db *sql.DB, yesAll
 	fmt.Println("[migrate] Attempting to undo")
 	toUndo := history[len(history)-1]
 	var migration *Migration = nil
-	for _, m := range migrations {
+	for _, m := range allMigrations {
 		if toUndo.Name == m.Name {
 			migration = &m
 			break

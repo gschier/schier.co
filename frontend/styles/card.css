@@ -1,0 +1,71 @@
+.cards {
+    @apply flex flex-1 -mx-2 items-stretch;
+
+    .card {
+        @apply text-sm px-2 w-full mx-auto block;
+
+        &__inner {
+            @apply border border-gray-200 rounded px-4 py-2 mt-4 bg-gray-100;
+
+            & > *:not(:last-child) {
+                @apply m-0 mb-1 p-0;
+            }
+        }
+
+        &__title {
+            @apply text-xs text-gray-600 whitespace-no-wrap;
+        }
+
+        &__body--big {
+            @apply text-3xl font-thin;
+        }
+
+        &--clicky:hover {
+            @apply cursor-pointer;
+        }
+
+        &--clicky:active {
+            @apply cursor-pointer;
+        }
+
+        &--clicky:hover .card__inner {
+            @apply border-primary-300;
+        }
+    }
+
+    &--2,
+    &--3,
+    &--flexy {
+        @apply flex-wrap;
+    }
+
+    &--2 .card {
+        @apply flex-grow;
+    }
+
+    &--flexy .card {
+        @apply flex-grow w-auto flex-auto;
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    .cards {
+        @apply flex-wrap;
+
+        .card {
+            @apply w-full;
+        }
+
+        &--double-wrap .card {
+            @apply w-1 / 2;
+        }
+
+        .card__body {
+            @apply text-lg;
+        }
+
+        .card__body--big {
+            @apply text-2xl;
+        }
+    }
+}

@@ -1,0 +1,34 @@
+pre.chroma {
+    @apply relative block bg-gray-100 p-6 overflow-auto rounded font-mono border border-gray-200 overflow-x-auto cursor-text;
+    tab-size: 4;
+    font-size: 0.8em;
+
+    .c,
+    .cm,
+    .c1 {
+        @apply italic text-syntax4;
+    }
+
+    .s,
+    .s1,
+    .sb,
+    .s2 {
+        @apply text-syntax1;
+    }
+
+    .n,
+    .nt,
+    .nb {
+        @apply text-gray-500 text-syntax2;
+    }
+
+    .k,
+    .kd {
+        @apply text-syntax3;
+    }
+
+    .m,
+    .mi {
+        @apply text-syntax1;
+    }
+}

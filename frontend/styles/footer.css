@@ -1,0 +1,21 @@
+.bottom-footer {
+    @apply bg-gray-100 py-32 mt-24;
+
+    .links {
+        @apply text-center pt-8 text-sm text-gray-600;
+
+        p {
+            @apply mt-2 mb-0;
+        }
+    }
+
+    svg {
+        @apply mx-auto block;
+        width: 7rem;
+    }
+
+    a i {
+        @apply text-link no-underline;
+    }
+
+}

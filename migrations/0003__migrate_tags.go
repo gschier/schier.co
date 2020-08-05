@@ -8,7 +8,7 @@ import (
 )
 
 func init() {
-	allMigrations = append(allMigrations, migrate.Migration{
+	migrate.Register(migrate.Migration{
 		Name: "0003__migrate_tags",
 		Forward: func(ctx context.Context, db *sql.DB) error {
 			_, err := db.ExecContext(ctx, `

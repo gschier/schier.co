@@ -1,6 +1,13 @@
 @import "./theme-light.css";
 @import "./theme-dark.css";
 
+/* Components */
+@import "./card.css";
+@import "./footer.css";
+@import "./notice.css";
+@import "./subscription-form.css";
+@import "./syntax.css";
+
 /* Reset */
 *, :after, :before {
     box-sizing: border-box;
@@ -57,7 +64,11 @@ a,
 
 a:hover,
 .link:hover {
-    text-decoration: underline;
+    @apply underline;
+}
+
+.header-link {
+    color: inherit;
 }
 
 hr {
@@ -82,7 +93,7 @@ h1 {
 }
 
 h2 {
-    @apply text-3xl text-gray-800;
+    @apply text-xl text-gray-800;
 }
 
 .btn {
@@ -161,58 +172,6 @@ h2 {
 
 .btn:disabled {
     @apply opacity-50 cursor-default;
-}
-
-/**********/
-/* NOTICE */
-/**********/
-
-.notice {
-    @apply border text-sm py-3 px-4 rounded border-dotted border-primary-200 bg-primary-100 text-center;
-}
-
-.notice a:not(.btn) {
-    @apply underline;
-}
-
-.notice a:hover {
-    @apply text-gray-700;
-}
-
-.notice--big {
-    @apply py-4 text-base border-2 font-medium;
-}
-
-.notice--huge {
-    @apply py-6 text-xl border-4 font-bold;
-}
-
-.notice > code {
-    @apply bg-background border-background !important;
-}
-
-.notice a {
-    color: inherit;
-}
-
-.notice--danger {
-    @apply border-danger-400 bg-danger-100 text-danger;
-}
-
-.notice--warning {
-    @apply border-warning-400 bg-warning-100 text-warning;
-}
-
-.notice--notice {
-    @apply border-notice-400 bg-notice-100 text-notice;
-}
-
-.notice--info {
-    @apply border-info-400 bg-info-100 text-info;
-}
-
-.notice--subtle {
-    @apply border-dotted border-gray-400 bg-gray-100 text-gray-600;
 }
 
 /*********/
@@ -462,86 +421,6 @@ details summary:focus {
     @apply w-24 text-center;
 }
 
-/*********************/
-/* SUBSCRIPTION FORM */
-/*********************/
-
-.subscription-form {
-    @apply border border-dashed border-primary-400 bg-primary-050 rounded mt-10;
-    position: relative;
-}
-
-.subscription-form small {
-    @apply text-xs italic text-gray-600;
-}
-
-.subscription-form p {
-    @apply mb-4;
-}
-
-.subscription-form input {
-    @apply border-primary-300;
-}
-
-.subscription-form form {
-    @apply mx-auto;
-    max-width: 24rem;
-}
-
-.subscription-form__inner {
-    @apply text-center mx-auto py-10 px-4;
-}
-
-.subscription-form__hide {
-    @apply h-8 w-8 opacity-50 text-link;
-    position: absolute;
-    top: 0;
-    right: 0;
-}
-
-.subscription-form__hide:hover {
-    @apply opacity-100;
-}
-
-/***********************/
-/* SYNTAX HIGHLIGHTING */
-/***********************/
-
-pre.chroma-chroma {
-    @apply block bg-gray-100 p-6 overflow-auto rounded font-mono border border-gray-200 overflow-x-auto cursor-text;
-    tab-size: 4;
-    font-size: 0.8em;
-}
-
-.chroma-c,
-.chroma-cm,
-.chroma-c1 {
-    @apply italic text-syntax4;
-}
-
-.chroma-s,
-.chroma-s1,
-.chroma-sb,
-.chroma-s2 {
-    @apply text-syntax1;
-}
-
-.chroma-n,
-.chroma-nt,
-.chroma-nb {
-    @apply text-gray-500 text-syntax2;
-}
-
-.chroma-k,
-.chroma-kd {
-    @apply text-syntax3;
-}
-
-.chroma-m,
-.chroma-mi {
-    @apply text-syntax1;
-}
-
 /******************/
 /* TOP NAVIGATION */
 /******************/
@@ -585,31 +464,6 @@ pre.chroma-chroma {
 
 .top-nav li:first-child {
     @apply ml-0 mr-auto;
-}
-
-/*****************/
-/* BOTTOM FOOTER */
-/*****************/
-
-.bottom-footer {
-    @apply bg-gray-100 py-32 mt-24;
-}
-
-.bottom-footer .links {
-    @apply text-center pt-8 text-sm text-gray-500;
-}
-
-.bottom-footer .links p {
-    @apply mt-2 mb-0;
-}
-
-.bottom-footer svg {
-    @apply mx-auto block;
-    width: 7rem;
-}
-
-.bottom-footer a i {
-    @apply text-link no-underline;
 }
 
 /****************/
@@ -681,90 +535,6 @@ pre.chroma-chroma {
 
 .project small {
     @apply text-sm text-gray-600 italic;
-}
-
-/* CARDS */
-
-.cards {
-    @apply flex flex-1 -mx-2 items-stretch;
-}
-
-.cards--2,
-.cards--3,
-.cards--flexy {
-    @apply flex-wrap;
-}
-
-.cards--2 .card {
-    flex-grow: 1;
-}
-
-.cards--flexy .card {
-    flex-grow: 1;
-    flex-basis: auto;
-    width: auto;
-}
-
-.card {
-    @apply text-sm;
-}
-
-.card {
-    @apply px-2 w-full mx-auto block;
-}
-
-.card__inner {
-    @apply border border-dashed border-gray-400 rounded px-4 py-2 mt-4;
-}
-
-.card__inner > *:not(:last-child) {
-    @apply m-0 mb-1 p-0;
-}
-
-.card__title {
-    @apply text-xs text-gray-500 whitespace-no-wrap;
-}
-
-.card__body--big {
-    @apply text-3xl font-thin;
-}
-
-.card--clicky:hover {
-    @apply cursor-pointer;
-}
-
-.card--clicky:hover a {
-    @apply underline;
-}
-
-.card--clicky:active {
-    @apply cursor-pointer;
-}
-
-.card--clicky:hover .card__inner {
-    @apply border-primary-400;
-}
-
-@media only screen and (max-width: 600px) {
-    .cards {
-        @apply flex-wrap;
-    }
-
-    .cards .card {
-        @apply w-full;
-    }
-
-    .cards.cards--double-wrap .card {
-        width: 50%;
-    }
-
-    .card__body {
-        @apply text-lg;
-    }
-
-    .card__body--big {
-        @apply text-2xl;
-    }
 }
 
 /*************/

@@ -33,7 +33,6 @@ var chroma = bfchroma.NewRenderer(
 		}),
 	),
 	bfchroma.ChromaOptions(
-		html.ClassPrefix("chroma-"),
 		html.WithClasses(),
 	),
 )

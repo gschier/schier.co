@@ -8,7 +8,7 @@ import (
 )
 
 func init() {
-	allMigrations = append(allMigrations, migrate.Migration{
+	migrate.Register(migrate.Migration{
 		Name: "0002__import_data",
 		Forward: func(ctx context.Context, db *sql.DB) error {
 			// No longer needed

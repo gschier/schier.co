@@ -13,13 +13,13 @@
     /* Text */
     --txt-link: hsl(var(--hue), 85%, 65%);
     --txt-syntax-1: hsl(258, 100%, 76%);
-    --txt-syntax-2: hsl(209, 100%, 72%);
-    --txt-syntax-3: hsl(234, 100%, 73%);
+    --txt-syntax-2: hsl(204, 100%, 67%);
+    --txt-syntax-3: hsl(298, 65%, 70%);
     --txt-syntax-4: hsl(218, 8%, 48%);
-    --txt-notice: var(--notice-400);
-    --txt-info: var(--info-400);
-    --txt-warning: var(--warning-400);
-    --txt-danger: var(--danger-400);
+    --txt-notice: var(--notice-500);
+    --txt-info: var(--info-500);
+    --txt-warning: var(--warning-500);
+    --txt-danger: var(--danger-500);
 
     /* Generic Colors */
     --gray-100: hsl(var(--hue), 19%, 13%);
@@ -32,7 +32,7 @@
     --gray-800: hsl(var(--hue), 19%, 84%);
     --gray-900: hsl(var(--hue), 19%, 90%);
 
-    --danger-100: #fff5f511;
+    --danger-100: #FC818111;
     --danger-400: #FC8181CC;
     --danger-500: #FC8181FF;
 
@@ -41,11 +41,11 @@
     --warning-500: #F6AD55FF;
 
     --notice-100: #D69E2E11;
-    --notice-400: #D69E2ECC;
+    --notice-400: #D69E2EDD;
     --notice-500: #D69E2EFF;
 
-    --info-100: #63B3ED11;
-    --info-400: #63B3EDCC;
-    --info-500: #63B3EDFF;
+    --info-100: #569CCF11;
+    --info-400: #569CCFCC;
+    --info-500: #569CCFFF;
 }
 

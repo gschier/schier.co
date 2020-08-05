@@ -3,3 +3,4 @@ frontend/.cache
 vendor
 .idea
 .git
+.DS_Store

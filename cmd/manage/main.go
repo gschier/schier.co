@@ -12,7 +12,7 @@ import (
 	"github.com/gschier/schier.co/internal"
 	"github.com/gschier/schier.co/internal/db"
 	"github.com/gschier/schier.co/internal/migrate"
-	"github.com/gschier/schier.co/migrations"
+	_ "github.com/gschier/schier.co/migrations"
 )
 
 var Cmd = kingpin.New("manage", "")
@@ -35,13 +35,13 @@ func initMigrate(ctx context.Context) {
 
 	cmdForward := cmd.Command("forward", "Apply all pending migrations")
 	cmdForward.Action(func(x *kingpin.ParseContext) error {
-		migrate.ForwardAll(ctx, migrations.All(), internal.NewStorage().Store.DB, *yesAll)
+		migrate.ForwardAll(ctx, internal.NewStorage().Store.DB, *yesAll)
 		return nil
 	})
 
 	cmdBackward := cmd.Command("backward", "Revert last migration")
 	cmdBackward.Action(func(x *kingpin.ParseContext) error {
-		migrate.BackwardOne(ctx, migrations.All(), internal.NewStorage().Store.DB, *yesAll)
+		migrate.BackwardOne(ctx, internal.NewStorage().Store.DB, *yesAll)
 		return nil
 	})
 }
