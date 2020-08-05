@@ -57,7 +57,7 @@
         }
 
         &--double-wrap .card {
-            @apply w-1 / 2;
+            width: 50%;
         }
 
         .card__body {
