@@ -2,7 +2,6 @@ import CodeMirror from 'codemirror';
 import 'codemirror/mode/gfm/gfm';
 import 'codemirror/addon/mode/overlay';
 import 'codemirror/lib/codemirror.css';
-
 import 'codemirror/addon/dialog/dialog';
 import 'codemirror/addon/dialog/dialog.css';
 import 'codemirror/addon/fold/foldcode';

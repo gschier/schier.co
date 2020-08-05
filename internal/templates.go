@@ -46,7 +46,7 @@ var bfExtensions = blackfriday.WithExtensions(
 		blackfriday.NoEmptyLineBeforeBlock,
 )
 
-var pongo2Set = pongo2.NewSet("foo", pkgerLoader{})
+var pongo2Set = pongo2.NewSet("schier.co", pkgerLoader{})
 
 func init() {
 	pkger.Include("/templates")

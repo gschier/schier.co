@@ -1,5 +1,3 @@
-import './styles/styles.css';
-
 // Handle theme toggling
 const htmlEl = document.querySelector('html');
 document.querySelectorAll('[data-toggle-theme]').forEach((el) => {

@@ -5,53 +5,53 @@
     --bg: hsl(var(--hue), 10%, 100%);
 
     /* Button */
-    --bg-btn: var(--color-primary-400);
-    --bg-btn-hover: var(--color-primary-500);
-    --text-btn: var(--color-gray-100);
-    --text-btn-hover: var(--color-gray-200);
+    --bg-btn: var(--primary-400);
+    --bg-btn-hover: var(--primary-500);
+    --txt-btn: var(--gray-100);
+    --txt-btn-hover: var(--gray-200);
 
     /* Text */
-    --text-link: hsl(var(--hue), 68%, 55%);
-    --text-syntax-1: #805AD5;
-    --text-syntax-2: #3182CE;
-    --text-syntax-3: #5A67D8;
-    --text-syntax-4: #8e9dad;
-    --text-notice: var(--color-notice-400);
-    --text-info: var(--color-info-400);
-    --text-warning: var(--color-warning-400);
-    --text-danger: var(--color-danger-400);
+    --txt-link: hsl(var(--hue), 68%, 55%);
+    --txt-syntax-1: #805AD5;
+    --txt-syntax-2: #3182CE;
+    --txt-syntax-3: #5A67D8;
+    --txt-syntax-4: #8e9dad;
+    --txt-notice: var(--notice-400);
+    --txt-info: var(--info-400);
+    --txt-warning: var(--warning-400);
+    --txt-danger: var(--danger-400);
 
     /* Generic Colors */
-    --color-gray-100: hsl(var(--hue), 80%, 98%);
-    --color-gray-200: hsl(var(--hue), 62%, 95%);
-    --color-gray-300: hsl(var(--hue), 52%, 91%);
-    --color-gray-400: hsl(var(--hue), 42%, 84%);
-    --color-gray-500: hsl(var(--hue), 32%, 69%);
-    --color-gray-600: hsl(var(--hue), 25%, 52%);
-    --color-gray-700: hsl(var(--hue), 20%, 35%);
-    --color-gray-800: hsl(var(--hue), 18%, 23%);
-    --color-gray-900: hsl(var(--hue), 12%, 14%);
+    --gray-100: hsl(var(--hue), 80%, 98%);
+    --gray-200: hsl(var(--hue), 62%, 95%);
+    --gray-300: hsl(var(--hue), 52%, 91%);
+    --gray-400: hsl(var(--hue), 42%, 84%);
+    --gray-500: hsl(var(--hue), 32%, 69%);
+    --gray-600: hsl(var(--hue), 25%, 52%);
+    --gray-700: hsl(var(--hue), 20%, 35%);
+    --gray-800: hsl(var(--hue), 18%, 23%);
+    --gray-900: hsl(var(--hue), 12%, 14%);
 
-    --color-danger-100: #fff5f5;
-    --color-danger-400: #FC8181;
-    --color-danger-500: #F56565;
+    --danger-100: #fff5f5;
+    --danger-400: #FC8181;
+    --danger-500: #F56565;
 
-    --color-warning-100: #FFFAF0;
-    --color-warning-400: #F6AD55;
-    --color-warning-500: #ED8936;
+    --warning-100: #FFFAF0;
+    --warning-400: #F6AD55;
+    --warning-500: #ED8936;
 
-    --color-notice-100: #FFFFF0;
-    --color-notice-400: #ECC94B;
-    --color-notice-500: #D69E2E;
+    --notice-100: #FFFFF0;
+    --notice-400: #ECC94B;
+    --notice-500: #D69E2E;
 
-    --color-info-100: #EBF8FF;
-    --color-info-400: #63B3ED;
-    --color-info-500: #4299E1;
+    --info-100: #EBF8FF;
+    --info-400: #63B3ED;
+    --info-500: #4299E1;
 
-    --color-primary-050: hsla(var(--hue), 62%, 50%, 0.07);
-    --color-primary-100: hsla(var(--hue), 62%, 50%, 0.33);
-    --color-primary-200: hsla(var(--hue), 62%, 50%, 0.53);
-    --color-primary-300: hsla(var(--hue), 62%, 50%, 0.67);
-    --color-primary-400: hsla(var(--hue), 62%, 50%, 0.87);
-    --color-primary-500: hsla(var(--hue), 62%, 50%, 1);
+    --primary-050: hsla(var(--hue), 62%, 50%, 0.07);
+    --primary-100: hsla(var(--hue), 62%, 50%, 0.33);
+    --primary-200: hsla(var(--hue), 62%, 50%, 0.53);
+    --primary-300: hsla(var(--hue), 62%, 50%, 0.67);
+    --primary-400: hsla(var(--hue), 62%, 50%, 0.87);
+    --primary-500: hsla(var(--hue), 62%, 50%, 1);
 }

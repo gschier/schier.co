@@ -4,7 +4,7 @@
 /* Reset */
 *, :after, :before {
     box-sizing: border-box;
-    border: 0 solid var(--color-gray-300);
+    border: 0 solid var(--gray-300);
     padding: 0;
     margin: 0;
     background-color: transparent;
@@ -651,100 +651,6 @@ pre.chroma-chroma {
     @apply mr-2 rounded-full border-primary-400 border uppercase inline-block;
     font-size: 0.7em;
     padding: 0 0.6em;
-}
-
-/********************/
-/* BLOG POST EDITOR */
-/********************/
-
-.blog-post-editor {
-    @apply bg-background;
-    display: grid;
-    grid-template-areas: 'editor preview';
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 100%;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-}
-
-.blog-post-editor__edit {
-    @apply p-4 mx-auto w-full;
-    grid-area: editor;
-    display: grid;
-    grid-template-rows: auto minmax(0, 1fr);
-    height: 100vh;
-    max-height: 100vh;
-    max-width: 40rem;
-}
-
-.blog-post-editor__edit .CodeMirror {
-    width: 100%;
-    height: 100%;
-    max-height: 100%;
-}
-
-.blog-post-editor__edit .CodeMirror-focused {
-    @apply shadow-none;
-}
-
-.blog-post-editor__edit .CodeMirror-gutters,
-.blog-post-editor__edit .CodeMirror-gutter-wrapper {
-    @apply hidden;
-}
-
-.blog-post-editor__preview {
-    grid-area: preview;
-}
-
-.blog-post-editor__preview iframe {
-    @apply w-full h-full;
-}
-
-.CodeMirror {
-    height: 300px;
-    font-family: Monaco, monospace !important;
-    font-size: 0.8rem;
-    line-height: 1.2rem;
-}
-
-.CodeMirror-lines {
-    padding-bottom: 80vh !important;
-}
-
-.CodeMirror .cm-typo {
-    background: rgba(255, 137, 0, 0.1) !important;
-    border-bottom: 2px dotted #ff5f00;
-}
-
-body .CodeMirror .cm-variable-2 {
-    @apply text-gray-700;
-}
-
-body .CodeMirror .cm-quote {
-    @apply text-syntax3;
-}
-
-body .CodeMirror .cm-strikethrough {
-    @apply opacity-50;
-}
-
-body .CodeMirror .cm-link {
-    @apply text-syntax1;
-}
-
-body .CodeMirror .cm-url {
-    @apply text-syntax2;
-}
-
-body .CodeMirror .cm-header {
-    @apply text-syntax2;
-}
-
-body .CodeMirror .cm-comment {
-    @apply text-syntax4;
 }
 
 /***********/

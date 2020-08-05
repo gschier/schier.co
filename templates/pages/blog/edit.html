@@ -1,19 +1,5 @@
 {% extends 'layouts/base.html' %} {% block extraStyles %}
   <link rel="stylesheet" href="{{ staticUrl }}/index.editor.css" />
-  <style>
-    .hide {
-      display: none;
-    }
-
-    #editor-app textarea {
-      font-family: monospace;
-      font-size: 0.8rem;
-    }
-
-    #editor-app h1 {
-      font-size: 1.5rem;
-    }
-  </style>
 {% endblock %} {% block content %}
   <div class="content container" id="editor-app">
     <h1 class="hidden-mobile">
@@ -42,7 +28,7 @@
       </div>
 
       <!-- Blog Post Editor -->
-      <div id="editor-container" class="blog-post-editor hide">
+      <div id="editor-container" class="blog-post-editor editor--hide">
         <div class="blog-post-editor__edit">
           <div style="display:flex;align-items:center;">
             <h1 class="text-xl">{{ blogPost.Title | default:"New Post" }}</h1>

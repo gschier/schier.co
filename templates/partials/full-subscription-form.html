@@ -2,7 +2,7 @@
   <div class="subscription-form__inner">
     <button class="subscription-form__hide">&times;</button>
     <script>
-      (function () {
+      (function() {
         const el = document.querySelector('.subscription-form');
         const btn = document.querySelector('.subscription-form__hide');
 
@@ -10,23 +10,22 @@
           const time = parseInt(localStorage.schierSubHide);
 
           // Re-show every two weeks
-          if (!isNaN(time) && (Date.now() - time) < 1000 * 60 * 60 * 24 * 14) {
+          if (!isNaN(time) && (Date.now() - time) < 1209600000) {
             el.style.display = 'none';
           }
         }
 
-        h();
-
-        btn.addEventListener('click', function (e) {
+        btn.addEventListener('click', function(e) {
           e.preventDefault();
           localStorage.schierSubHide = Date.now();
           h();
         });
+
+        h();
       })();
     </script>
     <p>
-      <strong>Be the first to hear about posts</strong>, right in your inbox 💌
-    </p>
+      <strong>Be the first to hear about posts</strong>, right in your inbox 💌 </p>
 
     {% include 'partials/subscription-form.html' %}
   </div>

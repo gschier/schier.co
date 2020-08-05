@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "start": "rm -rf ./static/* && parcel watch --out-dir ./static --public-url /static/ index.*.js",
-    "build": "rm -rf ./static/* && parcel build --no-source-maps --out-dir ./static index.*.js"
+    "start": "rm -rf ./static/* && parcel watch --out-dir ./static --public-url /static/ index.*.js index.*.css",
+    "build": "rm -rf ./static/* && parcel build --no-source-maps --out-dir ./static index.*.js index.*.css"
   },
   "staticFiles": {
     "staticPath": [
