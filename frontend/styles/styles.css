@@ -28,12 +28,6 @@ html {
     font-family: Helvetica, Lato, 'Open Sans', sans-serif;
 }
 
-@media only screen and (max-width: 600px) {
-    html {
-        font-size: 16px;
-    }
-}
-
 body {
     @apply text-gray-700;
 }
@@ -49,7 +43,7 @@ strong {
 }
 
 .container {
-    @apply mx-auto px-4;
+    @apply mx-auto px-8;
     max-width: 40rem;
 }
 
@@ -67,10 +61,6 @@ a:hover,
     @apply underline;
 }
 
-.header-link {
-    color: inherit;
-}
-
 hr {
     @apply border-gray-200 border-0 border-b my-8;
 }
@@ -85,7 +75,7 @@ h3,
 h4,
 h5,
 h6 {
-    @apply font-semibold text-gray-700;
+    @apply font-semibold text-gray-700 relative;
 }
 
 h1 {
@@ -396,6 +386,26 @@ details summary:focus {
     @apply border-l-4 border-gray-300 p-3 bg-gray-100 italic text-gray-700 rounded-sm;
 }
 
+.content .header {
+    .h-link {
+        @apply absolute pl-8 pr-2 invisible;
+        right: 100%;
+        color: inherit;
+
+        svg {
+            @apply h-4 opacity-50;
+        }
+
+        &:hover svg {
+            @apply opacity-100;
+        }
+    }
+
+    &:hover .h-link {
+        @apply visible;
+    }
+}
+
 .blog-post hr {
     @apply border-gray-300 border-0 border-double border-b-4 my-8 mx-auto;
     width: 5em;
@@ -555,17 +565,6 @@ details summary:focus {
     width: 18rem;
 }
 
-@media only screen and (max-width: 600px) {
-    .home-hero {
-        @apply flex-wrap;
-    }
-
-    .home-hero__avatar {
-        @apply mx-auto w-auto;
-        max-width: 12rem;
-    }
-}
-
 /***************/
 /* CLAP BUTTON */
 /***************/
@@ -650,12 +649,6 @@ details summary:focus {
     @apply inline;
 }
 
-@media only screen and (max-width: 600px) {
-    .hidden-mobile {
-        @apply hidden;
-    }
-}
-
 /**************/
 /* ANIMATIONS */
 /**************/
@@ -711,5 +704,32 @@ details summary:focus {
     }
     100% {
         transform: rotate(180deg);
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    html {
+        font-size: 16px;
+    }
+
+    .container {
+        @apply px-4;
+    }
+
+    .hidden-mobile {
+        @apply hidden;
+    }
+
+    .h-link {
+        @apply hidden;
+    }
+
+    .home-hero {
+        @apply flex-wrap;
+    }
+
+    .home-hero__avatar {
+        @apply mx-auto w-auto;
+        max-width: 12rem;
     }
 }

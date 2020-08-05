@@ -132,75 +132,88 @@
     const clapBtn = container.querySelector('button');
     const localStorageKey = "vote-{{ blogPost.Slug }}";
 
-      function updateDisabledAttr() {
-        const count = JSON.parse(localStorage.getItem(localStorageKey)) || 0;
-        if (count >= 50) {
-          clapBtn.setAttribute('disabled', 'disabled');
-        }
+    function updateDisabledAttr() {
+      const count = JSON.parse(localStorage.getItem(localStorageKey)) || 0;
+      if (count >= 50) {
+        clapBtn.setAttribute('disabled', 'disabled');
       }
+    }
 
+    updateDisabledAttr();
+
+    // Remove sheers notifications so we can show them later
+    for (const el of msgs) {
+      msgContainer.removeChild(el);
+    }
+
+    clapBtn.addEventListener('click', async function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+
+      let count = parseInt(localStorage.getItem(localStorageKey)) || 0;
+      count = isNaN(count) ? 0 : count;
+
+      const resp = await fetch('/api/blog/vote', {
+        method: 'POST',
+        body: `slug={{ blogPost.Slug }}&count=${count}`,
+        headers: {
+          [document.body.getAttribute(
+            'data-csrf-token-header',
+          )]: document.body.getAttribute('data-csrf-token'),
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      });
+      const total = await resp.text();
+      localStorage.setItem(localStorageKey, JSON.stringify(count + 1));
       updateDisabledAttr();
 
-      // Remove sheers notifications so we can show them later
+      clapCount.innerHTML = total;
       for (const el of msgs) {
-        msgContainer.removeChild(el);
-      }
-
-      clapBtn.addEventListener('click', async function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-
-        let count = parseInt(localStorage.getItem(localStorageKey)) || 0;
-        count = isNaN(count) ? 0 : count;
-
-        const resp = await fetch('/api/blog/vote', {
-          method: 'POST',
-          body: `slug={{ blogPost.Slug }}&count=${count}`,
-          headers: {
-            [document.body.getAttribute(
-              'data-csrf-token-header',
-            )]: document.body.getAttribute('data-csrf-token'),
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-        });
-        const total = await resp.text();
-        localStorage.setItem(localStorageKey, JSON.stringify(count + 1));
-        updateDisabledAttr();
-
-        clapCount.innerHTML = total;
-        for (const el of msgs) {
-          if (count + 1 < parseInt(el.getAttribute('data-votes'))) {
-            continue;
-          }
-
-          // Append child if it's not already
-          if (!el.parentNode) {
-            msgContainer.prepend(el);
-          } else {
-            // Already there, so no need to do the rest
-            continue;
-          }
-
-          el.style.animation = 'fade-in 0.5s';
-
-          if (el.getAttribute('data-effect') === 'shake') {
-            container.style.animation = 'shake 0.5s';
-            container.style.animationIterationCount = 'infinite';
-          }
-
-          if (el.getAttribute('data-effect') === 'page-shake') {
-            document.body.style.animation = 'shake 0.6s';
-            document.body.style.animationIterationCount = 'infinite';
-            container.style.animation = '';
-          }
-
-          if (el.getAttribute('data-effect') === 'page-flip') {
-            document.body.style.animation = 'flip 0.3s';
-            document.body.style.animationFillMode = 'forwards';
-            container.style.animation = '';
-          }
+        if (count + 1 < parseInt(el.getAttribute('data-votes'))) {
+          continue;
         }
-      });
-    })();
+
+        // Append child if it's not already
+        if (!el.parentNode) {
+          msgContainer.prepend(el);
+        } else {
+          // Already there, so no need to do the rest
+          continue;
+        }
+
+        el.style.animation = 'fade-in 0.5s';
+
+        if (el.getAttribute('data-effect') === 'shake') {
+          container.style.animation = 'shake 0.5s';
+          container.style.animationIterationCount = 'infinite';
+        }
+
+        if (el.getAttribute('data-effect') === 'page-shake') {
+          document.body.style.animation = 'shake 0.6s';
+          document.body.style.animationIterationCount = 'infinite';
+          container.style.animation = '';
+        }
+
+        if (el.getAttribute('data-effect') === 'page-flip') {
+          document.body.style.animation = 'flip 0.3s';
+          document.body.style.animationFillMode = 'forwards';
+          container.style.animation = '';
+        }
+      }
+    });
+  })();
+  </script>
+
+  <script> {# Handle header linking #}
+  (function() {
+    document.querySelectorAll('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]').forEach(el => {
+      const a = document.createElement('a');
+      a.href = '#' + el.id;
+      a.classList.add('h-link');
+      a.innerHTML = `{{ 'images/icons/link.svg' | inlinestatic | safe }}`;
+      el.classList.add('header');
+      el.prepend(a);
+    });
+  })();
   </script>
 {% endblock %}
