@@ -3,6 +3,7 @@
 
 /* Components */
 @import "./card.css";
+@import "./content.css";
 @import "./footer.css";
 @import "./notice.css";
 @import "./subscription-form.css";
@@ -193,6 +194,34 @@ form label {
     @apply block text-gray-600 text-sm font-bold mb-2;
 }
 
+form .checkbox-buttons {
+    @apply flex select-none;
+
+    .checkbox-buttons__button {
+        @apply flex inline-block mr-2;
+
+        label {
+            @apply m-0 px-3 py-1 rounded bg-gray-200 text-xs cursor-pointer text-gray-600;
+
+            &:hover {
+                @apply bg-gray-200 text-gray-700;
+            }
+        }
+
+        input:checked + label {
+            @apply bg-btn text-gray-800;
+
+            &:hover {
+                @apply bg-btn-hover text-gray-900;
+            }
+        }
+
+        input {
+            @apply hidden;
+        }
+    }
+}
+
 #editor-container .CodeMirror, /* To prevent need for !important */
 form input,
 form select,
@@ -272,138 +301,6 @@ details summary:focus {
 
 .blog-post-preview h2 a:not(:hover) {
     color: inherit;
-}
-
-.content h1 {
-    @apply text-3xl;
-}
-
-.content h2 {
-    @apply text-2xl pt-2;
-}
-
-.content h3 {
-    @apply text-xl;
-}
-
-.content ul li {
-    @apply list-disc ml-6;
-}
-
-.content ol li {
-    @apply list-decimal ml-6;
-}
-
-.content dl {
-}
-
-.content dl dt {
-    @apply font-bold;
-}
-
-.content dl dt::after {
-    content: ':';
-}
-
-.content dl dd {
-}
-
-.content blockquote,
-.content canvas,
-.content details,
-.content form,
-.content table,
-.content summary,
-.content > div,
-.content > header,
-.content > dl,
-.content > h1,
-.content > h2,
-.content > h3,
-.content > h4,
-.content > h5,
-.content > h6,
-.content > hr,
-.content > img,
-.content > ol,
-.content > p,
-.content > pre,
-.content > ul {
-    @apply my-6;
-}
-
-.content canvas {
-    @apply block w-full rounded-sm my-8;
-}
-
-.content > p {
-    @apply leading-relaxed;
-}
-
-.content p > img {
-    @apply block mx-auto rounded-sm my-8;
-    max-height: 50vh;
-    max-width: 100%;
-}
-
-.content .footnotes {
-    @apply text-sm opacity-80 my-10 italic;
-}
-
-.content .footnotes li {
-    @apply ml-5;
-}
-
-.content .footnotes hr {
-    @apply hidden;
-}
-
-.content :not(pre) code {
-    @apply bg-gray-200 rounded px-1 border-2 border-gray-200 font-mono;
-
-    /* Relative size so it works in headings and stuff */
-    font-size: 0.8em;
-}
-
-.content table {
-    @apply w-full;
-}
-
-.content table th {
-    @apply text-left;
-}
-
-.content table th,
-.content table td {
-    @apply border border-gray-300 px-2 py-1;
-}
-
-.content table thead tr {
-    @apply bg-gray-200;
-}
-
-.content blockquote {
-    @apply border-l-4 border-gray-300 p-3 bg-gray-100 italic text-gray-700 rounded-sm;
-}
-
-.content .header {
-    .h-link {
-        @apply absolute pl-8 pr-2 invisible;
-        right: 100%;
-        color: inherit;
-
-        svg {
-            @apply h-4 opacity-50;
-        }
-
-        &:hover svg {
-            @apply opacity-100;
-        }
-    }
-
-    &:hover .h-link {
-        @apply visible;
-    }
 }
 
 .blog-post hr {

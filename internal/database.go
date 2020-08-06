@@ -6,6 +6,7 @@ import (
 	_ "github.com/lib/pq"
 	"math/rand"
 	"os"
+	"sort"
 	"time"
 
 	"github.com/gschier/schier.co/internal/db"
@@ -115,4 +116,48 @@ func recommendedBlogPosts(store *gen.Store, ignoreID *string, limit uint64) *gen
 		).
 		Limit(limit).
 		Sort(gen.OrderBy.BlogPost.Score.Desc)
+}
+
+type postTag struct {
+	Name  string
+	Count int
+}
+
+func allTags(store *gen.Store) []postTag {
+	blogPosts := store.BlogPosts.Filter(
+		gen.Where.BlogPost.Published.True(),
+		gen.Where.BlogPost.Unlisted.False(),
+	).Sort(
+		gen.OrderBy.BlogPost.CreatedAt.Desc,
+	).AllP()
+
+	tagsMap := make(map[string]int, 0)
+	for _, p := range blogPosts {
+		for _, newTag := range p.Tags {
+			if newTag == "" {
+				continue
+			}
+
+			if _, ok := tagsMap[newTag]; !ok {
+				tagsMap[newTag] = 0
+			}
+
+			tagsMap[newTag]++
+		}
+	}
+
+	tags := make([]postTag, 0)
+	for tag, count := range tagsMap {
+		tags = append(tags, postTag{Name: tag, Count: count})
+	}
+
+	// Sort tags by highest count
+	sort.Slice(tags, func(i, j int) bool {
+		if tags[i].Count == tags[j].Count {
+			return tags[i].Name > tags[j].Name
+		}
+		return tags[i].Count > tags[j].Count
+	})
+
+	return tags
 }

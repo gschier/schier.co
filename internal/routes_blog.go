@@ -13,7 +13,6 @@ import (
 	"net/http"
 	"net/url"
 	"os"
-	"sort"
 	"strconv"
 	"strings"
 	"time"
@@ -60,50 +59,10 @@ func BlogRoutes(router *mux.Router) {
 }
 
 func routeBlogPostTags(w http.ResponseWriter, r *http.Request) {
-	blogPosts := ctxDB(r).Store.BlogPosts.Filter(
-		gen.Where.BlogPost.Published.True(),
-		gen.Where.BlogPost.Unlisted.False(),
-	).Sort(
-		gen.OrderBy.BlogPost.CreatedAt.Desc,
-	).AllP()
-
-	tagsMap := make(map[string]int, 0)
-	for _, p := range blogPosts {
-		for _, newTag := range p.Tags {
-			if newTag == "" {
-				continue
-			}
-
-			if _, ok := tagsMap[newTag]; !ok {
-				tagsMap[newTag] = 0
-			}
-
-			tagsMap[newTag]++
-		}
-	}
-
-	type postTag struct {
-		Name  string
-		Count int
-	}
-
-	tags := make([]postTag, 0)
-	for tag, count := range tagsMap {
-		tags = append(tags, postTag{Name: tag, Count: count})
-	}
-
-	// Sort tags by highest count
-	sort.Slice(tags, func(i, j int) bool {
-		if tags[i].Count == tags[j].Count {
-			return tags[i].Name > tags[j].Name
-		}
-		return tags[i].Count > tags[j].Count
-	})
-
 	renderTemplate(w, r, pageTemplate("blog/tags.html"), &pongo2.Context{
 		"pageTitle":       "Post Tags",
 		"pageDescription": "Browse blog posts by tag category",
-		"tags":            tags,
+		"tags":            allTags(ctxDB(r).Store),
 	})
 }
 
@@ -229,7 +188,7 @@ func routeBlogPostSearch(w http.ResponseWriter, r *http.Request) {
 				gen.Where.BlogPost.Title.IContains(query),
 				gen.Where.BlogPost.Tags.Contains([]string{strings.ToLower(query)}),
 			),
-		).Sort(gen.OrderBy.BlogPost.Date.Desc).Limit(20).AllP()
+		).Sort(gen.OrderBy.BlogPost.Date.Desc).AllP()
 	}
 
 	renderTemplate(w, r, pageTemplate("blog/search.html"), &pongo2.Context{
@@ -241,9 +200,13 @@ func routeBlogPostSearch(w http.ResponseWriter, r *http.Request) {
 func routeBlogPostEditor(w http.ResponseWriter, r *http.Request) {
 	id := mux.Vars(r)["id"]
 
+	tags := allTags(ctxDB(r).Store)
+
 	// Slug won't exist if it's a new post
 	if id == "" {
-		renderTemplate(w, r, pageTemplate("blog/edit.html"), nil)
+		renderTemplate(w, r, pageTemplate("blog/edit.html"), &pongo2.Context{
+			"allTags": tags,
+		})
 		return
 	}
 
@@ -259,6 +222,7 @@ func routeBlogPostEditor(w http.ResponseWriter, r *http.Request) {
 		"pageTitle": blogPost.Title,
 		"pageImage": blogPost.Image,
 		"blogPost":  blogPost,
+		"allTags":   tags,
 	})
 }
 
@@ -269,9 +233,14 @@ func routeBlogPostCreateOrUpdate(w http.ResponseWriter, r *http.Request) {
 	slug := r.Form.Get("slug")
 	content := r.Form.Get("content")
 	image := r.Form.Get("image")
-	tags := StringToTags(r.Form.Get("tags"))
 	stage := StrToInt64(r.Form.Get("stage"), 0)
 	title := CapitalizeTitle(r.Form.Get("title"))
+
+	// There can be multiple tag entries, so we need to loop
+	tags := make([]string, len(r.Form["tags"]))
+	for i, tag := range r.Form["tags"] {
+		tags[i] = strings.ToLower(tag)
+	}
 
 	// BlackFriday doesn't like Windows line endings
 	content = strings.Replace(content, "\r\n", "\n", -1)

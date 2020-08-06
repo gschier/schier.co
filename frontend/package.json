@@ -23,7 +23,9 @@
     ]
   },
   "browserslist": [
-    "last 1 Chrome versions"
+    "last 1 chrome version",
+    "last 1 firefox version",
+    "last 1 safari version"
   ],
   "devDependencies": {
     "autoprefixer": "^9.8.6",

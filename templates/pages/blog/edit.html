@@ -2,18 +2,24 @@
   <link rel="stylesheet" href="{{ staticUrl }}/index.editor.css" />
 {% endblock %} {% block content %}
   <div class="content container" id="editor-app">
-    <h1 class="hidden-mobile">
-      {{ blogPost | yesno:'Edit,Create' }} Post
-      {% if blogPost and blogPost.Published %}(Published){% else %}(Draft){% endif %}
-    </h1>
     <form action="/forms/blog/upsert" method="post" id="edit-form">
       {{ csrfField | safe }} {% include 'partials/form-input.html' with type='hidden' name='id' value=blogPost.ID required=true %}
       {% include 'partials/form-input.html' with label='Title' type='text' name='title' value=blogPost.Title placeholder='My Blog Post' required=true autofocus=true %}
       <details>
         <summary>Other Fields</summary>
         {% include 'partials/form-input.html' with label='Slug' type=blogPost.Published|yesno:"hidden,text" name='slug' value=blogPost.Slug placeholder='my-blog-post' %}
-        {% include 'partials/form-input.html' with label='Image' type='url' name='image' value=blogPost.Image placeholder='https://assets.schier.dev/images/insomnia-growth.png' %}
-        {% include 'partials/form-input.html' with label='Tags' type='text' name='tags' value=blogPost.Tags|join:", " placeholder='Tag1, Tag2' %}
+        <div class="form-row">
+          <label>Tags</label>
+          <div class="form-row checkbox-buttons">
+            {% for tag in allTags %}
+              <div class="checkbox-buttons__button">
+                <input type="checkbox" value="{{ tag.Name }}" id="tag-{{ tag.Name }}" name="tags" {% if tag.Name in blogPost.Tags %}checked="checked"{% endif %}>
+                <label for="tag-{{ tag.Name }}">{{ tag.Name }}</label>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+        {% include 'partials/form-input.html' with label='Social Image' type='url' name='image' value=blogPost.Image placeholder='Image' %}
         {% include 'partials/form-input.html' with label='Stage' type=blogPost.Published|yesno:"hidden,number" name='stage' value=blogPost.Stage placeholder='0' %}
       </details>
 
@@ -46,12 +52,18 @@
 
       <div class="form-actions">
         {% if blogPost.ID %}
-          <a class="btn btn--gray" href="/blog/{{ blogPost.Slug }}">
+          <a class="btn btn--gray" href="/blog/{{ blogPost.Slug }}" target="_blank">
             Preview
           </a>
         {% endif %}
         <button class="btn">
-          {% if blogPost %}Save{% else %}Create{% endif %}
+          {% if not blogPost %}
+            Create
+          {% elif blogPost.Published %}
+            Save
+          {% elif not blogPost.Published %}
+            Save Draft
+          {% endif %}
         </button>
       </div>
     </form>

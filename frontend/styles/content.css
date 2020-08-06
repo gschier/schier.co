@@ -1,0 +1,130 @@
+.content {
+    h1 {
+        @apply text-3xl;
+    }
+
+    h2 {
+        @apply text-2xl pt-2;
+    }
+
+    h3 {
+        @apply text-xl;
+    }
+
+    ul li {
+        @apply list-disc ml-6;
+    }
+
+    ol li {
+        @apply list-decimal ml-6;
+    }
+
+    dl {
+    }
+
+    dl dt {
+        @apply font-bold;
+    }
+
+    dl dt::after {
+        content: ':';
+    }
+
+    blockquote,
+    canvas,
+    details,
+    form,
+    table,
+    summary,
+    & > div,
+    & > header,
+    & > dl,
+    & > h1,
+    & > h2,
+    & > h3,
+    & > h4,
+    & > h5,
+    & > h6,
+    & > hr,
+    & > img,
+    & > ol,
+    & > p,
+    & > pre,
+    & > ul {
+        @apply my-6;
+    }
+
+    canvas {
+        @apply block w-full rounded-sm my-8;
+    }
+
+    > p {
+        @apply leading-relaxed;
+    }
+
+    p > img {
+        @apply block mx-auto rounded-sm my-8;
+        max-height: 50vh;
+        max-width: 100%;
+    }
+
+    .footnotes {
+        @apply text-sm opacity-80 my-10 italic;
+    }
+
+    .footnotes li {
+        @apply ml-5;
+    }
+
+    .footnotes hr {
+        @apply hidden;
+    }
+
+    :not(pre) code {
+        @apply bg-gray-200 rounded px-1 border-2 border-gray-200 font-mono;
+
+        /* Relative size so it works in headings and stuff */
+        font-size: 0.8em;
+    }
+
+    table {
+        @apply w-full;
+    }
+
+    table th {
+        @apply text-left;
+    }
+
+    table th,
+    table td {
+        @apply border border-gray-300 px-2 py-1;
+    }
+
+    table thead tr {
+        @apply bg-gray-200;
+    }
+
+    blockquote {
+        @apply border-l-4 border-gray-300 p-3 bg-gray-100 italic text-gray-700 rounded-sm;
+    }
+
+    h1[id], h2[id], h3[id], h4[id], h5[id], h6[id] {
+        .h-link {
+            @apply absolute pl-8 pr-2 invisible;
+            right: 100%;
+            color: inherit;
+
+            svg {
+                @apply h-4 opacity-50;
+            }
+
+            &:hover svg {
+                @apply opacity-100;
+            }
+        }
+
+        &:hover .h-link {
+            @apply visible;
+        }
+    }
+}
