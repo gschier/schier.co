@@ -160,7 +160,7 @@ func allTags(store *gen.Store, n int) []postTag {
 	})
 
 	if len(tags) > n {
-		return tags[n:]
+		return tags[0:n]
 	}
 
 	return tags

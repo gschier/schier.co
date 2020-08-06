@@ -251,10 +251,6 @@ form input:invalid {
     @apply border-danger-500;
 }
 
-form select {
-    background: url('../images/icons/select.svg') no-repeat 99% 50%;
-}
-
 details summary {
     @apply cursor-pointer;
 }
