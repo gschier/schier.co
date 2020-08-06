@@ -123,7 +123,7 @@ type postTag struct {
 	Count int
 }
 
-func allTags(store *gen.Store) []postTag {
+func allTags(store *gen.Store, n int) []postTag {
 	blogPosts := store.BlogPosts.Filter(
 		gen.Where.BlogPost.Published.True(),
 		gen.Where.BlogPost.Unlisted.False(),
@@ -158,6 +158,10 @@ func allTags(store *gen.Store) []postTag {
 		}
 		return tags[i].Count > tags[j].Count
 	})
+
+	if len(tags) > n {
+		return tags[n:]
+	}
 
 	return tags
 }

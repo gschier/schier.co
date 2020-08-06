@@ -195,13 +195,13 @@ form label {
 }
 
 form .checkbox-buttons {
-    @apply flex select-none;
+    @apply flex select-none w-full flex-wrap;
 
     .checkbox-buttons__button {
-        @apply flex inline-block mr-2;
+        @apply flex inline-block mr-2 mb-1;
 
         label {
-            @apply m-0 px-3 py-1 rounded bg-gray-200 text-xs cursor-pointer text-gray-600;
+            @apply m-0 px-3 py-1 rounded bg-gray-200 text-xs cursor-pointer text-gray-600 whitespace-no-wrap;
 
             &:hover {
                 @apply bg-gray-200 text-gray-700;

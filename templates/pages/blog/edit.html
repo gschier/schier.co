@@ -17,6 +17,18 @@
                 <label for="tag-{{ tag.Name }}">{{ tag.Name }}</label>
               </div>
             {% endfor %}
+            {% for tag in allTags %}
+              <div class="checkbox-buttons__button">
+                <input type="checkbox" value="{{ tag.Name }}" id="tag-{{ tag.Name }}" name="tags" {% if tag.Name in blogPost.Tags %}checked="checked"{% endif %}>
+                <label for="tag-{{ tag.Name }}">{{ tag.Name }}</label>
+              </div>
+            {% endfor %}
+            {% for tag in allTags %}
+              <div class="checkbox-buttons__button">
+                <input type="checkbox" value="{{ tag.Name }}" id="tag-{{ tag.Name }}" name="tags" {% if tag.Name in blogPost.Tags %}checked="checked"{% endif %}>
+                <label for="tag-{{ tag.Name }}">{{ tag.Name }}</label>
+              </div>
+            {% endfor %}
           </div>
         </div>
         {% include 'partials/form-input.html' with label='Social Image' type='url' name='image' value=blogPost.Image placeholder='Image' %}

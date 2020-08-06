@@ -62,7 +62,7 @@ func routeBlogPostTags(w http.ResponseWriter, r *http.Request) {
 	renderTemplate(w, r, pageTemplate("blog/tags.html"), &pongo2.Context{
 		"pageTitle":       "Post Tags",
 		"pageDescription": "Browse blog posts by tag category",
-		"tags":            allTags(ctxDB(r).Store),
+		"tags":            allTags(ctxDB(r).Store, 12),
 	})
 }
 
@@ -200,7 +200,7 @@ func routeBlogPostSearch(w http.ResponseWriter, r *http.Request) {
 func routeBlogPostEditor(w http.ResponseWriter, r *http.Request) {
 	id := mux.Vars(r)["id"]
 
-	tags := allTags(ctxDB(r).Store)
+	tags := allTags(ctxDB(r).Store, 12)
 
 	// Slug won't exist if it's a new post
 	if id == "" {
