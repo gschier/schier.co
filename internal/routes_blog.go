@@ -62,7 +62,7 @@ func routeBlogPostTags(w http.ResponseWriter, r *http.Request) {
 	renderTemplate(w, r, pageTemplate("blog/tags.html"), &pongo2.Context{
 		"pageTitle":       "Post Tags",
 		"pageDescription": "Browse blog posts by tag category",
-		"tags":            allTags(ctxDB(r).Store, 12),
+		"tags":            allTags(ctxDB(r).Store, -1),
 	})
 }
 

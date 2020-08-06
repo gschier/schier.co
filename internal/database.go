@@ -159,7 +159,7 @@ func allTags(store *gen.Store, n int) []postTag {
 		return tags[i].Count > tags[j].Count
 	})
 
-	if len(tags) > n {
+	if n >= 0 && len(tags) > n {
 		return tags[0:n]
 	}
 
