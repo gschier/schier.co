@@ -209,10 +209,10 @@ form .checkbox-buttons {
         }
 
         input:checked + label {
-            @apply bg-btn text-gray-800;
+            @apply bg-btn text-btn;
 
             &:hover {
-                @apply bg-btn-hover text-gray-900;
+                @apply bg-btn-hover text-btn-hover;
             }
         }
 
