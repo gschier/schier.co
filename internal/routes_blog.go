@@ -27,7 +27,7 @@ func BlogRoutes(router *mux.Router) {
 
 	// Blog Static
 	router.HandleFunc("/blog/new", Admin(routeBlogPostEditor)).Methods(http.MethodGet)
-	router.HandleFunc("/blog/render", routeBlogPostPreview).Methods(http.MethodPost)
+	router.HandleFunc("/blog/render", routeBlogPostRenderPreview).Methods(http.MethodPost)
 	router.HandleFunc("/blog/drafts", Admin(renderBlogPostDrafts)).Methods(http.MethodGet)
 	router.HandleFunc("/blog", routeBlogPosts).Methods(http.MethodGet)
 	router.HandleFunc("/blog/page/{page:[0-9]+}", routeBlogPosts).Methods(http.MethodGet)
@@ -66,7 +66,7 @@ func routeBlogPostTags(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-func routeBlogPostPreview(w http.ResponseWriter, r *http.Request) {
+func routeBlogPostRenderPreview(w http.ResponseWriter, r *http.Request) {
 	_ = r.ParseMultipartForm(0)
 
 	content := r.Form.Get("content")
@@ -76,7 +76,12 @@ func routeBlogPostPreview(w http.ResponseWriter, r *http.Request) {
 	title := r.Form.Get("title")
 	partial := r.Form.Get("partial") == "true"
 	dateStr := r.Form.Get("date")
-	tags := StringToTags(r.Form.Get("tags"))
+
+	// There can be multiple tag entries, so we need to loop
+	tags := make([]string, len(r.Form["tags"]))
+	for i, tag := range r.Form["tags"] {
+		tags[i] = strings.ToLower(tag)
+	}
 
 	date := time.Now()
 	if dateStr != "" {
@@ -91,10 +96,11 @@ func routeBlogPostPreview(w http.ResponseWriter, r *http.Request) {
 	}
 
 	renderTemplate(w, r, template, &pongo2.Context{
-		"loggedIn":      false,
-		"pageTitle":     title,
-		"showWordCount": true,
-		"hideVoteEgg":   true,
+		"loggedIn":          false,
+		"pageTitle":         title,
+		"showWordCount":     true,
+		"hideVoteEgg":       true,
+		"isBlogPostPreview": true,
 		"blogPost": gen.BlogPost{
 			Published: true,
 			Slug:      slug,

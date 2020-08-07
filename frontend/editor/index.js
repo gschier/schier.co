@@ -83,6 +83,7 @@ function toggleExpand(e) {
       // Add each form input value to form data
       Array.from(document.querySelectorAll('#edit-form input, #edit-form textarea'))
         .filter(el => el.hasAttribute('name'))
+        .filter(el => el.type === 'checkbox' ? el.checked : true)
         .forEach(el => formData.append(el.getAttribute('name'), el.value));
 
       // Send the AJAX request to fetch the render HTML
