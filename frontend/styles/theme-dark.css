@@ -20,6 +20,7 @@
     --txt-info: var(--info-500);
     --txt-warning: var(--warning-500);
     --txt-danger: var(--danger-500);
+    --txt-selection: hsla(219, 17%, 35%, 0.99);
 
     /* Generic Colors */
     --gray-100: hsl(var(--hue), 19%, 13%);

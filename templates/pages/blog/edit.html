@@ -68,9 +68,7 @@
       </div>
     </form>
   </div>
-{% endblock %} {% block extraScripts %}
-  <script>
-    /** Editor-related Code **/
-    {{ "index.editor.js" | inlinestatic | safe }}
-  </script>
+{% endblock %}
+{% block extraScripts %}
+  <script src="{{ staticUrl }}/index.editor.js"></script>
 {% endblock %}

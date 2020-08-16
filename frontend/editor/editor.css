@@ -49,43 +49,51 @@
     font-family: Monaco, monospace !important;
     font-size: 0.8rem;
     line-height: 1.2rem;
-}
 
-.CodeMirror-lines {
-    padding-bottom: 80vh !important;
-}
+    &.CodeMirror-focused .CodeMirror-selected {
+        @apply bg-selection;
+    }
 
-.CodeMirror .cm-typo {
-    background: rgba(255, 137, 0, 0.1) !important;
-    border-bottom: 2px dotted #ff5f00;
-}
+    &:not(.CodeMirror-focused) .CodeMirror-selected {
+        @apply bg-selection;
+    }
 
-body .CodeMirror .cm-variable-2 {
-    @apply text-gray-700;
-}
+    .CodeMirror-lines {
+        padding-bottom: 80vh !important;
+    }
 
-body .CodeMirror .cm-quote {
-    @apply text-syntax3;
-}
+    .cm-typo {
+        background: rgba(255, 137, 0, 0.1) !important;
+        border-bottom: 2px dotted #ff5f00;
+    }
 
-body .CodeMirror .cm-strikethrough {
-    @apply opacity-50;
-}
+    .cm-variable-2 {
+        @apply text-gray-700;
+    }
 
-body .CodeMirror .cm-link {
-    @apply text-syntax1;
-}
+    .cm-quote {
+        @apply text-syntax3;
+    }
 
-body .CodeMirror .cm-url {
-    @apply text-syntax2;
-}
+    .cm-strikethrough {
+        @apply opacity-50;
+    }
 
-body .CodeMirror .cm-header {
-    @apply text-syntax2;
-}
+    .cm-link {
+        @apply text-syntax1;
+    }
 
-body .CodeMirror .cm-comment {
-    @apply text-syntax4;
+    .cm-url {
+        @apply text-syntax2;
+    }
+
+    .cm-header {
+        @apply text-syntax2;
+    }
+
+    .cm-comment {
+        @apply text-syntax4;
+    }
 }
 
 .editor--hide {

@@ -22,6 +22,10 @@
     font-weight: 400;
 }
 
+::selection {
+    @apply bg-selection;
+}
+
 html {
     @apply bg-background text-gray-700;
     font-size: 18px;
@@ -39,7 +43,7 @@ main {
     min-height: 30vh;
 }
 
-strong {
+strong, strong * {
     @apply font-bold;
 }
 
