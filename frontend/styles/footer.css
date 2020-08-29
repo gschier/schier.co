@@ -2,7 +2,7 @@
     @apply bg-gray-100 py-32 mt-24 border-t border-gray-200;
 
     .links {
-        @apply text-center pt-8 text-sm text-gray-600;
+        @apply text-center pt-8 text-sm text-gray-700;
 
         p {
             @apply mt-2 mb-0;

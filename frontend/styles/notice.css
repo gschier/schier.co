@@ -1,5 +1,5 @@
 .notice {
-    @apply border text-sm py-3 px-4 rounded border-dotted border-gray-400 bg-gray-100 text-gray-600 text-center;
+    @apply border text-sm py-3 px-4 rounded border-dotted border-gray-400 bg-gray-100 text-gray-700 text-center;
 
     a {
         color: inherit;

@@ -1,10 +1,6 @@
 .subscription-form {
     @apply border border border-primary-100 bg-primary-050 rounded mt-10 relative;
 
-    small {
-        @apply text-xs italic text-gray-600;
-    }
-
     p {
         @apply mb-4;
     }

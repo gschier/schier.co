@@ -29,7 +29,7 @@
     --gray-400: hsl(var(--hue), 42%, 84%);
     --gray-500: hsl(var(--hue), 32%, 69%);
     --gray-600: hsl(var(--hue), 25%, 52%);
-    --gray-700: hsl(var(--hue), 20%, 35%);
+    --gray-700: hsl(var(--hue), 20%, 42%);
     --gray-800: hsl(var(--hue), 18%, 23%);
     --gray-900: hsl(var(--hue), 12%, 14%);
 
