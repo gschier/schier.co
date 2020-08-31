@@ -4,7 +4,7 @@
       &times;
     </a>
     <script>
-      (function() {
+      (function () {
         const el = document.querySelector('.subscription-form');
         const btn = document.querySelector('.subscription-form__hide');
 
@@ -17,7 +17,7 @@
           }
         }
 
-        btn.addEventListener('click', function(e) {
+        btn.addEventListener('click', function (e) {
           e.preventDefault();
           localStorage.schierSubHide = Date.now();
           h();
@@ -26,8 +26,11 @@
         h();
       })();
     </script>
-    <p>
-      <strong>Be the first to hear about posts</strong>, right in your inbox 💌 </p>
+    <label for="subscription-email">
+      <p>
+        <strong>Be the first to hear about posts</strong>, right in your inbox 💌
+      </p>
+    </label>
 
     {% include 'partials/subscription-form.html' %}
   </div>

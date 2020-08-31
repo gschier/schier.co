@@ -5,7 +5,7 @@
     --bg: hsl(var(--hue), 10%, 100%);
 
     /* Button */
-    --bg-btn: var(--primary-400);
+    --bg-btn: var(--primary-500);
     --bg-btn-hover: var(--primary-500);
     --txt-btn: var(--gray-100);
     --txt-btn-hover: var(--gray-100);

@@ -2,7 +2,7 @@
   <div class="container">
     <ul>
       <li>
-        <a href="/" class="logo">
+        <a href="/" class="logo" title="home">
           {{ 'images/greg-rounded.svg' | inlinestatic | safe }}
         </a>
       </li>
@@ -17,26 +17,24 @@
       </li>
     </ul>
     <ul>
-      <li>
-        <a href="#" data-toggle-theme style="font-size:0">
-          <span title="Automatic theme" data-theme="auto">
-            {{ 'images/icons/adjust.svg' | inlinestatic | safe }}
-          </span>
-          <span title="Light theme" data-theme="light" style="display:none">
-            {{ 'images/icons/sun.svg' | inlinestatic | safe }}
-          </span>
-          <span title="Dark theme" data-theme="dark" style="display:none">
-            {{ 'images/icons/moon.svg' | inlinestatic | safe }}
-          </span>
+      <li data-toggle-theme style="font-size:0">
+        <a href="#" title="Automatic theme" data-theme="auto">
+          {{ 'images/icons/adjust.svg' | inlinestatic | safe }}
+        </a>
+        <a href="#" title="Light theme" data-theme="light" style="display:none">
+          {{ 'images/icons/sun.svg' | inlinestatic | safe }}
+        </a>
+        <a href="#" title="Dark theme" data-theme="dark" style="display:none">
+          {{ 'images/icons/moon.svg' | inlinestatic | safe }}
         </a>
       </li>
       <li class="hidden-mobile">
-        <a href="//twitter.com/GregorySchier" rel="noopener">
+        <a href="//twitter.com/GregorySchier" rel="noopener" title="Twitter">
           {{ 'images/icons/twitter.svg' | inlinestatic | safe }}
         </a>
       </li>
       <li class="hidden-mobile">
-        <a href="/blog/search">
+        <a href="/blog/search" title="search">
           {{ 'images/icons/search.svg' | inlinestatic | safe }}
         </a>
       </li>

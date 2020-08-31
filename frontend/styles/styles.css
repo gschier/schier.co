@@ -254,22 +254,22 @@ details summary:focus {
 
 .button-input {
     @apply flex;
-}
 
-.button-input label {
-    @apply hidden;
-}
+    label {
+        @apply invisible absolute;
+    }
 
-.button-input input {
-    @apply rounded-r-none border-r-0;
-}
+    input {
+        @apply rounded-r-none border-r-0;
+    }
 
-.button-input input:focus {
-    @apply border-r-0;
-}
+    input:focus {
+        @apply border-r-0;
+    }
 
-.button-input .btn {
-    @apply w-auto text-center text-xs rounded-l-none;
+    .btn {
+        @apply w-auto text-center text-xs rounded-l-none;
+    }
 }
 
 /********/
