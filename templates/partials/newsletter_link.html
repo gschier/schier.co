@@ -1,16 +1,18 @@
-<form class="inline-form" action="/forms/blog/send-newsletter" method="post">
-  {{ csrfField | safe }}
-  {% include 'partials/form-input.html' with type='hidden' name='slug' value=blogPost.Slug %}
-  {% include 'partials/form-input.html' with type='hidden' name='email' value=user.Email %}
-  <button class="btn btn--gray btn--sm" type="submit">
-    Notify Test
-  </button>
-</form>
+{% if blogPost.Published %}
+  <form class="inline-form" action="/forms/blog/send-newsletter" method="post">
+    {{ csrfField | safe }}
+    {% include 'partials/form-input.html' with type='hidden' name='slug' value=blogPost.Slug %}
+    {% include 'partials/form-input.html' with type='hidden' name='email' value=user.Email %}
+    <button class="btn btn--gray btn--sm" type="submit" {% if not canSendNewsletter %}disabled="disabled"{% endif %}>
+      Notify Test
+    </button>
+  </form>
 
-<form class="inline-form" action="/forms/blog/send-newsletter" method="post">
-  {{ csrfField | safe }}
-  {% include 'partials/form-input.html' with type='hidden' name='slug' value=blogPost.Slug %}
-  <button class="btn btn--gray btn--sm" type="submit">
-    Notify
-  </button>
-</form>
+  <form class="inline-form" action="/forms/blog/send-newsletter" method="post">
+    {{ csrfField | safe }}
+    {% include 'partials/form-input.html' with type='hidden' name='slug' value=blogPost.Slug %}
+    <button class="btn btn--gray btn--sm" type="submit" {% if not canSendNewsletter %}disabled="disabled"{% endif %}>
+      Notify
+    </button>
+  </form>
+{% endif %}

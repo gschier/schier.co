@@ -42,7 +42,7 @@ func SendNewsletter(slug, email string) (*gen.NewsletterSend, error) {
 		gen.Where.NewsletterSend.Key.Eq(newsletterKey),
 	).One()
 	if newsletterSend != nil {
-		return nil, errors.New("Newsletter already sent for post " + newsletterSend.ID + " " + blogPost.Slug)
+		return nil, errors.New("Newsletter already sent (" + newsletterSend.ID + ") for post " + blogPost.Slug)
 	}
 
 	sent := 0

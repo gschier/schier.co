@@ -379,6 +379,7 @@ func renderBlogPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	send, _ := ctxDB(r).Store.NewsletterSends.Filter(gen.Where.NewsletterSend.Key.Eq(post.ID)).One()
 	recommendedBlogPosts := recommendedBlogPosts(ctxDB(r).Store, &post.ID, 7).AllP()
 
 	// Render template
@@ -389,6 +390,7 @@ func renderBlogPost(w http.ResponseWriter, r *http.Request) {
 		"pagePublishedTime":    post.Date,
 		"pageModifiedTime":     post.UpdatedAt,
 		"blogPost":             post,
+		"canSendNewsletter":    send == nil && time.Now().Sub(post.Date) < time.Hour*24,
 		"recommendedBlogPosts": recommendedBlogPosts,
 	})
 
