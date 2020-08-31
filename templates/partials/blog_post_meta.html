@@ -26,4 +26,7 @@
   {% if not blogPost.Published %}
     &bull; Draft
   {% endif %}
+  {% if loggedIn and newsletterSend %}
+    &bull; {{ newsletterSend.Recipients }} Notified
+  {% endif %}
 </div>

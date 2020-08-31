@@ -390,6 +390,7 @@ func renderBlogPost(w http.ResponseWriter, r *http.Request) {
 		"pagePublishedTime":    post.Date,
 		"pageModifiedTime":     post.UpdatedAt,
 		"blogPost":             post,
+		"newsletterSend":       send,
 		"canSendNewsletter":    send == nil && time.Now().Sub(post.Date) < time.Hour*24,
 		"recommendedBlogPosts": recommendedBlogPosts,
 	})

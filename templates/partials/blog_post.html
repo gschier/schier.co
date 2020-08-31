@@ -12,7 +12,7 @@
       {% include 'partials/publish_link.html' %}
       {% include 'partials/unlist_link.html' %}
       {% include 'partials/delete_link.html' %}
-      {% include 'partials/newsletter_link.html' with enabled=canSendNewsletter %}
+      {% include 'partials/newsletter_link.html' %}
     </div>
   {% endif %}
 
@@ -86,16 +86,36 @@
       <div class="notice">
         Thanks, glad you enjoyed it! Care to share?
         <div class="blog-post__btns">
-          <a data-href="/blog/share/{{ blogPost.Slug }}/hn" target="_blank" rel="nofollow" class="btn btn--xs svg-icon btn--hn">
+          <a
+            data-href="/blog/share/{{ blogPost.Slug }}/hn"
+            target="_blank"
+            rel="nofollow"
+            class="btn btn--xs svg-icon btn--hn"
+          >
             {{ 'images/icons/hn.svg' | inlinestatic | safe }} Hacker News
           </a>
-          <a data-href="/blog/share/{{ blogPost.Slug }}/twitter" target="_blank" rel="nofollow" class="btn btn--xs svg-icon btn--twitter">
+          <a
+            data-href="/blog/share/{{ blogPost.Slug }}/twitter"
+            target="_blank"
+            rel="nofollow"
+            class="btn btn--xs svg-icon btn--twitter"
+          >
             {{ 'images/icons/twitter.svg' | inlinestatic | safe }} Twitter
           </a>
-          <a data-href="/blog/share/{{ blogPost.Slug }}/reddit" target="_blank" rel="nofollow" class="btn btn--xs svg-icon btn--reddit">
+          <a
+            data-href="/blog/share/{{ blogPost.Slug }}/reddit"
+            target="_blank"
+            rel="nofollow"
+            class="btn btn--xs svg-icon btn--reddit"
+          >
             {{ 'images/icons/reddit.svg' | inlinestatic | safe }} Reddit
           </a>
-          <a data-href="/blog/share/{{ blogPost.Slug }}/email" target="_blank" rel="nofollow" class="btn btn--xs svg-icon btn--email">
+          <a
+            data-href="/blog/share/{{ blogPost.Slug }}/email"
+            target="_blank"
+            rel="nofollow"
+            class="btn btn--xs svg-icon btn--email"
+          >
             {{ 'images/icons/email.svg' | inlinestatic | safe }} Email
           </a>
           <script>
@@ -110,7 +130,7 @@
   </div>
 {% endif %}
 
-<hr class="hr--spaced" />
+<hr class="hr--spaced"/>
 <div>
   <div class="row-spaced">
     <h2 class="row-spaced">More Posts ✍🏻</h2>
@@ -123,9 +143,11 @@
 
 {% block extraScripts %}
   <script> {# Script for voting #}
-  (function() {
+  (function () {
     const msgContainer = document.body.querySelector('.vote-messages');
-    if (!msgContainer) return;
+    if (!msgContainer) {
+      return;
+    }
 
     const msgs = msgContainer.querySelectorAll('[data-votes]');
     const container = document.body.querySelector('.clap-button');
@@ -147,7 +169,7 @@
       msgContainer.removeChild(el);
     }
 
-    clapBtn.addEventListener('click', async function(e) {
+    clapBtn.addEventListener('click', async function (e) {
       e.preventDefault();
       e.stopPropagation();
 
@@ -206,7 +228,7 @@
   </script>
 
   <script> {# Handle header linking #}
-  (function() {
+  (function () {
     document.querySelectorAll('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]').forEach(el => {
       const a = document.createElement('a');
       a.href = '#' + el.id;
