@@ -68,6 +68,14 @@
         max-width: 100%;
     }
 
+    a {
+        @apply border-primary-300 border-b border-dashed;
+
+        &:hover {
+            @apply border-b border-solid border-primary-500 no-underline;
+        }
+    }
+
     .footnotes {
         @apply text-sm opacity-80 my-10 italic;
     }

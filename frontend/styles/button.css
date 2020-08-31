@@ -1,0 +1,78 @@
+.btn {
+    @apply bg-btn text-btn font-semibold py-2 px-4 text-sm rounded w-auto inline-block cursor-pointer;
+    @apply border-0 !important;
+}
+
+.btn svg {
+    @apply h-4 w-auto;
+}
+
+.btn path {
+    @apply fill-current;
+}
+
+.btn:hover:not(:disabled) {
+    @apply bg-btn-hover text-btn-hover no-underline;
+}
+
+.btn.btn--faint {
+    @apply bg-gray-200 text-gray-400 ml-auto py-1 px-3 text-lg;
+}
+
+.btn.btn--faint:hover:not(:disabled) {
+    @apply bg-gray-300 text-gray-500;
+}
+
+.btn.btn--gray {
+    @apply bg-gray-200 text-gray-700;
+}
+
+.btn.btn--gray:hover:not(:disabled) {
+    @apply bg-gray-300 text-gray-800;
+}
+
+.btn.btn--twitter,
+.btn.btn--hn,
+.btn.btn--reddit,
+.btn.btn--email {
+    text-shadow: 0 0 0.2em rgba(0, 0, 0, 0.2);
+    color: #fff;
+}
+
+.btn.btn--twitter:hover,
+.btn.btn--hn:hover,
+.btn.btn--reddit:hover,
+.btn.btn--email:hover {
+    box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.1);
+    color: #fff !important;
+}
+
+.btn.btn--twitter {
+    background-color: #55acee !important;
+}
+
+.btn.btn--hn {
+    background-color: #ff6600 !important;
+}
+
+.btn.btn--reddit {
+    background-color: #ff5700 !important;
+}
+
+.btn.btn--email {
+    background-color: #555 !important;
+}
+
+.btn.btn--sm {
+    @apply py-1 px-3 text-xs rounded-sm;
+}
+
+.btn.btn--xs {
+    @apply px-3 text-xs rounded-sm font-normal;
+    padding-top: 0.1em;
+    padding-bottom: 0.1em;
+}
+
+.btn:disabled {
+    @apply opacity-50 cursor-default;
+}

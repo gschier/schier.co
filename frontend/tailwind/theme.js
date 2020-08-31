@@ -6,6 +6,7 @@ module.exports = {
       'hover': 'var(--bg-btn-hover)',
     },
     selection: 'var(--txt-selection)',
+    transparent: 'transparent',
     primary: {
       '050': 'var(--primary-050)',
       '100': 'var(--primary-100)',

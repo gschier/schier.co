@@ -1,0 +1,41 @@
+.top-nav {
+    @apply mb-10 text-sm border-b border-gray-200;
+}
+
+.top-nav .container {
+    @apply flex flex-row items-center;
+    max-width: 70rem;
+}
+
+.top-nav ul {
+    @apply flex flex-row items-center list-none;
+}
+
+.top-nav ul:first-child {
+    @apply mr-auto;
+}
+
+.top-nav a {
+    @apply text-gray-700 h-full block;
+}
+
+.top-nav a:hover {
+    @apply text-gray-900;
+}
+
+.top-nav a.logo svg {
+    @apply h-8 w-8 overflow-visible my-3;
+}
+
+.top-nav a svg {
+    @apply h-4 w-4 fill-current float-left;
+}
+
+.top-nav li {
+    @apply ml-6;
+}
+
+.top-nav li:first-child {
+    @apply ml-0 mr-auto;
+}
+

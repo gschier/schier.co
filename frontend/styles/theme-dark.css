@@ -11,7 +11,7 @@
     --txt-btn-hover: var(--gray-900);
 
     /* Text */
-    --txt-link: hsl(var(--hue), 85%, 65%);
+    --txt-link: hsl(var(--hue), 100%, 68%);
     --txt-syntax-1: hsl(258, 100%, 76%);
     --txt-syntax-2: hsl(204, 100%, 67%);
     --txt-syntax-3: hsl(298, 65%, 70%);
