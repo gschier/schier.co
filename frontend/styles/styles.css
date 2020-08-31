@@ -160,7 +160,7 @@ form textarea {
 .CodeMirror-placeholder,
 textarea::placeholder,
 input::placeholder {
-    @apply text-gray-400;
+    @apply text-gray-500;
 }
 
 .CodeMirror-focused,
@@ -201,11 +201,16 @@ details summary:focus {
 
 .blog-post-continue {
     @apply flex flex-wrap;
+
+    & > a:last-child {
+        @apply ml-auto text-sm;
+
+        &:not(:hover) {
+            @apply border-transparent;
+        }
+    }
 }
 
-.blog-post-continue > a:last-child {
-    @apply ml-auto text-sm;
-}
 
 .blog-post-preview img {
     display: none;
@@ -278,16 +283,21 @@ details summary:focus {
 
 .all-tags {
     @apply flex flex-wrap justify-between;
-}
 
-.all-tags .tag {
-    @apply mt-2;
+    .tag {
+        @apply mt-2
+    }
 }
 
 .tag {
-    @apply mr-2 rounded-full border-primary-400 border uppercase inline-block;
+    @apply mt-2 mr-2 rounded-full border-primary-400 border border-solid uppercase inline-block;
+    @apply border-solid !important;
     font-size: 0.7em;
     padding: 0 0.6em;
+
+    &:hover {
+        @apply bg-primary-050;
+    }
 }
 
 /***********/
