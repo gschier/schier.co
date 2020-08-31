@@ -30,6 +30,10 @@ func SendNewsletter(slug, email string) (*gen.NewsletterSend, error) {
 		return nil, errors.New("no blog post found for slug \"" + slug + "\"")
 	}
 
+	if time.Now().Sub(blogPost.Date) > time.Hour*24 {
+		return nil, errors.New("blog post too old")
+	}
+
 	if !blogPost.Published {
 		return nil, errors.New("blog post not published")
 	}
