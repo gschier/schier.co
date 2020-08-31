@@ -2,20 +2,17 @@ package main
 
 import (
 	"context"
-	"errors"
-	"fmt"
-	"gopkg.in/alecthomas/kingpin.v2"
-	"log"
-	"os"
-	"time"
-
 	"github.com/gschier/schier.co/internal"
-	"github.com/gschier/schier.co/internal/db"
 	"github.com/gschier/schier.co/internal/migrate"
 	_ "github.com/gschier/schier.co/migrations"
+	"github.com/spf13/cobra"
+	"log"
+	"os"
 )
 
-var Cmd = kingpin.New("manage", "")
+var rootCmd = &cobra.Command{
+	Use: "manage",
+}
 
 func main() {
 	ctx := context.Background()
@@ -23,98 +20,56 @@ func main() {
 	initMigrate(ctx)
 	initSendNewsletter(ctx)
 
-	_, err := Cmd.Parse(os.Args[1:])
+	err := rootCmd.Execute()
 	if err != nil {
-		panic(err)
+		log.Println(err)
+		os.Exit(1)
 	}
 }
 
 func initMigrate(ctx context.Context) {
-	cmd := Cmd.Command("migrate", "Run migration commands")
-	yesAll := cmd.Flag("yes", "Confirm all things").Bool()
+	migrateCmd := &cobra.Command{
+		Use:   "migrate",
+		Short: "Run database migrations",
+	}
 
-	cmdForward := cmd.Command("forward", "Apply all pending migrations")
-	cmdForward.Action(func(x *kingpin.ParseContext) error {
-		migrate.ForwardAll(ctx, internal.NewStorage().Store.DB, *yesAll)
-		return nil
-	})
+	yesAll := migrateCmd.PersistentFlags().Bool("yes", false, "Confirm all things")
 
-	cmdBackward := cmd.Command("backward", "Revert last migration")
-	cmdBackward.Action(func(x *kingpin.ParseContext) error {
-		migrate.BackwardOne(ctx, internal.NewStorage().Store.DB, *yesAll)
-		return nil
-	})
+	forwardCmd := &cobra.Command{
+		Use:   "forward",
+		Short: "Apply all pending migrations",
+		Run: func(cmd *cobra.Command, args []string) {
+			migrate.ForwardAll(ctx, internal.NewStorage().Store.DB, *yesAll)
+		},
+	}
+
+	backwardCmd := &cobra.Command{
+		Use:   "backward",
+		Short: "Revert last migration",
+		Run: func(cmd *cobra.Command, args []string) {
+			migrate.BackwardOne(ctx, internal.NewStorage().Store.DB, *yesAll)
+		},
+	}
+
+	migrateCmd.AddCommand(forwardCmd, backwardCmd)
+	rootCmd.AddCommand(migrateCmd)
 }
 
 func initSendNewsletter(ctx context.Context) {
-	cmd := Cmd.Command("newsletter", "Send blog post update")
-	slug := *cmd.Arg("slug", "Blog post slug").Required().Required().String()
-	email := cmd.Arg("email", "Specify an email to send to").String()
-
-	cmd.Action(func(x *kingpin.ParseContext) error {
-		subscribers := make([]gen.NewsletterSubscriber, 0)
-		if email != nil {
-			var s *gen.NewsletterSubscriber
-			s, err := internal.NewStorage().Store.NewsletterSubscribers.Filter(
-				gen.Where.NewsletterSubscriber.Email.Eq(*email),
-			).One()
-			if err != nil {
-				return errors.New("failed to get subscriber by email")
+	newsletterCmd := &cobra.Command{
+		Use:  "newsletter",
+		Args: cobra.MinimumNArgs(1),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			email := ""
+			slug := args[0]
+			if len(args) > 1 {
+				email = args[1]
 			}
-			subscribers = append(subscribers, *s)
-		} else {
-			var err error
-			subscribers, err = internal.NewStorage().Store.NewsletterSubscribers.All()
-			if err != nil {
-				return err
-			}
-		}
 
-		blogPost, err := internal.NewStorage().Store.BlogPosts.Filter(gen.Where.BlogPost.Slug.Eq(slug)).One()
-		if err != nil {
+			_, err := internal.SendNewsletter(slug, email)
 			return err
-		}
-		if !blogPost.Published {
-			return errors.New("blog post not published")
-		}
+		},
+	}
 
-		newsletterKey := blogPost.ID
-		if email != nil {
-			newsletterKey = fmt.Sprintf("TEST:%s:%d:%s", *email, time.Now().Unix(), newsletterKey)
-		}
-		newsletterSend, err := internal.NewStorage().Store.NewsletterSends.Filter(gen.Where.NewsletterSend.Key.Eq(newsletterKey)).One()
-		if newsletterSend != nil {
-			log.Println("Newsletter already sent for post", newsletterSend.ID, blogPost.Slug)
-			return nil
-		}
-
-		sent := 0
-		for _, sub := range subscribers {
-			if sub.Unsubscribed {
-				log.Println("Skip unsubscribed email", sub.Email)
-				continue
-			}
-
-			err := internal.SendNewPostTemplate(blogPost, &sub)
-			if err != nil {
-				log.Panicln("failed to send email", err.Error())
-			}
-
-			log.Println("Sent email to", sub.Email)
-			sent++
-		}
-
-		_, err = internal.NewStorage().Store.NewsletterSends.Insert(
-			gen.Set.NewsletterSend.Key(newsletterKey),
-			gen.Set.NewsletterSend.Recipients(int64(len(subscribers))),
-			gen.Set.NewsletterSend.Description(fmt.Sprintf("Blog Post: %s", blogPost.Title)),
-		)
-		if err != nil {
-			return err
-		}
-
-		log.Printf("Sent newsletter to %d recipients\n", sent)
-
-		return nil
-	})
+	rootCmd.AddCommand(newsletterCmd)
 }

@@ -52,6 +52,7 @@ func BlogRoutes(router *mux.Router) {
 	router.HandleFunc("/forms/blog/publish", Admin(routeBlogPostPublish)).Methods(http.MethodPost)
 	router.HandleFunc("/forms/blog/delete", Admin(routeBlogPostDelete)).Methods(http.MethodPost)
 	router.HandleFunc("/forms/blog/unlist", Admin(routeBlogPostUnlist)).Methods(http.MethodPost)
+	router.HandleFunc("/forms/blog/send-newsletter", Admin(routeBlogPostSendNewsletter)).Methods(http.MethodPost)
 
 	// API
 	router.HandleFunc("/api/blog/assets", Admin(routeUploadAsset)).Methods(http.MethodPut)
@@ -173,6 +174,23 @@ func routeBlogPostPublish(w http.ResponseWriter, r *http.Request) {
 	}
 
 	http.Redirect(w, r, "/blog/"+post.Slug, http.StatusSeeOther)
+}
+
+func routeBlogPostSendNewsletter(w http.ResponseWriter, r *http.Request) {
+	_ = r.ParseForm()
+
+	slug := r.Form.Get("slug")
+	email := r.Form.Get("email")
+
+	send, err := SendNewsletter(slug, email)
+
+	if err != nil {
+		http.Error(w, "Newsletter send failed\n\n"+err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	j, _ := json.MarshalIndent(send, "", "  ")
+	w.Write([]byte("Newsletter sent succeeded\n\n" + string(j)))
 }
 
 func routeBlogPostSearch(w http.ResponseWriter, r *http.Request) {

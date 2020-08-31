@@ -22,13 +22,14 @@ require (
 	github.com/pkg/errors v0.8.1 // indirect
 	github.com/russross/blackfriday/v2 v2.0.1
 	github.com/smartystreets/goconvey v1.6.4 // indirect
+	github.com/spf13/cobra v1.0.0
+	github.com/spf13/cobra/cobra v0.0.0-20200826151851-02a0d2fbc9e6 // indirect
 	github.com/stretchr/testify v1.4.0
 	github.com/writeas/go-strip-markdown v2.0.1+incompatible
 	golang.org/x/crypto v0.0.0-20191111213947-16651526fdb4
-	golang.org/x/net v0.0.0-20190603091049-60506f45cf65 // indirect
 	golang.org/x/sys v0.0.0-20191224085550-c709ea063b76 // indirect
 	golang.org/x/text v0.3.2 // indirect
-	gopkg.in/alecthomas/kingpin.v2 v2.2.6
+	gopkg.in/alecthomas/kingpin.v2 v2.2.6 // indirect
 	gopkg.in/ini.v1 v1.56.0 // indirect
 )
 

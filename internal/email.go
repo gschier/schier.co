@@ -38,7 +38,7 @@ func SendSubscriberTemplate(sub *gen.NewsletterSubscriber) error {
 
 func SendTemplate(id int, sub *gen.NewsletterSubscriber, variables map[string]interface{}) error {
 	if os.Getenv("MAILJET_PRV_KEY") == "" {
-		log.Println("Sent no-op email", sub)
+		log.Println("Sent no-op email to", sub.ID, sub.Email)
 		return nil
 	}
 
