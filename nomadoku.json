@@ -2,6 +2,6 @@
   "name": "schierco",
   "host": "schier.co",
   "vault": "schier.co",
-  "image": "registry.digitalocean.com/schierdev/schier.co",
+  "image": "docker.pkg.github.com/gschier/schier.co/schierco",
   "scale": 3
 }
