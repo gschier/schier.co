@@ -18,3 +18,15 @@ jobs:
           registry: registry.digitalocean.com
           tags: latest
           tag_with_sha: true
+  DeployGitHub:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: docker/build-push-action@v1
+        with:
+          username: ${{ github.actor }}
+          password: ${{ secrets.GH_REGISTRY_TOKEN }}
+          repository: ${{ github.repository_owner }}/schierco
+          registry: ghcr.io
+          tags: latest
+          tag_with_sha: true
