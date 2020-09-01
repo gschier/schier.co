@@ -27,4 +27,4 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
           repository: gschier/schier.co/schierco
           registry: docker.pkg.github.com
-          tag_with_ref: true
+          tag_with_sha: true
