@@ -2,7 +2,7 @@
   "name": "schierco",
   "host": "schier.co",
   "vault": "schier.co",
-  "image": "ghcr.io/gschier/schierco",
+  "image": "registry.digitalocean.com/schierdev/schierco",
   "scale": 3,
   "tagFormat": "short-sha"
 }
