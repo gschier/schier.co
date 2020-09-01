@@ -17,3 +17,14 @@ jobs:
           repository: schierdev/schier.co
           registry: registry.digitalocean.com
           tags: ${{ github.sha }},latest
+  DeployGitHub:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: docker/build-push-action@v1
+        with:
+          username: ${{ secrets.GH_REGISTRY_TOKEN }}
+          password: ${{ secrets.GH_REGISTRY_TOKEN }}
+          repository: gschier/schier.co
+          registry: ghcr.io
+          tags: ${{ github.sha }},latest
