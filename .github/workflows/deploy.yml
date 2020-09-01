@@ -25,6 +25,6 @@ jobs:
         with:
           username: ${{ secrets.GH_REGISTRY_TOKEN }}
           password: ${{ secrets.GH_REGISTRY_TOKEN }}
-          repository: gschier/schier.co
+          repository: gschier/schier.co/apps
           registry: ghcr.io
           tags: ${{ github.sha }},latest
