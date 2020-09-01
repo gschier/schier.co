@@ -23,8 +23,8 @@ jobs:
       - uses: actions/checkout@v1
       - uses: docker/build-push-action@v1
         with:
-          username: ${{ secrets.GH_REGISTRY_TOKEN }}
-          password: ${{ secrets.GH_REGISTRY_TOKEN }}
-          repository: gschier/schier.co/app
-          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+          repository: gschier/schier.co/schierco
+          registry: docker.pkg.github.com
           tags: ${{ github.sha }},latest
