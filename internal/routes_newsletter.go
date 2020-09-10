@@ -78,6 +78,10 @@ func routeSubscribe(w http.ResponseWriter, r *http.Request) {
 			gen.Set.NewsletterSubscriber.Email(email),
 			gen.Set.NewsletterSubscriber.Name(name),
 		))
+	} else {
+		// Re-subscribe if already a subscriber
+		subs[0].Unsubscribed = false
+		ctxDB(r).Store.NewsletterSubscribers.UpdateP(&subs[0])
 	}
 
 	// Send the confirmation email
