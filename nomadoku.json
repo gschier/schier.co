@@ -3,7 +3,7 @@
   "host": "schier.co",
   "vault": "schier.co",
   "image": "ghcr.io/gschier/schierco",
-  "scale": 2,
+  "scale": 3,
   "tagFormat": "short-sha",
   "auth": false
 }
