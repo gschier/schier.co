@@ -1,9 +1,0 @@
-{
-  "name": "schierco",
-  "host": "schier.co",
-  "vault": "schier.co",
-  "image": "ghcr.io/gschier/schierco",
-  "scale": 3,
-  "tagFormat": "short-sha",
-  "auth": false
-}
