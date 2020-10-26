@@ -41,7 +41,7 @@ func main() {
 		port = "8258"
 	}
 
-	fmt.Println("[schier.co] \033[32;1mStarted server on " + port + "\033[0m")
+	fmt.Println("[schier.co] \033[32;1mStarted server on http://localhost:" + port + "\033[0m")
 	log.Fatal(http.ListenAndServe(":"+port, handler))
 }
 

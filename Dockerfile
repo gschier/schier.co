@@ -1,28 +1,21 @@
 # ~~~~~~~~~~~~~~ #
-# Frontend Build #
-# ~~~~~~~~~~~~~~ #
-
-FROM node:12-alpine as frontend
+# Frontend Build
+FROM node:12-alpine AS frontend
 ADD . ./app
 WORKDIR /app/frontend
 RUN npm install && npm run build
 
 # ~~~~~~~~~~~~~ #
-# Backend Build #
-# ~~~~~~~~~~~~~ #
-
-FROM golang:1.14-alpine as backend
-RUN apk add --no-cache git && go get github.com/markbates/pkger/cmd/pkger
-ADD . /app
+# Backend Build
+FROM golang:1.14-alpine AS backend
 WORKDIR /app
+ADD . .
+RUN apk add --no-cache git && go get github.com/markbates/pkger/cmd/pkger
 COPY --from=frontend /app/frontend/static ./frontend/static
-RUN pkger list  && pkger  && go install ./...
+RUN pkger list && pkger  && go install ./...
 
 # ~~~~~~~~~~~~~~~~ #
-# Production Image #
-# ~~~~~~~~~~~~~~~~ #
-
+# Production Image
 FROM alpine:3.11
 COPY --from=backend /go/bin/web ./web
-COPY --from=backend /go/bin/manage ./manage
 CMD ["./web"]
