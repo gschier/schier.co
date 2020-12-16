@@ -2,13 +2,13 @@
 
 This is the source code for my personal website [schier.co](https://schier.co).
 
-## Requirements 👇🏻
+## Requirements
 
 - [wyp](https://github.com/gschier/will-you-please) for running tasks
 - [Docker](https://www.docker.com) for running the server
 - [NodeJS](https://nodejs.org/en/) for running the frontend
 
-## Development 👨🏼‍💻
+## Development
 
 ```bash
 # Migrate/init database
