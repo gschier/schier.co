@@ -52,5 +52,5 @@ jobs:
             | sed "s|__MIGRATE_ON_START__|${{ secrets.MIGRATE_ON_START }}|g" \
             | sed "s|__STATIC_URL__|${{ secrets.STATIC_URL }}|g" \
             | cat > job.hcl
-          scp job.hcl root@ssh.schier.dev:/tmp/job.hcl
-          ssh root@ssh.schier.dev nomad job run -address="http://10.120.16.2:4646" -token="${{ secrets.NOMAD_TOKEN }}" /tmp/job.hcl
+          scp job.hcl root@ssh.schier.dev:/tmp/job.schierco.hcl
+          ssh root@ssh.schier.dev nomad job run -address="http://10.120.16.2:4646" -token="${{ secrets.NOMAD_TOKEN }}" /tmp/job.schierco.hcl && rm /tmp/job.schierco.hcl
