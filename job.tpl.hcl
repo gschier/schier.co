@@ -19,12 +19,6 @@ job "app.schierco" {
     task "web" {
       driver = "docker"
 
-      vault {
-        policies = [
-          "schier.co",
-        ]
-      }
-
       config {
         image = "ghcr.io/gschier/schier.co:__DOCKER_TAG__"
 
@@ -42,21 +36,23 @@ job "app.schierco" {
         }
       }
 
-      template {
-        env         = true
-        destination = "${NOMAD_SECRETS_DIR}/schierco.env"
-        change_mode = "restart"
-        data        = <<EOH
-{{ with secret "schier.co/env" }}
-{{ range $key, $val := .Data }}
-{{ $key }}="{{ $val }}"
-{{ end }}
-{{ end }}
-EOH
-      }
-
       env {
         PORT = "${NOMAD_PORT_web}"
+
+        # Secrets
+        BASE_URL          = "__BASE_URL__",
+        CSRF_KEY          = "__CSRF_KEY__",
+        DATABASE_URL      = "__DATABASE_URL__",
+        DEV_ENVIRONMENT   = "__DEV_ENVIRONMENT__",
+        DO_SPACES_DOMAIN  = "__DO_SPACES_DOMAIN__",
+        DO_SPACES_KEY     = "__DO_SPACES_KEY__",
+        DO_SPACES_SECRET  = "__DO_SPACES_SECRET__",
+        DO_SPACES_SPACE   = "__DO_SPACES_SPACE__",
+        GH_REGISTRY_TOKEN = "__GH_REGISTRY_TOKEN__",
+        MAILJET_PRV_KEY   = "__MAILJET_PRV_KEY__",
+        MAILJET_PUB_KEY   = "__MAILJET_PUB_KEY__",
+        MIGRATE_ON_START  = "__MIGRATE_ON_START__",
+        STATIC_URL        = "__STATIC_URL__",
       }
 
       service {

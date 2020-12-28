@@ -4,3 +4,4 @@ vendor
 .idea
 .git
 .DS_Store
+*.hcl

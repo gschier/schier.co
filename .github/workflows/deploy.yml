@@ -33,11 +33,24 @@ jobs:
       - name: Add SSH Key
         run: |
           mkdir -p ~/.ssh && echo "${{ secrets.SSH_PRIVATE_KEY }}" | tr -d '\r' > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan 165.227.10.226 >> ~/.ssh/known_hosts
+          ssh-keyscan ssh.schier.dev >> ~/.ssh/known_hosts
       - name: Deploy to Nomad
         run: |
-          cat job.tpl.hcl | sed "s|__DOCKER_TAG__|${{ github.sha }}|g" | cat > job.hcl
-          scp job.hcl root@165.227.10.226:/tmp/job.hcl
-          ssh root@165.227.10.226 nomad job run -address="http://10.120.16.2:4646" -token="${{ secrets.NOMAD_TOKEN }}" /tmp/job.hcl
-
-
+          cat job.tpl.hcl \
+            | sed "s|__DOCKER_TAG__|${{ github.sha }}|g" \
+            | sed "s|__BASE_URL__|${{ secrets.BASE_URL }}|g" \
+            | sed "s|__CSRF_KEY__|${{ secrets.CSRF_KEY }}|g" \
+            | sed "s|__DATABASE_URL__|${{ secrets.DATABASE_URL }}|g" \
+            | sed "s|__DEV_ENVIRONMENT__|${{ secrets.DEV_ENVIRONMENT }}|g" \
+            | sed "s|__DO_SPACES_DOMAIN__|${{ secrets.DO_SPACES_DOMAIN }}|g" \
+            | sed "s|__DO_SPACES_KEY__|${{ secrets.DO_SPACES_KEY }}|g" \
+            | sed "s|__DO_SPACES_SECRET__|${{ secrets.DO_SPACES_SECRET }}|g" \
+            | sed "s|__DO_SPACES_SPACE__|${{ secrets.DO_SPACES_SPACE }}|g" \
+            | sed "s|__GH_REGISTRY_TOKEN__|${{ secrets.GH_REGISTRY_TOKEN }}|g" \
+            | sed "s|__MAILJET_PRV_KEY__|${{ secrets.MAILJET_PRV_KEY }}|g" \
+            | sed "s|__MAILJET_PUB_KEY__|${{ secrets.MAILJET_PUB_KEY }}|g" \
+            | sed "s|__MIGRATE_ON_START__|${{ secrets.MIGRATE_ON_START }}|g" \
+            | sed "s|__STATIC_URL__|${{ secrets.STATIC_URL }}|g" \
+            | cat > job.hcl
+          scp job.hcl root@ssh.schier.dev:/tmp/job.hcl
+          ssh root@ssh.schier.dev nomad job run -address="http://10.120.16.2:4646" -token="${{ secrets.NOMAD_TOKEN }}" /tmp/job.hcl
