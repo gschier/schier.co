@@ -41,8 +41,13 @@ func main() {
 		port = "8258"
 	}
 
-	fmt.Println("[schier.co] \033[32;1mStarted server on http://localhost:" + port + "\033[0m")
-	log.Fatal(http.ListenAndServe(":"+port, handler))
+	host := os.Getenv("HOST")
+	if host == "" {
+		host = ""
+	}
+
+	fmt.Println("[schier.co] \033[32;1mStarted server on http://" + host + ":" + port + "\033[0m")
+	log.Fatal(http.ListenAndServe(host+":"+port, handler))
 }
 
 func setupRouter(db *internal.Storage) *mux.Router {
