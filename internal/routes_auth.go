@@ -96,8 +96,9 @@ func routeRegister(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if os.Getenv("DEV_ENVIRONMENT") != "development" {
-		render(email, name, password, "registration disabled for non-dev environment")
+	if os.Getenv("REGISTRATION") != "enable" {
+		render(email, name, password, "REGISTRATION != \"enabled\"")
+		return
 	}
 
 	// Generate password hash
