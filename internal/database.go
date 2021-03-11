@@ -7,6 +7,7 @@ import (
 	"math/rand"
 	"os"
 	"sort"
+	"strings"
 	"time"
 
 	"github.com/gschier/schier.co/internal/db"
@@ -27,7 +28,12 @@ func NewStorage() *Storage {
 }
 
 func NewStorageWithSource(source rand.Source) *Storage {
-	sqlDB, err := sql.Open("postgres", os.Getenv("DATABASE_URL"))
+	url := os.Getenv("DATABASE_URL")
+	if strings.Contains(url, "railway.app") {
+		url += "?sslmode=disable"
+	}
+
+	sqlDB, err := sql.Open("postgres", url)
 	if err != nil {
 		panic(err)
 	}
