@@ -61,6 +61,10 @@
   {% endif %}
 
   {% block extraStyles %}{% endblock %}
+
+  {% if not isDev and not loggedIn %}
+    <script async defer data-website-id="8988d628-d14d-421a-b4bd-390381c601ad" src="https://umami-analytics-production.up.railway.app/umami.js"></script>
+  {% endif %}
 </head>
 <body data-deployed="{{ deployTime }}" data-csrf-token="{{ csrfToken }}" data-csrf-Token-header="{{ csrfTokenHeader }}" data-logged-in="{{ loggedIn | yesno:'yes,no' }}">
 
