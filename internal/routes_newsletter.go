@@ -63,17 +63,25 @@ func routeSubscribe(w http.ResponseWriter, r *http.Request) {
 
 	email := r.Form.Get("email")
 	name := r.Form.Get("name")
+	honeypot := r.Form.Get("username")
 
 	if email == "" {
 		http.Error(w, "Email address required", http.StatusBadRequest)
 		return
 	}
 
+	if honeypot != "" {
+		// If they filled out the honeypot, do nothing
+		log.Printf("Subscriber caught by honeypot: %s", email)
+		http.Redirect(w, r, "/newsletter/thanks", http.StatusSeeOther)
+		return
+	}
+
 	subs := ctxDB(r).Store.NewsletterSubscribers.
 		Filter(gen.Where.NewsletterSubscriber.Email.Eq(email)).AllP()
 
-	// Create a subscriber if none exist
 	if len(subs) == 0 {
+		// Create a subscriber if none exist
 		subs = append(subs, *ctxDB(r).Store.NewsletterSubscribers.InsertP(
 			gen.Set.NewsletterSubscriber.Email(email),
 			gen.Set.NewsletterSubscriber.Name(name),
