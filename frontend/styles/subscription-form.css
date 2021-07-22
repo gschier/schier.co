@@ -1,34 +1,37 @@
+.subscription-form-wrapper {
+  @apply border border border-primary-100 bg-primary-050 rounded mt-10 relative;
+
+  p {
+    @apply mb-4;
+  }
+
+  input {
+    @apply border-primary-200;
+  }
+
+  form {
+    max-width: 24rem;
+  }
+}
+
 .subscription-form {
-    @apply border border border-primary-100 bg-primary-050 rounded mt-10 relative;
+  @apply mx-auto mt-0;
 
-    p {
-        @apply mb-4;
+  &__inner {
+    @apply text-center mx-auto py-10 px-4;
+  }
+
+  &__hide {
+    @apply px-3 py-1 opacity-50 text-link right-0 top-0 absolute;
+
+    &:hover {
+      @apply opacity-100 no-underline;
     }
+  }
 
-    input {
-        @apply border-primary-200;
-    }
-
-    form {
-        @apply mx-auto;
-        max-width: 24rem;
-    }
-
-    &__inner {
-        @apply text-center mx-auto py-10 px-4;
-    }
-
-    &__hide {
-        @apply px-3 py-1 opacity-50 text-link right-0 top-0 absolute;
-
-        &:hover {
-            @apply opacity-100 no-underline;
-        }
-    }
-
-    #subscription-username {
-        position: absolute;
-        left: -100000px;
-        top: -100000px;
-    }
+  input[name="username"] {
+    @apply absolute;
+    left: -100000px;
+    top: -100000px;
+  }
 }

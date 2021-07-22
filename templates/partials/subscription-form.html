@@ -1,9 +1,9 @@
-<form action="/forms/newsletter/subscribe" method="post">
+<form action="/forms/newsletter/subscribe" method="post" class="subscription-form">
   {{ csrfField | safe }}
   <div class="button-input">
     <input id="subscription-email" name="email" type="email" placeholder="me@example.com">
     {# Honeypot username field is hidden via css in the stylesheet #}
-    <input id="subscription-username" name="username" type="text" placeholder="myUsername">
+    <input id="subscription-username" name="username" type="text" placeholder="username">
     <button class="btn">
       Subscribe
     </button>
