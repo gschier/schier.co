@@ -1,6 +1,6 @@
 # schier.co [![Deploy](https://github.com/gschier/schier.co/workflows/Deploy/badge.svg)](https://github.com/gschier/schier.co/actions?query=workflow%3ADeploy)
 
-This is the source code for [schier.co](https://schier.co)
+This is the source code for my website, [schier.co](https://schier.co).
 
 ## Requirements
 
