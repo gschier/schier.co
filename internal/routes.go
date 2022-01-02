@@ -71,7 +71,7 @@ func routeBooks(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-func routeRobotsText(w http.ResponseWriter, r *http.Request) {
+func routeRobotsText(w http.ResponseWriter, _ *http.Request) {
 	_, _ = w.Write([]byte(robots))
 }
 
@@ -81,7 +81,7 @@ func routeHealthCheck() http.HandlerFunc {
 		blogPostCount := 0
 		pgConns := 0
 
-		_ = ctxDB(r).Store.DB.QueryRowContext(r.Context(), `SELECT sum(numbackends) FROM pg_stat_database`).Scan(&pgConns)
+		_ = ctxDB(r).Store.DB.QueryRowContext(r.Context(), `SELECT SUM(numbackends) FROM pg_stat_database`).Scan(&pgConns)
 		_ = ctxDB(r).Store.DB.QueryRowContext(r.Context(), `SELECT COUNT(id) FROM blog_posts`).Scan(&blogPostCount)
 
 		err := json.NewEncoder(w).Encode(&map[string]interface{}{
