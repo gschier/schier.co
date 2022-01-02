@@ -344,7 +344,7 @@ details summary:focus {
 .home-hero__avatar img {
     @apply rounded-full block mx-auto;
     max-width: 100%;
-    width: 18rem;
+    width: 28rem;
 }
 
 /***************/

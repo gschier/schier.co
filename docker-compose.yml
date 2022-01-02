@@ -2,10 +2,11 @@ version: "3"
 services:
   web:
     command: >
-      reflex
-        --start-service
-        --regex=\.(go)$$
-        --decoration=none
+      reflex \
+        --start-service \
+        --regex='\.(go)$$' \
+        --inverse-regex='\/node_modules\/' \
+        --decoration=none \
         go run github.com/gschier/schier.co/cmd/web
     build:
       context: .
@@ -48,4 +49,3 @@ services:
       - postgres:/var/lib/postgresql/data
 volumes:
   postgres: ~
-
