@@ -190,7 +190,7 @@ func routeBlogPostSendNewsletter(w http.ResponseWriter, r *http.Request) {
 	}
 
 	j, _ := json.MarshalIndent(send, "", "  ")
-	w.Write([]byte("Newsletter sent succeeded\n\n" + string(j)))
+	_, _ = w.Write([]byte("Newsletter sent succeeded\n\n" + string(j)))
 }
 
 func routeBlogPostSearch(w http.ResponseWriter, r *http.Request) {
@@ -521,7 +521,7 @@ func routeBlogPosts(w http.ResponseWriter, r *http.Request) {
 		AllP()
 
 	// 404 if no posts found for page
-	if len(blogPosts) == 0 {
+	if len(blogPosts) == 0 && page > 1 {
 		routeNotFound(w, r)
 		return
 	}
