@@ -20,9 +20,9 @@ import (
 func main() {
 	// Print bold heading
 	fmt.Println()
-	fmt.Printf("\u001B[32;1m┏━━━━━━━━━━━┓\u001B[0m\n")
-	fmt.Printf("\u001B[32;1m┃ schier.co ┃\u001B[0m\n")
-	fmt.Printf("\u001B[32;1m┗━━━━━━━━━━━┛\u001B[0m\n")
+	fmt.Printf("\u001B[32;1m~~~~~~~~~~~~~~~~~\u001B[0m\n")
+	fmt.Printf("\u001B[32;1m~   schier.co   ~\u001B[0m\n")
+	fmt.Printf("\u001B[32;1m~~~~~~~~~~~~~~~~~\u001B[0m\n")
 
 	db := internal.NewStorage()
 
