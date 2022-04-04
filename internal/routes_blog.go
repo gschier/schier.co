@@ -256,6 +256,7 @@ func routeBlogPostCreateOrUpdate(w http.ResponseWriter, r *http.Request) {
 	id := r.Form.Get("id")
 	slug := r.Form.Get("slug")
 	content := r.Form.Get("content")
+	summary := r.Form.Get("summary")
 	image := r.Form.Get("image")
 	stage := StrToInt64(r.Form.Get("stage"), 0)
 	title := CapitalizeTitle(r.Form.Get("title"))
@@ -305,6 +306,7 @@ func routeBlogPostCreateOrUpdate(w http.ResponseWriter, r *http.Request) {
 		existingPost.Title = title
 		existingPost.Content = content
 		existingPost.Image = image
+		existingPost.Summary = summary
 		existingPost.Tags = tags
 		existingPost.Stage = stage
 		upsertErr = ctxDB(r).Store.BlogPosts.Update(existingPost)
@@ -317,6 +319,7 @@ func routeBlogPostCreateOrUpdate(w http.ResponseWriter, r *http.Request) {
 			gen.Set.BlogPost.Title(title),
 			gen.Set.BlogPost.Content(content),
 			gen.Set.BlogPost.Image(image),
+			gen.Set.BlogPost.Summary(summary),
 			gen.Set.BlogPost.UserID(user.ID),
 			gen.Set.BlogPost.Tags(tags),
 			gen.Set.BlogPost.Date(time.Now()),
@@ -383,10 +386,15 @@ func renderBlogPost(w http.ResponseWriter, r *http.Request) {
 	recommendedBlogPosts := recommendedBlogPosts(ctxDB(r).Store, &post.ID, 7).AllP()
 
 	// Render template
+	postSummary := post.Summary
+	if postSummary == "" {
+		postSummary = Summary(post.Content)
+	}
+
 	renderTemplate(w, r, pageTemplate("blog/post.html"), &pongo2.Context{
 		"pageTitle":            post.Title,
 		"pageImage":            post.Image,
-		"pageDescription":      Summary(post.Content),
+		"pageDescription":      postSummary,
 		"pagePublishedTime":    post.Date,
 		"pageModifiedTime":     post.UpdatedAt,
 		"blogPost":             post,
