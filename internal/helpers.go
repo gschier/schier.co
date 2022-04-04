@@ -1,9 +1,8 @@
 package internal
 
 import (
-	"fmt"
 	stripmd "github.com/writeas/go-strip-markdown"
-	"math"
+	"log"
 	"net/http"
 	"os"
 	"regexp"
@@ -24,10 +23,22 @@ func Admin(h http.HandlerFunc) http.HandlerFunc {
 	}
 }
 
-func FormatTime(seconds float64) string {
-	minutes := math.Floor(seconds / 60)
-	secondsLeft := seconds - minutes*60
-	return fmt.Sprintf("%02.0f:%02.0f", minutes, secondsLeft)
+func HttpErrorBadRequest(w http.ResponseWriter, msg string, err error) {
+	HttpError(w, msg, err, http.StatusBadRequest)
+}
+
+func HttpErrorInternal(w http.ResponseWriter, msg string, err error) {
+	HttpError(w, msg, err, http.StatusInternalServerError)
+}
+
+func HttpError(w http.ResponseWriter, msg string, err error, status int) {
+	if err != nil {
+		log.Println(msg, err.Error())
+		http.Error(w, msg, status)
+	} else {
+		log.Println(msg)
+		http.Error(w, msg, status)
+	}
 }
 
 func CapitalizeTitle(title string) string {

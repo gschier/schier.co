@@ -715,50 +715,50 @@ func newUserOrders() userOrders {
 
 type userIDFilter struct{}
 
-func (userIDFilter) IContains(v string) (filter userFilterArg) {
-	return userFilterArg{filter: sq.Expr("\"users\".\"id\" ILIKE '%' || ? || '%'", v)}
-}
-func (userIDFilter) Regex(v string) (filter userFilterArg) {
-	return userFilterArg{filter: sq.Expr("\"users\".\"id\" ~ ?", v)}
-}
-func (userIDFilter) Lte(v string) (filter userFilterArg) {
-	return userFilterArg{filter: sq.Expr("\"users\".\"id\" <= ?", v)}
-}
-func (userIDFilter) HasSuffix(v string) (filter userFilterArg) {
-	return userFilterArg{filter: sq.Expr("\"users\".\"id\" LIKE '%' || ?", v)}
-}
-func (userIDFilter) IHasSuffix(v string) (filter userFilterArg) {
-	return userFilterArg{filter: sq.Expr("\"users\".\"id\" ILIKE '%' || ?", v)}
-}
-func (userIDFilter) Contains(v string) (filter userFilterArg) {
-	return userFilterArg{filter: sq.Expr("\"users\".\"id\" LIKE '%' || ? || '%'", v)}
-}
-func (userIDFilter) HasPrefix(v string) (filter userFilterArg) {
-	return userFilterArg{filter: sq.Expr("\"users\".\"id\" LIKE ? || '%'", v)}
-}
-func (userIDFilter) IHasPrefix(v string) (filter userFilterArg) {
-	return userFilterArg{filter: sq.Expr("\"users\".\"id\" ILIKE ? || '%'", v)}
-}
-func (userIDFilter) Eq(v string) (filter userFilterArg) {
-	return userFilterArg{filter: sq.Expr("\"users\".\"id\" = ?", v)}
-}
 func (userIDFilter) Gte(v string) (filter userFilterArg) {
 	return userFilterArg{filter: sq.Expr("\"users\".\"id\" >= ?", v)}
 }
 func (userIDFilter) Lt(v string) (filter userFilterArg) {
 	return userFilterArg{filter: sq.Expr("\"users\".\"id\" < ?", v)}
 }
+func (userIDFilter) Lte(v string) (filter userFilterArg) {
+	return userFilterArg{filter: sq.Expr("\"users\".\"id\" <= ?", v)}
+}
 func (userIDFilter) NotEq(v string) (filter userFilterArg) {
 	return userFilterArg{filter: sq.Expr("\"users\".\"id\" != ?", v)}
 }
-func (userIDFilter) IRegex(v string) (filter userFilterArg) {
-	return userFilterArg{filter: sq.Expr("\"users\".\"id\" ~* ?", v)}
+func (userIDFilter) IContains(v string) (filter userFilterArg) {
+	return userFilterArg{filter: sq.Expr("\"users\".\"id\" ILIKE '%' || ? || '%'", v)}
+}
+func (userIDFilter) HasPrefix(v string) (filter userFilterArg) {
+	return userFilterArg{filter: sq.Expr("\"users\".\"id\" LIKE ? || '%'", v)}
+}
+func (userIDFilter) HasSuffix(v string) (filter userFilterArg) {
+	return userFilterArg{filter: sq.Expr("\"users\".\"id\" LIKE '%' || ?", v)}
+}
+func (userIDFilter) Contains(v string) (filter userFilterArg) {
+	return userFilterArg{filter: sq.Expr("\"users\".\"id\" LIKE '%' || ? || '%'", v)}
 }
 func (userIDFilter) Gt(v string) (filter userFilterArg) {
 	return userFilterArg{filter: sq.Expr("\"users\".\"id\" > ?", v)}
 }
+func (userIDFilter) IHasPrefix(v string) (filter userFilterArg) {
+	return userFilterArg{filter: sq.Expr("\"users\".\"id\" ILIKE ? || '%'", v)}
+}
+func (userIDFilter) IHasSuffix(v string) (filter userFilterArg) {
+	return userFilterArg{filter: sq.Expr("\"users\".\"id\" ILIKE '%' || ?", v)}
+}
+func (userIDFilter) Eq(v string) (filter userFilterArg) {
+	return userFilterArg{filter: sq.Expr("\"users\".\"id\" = ?", v)}
+}
 func (userIDFilter) ILike(v string) (filter userFilterArg) {
 	return userFilterArg{filter: sq.Expr("\"users\".\"id\" LIKE ?", v)}
+}
+func (userIDFilter) Regex(v string) (filter userFilterArg) {
+	return userFilterArg{filter: sq.Expr("\"users\".\"id\" ~ ?", v)}
+}
+func (userIDFilter) IRegex(v string) (filter userFilterArg) {
+	return userFilterArg{filter: sq.Expr("\"users\".\"id\" ~* ?", v)}
 }
 
 type userCreatedAtFilter struct{}
@@ -778,26 +778,20 @@ func (userCreatedAtFilter) After(v time.Time) (filter userFilterArg) {
 
 type userEmailFilter struct{}
 
-func (userEmailFilter) HasPrefix(v string) (filter userFilterArg) {
-	return userFilterArg{filter: sq.Expr("\"users\".\"email\" LIKE ? || '%'", v)}
+func (userEmailFilter) IRegex(v string) (filter userFilterArg) {
+	return userFilterArg{filter: sq.Expr("\"users\".\"email\" ~* ?", v)}
 }
-func (userEmailFilter) HasSuffix(v string) (filter userFilterArg) {
-	return userFilterArg{filter: sq.Expr("\"users\".\"email\" LIKE '%' || ?", v)}
+func (userEmailFilter) Gte(v string) (filter userFilterArg) {
+	return userFilterArg{filter: sq.Expr("\"users\".\"email\" >= ?", v)}
+}
+func (userEmailFilter) IHasPrefix(v string) (filter userFilterArg) {
+	return userFilterArg{filter: sq.Expr("\"users\".\"email\" ILIKE ? || '%'", v)}
 }
 func (userEmailFilter) IHasSuffix(v string) (filter userFilterArg) {
 	return userFilterArg{filter: sq.Expr("\"users\".\"email\" ILIKE '%' || ?", v)}
 }
-func (userEmailFilter) Gt(v string) (filter userFilterArg) {
-	return userFilterArg{filter: sq.Expr("\"users\".\"email\" > ?", v)}
-}
 func (userEmailFilter) ILike(v string) (filter userFilterArg) {
 	return userFilterArg{filter: sq.Expr("\"users\".\"email\" LIKE ?", v)}
-}
-func (userEmailFilter) NotEq(v string) (filter userFilterArg) {
-	return userFilterArg{filter: sq.Expr("\"users\".\"email\" != ?", v)}
-}
-func (userEmailFilter) IContains(v string) (filter userFilterArg) {
-	return userFilterArg{filter: sq.Expr("\"users\".\"email\" ILIKE '%' || ? || '%'", v)}
 }
 func (userEmailFilter) Regex(v string) (filter userFilterArg) {
 	return userFilterArg{filter: sq.Expr("\"users\".\"email\" ~ ?", v)}
@@ -808,8 +802,8 @@ func (userEmailFilter) Lt(v string) (filter userFilterArg) {
 func (userEmailFilter) Lte(v string) (filter userFilterArg) {
 	return userFilterArg{filter: sq.Expr("\"users\".\"email\" <= ?", v)}
 }
-func (userEmailFilter) IHasPrefix(v string) (filter userFilterArg) {
-	return userFilterArg{filter: sq.Expr("\"users\".\"email\" ILIKE ? || '%'", v)}
+func (userEmailFilter) HasSuffix(v string) (filter userFilterArg) {
+	return userFilterArg{filter: sq.Expr("\"users\".\"email\" LIKE '%' || ?", v)}
 }
 func (userEmailFilter) Eq(v string) (filter userFilterArg) {
 	return userFilterArg{filter: sq.Expr("\"users\".\"email\" = ?", v)}
@@ -817,41 +811,41 @@ func (userEmailFilter) Eq(v string) (filter userFilterArg) {
 func (userEmailFilter) Contains(v string) (filter userFilterArg) {
 	return userFilterArg{filter: sq.Expr("\"users\".\"email\" LIKE '%' || ? || '%'", v)}
 }
-func (userEmailFilter) IRegex(v string) (filter userFilterArg) {
-	return userFilterArg{filter: sq.Expr("\"users\".\"email\" ~* ?", v)}
+func (userEmailFilter) Gt(v string) (filter userFilterArg) {
+	return userFilterArg{filter: sq.Expr("\"users\".\"email\" > ?", v)}
 }
-func (userEmailFilter) Gte(v string) (filter userFilterArg) {
-	return userFilterArg{filter: sq.Expr("\"users\".\"email\" >= ?", v)}
+func (userEmailFilter) NotEq(v string) (filter userFilterArg) {
+	return userFilterArg{filter: sq.Expr("\"users\".\"email\" != ?", v)}
+}
+func (userEmailFilter) IContains(v string) (filter userFilterArg) {
+	return userFilterArg{filter: sq.Expr("\"users\".\"email\" ILIKE '%' || ? || '%'", v)}
+}
+func (userEmailFilter) HasPrefix(v string) (filter userFilterArg) {
+	return userFilterArg{filter: sq.Expr("\"users\".\"email\" LIKE ? || '%'", v)}
 }
 
 type userNameFilter struct{}
 
-func (userNameFilter) Eq(v string) (filter userFilterArg) {
-	return userFilterArg{filter: sq.Expr("\"users\".\"name\" = ?", v)}
-}
-func (userNameFilter) NotEq(v string) (filter userFilterArg) {
-	return userFilterArg{filter: sq.Expr("\"users\".\"name\" != ?", v)}
-}
-func (userNameFilter) IContains(v string) (filter userFilterArg) {
-	return userFilterArg{filter: sq.Expr("\"users\".\"name\" ILIKE '%' || ? || '%'", v)}
-}
-func (userNameFilter) IHasPrefix(v string) (filter userFilterArg) {
-	return userFilterArg{filter: sq.Expr("\"users\".\"name\" ILIKE ? || '%'", v)}
-}
-func (userNameFilter) Contains(v string) (filter userFilterArg) {
-	return userFilterArg{filter: sq.Expr("\"users\".\"name\" LIKE '%' || ? || '%'", v)}
+func (userNameFilter) Regex(v string) (filter userFilterArg) {
+	return userFilterArg{filter: sq.Expr("\"users\".\"name\" ~ ?", v)}
 }
 func (userNameFilter) IRegex(v string) (filter userFilterArg) {
 	return userFilterArg{filter: sq.Expr("\"users\".\"name\" ~* ?", v)}
 }
-func (userNameFilter) Gte(v string) (filter userFilterArg) {
-	return userFilterArg{filter: sq.Expr("\"users\".\"name\" >= ?", v)}
+func (userNameFilter) Lte(v string) (filter userFilterArg) {
+	return userFilterArg{filter: sq.Expr("\"users\".\"name\" <= ?", v)}
+}
+func (userNameFilter) Eq(v string) (filter userFilterArg) {
+	return userFilterArg{filter: sq.Expr("\"users\".\"name\" = ?", v)}
+}
+func (userNameFilter) ILike(v string) (filter userFilterArg) {
+	return userFilterArg{filter: sq.Expr("\"users\".\"name\" LIKE ?", v)}
+}
+func (userNameFilter) Contains(v string) (filter userFilterArg) {
+	return userFilterArg{filter: sq.Expr("\"users\".\"name\" LIKE '%' || ? || '%'", v)}
 }
 func (userNameFilter) Lt(v string) (filter userFilterArg) {
 	return userFilterArg{filter: sq.Expr("\"users\".\"name\" < ?", v)}
-}
-func (userNameFilter) Lte(v string) (filter userFilterArg) {
-	return userFilterArg{filter: sq.Expr("\"users\".\"name\" <= ?", v)}
 }
 func (userNameFilter) HasPrefix(v string) (filter userFilterArg) {
 	return userFilterArg{filter: sq.Expr("\"users\".\"name\" LIKE ? || '%'", v)}
@@ -859,14 +853,20 @@ func (userNameFilter) HasPrefix(v string) (filter userFilterArg) {
 func (userNameFilter) IHasSuffix(v string) (filter userFilterArg) {
 	return userFilterArg{filter: sq.Expr("\"users\".\"name\" ILIKE '%' || ?", v)}
 }
-func (userNameFilter) ILike(v string) (filter userFilterArg) {
-	return userFilterArg{filter: sq.Expr("\"users\".\"name\" LIKE ?", v)}
+func (userNameFilter) IHasPrefix(v string) (filter userFilterArg) {
+	return userFilterArg{filter: sq.Expr("\"users\".\"name\" ILIKE ? || '%'", v)}
 }
-func (userNameFilter) Regex(v string) (filter userFilterArg) {
-	return userFilterArg{filter: sq.Expr("\"users\".\"name\" ~ ?", v)}
+func (userNameFilter) NotEq(v string) (filter userFilterArg) {
+	return userFilterArg{filter: sq.Expr("\"users\".\"name\" != ?", v)}
+}
+func (userNameFilter) IContains(v string) (filter userFilterArg) {
+	return userFilterArg{filter: sq.Expr("\"users\".\"name\" ILIKE '%' || ? || '%'", v)}
 }
 func (userNameFilter) Gt(v string) (filter userFilterArg) {
 	return userFilterArg{filter: sq.Expr("\"users\".\"name\" > ?", v)}
+}
+func (userNameFilter) Gte(v string) (filter userFilterArg) {
+	return userFilterArg{filter: sq.Expr("\"users\".\"name\" >= ?", v)}
 }
 func (userNameFilter) HasSuffix(v string) (filter userFilterArg) {
 	return userFilterArg{filter: sq.Expr("\"users\".\"name\" LIKE '%' || ?", v)}
@@ -874,8 +874,11 @@ func (userNameFilter) HasSuffix(v string) (filter userFilterArg) {
 
 type userPasswordHashFilter struct{}
 
-func (userPasswordHashFilter) Gt(v string) (filter userFilterArg) {
-	return userFilterArg{filter: sq.Expr("\"users\".\"password_hash\" > ?", v)}
+func (userPasswordHashFilter) Eq(v string) (filter userFilterArg) {
+	return userFilterArg{filter: sq.Expr("\"users\".\"password_hash\" = ?", v)}
+}
+func (userPasswordHashFilter) Regex(v string) (filter userFilterArg) {
+	return userFilterArg{filter: sq.Expr("\"users\".\"password_hash\" ~ ?", v)}
 }
 func (userPasswordHashFilter) HasPrefix(v string) (filter userFilterArg) {
 	return userFilterArg{filter: sq.Expr("\"users\".\"password_hash\" LIKE ? || '%'", v)}
@@ -883,23 +886,20 @@ func (userPasswordHashFilter) HasPrefix(v string) (filter userFilterArg) {
 func (userPasswordHashFilter) IHasSuffix(v string) (filter userFilterArg) {
 	return userFilterArg{filter: sq.Expr("\"users\".\"password_hash\" ILIKE '%' || ?", v)}
 }
-func (userPasswordHashFilter) NotEq(v string) (filter userFilterArg) {
-	return userFilterArg{filter: sq.Expr("\"users\".\"password_hash\" != ?", v)}
+func (userPasswordHashFilter) ILike(v string) (filter userFilterArg) {
+	return userFilterArg{filter: sq.Expr("\"users\".\"password_hash\" LIKE ?", v)}
 }
-func (userPasswordHashFilter) IContains(v string) (filter userFilterArg) {
-	return userFilterArg{filter: sq.Expr("\"users\".\"password_hash\" ILIKE '%' || ? || '%'", v)}
-}
-func (userPasswordHashFilter) IRegex(v string) (filter userFilterArg) {
-	return userFilterArg{filter: sq.Expr("\"users\".\"password_hash\" ~* ?", v)}
+func (userPasswordHashFilter) Gt(v string) (filter userFilterArg) {
+	return userFilterArg{filter: sq.Expr("\"users\".\"password_hash\" > ?", v)}
 }
 func (userPasswordHashFilter) Lt(v string) (filter userFilterArg) {
 	return userFilterArg{filter: sq.Expr("\"users\".\"password_hash\" < ?", v)}
 }
-func (userPasswordHashFilter) ILike(v string) (filter userFilterArg) {
-	return userFilterArg{filter: sq.Expr("\"users\".\"password_hash\" LIKE ?", v)}
+func (userPasswordHashFilter) IRegex(v string) (filter userFilterArg) {
+	return userFilterArg{filter: sq.Expr("\"users\".\"password_hash\" ~* ?", v)}
 }
-func (userPasswordHashFilter) Regex(v string) (filter userFilterArg) {
-	return userFilterArg{filter: sq.Expr("\"users\".\"password_hash\" ~ ?", v)}
+func (userPasswordHashFilter) Gte(v string) (filter userFilterArg) {
+	return userFilterArg{filter: sq.Expr("\"users\".\"password_hash\" >= ?", v)}
 }
 func (userPasswordHashFilter) Lte(v string) (filter userFilterArg) {
 	return userFilterArg{filter: sq.Expr("\"users\".\"password_hash\" <= ?", v)}
@@ -910,14 +910,14 @@ func (userPasswordHashFilter) HasSuffix(v string) (filter userFilterArg) {
 func (userPasswordHashFilter) IHasPrefix(v string) (filter userFilterArg) {
 	return userFilterArg{filter: sq.Expr("\"users\".\"password_hash\" ILIKE ? || '%'", v)}
 }
+func (userPasswordHashFilter) NotEq(v string) (filter userFilterArg) {
+	return userFilterArg{filter: sq.Expr("\"users\".\"password_hash\" != ?", v)}
+}
 func (userPasswordHashFilter) Contains(v string) (filter userFilterArg) {
 	return userFilterArg{filter: sq.Expr("\"users\".\"password_hash\" LIKE '%' || ? || '%'", v)}
 }
-func (userPasswordHashFilter) Gte(v string) (filter userFilterArg) {
-	return userFilterArg{filter: sq.Expr("\"users\".\"password_hash\" >= ?", v)}
-}
-func (userPasswordHashFilter) Eq(v string) (filter userFilterArg) {
-	return userFilterArg{filter: sq.Expr("\"users\".\"password_hash\" = ?", v)}
+func (userPasswordHashFilter) IContains(v string) (filter userFilterArg) {
+	return userFilterArg{filter: sq.Expr("\"users\".\"password_hash\" ILIKE '%' || ? || '%'", v)}
 }
 
 type userFilters struct {
@@ -1509,38 +1509,11 @@ func newSessionOrders() sessionOrders {
 
 type sessionIDFilter struct{}
 
-func (sessionIDFilter) NotEq(v string) (filter sessionFilterArg) {
-	return sessionFilterArg{filter: sq.Expr("\"sessions\".\"id\" != ?", v)}
-}
-func (sessionIDFilter) Lt(v string) (filter sessionFilterArg) {
-	return sessionFilterArg{filter: sq.Expr("\"sessions\".\"id\" < ?", v)}
-}
-func (sessionIDFilter) Gte(v string) (filter sessionFilterArg) {
-	return sessionFilterArg{filter: sq.Expr("\"sessions\".\"id\" >= ?", v)}
-}
-func (sessionIDFilter) Lte(v string) (filter sessionFilterArg) {
-	return sessionFilterArg{filter: sq.Expr("\"sessions\".\"id\" <= ?", v)}
-}
-func (sessionIDFilter) HasSuffix(v string) (filter sessionFilterArg) {
-	return sessionFilterArg{filter: sq.Expr("\"sessions\".\"id\" LIKE '%' || ?", v)}
-}
-func (sessionIDFilter) IHasSuffix(v string) (filter sessionFilterArg) {
-	return sessionFilterArg{filter: sq.Expr("\"sessions\".\"id\" ILIKE '%' || ?", v)}
-}
-func (sessionIDFilter) Eq(v string) (filter sessionFilterArg) {
-	return sessionFilterArg{filter: sq.Expr("\"sessions\".\"id\" = ?", v)}
-}
-func (sessionIDFilter) Regex(v string) (filter sessionFilterArg) {
-	return sessionFilterArg{filter: sq.Expr("\"sessions\".\"id\" ~ ?", v)}
-}
-func (sessionIDFilter) Gt(v string) (filter sessionFilterArg) {
-	return sessionFilterArg{filter: sq.Expr("\"sessions\".\"id\" > ?", v)}
+func (sessionIDFilter) IContains(v string) (filter sessionFilterArg) {
+	return sessionFilterArg{filter: sq.Expr("\"sessions\".\"id\" ILIKE '%' || ? || '%'", v)}
 }
 func (sessionIDFilter) HasPrefix(v string) (filter sessionFilterArg) {
 	return sessionFilterArg{filter: sq.Expr("\"sessions\".\"id\" LIKE ? || '%'", v)}
-}
-func (sessionIDFilter) IHasPrefix(v string) (filter sessionFilterArg) {
-	return sessionFilterArg{filter: sq.Expr("\"sessions\".\"id\" ILIKE ? || '%'", v)}
 }
 func (sessionIDFilter) ILike(v string) (filter sessionFilterArg) {
 	return sessionFilterArg{filter: sq.Expr("\"sessions\".\"id\" LIKE ?", v)}
@@ -1548,11 +1521,38 @@ func (sessionIDFilter) ILike(v string) (filter sessionFilterArg) {
 func (sessionIDFilter) Contains(v string) (filter sessionFilterArg) {
 	return sessionFilterArg{filter: sq.Expr("\"sessions\".\"id\" LIKE '%' || ? || '%'", v)}
 }
-func (sessionIDFilter) IContains(v string) (filter sessionFilterArg) {
-	return sessionFilterArg{filter: sq.Expr("\"sessions\".\"id\" ILIKE '%' || ? || '%'", v)}
+func (sessionIDFilter) Gte(v string) (filter sessionFilterArg) {
+	return sessionFilterArg{filter: sq.Expr("\"sessions\".\"id\" >= ?", v)}
+}
+func (sessionIDFilter) IHasSuffix(v string) (filter sessionFilterArg) {
+	return sessionFilterArg{filter: sq.Expr("\"sessions\".\"id\" ILIKE '%' || ?", v)}
+}
+func (sessionIDFilter) NotEq(v string) (filter sessionFilterArg) {
+	return sessionFilterArg{filter: sq.Expr("\"sessions\".\"id\" != ?", v)}
+}
+func (sessionIDFilter) Regex(v string) (filter sessionFilterArg) {
+	return sessionFilterArg{filter: sq.Expr("\"sessions\".\"id\" ~ ?", v)}
 }
 func (sessionIDFilter) IRegex(v string) (filter sessionFilterArg) {
 	return sessionFilterArg{filter: sq.Expr("\"sessions\".\"id\" ~* ?", v)}
+}
+func (sessionIDFilter) Lt(v string) (filter sessionFilterArg) {
+	return sessionFilterArg{filter: sq.Expr("\"sessions\".\"id\" < ?", v)}
+}
+func (sessionIDFilter) Lte(v string) (filter sessionFilterArg) {
+	return sessionFilterArg{filter: sq.Expr("\"sessions\".\"id\" <= ?", v)}
+}
+func (sessionIDFilter) HasSuffix(v string) (filter sessionFilterArg) {
+	return sessionFilterArg{filter: sq.Expr("\"sessions\".\"id\" LIKE '%' || ?", v)}
+}
+func (sessionIDFilter) IHasPrefix(v string) (filter sessionFilterArg) {
+	return sessionFilterArg{filter: sq.Expr("\"sessions\".\"id\" ILIKE ? || '%'", v)}
+}
+func (sessionIDFilter) Eq(v string) (filter sessionFilterArg) {
+	return sessionFilterArg{filter: sq.Expr("\"sessions\".\"id\" = ?", v)}
+}
+func (sessionIDFilter) Gt(v string) (filter sessionFilterArg) {
+	return sessionFilterArg{filter: sq.Expr("\"sessions\".\"id\" > ?", v)}
 }
 
 type sessionCreatedAtFilter struct{}
@@ -1572,17 +1572,14 @@ func (sessionCreatedAtFilter) After(v time.Time) (filter sessionFilterArg) {
 
 type sessionUserIDFilter struct{}
 
-func (sessionUserIDFilter) Eq(v string) (filter sessionFilterArg) {
-	return sessionFilterArg{filter: sq.Expr("\"sessions\".\"user_id\" = ?", v)}
+func (sessionUserIDFilter) IRegex(v string) (filter sessionFilterArg) {
+	return sessionFilterArg{filter: sq.Expr("\"sessions\".\"user_id\" ~* ?", v)}
 }
-func (sessionUserIDFilter) HasPrefix(v string) (filter sessionFilterArg) {
-	return sessionFilterArg{filter: sq.Expr("\"sessions\".\"user_id\" LIKE ? || '%'", v)}
+func (sessionUserIDFilter) Regex(v string) (filter sessionFilterArg) {
+	return sessionFilterArg{filter: sq.Expr("\"sessions\".\"user_id\" ~ ?", v)}
 }
-func (sessionUserIDFilter) IHasPrefix(v string) (filter sessionFilterArg) {
-	return sessionFilterArg{filter: sq.Expr("\"sessions\".\"user_id\" ILIKE ? || '%'", v)}
-}
-func (sessionUserIDFilter) NotEq(v string) (filter sessionFilterArg) {
-	return sessionFilterArg{filter: sq.Expr("\"sessions\".\"user_id\" != ?", v)}
+func (sessionUserIDFilter) IContains(v string) (filter sessionFilterArg) {
+	return sessionFilterArg{filter: sq.Expr("\"sessions\".\"user_id\" ILIKE '%' || ? || '%'", v)}
 }
 func (sessionUserIDFilter) Gte(v string) (filter sessionFilterArg) {
 	return sessionFilterArg{filter: sq.Expr("\"sessions\".\"user_id\" >= ?", v)}
@@ -1590,32 +1587,35 @@ func (sessionUserIDFilter) Gte(v string) (filter sessionFilterArg) {
 func (sessionUserIDFilter) Lt(v string) (filter sessionFilterArg) {
 	return sessionFilterArg{filter: sq.Expr("\"sessions\".\"user_id\" < ?", v)}
 }
-func (sessionUserIDFilter) ILike(v string) (filter sessionFilterArg) {
-	return sessionFilterArg{filter: sq.Expr("\"sessions\".\"user_id\" LIKE ?", v)}
+func (sessionUserIDFilter) Lte(v string) (filter sessionFilterArg) {
+	return sessionFilterArg{filter: sq.Expr("\"sessions\".\"user_id\" <= ?", v)}
 }
-func (sessionUserIDFilter) IRegex(v string) (filter sessionFilterArg) {
-	return sessionFilterArg{filter: sq.Expr("\"sessions\".\"user_id\" ~* ?", v)}
+func (sessionUserIDFilter) NotEq(v string) (filter sessionFilterArg) {
+	return sessionFilterArg{filter: sq.Expr("\"sessions\".\"user_id\" != ?", v)}
 }
 func (sessionUserIDFilter) Gt(v string) (filter sessionFilterArg) {
 	return sessionFilterArg{filter: sq.Expr("\"sessions\".\"user_id\" > ?", v)}
 }
-func (sessionUserIDFilter) Lte(v string) (filter sessionFilterArg) {
-	return sessionFilterArg{filter: sq.Expr("\"sessions\".\"user_id\" <= ?", v)}
+func (sessionUserIDFilter) HasPrefix(v string) (filter sessionFilterArg) {
+	return sessionFilterArg{filter: sq.Expr("\"sessions\".\"user_id\" LIKE ? || '%'", v)}
 }
 func (sessionUserIDFilter) HasSuffix(v string) (filter sessionFilterArg) {
 	return sessionFilterArg{filter: sq.Expr("\"sessions\".\"user_id\" LIKE '%' || ?", v)}
 }
-func (sessionUserIDFilter) IHasSuffix(v string) (filter sessionFilterArg) {
-	return sessionFilterArg{filter: sq.Expr("\"sessions\".\"user_id\" ILIKE '%' || ?", v)}
-}
 func (sessionUserIDFilter) Contains(v string) (filter sessionFilterArg) {
 	return sessionFilterArg{filter: sq.Expr("\"sessions\".\"user_id\" LIKE '%' || ? || '%'", v)}
 }
-func (sessionUserIDFilter) IContains(v string) (filter sessionFilterArg) {
-	return sessionFilterArg{filter: sq.Expr("\"sessions\".\"user_id\" ILIKE '%' || ? || '%'", v)}
+func (sessionUserIDFilter) ILike(v string) (filter sessionFilterArg) {
+	return sessionFilterArg{filter: sq.Expr("\"sessions\".\"user_id\" LIKE ?", v)}
 }
-func (sessionUserIDFilter) Regex(v string) (filter sessionFilterArg) {
-	return sessionFilterArg{filter: sq.Expr("\"sessions\".\"user_id\" ~ ?", v)}
+func (sessionUserIDFilter) IHasPrefix(v string) (filter sessionFilterArg) {
+	return sessionFilterArg{filter: sq.Expr("\"sessions\".\"user_id\" ILIKE ? || '%'", v)}
+}
+func (sessionUserIDFilter) IHasSuffix(v string) (filter sessionFilterArg) {
+	return sessionFilterArg{filter: sq.Expr("\"sessions\".\"user_id\" ILIKE '%' || ?", v)}
+}
+func (sessionUserIDFilter) Eq(v string) (filter sessionFilterArg) {
+	return sessionFilterArg{filter: sq.Expr("\"sessions\".\"user_id\" = ?", v)}
 }
 
 type sessionFilters struct {
@@ -1666,7 +1666,7 @@ type BlogPost struct {
 	Date       time.Time `json:"date"`       // date TIMESTAMP WITH TIME ZONE NOT NULL
 	EditedAt   time.Time `json:"editedAt"`   // edited_at TIMESTAMP WITH TIME ZONE NOT NULL
 	Image      string    `json:"image"`      // image TEXT NOT NULL
-	Summary    string    `json:"summary"`    // summary TEXT NOT NULL
+	Summary    string    `json:"summary"`    // summary TEXT DEFAULT '' NOT NULL
 	Published  bool      `json:"published"`  // published BOOLEAN NOT NULL
 	Score      int64     `json:"score"`      // score INTEGER NOT NULL
 	Shares     int64     `json:"shares"`     // shares INTEGER NOT NULL
@@ -2925,11 +2925,23 @@ func newBlogPostOrders() blogPostOrders {
 
 type blogPostIDFilter struct{}
 
+func (blogPostIDFilter) HasPrefix(v string) (filter blogPostFilterArg) {
+	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"id\" LIKE ? || '%'", v)}
+}
 func (blogPostIDFilter) Eq(v string) (filter blogPostFilterArg) {
 	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"id\" = ?", v)}
 }
-func (blogPostIDFilter) NotEq(v string) (filter blogPostFilterArg) {
-	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"id\" != ?", v)}
+func (blogPostIDFilter) Contains(v string) (filter blogPostFilterArg) {
+	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"id\" LIKE '%' || ? || '%'", v)}
+}
+func (blogPostIDFilter) Gt(v string) (filter blogPostFilterArg) {
+	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"id\" > ?", v)}
+}
+func (blogPostIDFilter) Gte(v string) (filter blogPostFilterArg) {
+	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"id\" >= ?", v)}
+}
+func (blogPostIDFilter) Lt(v string) (filter blogPostFilterArg) {
+	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"id\" < ?", v)}
 }
 func (blogPostIDFilter) Regex(v string) (filter blogPostFilterArg) {
 	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"id\" ~ ?", v)}
@@ -2937,20 +2949,8 @@ func (blogPostIDFilter) Regex(v string) (filter blogPostFilterArg) {
 func (blogPostIDFilter) IHasPrefix(v string) (filter blogPostFilterArg) {
 	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"id\" ILIKE ? || '%'", v)}
 }
-func (blogPostIDFilter) IContains(v string) (filter blogPostFilterArg) {
-	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"id\" ILIKE '%' || ? || '%'", v)}
-}
-func (blogPostIDFilter) IRegex(v string) (filter blogPostFilterArg) {
-	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"id\" ~* ?", v)}
-}
-func (blogPostIDFilter) Gt(v string) (filter blogPostFilterArg) {
-	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"id\" > ?", v)}
-}
-func (blogPostIDFilter) Lt(v string) (filter blogPostFilterArg) {
-	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"id\" < ?", v)}
-}
-func (blogPostIDFilter) Gte(v string) (filter blogPostFilterArg) {
-	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"id\" >= ?", v)}
+func (blogPostIDFilter) HasSuffix(v string) (filter blogPostFilterArg) {
+	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"id\" LIKE '%' || ?", v)}
 }
 func (blogPostIDFilter) IHasSuffix(v string) (filter blogPostFilterArg) {
 	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"id\" ILIKE '%' || ?", v)}
@@ -2958,36 +2958,39 @@ func (blogPostIDFilter) IHasSuffix(v string) (filter blogPostFilterArg) {
 func (blogPostIDFilter) ILike(v string) (filter blogPostFilterArg) {
 	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"id\" LIKE ?", v)}
 }
-func (blogPostIDFilter) Contains(v string) (filter blogPostFilterArg) {
-	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"id\" LIKE '%' || ? || '%'", v)}
+func (blogPostIDFilter) NotEq(v string) (filter blogPostFilterArg) {
+	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"id\" != ?", v)}
+}
+func (blogPostIDFilter) IContains(v string) (filter blogPostFilterArg) {
+	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"id\" ILIKE '%' || ? || '%'", v)}
+}
+func (blogPostIDFilter) IRegex(v string) (filter blogPostFilterArg) {
+	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"id\" ~* ?", v)}
 }
 func (blogPostIDFilter) Lte(v string) (filter blogPostFilterArg) {
 	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"id\" <= ?", v)}
 }
-func (blogPostIDFilter) HasPrefix(v string) (filter blogPostFilterArg) {
-	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"id\" LIKE ? || '%'", v)}
-}
-func (blogPostIDFilter) HasSuffix(v string) (filter blogPostFilterArg) {
-	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"id\" LIKE '%' || ?", v)}
-}
 
 type blogPostCreatedAtFilter struct{}
 
-func (blogPostCreatedAtFilter) Eq(v time.Time) (filter blogPostFilterArg) {
-	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"created_at\" = ?", v)}
-}
-func (blogPostCreatedAtFilter) NotEq(v time.Time) (filter blogPostFilterArg) {
-	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"created_at\" != ?", v)}
-}
 func (blogPostCreatedAtFilter) Before(v time.Time) (filter blogPostFilterArg) {
 	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"created_at\" < ?", v)}
 }
 func (blogPostCreatedAtFilter) After(v time.Time) (filter blogPostFilterArg) {
 	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"created_at\" > ?", v)}
 }
+func (blogPostCreatedAtFilter) Eq(v time.Time) (filter blogPostFilterArg) {
+	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"created_at\" = ?", v)}
+}
+func (blogPostCreatedAtFilter) NotEq(v time.Time) (filter blogPostFilterArg) {
+	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"created_at\" != ?", v)}
+}
 
 type blogPostUpdatedAtFilter struct{}
 
+func (blogPostUpdatedAtFilter) After(v time.Time) (filter blogPostFilterArg) {
+	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"updated_at\" > ?", v)}
+}
 func (blogPostUpdatedAtFilter) Eq(v time.Time) (filter blogPostFilterArg) {
 	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"updated_at\" = ?", v)}
 }
@@ -2997,14 +3000,44 @@ func (blogPostUpdatedAtFilter) NotEq(v time.Time) (filter blogPostFilterArg) {
 func (blogPostUpdatedAtFilter) Before(v time.Time) (filter blogPostFilterArg) {
 	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"updated_at\" < ?", v)}
 }
-func (blogPostUpdatedAtFilter) After(v time.Time) (filter blogPostFilterArg) {
-	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"updated_at\" > ?", v)}
-}
 
 type blogPostUserIDFilter struct{}
 
+func (blogPostUserIDFilter) Contains(v string) (filter blogPostFilterArg) {
+	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"user_id\" LIKE '%' || ? || '%'", v)}
+}
+func (blogPostUserIDFilter) Gt(v string) (filter blogPostFilterArg) {
+	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"user_id\" > ?", v)}
+}
+func (blogPostUserIDFilter) HasPrefix(v string) (filter blogPostFilterArg) {
+	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"user_id\" LIKE ? || '%'", v)}
+}
+func (blogPostUserIDFilter) HasSuffix(v string) (filter blogPostFilterArg) {
+	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"user_id\" LIKE '%' || ?", v)}
+}
+func (blogPostUserIDFilter) Eq(v string) (filter blogPostFilterArg) {
+	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"user_id\" = ?", v)}
+}
+func (blogPostUserIDFilter) ILike(v string) (filter blogPostFilterArg) {
+	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"user_id\" LIKE ?", v)}
+}
+func (blogPostUserIDFilter) IHasPrefix(v string) (filter blogPostFilterArg) {
+	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"user_id\" ILIKE ? || '%'", v)}
+}
+func (blogPostUserIDFilter) IHasSuffix(v string) (filter blogPostFilterArg) {
+	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"user_id\" ILIKE '%' || ?", v)}
+}
+func (blogPostUserIDFilter) Regex(v string) (filter blogPostFilterArg) {
+	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"user_id\" ~ ?", v)}
+}
+func (blogPostUserIDFilter) IRegex(v string) (filter blogPostFilterArg) {
+	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"user_id\" ~* ?", v)}
+}
 func (blogPostUserIDFilter) NotEq(v string) (filter blogPostFilterArg) {
 	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"user_id\" != ?", v)}
+}
+func (blogPostUserIDFilter) IContains(v string) (filter blogPostFilterArg) {
+	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"user_id\" ILIKE '%' || ? || '%'", v)}
 }
 func (blogPostUserIDFilter) Gte(v string) (filter blogPostFilterArg) {
 	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"user_id\" >= ?", v)}
@@ -3012,56 +3045,38 @@ func (blogPostUserIDFilter) Gte(v string) (filter blogPostFilterArg) {
 func (blogPostUserIDFilter) Lt(v string) (filter blogPostFilterArg) {
 	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"user_id\" < ?", v)}
 }
-func (blogPostUserIDFilter) ILike(v string) (filter blogPostFilterArg) {
-	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"user_id\" LIKE ?", v)}
-}
-func (blogPostUserIDFilter) IRegex(v string) (filter blogPostFilterArg) {
-	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"user_id\" ~* ?", v)}
-}
-func (blogPostUserIDFilter) Gt(v string) (filter blogPostFilterArg) {
-	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"user_id\" > ?", v)}
-}
 func (blogPostUserIDFilter) Lte(v string) (filter blogPostFilterArg) {
 	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"user_id\" <= ?", v)}
-}
-func (blogPostUserIDFilter) HasSuffix(v string) (filter blogPostFilterArg) {
-	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"user_id\" LIKE '%' || ?", v)}
-}
-func (blogPostUserIDFilter) IHasSuffix(v string) (filter blogPostFilterArg) {
-	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"user_id\" ILIKE '%' || ?", v)}
-}
-func (blogPostUserIDFilter) Contains(v string) (filter blogPostFilterArg) {
-	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"user_id\" LIKE '%' || ? || '%'", v)}
-}
-func (blogPostUserIDFilter) IContains(v string) (filter blogPostFilterArg) {
-	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"user_id\" ILIKE '%' || ? || '%'", v)}
-}
-func (blogPostUserIDFilter) Regex(v string) (filter blogPostFilterArg) {
-	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"user_id\" ~ ?", v)}
-}
-func (blogPostUserIDFilter) Eq(v string) (filter blogPostFilterArg) {
-	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"user_id\" = ?", v)}
-}
-func (blogPostUserIDFilter) HasPrefix(v string) (filter blogPostFilterArg) {
-	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"user_id\" LIKE ? || '%'", v)}
-}
-func (blogPostUserIDFilter) IHasPrefix(v string) (filter blogPostFilterArg) {
-	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"user_id\" ILIKE ? || '%'", v)}
 }
 
 type blogPostContentFilter struct{}
 
+func (blogPostContentFilter) Regex(v string) (filter blogPostFilterArg) {
+	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"content\" ~ ?", v)}
+}
+func (blogPostContentFilter) Gt(v string) (filter blogPostFilterArg) {
+	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"content\" > ?", v)}
+}
+func (blogPostContentFilter) NotEq(v string) (filter blogPostFilterArg) {
+	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"content\" != ?", v)}
+}
+func (blogPostContentFilter) IContains(v string) (filter blogPostFilterArg) {
+	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"content\" ILIKE '%' || ? || '%'", v)}
+}
+func (blogPostContentFilter) HasPrefix(v string) (filter blogPostFilterArg) {
+	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"content\" LIKE ? || '%'", v)}
+}
+func (blogPostContentFilter) IRegex(v string) (filter blogPostFilterArg) {
+	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"content\" ~* ?", v)}
+}
+func (blogPostContentFilter) Gte(v string) (filter blogPostFilterArg) {
+	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"content\" >= ?", v)}
+}
 func (blogPostContentFilter) Contains(v string) (filter blogPostFilterArg) {
 	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"content\" LIKE '%' || ? || '%'", v)}
 }
 func (blogPostContentFilter) Lt(v string) (filter blogPostFilterArg) {
 	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"content\" < ?", v)}
-}
-func (blogPostContentFilter) Lte(v string) (filter blogPostFilterArg) {
-	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"content\" <= ?", v)}
-}
-func (blogPostContentFilter) Gte(v string) (filter blogPostFilterArg) {
-	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"content\" >= ?", v)}
 }
 func (blogPostContentFilter) HasSuffix(v string) (filter blogPostFilterArg) {
 	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"content\" LIKE '%' || ?", v)}
@@ -3069,36 +3084,24 @@ func (blogPostContentFilter) HasSuffix(v string) (filter blogPostFilterArg) {
 func (blogPostContentFilter) IHasPrefix(v string) (filter blogPostFilterArg) {
 	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"content\" ILIKE ? || '%'", v)}
 }
-func (blogPostContentFilter) ILike(v string) (filter blogPostFilterArg) {
-	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"content\" LIKE ?", v)}
-}
-func (blogPostContentFilter) IContains(v string) (filter blogPostFilterArg) {
-	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"content\" ILIKE '%' || ? || '%'", v)}
-}
-func (blogPostContentFilter) Regex(v string) (filter blogPostFilterArg) {
-	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"content\" ~ ?", v)}
+func (blogPostContentFilter) IHasSuffix(v string) (filter blogPostFilterArg) {
+	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"content\" ILIKE '%' || ?", v)}
 }
 func (blogPostContentFilter) Eq(v string) (filter blogPostFilterArg) {
 	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"content\" = ?", v)}
 }
-func (blogPostContentFilter) IHasSuffix(v string) (filter blogPostFilterArg) {
-	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"content\" ILIKE '%' || ?", v)}
+func (blogPostContentFilter) ILike(v string) (filter blogPostFilterArg) {
+	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"content\" LIKE ?", v)}
 }
-func (blogPostContentFilter) HasPrefix(v string) (filter blogPostFilterArg) {
-	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"content\" LIKE ? || '%'", v)}
-}
-func (blogPostContentFilter) NotEq(v string) (filter blogPostFilterArg) {
-	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"content\" != ?", v)}
-}
-func (blogPostContentFilter) IRegex(v string) (filter blogPostFilterArg) {
-	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"content\" ~* ?", v)}
-}
-func (blogPostContentFilter) Gt(v string) (filter blogPostFilterArg) {
-	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"content\" > ?", v)}
+func (blogPostContentFilter) Lte(v string) (filter blogPostFilterArg) {
+	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"content\" <= ?", v)}
 }
 
 type blogPostDateFilter struct{}
 
+func (blogPostDateFilter) Eq(v time.Time) (filter blogPostFilterArg) {
+	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"date\" = ?", v)}
+}
 func (blogPostDateFilter) NotEq(v time.Time) (filter blogPostFilterArg) {
 	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"date\" != ?", v)}
 }
@@ -3108,15 +3111,9 @@ func (blogPostDateFilter) Before(v time.Time) (filter blogPostFilterArg) {
 func (blogPostDateFilter) After(v time.Time) (filter blogPostFilterArg) {
 	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"date\" > ?", v)}
 }
-func (blogPostDateFilter) Eq(v time.Time) (filter blogPostFilterArg) {
-	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"date\" = ?", v)}
-}
 
 type blogPostEditedAtFilter struct{}
 
-func (blogPostEditedAtFilter) Eq(v time.Time) (filter blogPostFilterArg) {
-	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"edited_at\" = ?", v)}
-}
 func (blogPostEditedAtFilter) NotEq(v time.Time) (filter blogPostFilterArg) {
 	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"edited_at\" != ?", v)}
 }
@@ -3126,38 +3123,20 @@ func (blogPostEditedAtFilter) Before(v time.Time) (filter blogPostFilterArg) {
 func (blogPostEditedAtFilter) After(v time.Time) (filter blogPostFilterArg) {
 	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"edited_at\" > ?", v)}
 }
+func (blogPostEditedAtFilter) Eq(v time.Time) (filter blogPostFilterArg) {
+	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"edited_at\" = ?", v)}
+}
 
 type blogPostImageFilter struct{}
 
-func (blogPostImageFilter) Gt(v string) (filter blogPostFilterArg) {
-	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"image\" > ?", v)}
-}
-func (blogPostImageFilter) Lt(v string) (filter blogPostFilterArg) {
-	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"image\" < ?", v)}
-}
-func (blogPostImageFilter) NotEq(v string) (filter blogPostFilterArg) {
-	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"image\" != ?", v)}
-}
-func (blogPostImageFilter) IContains(v string) (filter blogPostFilterArg) {
-	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"image\" ILIKE '%' || ? || '%'", v)}
+func (blogPostImageFilter) Regex(v string) (filter blogPostFilterArg) {
+	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"image\" ~ ?", v)}
 }
 func (blogPostImageFilter) IRegex(v string) (filter blogPostFilterArg) {
 	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"image\" ~* ?", v)}
 }
-func (blogPostImageFilter) ILike(v string) (filter blogPostFilterArg) {
-	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"image\" LIKE ?", v)}
-}
-func (blogPostImageFilter) Lte(v string) (filter blogPostFilterArg) {
-	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"image\" <= ?", v)}
-}
-func (blogPostImageFilter) Eq(v string) (filter blogPostFilterArg) {
-	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"image\" = ?", v)}
-}
-func (blogPostImageFilter) Contains(v string) (filter blogPostFilterArg) {
-	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"image\" LIKE '%' || ? || '%'", v)}
-}
-func (blogPostImageFilter) HasSuffix(v string) (filter blogPostFilterArg) {
-	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"image\" LIKE '%' || ?", v)}
+func (blogPostImageFilter) HasPrefix(v string) (filter blogPostFilterArg) {
+	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"image\" LIKE ? || '%'", v)}
 }
 func (blogPostImageFilter) IHasPrefix(v string) (filter blogPostFilterArg) {
 	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"image\" ILIKE ? || '%'", v)}
@@ -3165,45 +3144,39 @@ func (blogPostImageFilter) IHasPrefix(v string) (filter blogPostFilterArg) {
 func (blogPostImageFilter) IHasSuffix(v string) (filter blogPostFilterArg) {
 	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"image\" ILIKE '%' || ?", v)}
 }
-func (blogPostImageFilter) Regex(v string) (filter blogPostFilterArg) {
-	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"image\" ~ ?", v)}
+func (blogPostImageFilter) Eq(v string) (filter blogPostFilterArg) {
+	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"image\" = ?", v)}
+}
+func (blogPostImageFilter) IContains(v string) (filter blogPostFilterArg) {
+	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"image\" ILIKE '%' || ? || '%'", v)}
+}
+func (blogPostImageFilter) NotEq(v string) (filter blogPostFilterArg) {
+	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"image\" != ?", v)}
+}
+func (blogPostImageFilter) Contains(v string) (filter blogPostFilterArg) {
+	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"image\" LIKE '%' || ? || '%'", v)}
+}
+func (blogPostImageFilter) HasSuffix(v string) (filter blogPostFilterArg) {
+	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"image\" LIKE '%' || ?", v)}
+}
+func (blogPostImageFilter) ILike(v string) (filter blogPostFilterArg) {
+	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"image\" LIKE ?", v)}
+}
+func (blogPostImageFilter) Lte(v string) (filter blogPostFilterArg) {
+	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"image\" <= ?", v)}
+}
+func (blogPostImageFilter) Lt(v string) (filter blogPostFilterArg) {
+	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"image\" < ?", v)}
+}
+func (blogPostImageFilter) Gt(v string) (filter blogPostFilterArg) {
+	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"image\" > ?", v)}
 }
 func (blogPostImageFilter) Gte(v string) (filter blogPostFilterArg) {
 	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"image\" >= ?", v)}
 }
-func (blogPostImageFilter) HasPrefix(v string) (filter blogPostFilterArg) {
-	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"image\" LIKE ? || '%'", v)}
-}
 
 type blogPostSummaryFilter struct{}
 
-func (blogPostSummaryFilter) IRegex(v string) (filter blogPostFilterArg) {
-	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"summary\" ~* ?", v)}
-}
-func (blogPostSummaryFilter) Gte(v string) (filter blogPostFilterArg) {
-	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"summary\" >= ?", v)}
-}
-func (blogPostSummaryFilter) HasPrefix(v string) (filter blogPostFilterArg) {
-	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"summary\" LIKE ? || '%'", v)}
-}
-func (blogPostSummaryFilter) IHasPrefix(v string) (filter blogPostFilterArg) {
-	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"summary\" ILIKE ? || '%'", v)}
-}
-func (blogPostSummaryFilter) Contains(v string) (filter blogPostFilterArg) {
-	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"summary\" LIKE '%' || ? || '%'", v)}
-}
-func (blogPostSummaryFilter) Regex(v string) (filter blogPostFilterArg) {
-	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"summary\" ~ ?", v)}
-}
-func (blogPostSummaryFilter) Lte(v string) (filter blogPostFilterArg) {
-	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"summary\" <= ?", v)}
-}
-func (blogPostSummaryFilter) HasSuffix(v string) (filter blogPostFilterArg) {
-	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"summary\" LIKE '%' || ?", v)}
-}
-func (blogPostSummaryFilter) IHasSuffix(v string) (filter blogPostFilterArg) {
-	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"summary\" ILIKE '%' || ?", v)}
-}
 func (blogPostSummaryFilter) Eq(v string) (filter blogPostFilterArg) {
 	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"summary\" = ?", v)}
 }
@@ -3213,14 +3186,41 @@ func (blogPostSummaryFilter) ILike(v string) (filter blogPostFilterArg) {
 func (blogPostSummaryFilter) NotEq(v string) (filter blogPostFilterArg) {
 	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"summary\" != ?", v)}
 }
-func (blogPostSummaryFilter) IContains(v string) (filter blogPostFilterArg) {
-	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"summary\" ILIKE '%' || ? || '%'", v)}
+func (blogPostSummaryFilter) Contains(v string) (filter blogPostFilterArg) {
+	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"summary\" LIKE '%' || ? || '%'", v)}
+}
+func (blogPostSummaryFilter) Lte(v string) (filter blogPostFilterArg) {
+	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"summary\" <= ?", v)}
+}
+func (blogPostSummaryFilter) Regex(v string) (filter blogPostFilterArg) {
+	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"summary\" ~ ?", v)}
+}
+func (blogPostSummaryFilter) Lt(v string) (filter blogPostFilterArg) {
+	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"summary\" < ?", v)}
+}
+func (blogPostSummaryFilter) HasSuffix(v string) (filter blogPostFilterArg) {
+	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"summary\" LIKE '%' || ?", v)}
+}
+func (blogPostSummaryFilter) IRegex(v string) (filter blogPostFilterArg) {
+	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"summary\" ~* ?", v)}
 }
 func (blogPostSummaryFilter) Gt(v string) (filter blogPostFilterArg) {
 	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"summary\" > ?", v)}
 }
-func (blogPostSummaryFilter) Lt(v string) (filter blogPostFilterArg) {
-	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"summary\" < ?", v)}
+func (blogPostSummaryFilter) Gte(v string) (filter blogPostFilterArg) {
+	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"summary\" >= ?", v)}
+}
+func (blogPostSummaryFilter) IHasPrefix(v string) (filter blogPostFilterArg) {
+	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"summary\" ILIKE ? || '%'", v)}
+}
+func (blogPostSummaryFilter) IHasSuffix(v string) (filter blogPostFilterArg) {
+	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"summary\" ILIKE '%' || ?", v)}
+}
+func (blogPostSummaryFilter) IContains(v string) (filter blogPostFilterArg) {
+	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"summary\" ILIKE '%' || ? || '%'", v)}
+}
+func (blogPostSummaryFilter) HasPrefix(v string) (filter blogPostFilterArg) {
+	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"summary\" LIKE ? || '%'", v)}
 }
 
 type blogPostPublishedFilter struct{}
@@ -3240,12 +3240,6 @@ func (blogPostPublishedFilter) NotEq(v bool) (filter blogPostFilterArg) {
 
 type blogPostScoreFilter struct{}
 
-func (blogPostScoreFilter) Eq(v int64) (filter blogPostFilterArg) {
-	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"score\" = ?", v)}
-}
-func (blogPostScoreFilter) NotEq(v int64) (filter blogPostFilterArg) {
-	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"score\" != ?", v)}
-}
 func (blogPostScoreFilter) Lt(v int64) (filter blogPostFilterArg) {
 	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"score\" < ?", v)}
 }
@@ -3257,6 +3251,12 @@ func (blogPostScoreFilter) Gt(v int64) (filter blogPostFilterArg) {
 }
 func (blogPostScoreFilter) Gte(v int64) (filter blogPostFilterArg) {
 	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"score\" >= ?", v)}
+}
+func (blogPostScoreFilter) Eq(v int64) (filter blogPostFilterArg) {
+	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"score\" = ?", v)}
+}
+func (blogPostScoreFilter) NotEq(v int64) (filter blogPostFilterArg) {
+	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"score\" != ?", v)}
 }
 
 type blogPostSharesFilter struct{}
@@ -3282,50 +3282,50 @@ func (blogPostSharesFilter) Gte(v int64) (filter blogPostFilterArg) {
 
 type blogPostSlugFilter struct{}
 
-func (blogPostSlugFilter) NotEq(v string) (filter blogPostFilterArg) {
-	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"slug\" != ?", v)}
-}
-func (blogPostSlugFilter) Lt(v string) (filter blogPostFilterArg) {
-	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"slug\" < ?", v)}
-}
-func (blogPostSlugFilter) HasSuffix(v string) (filter blogPostFilterArg) {
-	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"slug\" LIKE '%' || ?", v)}
-}
-func (blogPostSlugFilter) IHasPrefix(v string) (filter blogPostFilterArg) {
-	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"slug\" ILIKE ? || '%'", v)}
-}
-func (blogPostSlugFilter) Eq(v string) (filter blogPostFilterArg) {
-	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"slug\" = ?", v)}
-}
-func (blogPostSlugFilter) ILike(v string) (filter blogPostFilterArg) {
-	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"slug\" LIKE ?", v)}
-}
-func (blogPostSlugFilter) Gt(v string) (filter blogPostFilterArg) {
-	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"slug\" > ?", v)}
-}
-func (blogPostSlugFilter) IContains(v string) (filter blogPostFilterArg) {
-	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"slug\" ILIKE '%' || ? || '%'", v)}
-}
-func (blogPostSlugFilter) HasPrefix(v string) (filter blogPostFilterArg) {
-	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"slug\" LIKE ? || '%'", v)}
-}
-func (blogPostSlugFilter) Contains(v string) (filter blogPostFilterArg) {
-	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"slug\" LIKE '%' || ? || '%'", v)}
-}
 func (blogPostSlugFilter) Regex(v string) (filter blogPostFilterArg) {
 	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"slug\" ~ ?", v)}
-}
-func (blogPostSlugFilter) IRegex(v string) (filter blogPostFilterArg) {
-	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"slug\" ~* ?", v)}
 }
 func (blogPostSlugFilter) Gte(v string) (filter blogPostFilterArg) {
 	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"slug\" >= ?", v)}
 }
+func (blogPostSlugFilter) NotEq(v string) (filter blogPostFilterArg) {
+	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"slug\" != ?", v)}
+}
+func (blogPostSlugFilter) Contains(v string) (filter blogPostFilterArg) {
+	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"slug\" LIKE '%' || ? || '%'", v)}
+}
+func (blogPostSlugFilter) Gt(v string) (filter blogPostFilterArg) {
+	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"slug\" > ?", v)}
+}
 func (blogPostSlugFilter) Lte(v string) (filter blogPostFilterArg) {
 	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"slug\" <= ?", v)}
 }
+func (blogPostSlugFilter) IHasPrefix(v string) (filter blogPostFilterArg) {
+	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"slug\" ILIKE ? || '%'", v)}
+}
 func (blogPostSlugFilter) IHasSuffix(v string) (filter blogPostFilterArg) {
 	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"slug\" ILIKE '%' || ?", v)}
+}
+func (blogPostSlugFilter) Eq(v string) (filter blogPostFilterArg) {
+	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"slug\" = ?", v)}
+}
+func (blogPostSlugFilter) IRegex(v string) (filter blogPostFilterArg) {
+	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"slug\" ~* ?", v)}
+}
+func (blogPostSlugFilter) IContains(v string) (filter blogPostFilterArg) {
+	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"slug\" ILIKE '%' || ? || '%'", v)}
+}
+func (blogPostSlugFilter) HasSuffix(v string) (filter blogPostFilterArg) {
+	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"slug\" LIKE '%' || ?", v)}
+}
+func (blogPostSlugFilter) HasPrefix(v string) (filter blogPostFilterArg) {
+	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"slug\" LIKE ? || '%'", v)}
+}
+func (blogPostSlugFilter) ILike(v string) (filter blogPostFilterArg) {
+	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"slug\" LIKE ?", v)}
+}
+func (blogPostSlugFilter) Lt(v string) (filter blogPostFilterArg) {
+	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"slug\" < ?", v)}
 }
 
 type blogPostStageFilter struct{}
@@ -3351,11 +3351,38 @@ func (blogPostStageFilter) Gt(v int64) (filter blogPostFilterArg) {
 
 type blogPostTitleFilter struct{}
 
-func (blogPostTitleFilter) IHasPrefix(v string) (filter blogPostFilterArg) {
-	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"title\" ILIKE ? || '%'", v)}
+func (blogPostTitleFilter) NotEq(v string) (filter blogPostFilterArg) {
+	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"title\" != ?", v)}
+}
+func (blogPostTitleFilter) Gt(v string) (filter blogPostFilterArg) {
+	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"title\" > ?", v)}
+}
+func (blogPostTitleFilter) HasSuffix(v string) (filter blogPostFilterArg) {
+	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"title\" LIKE '%' || ?", v)}
+}
+func (blogPostTitleFilter) IHasSuffix(v string) (filter blogPostFilterArg) {
+	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"title\" ILIKE '%' || ?", v)}
+}
+func (blogPostTitleFilter) Eq(v string) (filter blogPostFilterArg) {
+	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"title\" = ?", v)}
+}
+func (blogPostTitleFilter) IContains(v string) (filter blogPostFilterArg) {
+	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"title\" ILIKE '%' || ? || '%'", v)}
+}
+func (blogPostTitleFilter) Gte(v string) (filter blogPostFilterArg) {
+	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"title\" >= ?", v)}
+}
+func (blogPostTitleFilter) IRegex(v string) (filter blogPostFilterArg) {
+	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"title\" ~* ?", v)}
+}
+func (blogPostTitleFilter) Lt(v string) (filter blogPostFilterArg) {
+	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"title\" < ?", v)}
 }
 func (blogPostTitleFilter) HasPrefix(v string) (filter blogPostFilterArg) {
 	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"title\" LIKE ? || '%'", v)}
+}
+func (blogPostTitleFilter) ILike(v string) (filter blogPostFilterArg) {
+	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"title\" LIKE ?", v)}
 }
 func (blogPostTitleFilter) Contains(v string) (filter blogPostFilterArg) {
 	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"title\" LIKE '%' || ? || '%'", v)}
@@ -3363,42 +3390,18 @@ func (blogPostTitleFilter) Contains(v string) (filter blogPostFilterArg) {
 func (blogPostTitleFilter) Regex(v string) (filter blogPostFilterArg) {
 	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"title\" ~ ?", v)}
 }
-func (blogPostTitleFilter) IRegex(v string) (filter blogPostFilterArg) {
-	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"title\" ~* ?", v)}
-}
-func (blogPostTitleFilter) Gte(v string) (filter blogPostFilterArg) {
-	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"title\" >= ?", v)}
-}
-func (blogPostTitleFilter) IHasSuffix(v string) (filter blogPostFilterArg) {
-	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"title\" ILIKE '%' || ?", v)}
-}
-func (blogPostTitleFilter) ILike(v string) (filter blogPostFilterArg) {
-	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"title\" LIKE ?", v)}
-}
-func (blogPostTitleFilter) NotEq(v string) (filter blogPostFilterArg) {
-	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"title\" != ?", v)}
-}
-func (blogPostTitleFilter) IContains(v string) (filter blogPostFilterArg) {
-	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"title\" ILIKE '%' || ? || '%'", v)}
-}
 func (blogPostTitleFilter) Lte(v string) (filter blogPostFilterArg) {
 	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"title\" <= ?", v)}
 }
-func (blogPostTitleFilter) Eq(v string) (filter blogPostFilterArg) {
-	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"title\" = ?", v)}
-}
-func (blogPostTitleFilter) Lt(v string) (filter blogPostFilterArg) {
-	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"title\" < ?", v)}
-}
-func (blogPostTitleFilter) HasSuffix(v string) (filter blogPostFilterArg) {
-	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"title\" LIKE '%' || ?", v)}
-}
-func (blogPostTitleFilter) Gt(v string) (filter blogPostFilterArg) {
-	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"title\" > ?", v)}
+func (blogPostTitleFilter) IHasPrefix(v string) (filter blogPostFilterArg) {
+	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"title\" ILIKE ? || '%'", v)}
 }
 
 type blogPostUnlistedFilter struct{}
 
+func (blogPostUnlistedFilter) NotEq(v bool) (filter blogPostFilterArg) {
+	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"unlisted\" != ?", v)}
+}
 func (blogPostUnlistedFilter) Eq(v bool) (filter blogPostFilterArg) {
 	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"unlisted\" = ?", v)}
 }
@@ -3407,9 +3410,6 @@ func (blogPostUnlistedFilter) True() (filter blogPostFilterArg) {
 }
 func (blogPostUnlistedFilter) False() (filter blogPostFilterArg) {
 	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"unlisted\" = ?", false)}
-}
-func (blogPostUnlistedFilter) NotEq(v bool) (filter blogPostFilterArg) {
-	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"unlisted\" != ?", v)}
 }
 
 type blogPostViewsFilter struct{}
@@ -3435,12 +3435,6 @@ func (blogPostViewsFilter) NotEq(v int64) (filter blogPostFilterArg) {
 
 type blogPostVotesTotalFilter struct{}
 
-func (blogPostVotesTotalFilter) Lte(v int64) (filter blogPostFilterArg) {
-	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"votes_total\" <= ?", v)}
-}
-func (blogPostVotesTotalFilter) Gt(v int64) (filter blogPostFilterArg) {
-	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"votes_total\" > ?", v)}
-}
 func (blogPostVotesTotalFilter) Gte(v int64) (filter blogPostFilterArg) {
 	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"votes_total\" >= ?", v)}
 }
@@ -3453,18 +3447,15 @@ func (blogPostVotesTotalFilter) NotEq(v int64) (filter blogPostFilterArg) {
 func (blogPostVotesTotalFilter) Lt(v int64) (filter blogPostFilterArg) {
 	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"votes_total\" < ?", v)}
 }
+func (blogPostVotesTotalFilter) Lte(v int64) (filter blogPostFilterArg) {
+	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"votes_total\" <= ?", v)}
+}
+func (blogPostVotesTotalFilter) Gt(v int64) (filter blogPostFilterArg) {
+	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"votes_total\" > ?", v)}
+}
 
 type blogPostVotesUsersFilter struct{}
 
-func (blogPostVotesUsersFilter) Lte(v int64) (filter blogPostFilterArg) {
-	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"votes_users\" <= ?", v)}
-}
-func (blogPostVotesUsersFilter) Gt(v int64) (filter blogPostFilterArg) {
-	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"votes_users\" > ?", v)}
-}
-func (blogPostVotesUsersFilter) Gte(v int64) (filter blogPostFilterArg) {
-	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"votes_users\" >= ?", v)}
-}
 func (blogPostVotesUsersFilter) Eq(v int64) (filter blogPostFilterArg) {
 	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"votes_users\" = ?", v)}
 }
@@ -3473,6 +3464,15 @@ func (blogPostVotesUsersFilter) NotEq(v int64) (filter blogPostFilterArg) {
 }
 func (blogPostVotesUsersFilter) Lt(v int64) (filter blogPostFilterArg) {
 	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"votes_users\" < ?", v)}
+}
+func (blogPostVotesUsersFilter) Lte(v int64) (filter blogPostFilterArg) {
+	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"votes_users\" <= ?", v)}
+}
+func (blogPostVotesUsersFilter) Gt(v int64) (filter blogPostFilterArg) {
+	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"votes_users\" > ?", v)}
+}
+func (blogPostVotesUsersFilter) Gte(v int64) (filter blogPostFilterArg) {
+	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"votes_users\" >= ?", v)}
 }
 
 type blogPostTagsFilter struct{}
@@ -3483,6 +3483,12 @@ func (blogPostTagsFilter) Contains(v []string) (filter blogPostFilterArg) {
 
 type blogPostDonationsFilter struct{}
 
+func (blogPostDonationsFilter) Gt(v int64) (filter blogPostFilterArg) {
+	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"donations\" > ?", v)}
+}
+func (blogPostDonationsFilter) Gte(v int64) (filter blogPostFilterArg) {
+	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"donations\" >= ?", v)}
+}
 func (blogPostDonationsFilter) Eq(v int64) (filter blogPostFilterArg) {
 	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"donations\" = ?", v)}
 }
@@ -3494,12 +3500,6 @@ func (blogPostDonationsFilter) Lt(v int64) (filter blogPostFilterArg) {
 }
 func (blogPostDonationsFilter) Lte(v int64) (filter blogPostFilterArg) {
 	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"donations\" <= ?", v)}
-}
-func (blogPostDonationsFilter) Gt(v int64) (filter blogPostFilterArg) {
-	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"donations\" > ?", v)}
-}
-func (blogPostDonationsFilter) Gte(v int64) (filter blogPostFilterArg) {
-	return blogPostFilterArg{filter: sq.Expr("\"blog_posts\".\"donations\" >= ?", v)}
 }
 
 type blogPostFilters struct {
@@ -4227,20 +4227,8 @@ func newNewsletterSubscriberOrders() newsletterSubscriberOrders {
 
 type newsletterSubscriberIDFilter struct{}
 
-func (newsletterSubscriberIDFilter) Eq(v string) (filter newsletterSubscriberFilterArg) {
-	return newsletterSubscriberFilterArg{filter: sq.Expr("\"newsletter_subscribers\".\"id\" = ?", v)}
-}
-func (newsletterSubscriberIDFilter) ILike(v string) (filter newsletterSubscriberFilterArg) {
-	return newsletterSubscriberFilterArg{filter: sq.Expr("\"newsletter_subscribers\".\"id\" LIKE ?", v)}
-}
-func (newsletterSubscriberIDFilter) Gte(v string) (filter newsletterSubscriberFilterArg) {
-	return newsletterSubscriberFilterArg{filter: sq.Expr("\"newsletter_subscribers\".\"id\" >= ?", v)}
-}
-func (newsletterSubscriberIDFilter) Contains(v string) (filter newsletterSubscriberFilterArg) {
-	return newsletterSubscriberFilterArg{filter: sq.Expr("\"newsletter_subscribers\".\"id\" LIKE '%' || ? || '%'", v)}
-}
-func (newsletterSubscriberIDFilter) HasSuffix(v string) (filter newsletterSubscriberFilterArg) {
-	return newsletterSubscriberFilterArg{filter: sq.Expr("\"newsletter_subscribers\".\"id\" LIKE '%' || ?", v)}
+func (newsletterSubscriberIDFilter) NotEq(v string) (filter newsletterSubscriberFilterArg) {
+	return newsletterSubscriberFilterArg{filter: sq.Expr("\"newsletter_subscribers\".\"id\" != ?", v)}
 }
 func (newsletterSubscriberIDFilter) IContains(v string) (filter newsletterSubscriberFilterArg) {
 	return newsletterSubscriberFilterArg{filter: sq.Expr("\"newsletter_subscribers\".\"id\" ILIKE '%' || ? || '%'", v)}
@@ -4248,26 +4236,38 @@ func (newsletterSubscriberIDFilter) IContains(v string) (filter newsletterSubscr
 func (newsletterSubscriberIDFilter) Regex(v string) (filter newsletterSubscriberFilterArg) {
 	return newsletterSubscriberFilterArg{filter: sq.Expr("\"newsletter_subscribers\".\"id\" ~ ?", v)}
 }
+func (newsletterSubscriberIDFilter) Lt(v string) (filter newsletterSubscriberFilterArg) {
+	return newsletterSubscriberFilterArg{filter: sq.Expr("\"newsletter_subscribers\".\"id\" < ?", v)}
+}
+func (newsletterSubscriberIDFilter) IHasPrefix(v string) (filter newsletterSubscriberFilterArg) {
+	return newsletterSubscriberFilterArg{filter: sq.Expr("\"newsletter_subscribers\".\"id\" ILIKE ? || '%'", v)}
+}
+func (newsletterSubscriberIDFilter) Eq(v string) (filter newsletterSubscriberFilterArg) {
+	return newsletterSubscriberFilterArg{filter: sq.Expr("\"newsletter_subscribers\".\"id\" = ?", v)}
+}
+func (newsletterSubscriberIDFilter) Gte(v string) (filter newsletterSubscriberFilterArg) {
+	return newsletterSubscriberFilterArg{filter: sq.Expr("\"newsletter_subscribers\".\"id\" >= ?", v)}
+}
+func (newsletterSubscriberIDFilter) HasSuffix(v string) (filter newsletterSubscriberFilterArg) {
+	return newsletterSubscriberFilterArg{filter: sq.Expr("\"newsletter_subscribers\".\"id\" LIKE '%' || ?", v)}
+}
+func (newsletterSubscriberIDFilter) ILike(v string) (filter newsletterSubscriberFilterArg) {
+	return newsletterSubscriberFilterArg{filter: sq.Expr("\"newsletter_subscribers\".\"id\" LIKE ?", v)}
+}
+func (newsletterSubscriberIDFilter) Contains(v string) (filter newsletterSubscriberFilterArg) {
+	return newsletterSubscriberFilterArg{filter: sq.Expr("\"newsletter_subscribers\".\"id\" LIKE '%' || ? || '%'", v)}
+}
+func (newsletterSubscriberIDFilter) HasPrefix(v string) (filter newsletterSubscriberFilterArg) {
+	return newsletterSubscriberFilterArg{filter: sq.Expr("\"newsletter_subscribers\".\"id\" LIKE ? || '%'", v)}
+}
+func (newsletterSubscriberIDFilter) IHasSuffix(v string) (filter newsletterSubscriberFilterArg) {
+	return newsletterSubscriberFilterArg{filter: sq.Expr("\"newsletter_subscribers\".\"id\" ILIKE '%' || ?", v)}
+}
 func (newsletterSubscriberIDFilter) IRegex(v string) (filter newsletterSubscriberFilterArg) {
 	return newsletterSubscriberFilterArg{filter: sq.Expr("\"newsletter_subscribers\".\"id\" ~* ?", v)}
 }
 func (newsletterSubscriberIDFilter) Gt(v string) (filter newsletterSubscriberFilterArg) {
 	return newsletterSubscriberFilterArg{filter: sq.Expr("\"newsletter_subscribers\".\"id\" > ?", v)}
-}
-func (newsletterSubscriberIDFilter) HasPrefix(v string) (filter newsletterSubscriberFilterArg) {
-	return newsletterSubscriberFilterArg{filter: sq.Expr("\"newsletter_subscribers\".\"id\" LIKE ? || '%'", v)}
-}
-func (newsletterSubscriberIDFilter) IHasPrefix(v string) (filter newsletterSubscriberFilterArg) {
-	return newsletterSubscriberFilterArg{filter: sq.Expr("\"newsletter_subscribers\".\"id\" ILIKE ? || '%'", v)}
-}
-func (newsletterSubscriberIDFilter) IHasSuffix(v string) (filter newsletterSubscriberFilterArg) {
-	return newsletterSubscriberFilterArg{filter: sq.Expr("\"newsletter_subscribers\".\"id\" ILIKE '%' || ?", v)}
-}
-func (newsletterSubscriberIDFilter) NotEq(v string) (filter newsletterSubscriberFilterArg) {
-	return newsletterSubscriberFilterArg{filter: sq.Expr("\"newsletter_subscribers\".\"id\" != ?", v)}
-}
-func (newsletterSubscriberIDFilter) Lt(v string) (filter newsletterSubscriberFilterArg) {
-	return newsletterSubscriberFilterArg{filter: sq.Expr("\"newsletter_subscribers\".\"id\" < ?", v)}
 }
 func (newsletterSubscriberIDFilter) Lte(v string) (filter newsletterSubscriberFilterArg) {
 	return newsletterSubscriberFilterArg{filter: sq.Expr("\"newsletter_subscribers\".\"id\" <= ?", v)}
@@ -4290,56 +4290,29 @@ func (newsletterSubscriberCreatedAtFilter) After(v time.Time) (filter newsletter
 
 type newsletterSubscriberUpdatedAtFilter struct{}
 
-func (newsletterSubscriberUpdatedAtFilter) Before(v time.Time) (filter newsletterSubscriberFilterArg) {
-	return newsletterSubscriberFilterArg{filter: sq.Expr("\"newsletter_subscribers\".\"updated_at\" < ?", v)}
-}
-func (newsletterSubscriberUpdatedAtFilter) After(v time.Time) (filter newsletterSubscriberFilterArg) {
-	return newsletterSubscriberFilterArg{filter: sq.Expr("\"newsletter_subscribers\".\"updated_at\" > ?", v)}
-}
 func (newsletterSubscriberUpdatedAtFilter) Eq(v time.Time) (filter newsletterSubscriberFilterArg) {
 	return newsletterSubscriberFilterArg{filter: sq.Expr("\"newsletter_subscribers\".\"updated_at\" = ?", v)}
 }
 func (newsletterSubscriberUpdatedAtFilter) NotEq(v time.Time) (filter newsletterSubscriberFilterArg) {
 	return newsletterSubscriberFilterArg{filter: sq.Expr("\"newsletter_subscribers\".\"updated_at\" != ?", v)}
 }
+func (newsletterSubscriberUpdatedAtFilter) Before(v time.Time) (filter newsletterSubscriberFilterArg) {
+	return newsletterSubscriberFilterArg{filter: sq.Expr("\"newsletter_subscribers\".\"updated_at\" < ?", v)}
+}
+func (newsletterSubscriberUpdatedAtFilter) After(v time.Time) (filter newsletterSubscriberFilterArg) {
+	return newsletterSubscriberFilterArg{filter: sq.Expr("\"newsletter_subscribers\".\"updated_at\" > ?", v)}
+}
 
 type newsletterSubscriberEmailFilter struct{}
 
-func (newsletterSubscriberEmailFilter) Eq(v string) (filter newsletterSubscriberFilterArg) {
-	return newsletterSubscriberFilterArg{filter: sq.Expr("\"newsletter_subscribers\".\"email\" = ?", v)}
-}
-func (newsletterSubscriberEmailFilter) Contains(v string) (filter newsletterSubscriberFilterArg) {
-	return newsletterSubscriberFilterArg{filter: sq.Expr("\"newsletter_subscribers\".\"email\" LIKE '%' || ? || '%'", v)}
-}
-func (newsletterSubscriberEmailFilter) Lte(v string) (filter newsletterSubscriberFilterArg) {
-	return newsletterSubscriberFilterArg{filter: sq.Expr("\"newsletter_subscribers\".\"email\" <= ?", v)}
-}
 func (newsletterSubscriberEmailFilter) NotEq(v string) (filter newsletterSubscriberFilterArg) {
 	return newsletterSubscriberFilterArg{filter: sq.Expr("\"newsletter_subscribers\".\"email\" != ?", v)}
 }
-func (newsletterSubscriberEmailFilter) IContains(v string) (filter newsletterSubscriberFilterArg) {
-	return newsletterSubscriberFilterArg{filter: sq.Expr("\"newsletter_subscribers\".\"email\" ILIKE '%' || ? || '%'", v)}
-}
-func (newsletterSubscriberEmailFilter) Gte(v string) (filter newsletterSubscriberFilterArg) {
-	return newsletterSubscriberFilterArg{filter: sq.Expr("\"newsletter_subscribers\".\"email\" >= ?", v)}
-}
-func (newsletterSubscriberEmailFilter) HasSuffix(v string) (filter newsletterSubscriberFilterArg) {
-	return newsletterSubscriberFilterArg{filter: sq.Expr("\"newsletter_subscribers\".\"email\" LIKE '%' || ?", v)}
-}
-func (newsletterSubscriberEmailFilter) Regex(v string) (filter newsletterSubscriberFilterArg) {
-	return newsletterSubscriberFilterArg{filter: sq.Expr("\"newsletter_subscribers\".\"email\" ~ ?", v)}
+func (newsletterSubscriberEmailFilter) IRegex(v string) (filter newsletterSubscriberFilterArg) {
+	return newsletterSubscriberFilterArg{filter: sq.Expr("\"newsletter_subscribers\".\"email\" ~* ?", v)}
 }
 func (newsletterSubscriberEmailFilter) Gt(v string) (filter newsletterSubscriberFilterArg) {
 	return newsletterSubscriberFilterArg{filter: sq.Expr("\"newsletter_subscribers\".\"email\" > ?", v)}
-}
-func (newsletterSubscriberEmailFilter) Lt(v string) (filter newsletterSubscriberFilterArg) {
-	return newsletterSubscriberFilterArg{filter: sq.Expr("\"newsletter_subscribers\".\"email\" < ?", v)}
-}
-func (newsletterSubscriberEmailFilter) ILike(v string) (filter newsletterSubscriberFilterArg) {
-	return newsletterSubscriberFilterArg{filter: sq.Expr("\"newsletter_subscribers\".\"email\" LIKE ?", v)}
-}
-func (newsletterSubscriberEmailFilter) IRegex(v string) (filter newsletterSubscriberFilterArg) {
-	return newsletterSubscriberFilterArg{filter: sq.Expr("\"newsletter_subscribers\".\"email\" ~* ?", v)}
 }
 func (newsletterSubscriberEmailFilter) HasPrefix(v string) (filter newsletterSubscriberFilterArg) {
 	return newsletterSubscriberFilterArg{filter: sq.Expr("\"newsletter_subscribers\".\"email\" LIKE ? || '%'", v)}
@@ -4347,8 +4320,35 @@ func (newsletterSubscriberEmailFilter) HasPrefix(v string) (filter newsletterSub
 func (newsletterSubscriberEmailFilter) IHasPrefix(v string) (filter newsletterSubscriberFilterArg) {
 	return newsletterSubscriberFilterArg{filter: sq.Expr("\"newsletter_subscribers\".\"email\" ILIKE ? || '%'", v)}
 }
+func (newsletterSubscriberEmailFilter) Eq(v string) (filter newsletterSubscriberFilterArg) {
+	return newsletterSubscriberFilterArg{filter: sq.Expr("\"newsletter_subscribers\".\"email\" = ?", v)}
+}
+func (newsletterSubscriberEmailFilter) ILike(v string) (filter newsletterSubscriberFilterArg) {
+	return newsletterSubscriberFilterArg{filter: sq.Expr("\"newsletter_subscribers\".\"email\" LIKE ?", v)}
+}
+func (newsletterSubscriberEmailFilter) Lt(v string) (filter newsletterSubscriberFilterArg) {
+	return newsletterSubscriberFilterArg{filter: sq.Expr("\"newsletter_subscribers\".\"email\" < ?", v)}
+}
+func (newsletterSubscriberEmailFilter) HasSuffix(v string) (filter newsletterSubscriberFilterArg) {
+	return newsletterSubscriberFilterArg{filter: sq.Expr("\"newsletter_subscribers\".\"email\" LIKE '%' || ?", v)}
+}
 func (newsletterSubscriberEmailFilter) IHasSuffix(v string) (filter newsletterSubscriberFilterArg) {
 	return newsletterSubscriberFilterArg{filter: sq.Expr("\"newsletter_subscribers\".\"email\" ILIKE '%' || ?", v)}
+}
+func (newsletterSubscriberEmailFilter) Contains(v string) (filter newsletterSubscriberFilterArg) {
+	return newsletterSubscriberFilterArg{filter: sq.Expr("\"newsletter_subscribers\".\"email\" LIKE '%' || ? || '%'", v)}
+}
+func (newsletterSubscriberEmailFilter) IContains(v string) (filter newsletterSubscriberFilterArg) {
+	return newsletterSubscriberFilterArg{filter: sq.Expr("\"newsletter_subscribers\".\"email\" ILIKE '%' || ? || '%'", v)}
+}
+func (newsletterSubscriberEmailFilter) Gte(v string) (filter newsletterSubscriberFilterArg) {
+	return newsletterSubscriberFilterArg{filter: sq.Expr("\"newsletter_subscribers\".\"email\" >= ?", v)}
+}
+func (newsletterSubscriberEmailFilter) Regex(v string) (filter newsletterSubscriberFilterArg) {
+	return newsletterSubscriberFilterArg{filter: sq.Expr("\"newsletter_subscribers\".\"email\" ~ ?", v)}
+}
+func (newsletterSubscriberEmailFilter) Lte(v string) (filter newsletterSubscriberFilterArg) {
+	return newsletterSubscriberFilterArg{filter: sq.Expr("\"newsletter_subscribers\".\"email\" <= ?", v)}
 }
 
 type newsletterSubscriberNameFilter struct{}
@@ -4356,8 +4356,26 @@ type newsletterSubscriberNameFilter struct{}
 func (newsletterSubscriberNameFilter) Eq(v string) (filter newsletterSubscriberFilterArg) {
 	return newsletterSubscriberFilterArg{filter: sq.Expr("\"newsletter_subscribers\".\"name\" = ?", v)}
 }
+func (newsletterSubscriberNameFilter) NotEq(v string) (filter newsletterSubscriberFilterArg) {
+	return newsletterSubscriberFilterArg{filter: sq.Expr("\"newsletter_subscribers\".\"name\" != ?", v)}
+}
+func (newsletterSubscriberNameFilter) Contains(v string) (filter newsletterSubscriberFilterArg) {
+	return newsletterSubscriberFilterArg{filter: sq.Expr("\"newsletter_subscribers\".\"name\" LIKE '%' || ? || '%'", v)}
+}
+func (newsletterSubscriberNameFilter) IHasSuffix(v string) (filter newsletterSubscriberFilterArg) {
+	return newsletterSubscriberFilterArg{filter: sq.Expr("\"newsletter_subscribers\".\"name\" ILIKE '%' || ?", v)}
+}
 func (newsletterSubscriberNameFilter) Regex(v string) (filter newsletterSubscriberFilterArg) {
 	return newsletterSubscriberFilterArg{filter: sq.Expr("\"newsletter_subscribers\".\"name\" ~ ?", v)}
+}
+func (newsletterSubscriberNameFilter) IRegex(v string) (filter newsletterSubscriberFilterArg) {
+	return newsletterSubscriberFilterArg{filter: sq.Expr("\"newsletter_subscribers\".\"name\" ~* ?", v)}
+}
+func (newsletterSubscriberNameFilter) Lte(v string) (filter newsletterSubscriberFilterArg) {
+	return newsletterSubscriberFilterArg{filter: sq.Expr("\"newsletter_subscribers\".\"name\" <= ?", v)}
+}
+func (newsletterSubscriberNameFilter) ILike(v string) (filter newsletterSubscriberFilterArg) {
+	return newsletterSubscriberFilterArg{filter: sq.Expr("\"newsletter_subscribers\".\"name\" LIKE ?", v)}
 }
 func (newsletterSubscriberNameFilter) Gt(v string) (filter newsletterSubscriberFilterArg) {
 	return newsletterSubscriberFilterArg{filter: sq.Expr("\"newsletter_subscribers\".\"name\" > ?", v)}
@@ -4365,45 +4383,24 @@ func (newsletterSubscriberNameFilter) Gt(v string) (filter newsletterSubscriberF
 func (newsletterSubscriberNameFilter) Lt(v string) (filter newsletterSubscriberFilterArg) {
 	return newsletterSubscriberFilterArg{filter: sq.Expr("\"newsletter_subscribers\".\"name\" < ?", v)}
 }
-func (newsletterSubscriberNameFilter) IHasSuffix(v string) (filter newsletterSubscriberFilterArg) {
-	return newsletterSubscriberFilterArg{filter: sq.Expr("\"newsletter_subscribers\".\"name\" ILIKE '%' || ?", v)}
-}
-func (newsletterSubscriberNameFilter) IContains(v string) (filter newsletterSubscriberFilterArg) {
-	return newsletterSubscriberFilterArg{filter: sq.Expr("\"newsletter_subscribers\".\"name\" ILIKE '%' || ? || '%'", v)}
-}
-func (newsletterSubscriberNameFilter) HasPrefix(v string) (filter newsletterSubscriberFilterArg) {
-	return newsletterSubscriberFilterArg{filter: sq.Expr("\"newsletter_subscribers\".\"name\" LIKE ? || '%'", v)}
-}
 func (newsletterSubscriberNameFilter) HasSuffix(v string) (filter newsletterSubscriberFilterArg) {
 	return newsletterSubscriberFilterArg{filter: sq.Expr("\"newsletter_subscribers\".\"name\" LIKE '%' || ?", v)}
 }
 func (newsletterSubscriberNameFilter) IHasPrefix(v string) (filter newsletterSubscriberFilterArg) {
 	return newsletterSubscriberFilterArg{filter: sq.Expr("\"newsletter_subscribers\".\"name\" ILIKE ? || '%'", v)}
 }
-func (newsletterSubscriberNameFilter) ILike(v string) (filter newsletterSubscriberFilterArg) {
-	return newsletterSubscriberFilterArg{filter: sq.Expr("\"newsletter_subscribers\".\"name\" LIKE ?", v)}
-}
-func (newsletterSubscriberNameFilter) NotEq(v string) (filter newsletterSubscriberFilterArg) {
-	return newsletterSubscriberFilterArg{filter: sq.Expr("\"newsletter_subscribers\".\"name\" != ?", v)}
-}
-func (newsletterSubscriberNameFilter) Contains(v string) (filter newsletterSubscriberFilterArg) {
-	return newsletterSubscriberFilterArg{filter: sq.Expr("\"newsletter_subscribers\".\"name\" LIKE '%' || ? || '%'", v)}
-}
-func (newsletterSubscriberNameFilter) IRegex(v string) (filter newsletterSubscriberFilterArg) {
-	return newsletterSubscriberFilterArg{filter: sq.Expr("\"newsletter_subscribers\".\"name\" ~* ?", v)}
+func (newsletterSubscriberNameFilter) IContains(v string) (filter newsletterSubscriberFilterArg) {
+	return newsletterSubscriberFilterArg{filter: sq.Expr("\"newsletter_subscribers\".\"name\" ILIKE '%' || ? || '%'", v)}
 }
 func (newsletterSubscriberNameFilter) Gte(v string) (filter newsletterSubscriberFilterArg) {
 	return newsletterSubscriberFilterArg{filter: sq.Expr("\"newsletter_subscribers\".\"name\" >= ?", v)}
 }
-func (newsletterSubscriberNameFilter) Lte(v string) (filter newsletterSubscriberFilterArg) {
-	return newsletterSubscriberFilterArg{filter: sq.Expr("\"newsletter_subscribers\".\"name\" <= ?", v)}
+func (newsletterSubscriberNameFilter) HasPrefix(v string) (filter newsletterSubscriberFilterArg) {
+	return newsletterSubscriberFilterArg{filter: sq.Expr("\"newsletter_subscribers\".\"name\" LIKE ? || '%'", v)}
 }
 
 type newsletterSubscriberUnsubscribedFilter struct{}
 
-func (newsletterSubscriberUnsubscribedFilter) NotEq(v bool) (filter newsletterSubscriberFilterArg) {
-	return newsletterSubscriberFilterArg{filter: sq.Expr("\"newsletter_subscribers\".\"unsubscribed\" != ?", v)}
-}
 func (newsletterSubscriberUnsubscribedFilter) Eq(v bool) (filter newsletterSubscriberFilterArg) {
 	return newsletterSubscriberFilterArg{filter: sq.Expr("\"newsletter_subscribers\".\"unsubscribed\" = ?", v)}
 }
@@ -4412,6 +4409,9 @@ func (newsletterSubscriberUnsubscribedFilter) True() (filter newsletterSubscribe
 }
 func (newsletterSubscriberUnsubscribedFilter) False() (filter newsletterSubscriberFilterArg) {
 	return newsletterSubscriberFilterArg{filter: sq.Expr("\"newsletter_subscribers\".\"unsubscribed\" = ?", false)}
+}
+func (newsletterSubscriberUnsubscribedFilter) NotEq(v bool) (filter newsletterSubscriberFilterArg) {
+	return newsletterSubscriberFilterArg{filter: sq.Expr("\"newsletter_subscribers\".\"unsubscribed\" != ?", v)}
 }
 
 type newsletterSubscriberFilters struct {
@@ -4423,9 +4423,9 @@ type newsletterSubscriberFilters struct {
 	Unsubscribed newsletterSubscriberUnsubscribedFilter
 }
 
-// Or combines multiple filters into one
-func (newsletterSubscriberFilters) Or(filter ...newsletterSubscriberFilterArg) newsletterSubscriberFilterArg {
-	q := sq.Or{}
+// And combines multiple filters into one
+func (newsletterSubscriberFilters) And(filter ...newsletterSubscriberFilterArg) newsletterSubscriberFilterArg {
+	q := sq.And{}
 	j := make([]string, 0)
 
 	for _, f := range filter {
@@ -4439,9 +4439,9 @@ func (newsletterSubscriberFilters) Or(filter ...newsletterSubscriberFilterArg) n
 	}
 }
 
-// And combines multiple filters into one
-func (newsletterSubscriberFilters) And(filter ...newsletterSubscriberFilterArg) newsletterSubscriberFilterArg {
-	q := sq.And{}
+// Or combines multiple filters into one
+func (newsletterSubscriberFilters) Or(filter ...newsletterSubscriberFilterArg) newsletterSubscriberFilterArg {
+	q := sq.Or{}
 	j := make([]string, 0)
 
 	for _, f := range filter {
@@ -5084,11 +5084,14 @@ func newNewsletterSendOrders() newsletterSendOrders {
 
 type newsletterSendIDFilter struct{}
 
-func (newsletterSendIDFilter) Gte(v string) (filter newsletterSendFilterArg) {
-	return newsletterSendFilterArg{filter: sq.Expr("\"newsletter_sends\".\"id\" >= ?", v)}
+func (newsletterSendIDFilter) Eq(v string) (filter newsletterSendFilterArg) {
+	return newsletterSendFilterArg{filter: sq.Expr("\"newsletter_sends\".\"id\" = ?", v)}
 }
-func (newsletterSendIDFilter) Lte(v string) (filter newsletterSendFilterArg) {
-	return newsletterSendFilterArg{filter: sq.Expr("\"newsletter_sends\".\"id\" <= ?", v)}
+func (newsletterSendIDFilter) Contains(v string) (filter newsletterSendFilterArg) {
+	return newsletterSendFilterArg{filter: sq.Expr("\"newsletter_sends\".\"id\" LIKE '%' || ? || '%'", v)}
+}
+func (newsletterSendIDFilter) Regex(v string) (filter newsletterSendFilterArg) {
+	return newsletterSendFilterArg{filter: sq.Expr("\"newsletter_sends\".\"id\" ~ ?", v)}
 }
 func (newsletterSendIDFilter) HasPrefix(v string) (filter newsletterSendFilterArg) {
 	return newsletterSendFilterArg{filter: sq.Expr("\"newsletter_sends\".\"id\" LIKE ? || '%'", v)}
@@ -5096,45 +5099,39 @@ func (newsletterSendIDFilter) HasPrefix(v string) (filter newsletterSendFilterAr
 func (newsletterSendIDFilter) HasSuffix(v string) (filter newsletterSendFilterArg) {
 	return newsletterSendFilterArg{filter: sq.Expr("\"newsletter_sends\".\"id\" LIKE '%' || ?", v)}
 }
-func (newsletterSendIDFilter) NotEq(v string) (filter newsletterSendFilterArg) {
-	return newsletterSendFilterArg{filter: sq.Expr("\"newsletter_sends\".\"id\" != ?", v)}
-}
-func (newsletterSendIDFilter) Regex(v string) (filter newsletterSendFilterArg) {
-	return newsletterSendFilterArg{filter: sq.Expr("\"newsletter_sends\".\"id\" ~ ?", v)}
-}
-func (newsletterSendIDFilter) Gt(v string) (filter newsletterSendFilterArg) {
-	return newsletterSendFilterArg{filter: sq.Expr("\"newsletter_sends\".\"id\" > ?", v)}
-}
-func (newsletterSendIDFilter) IContains(v string) (filter newsletterSendFilterArg) {
-	return newsletterSendFilterArg{filter: sq.Expr("\"newsletter_sends\".\"id\" ILIKE '%' || ? || '%'", v)}
-}
-func (newsletterSendIDFilter) IRegex(v string) (filter newsletterSendFilterArg) {
-	return newsletterSendFilterArg{filter: sq.Expr("\"newsletter_sends\".\"id\" ~* ?", v)}
-}
 func (newsletterSendIDFilter) IHasPrefix(v string) (filter newsletterSendFilterArg) {
 	return newsletterSendFilterArg{filter: sq.Expr("\"newsletter_sends\".\"id\" ILIKE ? || '%'", v)}
-}
-func (newsletterSendIDFilter) Eq(v string) (filter newsletterSendFilterArg) {
-	return newsletterSendFilterArg{filter: sq.Expr("\"newsletter_sends\".\"id\" = ?", v)}
-}
-func (newsletterSendIDFilter) IHasSuffix(v string) (filter newsletterSendFilterArg) {
-	return newsletterSendFilterArg{filter: sq.Expr("\"newsletter_sends\".\"id\" ILIKE '%' || ?", v)}
 }
 func (newsletterSendIDFilter) ILike(v string) (filter newsletterSendFilterArg) {
 	return newsletterSendFilterArg{filter: sq.Expr("\"newsletter_sends\".\"id\" LIKE ?", v)}
 }
-func (newsletterSendIDFilter) Contains(v string) (filter newsletterSendFilterArg) {
-	return newsletterSendFilterArg{filter: sq.Expr("\"newsletter_sends\".\"id\" LIKE '%' || ? || '%'", v)}
+func (newsletterSendIDFilter) IRegex(v string) (filter newsletterSendFilterArg) {
+	return newsletterSendFilterArg{filter: sq.Expr("\"newsletter_sends\".\"id\" ~* ?", v)}
+}
+func (newsletterSendIDFilter) Gt(v string) (filter newsletterSendFilterArg) {
+	return newsletterSendFilterArg{filter: sq.Expr("\"newsletter_sends\".\"id\" > ?", v)}
+}
+func (newsletterSendIDFilter) Lte(v string) (filter newsletterSendFilterArg) {
+	return newsletterSendFilterArg{filter: sq.Expr("\"newsletter_sends\".\"id\" <= ?", v)}
+}
+func (newsletterSendIDFilter) NotEq(v string) (filter newsletterSendFilterArg) {
+	return newsletterSendFilterArg{filter: sq.Expr("\"newsletter_sends\".\"id\" != ?", v)}
+}
+func (newsletterSendIDFilter) Gte(v string) (filter newsletterSendFilterArg) {
+	return newsletterSendFilterArg{filter: sq.Expr("\"newsletter_sends\".\"id\" >= ?", v)}
 }
 func (newsletterSendIDFilter) Lt(v string) (filter newsletterSendFilterArg) {
 	return newsletterSendFilterArg{filter: sq.Expr("\"newsletter_sends\".\"id\" < ?", v)}
 }
+func (newsletterSendIDFilter) IHasSuffix(v string) (filter newsletterSendFilterArg) {
+	return newsletterSendFilterArg{filter: sq.Expr("\"newsletter_sends\".\"id\" ILIKE '%' || ?", v)}
+}
+func (newsletterSendIDFilter) IContains(v string) (filter newsletterSendFilterArg) {
+	return newsletterSendFilterArg{filter: sq.Expr("\"newsletter_sends\".\"id\" ILIKE '%' || ? || '%'", v)}
+}
 
 type newsletterSendCreatedAtFilter struct{}
 
-func (newsletterSendCreatedAtFilter) Eq(v time.Time) (filter newsletterSendFilterArg) {
-	return newsletterSendFilterArg{filter: sq.Expr("\"newsletter_sends\".\"created_at\" = ?", v)}
-}
 func (newsletterSendCreatedAtFilter) NotEq(v time.Time) (filter newsletterSendFilterArg) {
 	return newsletterSendFilterArg{filter: sq.Expr("\"newsletter_sends\".\"created_at\" != ?", v)}
 }
@@ -5144,11 +5141,41 @@ func (newsletterSendCreatedAtFilter) Before(v time.Time) (filter newsletterSendF
 func (newsletterSendCreatedAtFilter) After(v time.Time) (filter newsletterSendFilterArg) {
 	return newsletterSendFilterArg{filter: sq.Expr("\"newsletter_sends\".\"created_at\" > ?", v)}
 }
+func (newsletterSendCreatedAtFilter) Eq(v time.Time) (filter newsletterSendFilterArg) {
+	return newsletterSendFilterArg{filter: sq.Expr("\"newsletter_sends\".\"created_at\" = ?", v)}
+}
 
 type newsletterSendDescriptionFilter struct{}
 
-func (newsletterSendDescriptionFilter) Gte(v string) (filter newsletterSendFilterArg) {
-	return newsletterSendFilterArg{filter: sq.Expr("\"newsletter_sends\".\"description\" >= ?", v)}
+func (newsletterSendDescriptionFilter) ILike(v string) (filter newsletterSendFilterArg) {
+	return newsletterSendFilterArg{filter: sq.Expr("\"newsletter_sends\".\"description\" LIKE ?", v)}
+}
+func (newsletterSendDescriptionFilter) IRegex(v string) (filter newsletterSendFilterArg) {
+	return newsletterSendFilterArg{filter: sq.Expr("\"newsletter_sends\".\"description\" ~* ?", v)}
+}
+func (newsletterSendDescriptionFilter) HasPrefix(v string) (filter newsletterSendFilterArg) {
+	return newsletterSendFilterArg{filter: sq.Expr("\"newsletter_sends\".\"description\" LIKE ? || '%'", v)}
+}
+func (newsletterSendDescriptionFilter) IHasSuffix(v string) (filter newsletterSendFilterArg) {
+	return newsletterSendFilterArg{filter: sq.Expr("\"newsletter_sends\".\"description\" ILIKE '%' || ?", v)}
+}
+func (newsletterSendDescriptionFilter) Contains(v string) (filter newsletterSendFilterArg) {
+	return newsletterSendFilterArg{filter: sq.Expr("\"newsletter_sends\".\"description\" LIKE '%' || ? || '%'", v)}
+}
+func (newsletterSendDescriptionFilter) IContains(v string) (filter newsletterSendFilterArg) {
+	return newsletterSendFilterArg{filter: sq.Expr("\"newsletter_sends\".\"description\" ILIKE '%' || ? || '%'", v)}
+}
+func (newsletterSendDescriptionFilter) Regex(v string) (filter newsletterSendFilterArg) {
+	return newsletterSendFilterArg{filter: sq.Expr("\"newsletter_sends\".\"description\" ~ ?", v)}
+}
+func (newsletterSendDescriptionFilter) Eq(v string) (filter newsletterSendFilterArg) {
+	return newsletterSendFilterArg{filter: sq.Expr("\"newsletter_sends\".\"description\" = ?", v)}
+}
+func (newsletterSendDescriptionFilter) NotEq(v string) (filter newsletterSendFilterArg) {
+	return newsletterSendFilterArg{filter: sq.Expr("\"newsletter_sends\".\"description\" != ?", v)}
+}
+func (newsletterSendDescriptionFilter) Lt(v string) (filter newsletterSendFilterArg) {
+	return newsletterSendFilterArg{filter: sq.Expr("\"newsletter_sends\".\"description\" < ?", v)}
 }
 func (newsletterSendDescriptionFilter) HasSuffix(v string) (filter newsletterSendFilterArg) {
 	return newsletterSendFilterArg{filter: sq.Expr("\"newsletter_sends\".\"description\" LIKE '%' || ?", v)}
@@ -5156,86 +5183,59 @@ func (newsletterSendDescriptionFilter) HasSuffix(v string) (filter newsletterSen
 func (newsletterSendDescriptionFilter) IHasPrefix(v string) (filter newsletterSendFilterArg) {
 	return newsletterSendFilterArg{filter: sq.Expr("\"newsletter_sends\".\"description\" ILIKE ? || '%'", v)}
 }
-func (newsletterSendDescriptionFilter) Eq(v string) (filter newsletterSendFilterArg) {
-	return newsletterSendFilterArg{filter: sq.Expr("\"newsletter_sends\".\"description\" = ?", v)}
-}
-func (newsletterSendDescriptionFilter) Regex(v string) (filter newsletterSendFilterArg) {
-	return newsletterSendFilterArg{filter: sq.Expr("\"newsletter_sends\".\"description\" ~ ?", v)}
-}
-func (newsletterSendDescriptionFilter) IContains(v string) (filter newsletterSendFilterArg) {
-	return newsletterSendFilterArg{filter: sq.Expr("\"newsletter_sends\".\"description\" ILIKE '%' || ? || '%'", v)}
-}
 func (newsletterSendDescriptionFilter) Gt(v string) (filter newsletterSendFilterArg) {
 	return newsletterSendFilterArg{filter: sq.Expr("\"newsletter_sends\".\"description\" > ?", v)}
 }
-func (newsletterSendDescriptionFilter) NotEq(v string) (filter newsletterSendFilterArg) {
-	return newsletterSendFilterArg{filter: sq.Expr("\"newsletter_sends\".\"description\" != ?", v)}
-}
-func (newsletterSendDescriptionFilter) Contains(v string) (filter newsletterSendFilterArg) {
-	return newsletterSendFilterArg{filter: sq.Expr("\"newsletter_sends\".\"description\" LIKE '%' || ? || '%'", v)}
-}
-func (newsletterSendDescriptionFilter) Lt(v string) (filter newsletterSendFilterArg) {
-	return newsletterSendFilterArg{filter: sq.Expr("\"newsletter_sends\".\"description\" < ?", v)}
-}
-func (newsletterSendDescriptionFilter) IHasSuffix(v string) (filter newsletterSendFilterArg) {
-	return newsletterSendFilterArg{filter: sq.Expr("\"newsletter_sends\".\"description\" ILIKE '%' || ?", v)}
+func (newsletterSendDescriptionFilter) Gte(v string) (filter newsletterSendFilterArg) {
+	return newsletterSendFilterArg{filter: sq.Expr("\"newsletter_sends\".\"description\" >= ?", v)}
 }
 func (newsletterSendDescriptionFilter) Lte(v string) (filter newsletterSendFilterArg) {
 	return newsletterSendFilterArg{filter: sq.Expr("\"newsletter_sends\".\"description\" <= ?", v)}
 }
-func (newsletterSendDescriptionFilter) HasPrefix(v string) (filter newsletterSendFilterArg) {
-	return newsletterSendFilterArg{filter: sq.Expr("\"newsletter_sends\".\"description\" LIKE ? || '%'", v)}
-}
-func (newsletterSendDescriptionFilter) ILike(v string) (filter newsletterSendFilterArg) {
-	return newsletterSendFilterArg{filter: sq.Expr("\"newsletter_sends\".\"description\" LIKE ?", v)}
-}
-func (newsletterSendDescriptionFilter) IRegex(v string) (filter newsletterSendFilterArg) {
-	return newsletterSendFilterArg{filter: sq.Expr("\"newsletter_sends\".\"description\" ~* ?", v)}
-}
 
 type newsletterSendKeyFilter struct{}
 
-func (newsletterSendKeyFilter) IContains(v string) (filter newsletterSendFilterArg) {
-	return newsletterSendFilterArg{filter: sq.Expr("\"newsletter_sends\".\"key\" ILIKE '%' || ? || '%'", v)}
-}
-func (newsletterSendKeyFilter) IRegex(v string) (filter newsletterSendFilterArg) {
-	return newsletterSendFilterArg{filter: sq.Expr("\"newsletter_sends\".\"key\" ~* ?", v)}
-}
-func (newsletterSendKeyFilter) IHasPrefix(v string) (filter newsletterSendFilterArg) {
-	return newsletterSendFilterArg{filter: sq.Expr("\"newsletter_sends\".\"key\" ILIKE ? || '%'", v)}
-}
 func (newsletterSendKeyFilter) Eq(v string) (filter newsletterSendFilterArg) {
 	return newsletterSendFilterArg{filter: sq.Expr("\"newsletter_sends\".\"key\" = ?", v)}
 }
-func (newsletterSendKeyFilter) Contains(v string) (filter newsletterSendFilterArg) {
-	return newsletterSendFilterArg{filter: sq.Expr("\"newsletter_sends\".\"key\" LIKE '%' || ? || '%'", v)}
+func (newsletterSendKeyFilter) IContains(v string) (filter newsletterSendFilterArg) {
+	return newsletterSendFilterArg{filter: sq.Expr("\"newsletter_sends\".\"key\" ILIKE '%' || ? || '%'", v)}
 }
 func (newsletterSendKeyFilter) HasPrefix(v string) (filter newsletterSendFilterArg) {
 	return newsletterSendFilterArg{filter: sq.Expr("\"newsletter_sends\".\"key\" LIKE ? || '%'", v)}
 }
-func (newsletterSendKeyFilter) HasSuffix(v string) (filter newsletterSendFilterArg) {
-	return newsletterSendFilterArg{filter: sq.Expr("\"newsletter_sends\".\"key\" LIKE '%' || ?", v)}
-}
-func (newsletterSendKeyFilter) NotEq(v string) (filter newsletterSendFilterArg) {
-	return newsletterSendFilterArg{filter: sq.Expr("\"newsletter_sends\".\"key\" != ?", v)}
-}
-func (newsletterSendKeyFilter) Regex(v string) (filter newsletterSendFilterArg) {
-	return newsletterSendFilterArg{filter: sq.Expr("\"newsletter_sends\".\"key\" ~ ?", v)}
-}
-func (newsletterSendKeyFilter) Gte(v string) (filter newsletterSendFilterArg) {
-	return newsletterSendFilterArg{filter: sq.Expr("\"newsletter_sends\".\"key\" >= ?", v)}
-}
-func (newsletterSendKeyFilter) Lt(v string) (filter newsletterSendFilterArg) {
-	return newsletterSendFilterArg{filter: sq.Expr("\"newsletter_sends\".\"key\" < ?", v)}
-}
-func (newsletterSendKeyFilter) Lte(v string) (filter newsletterSendFilterArg) {
-	return newsletterSendFilterArg{filter: sq.Expr("\"newsletter_sends\".\"key\" <= ?", v)}
+func (newsletterSendKeyFilter) IHasPrefix(v string) (filter newsletterSendFilterArg) {
+	return newsletterSendFilterArg{filter: sq.Expr("\"newsletter_sends\".\"key\" ILIKE ? || '%'", v)}
 }
 func (newsletterSendKeyFilter) ILike(v string) (filter newsletterSendFilterArg) {
 	return newsletterSendFilterArg{filter: sq.Expr("\"newsletter_sends\".\"key\" LIKE ?", v)}
 }
+func (newsletterSendKeyFilter) NotEq(v string) (filter newsletterSendFilterArg) {
+	return newsletterSendFilterArg{filter: sq.Expr("\"newsletter_sends\".\"key\" != ?", v)}
+}
+func (newsletterSendKeyFilter) Contains(v string) (filter newsletterSendFilterArg) {
+	return newsletterSendFilterArg{filter: sq.Expr("\"newsletter_sends\".\"key\" LIKE '%' || ? || '%'", v)}
+}
+func (newsletterSendKeyFilter) Gte(v string) (filter newsletterSendFilterArg) {
+	return newsletterSendFilterArg{filter: sq.Expr("\"newsletter_sends\".\"key\" >= ?", v)}
+}
+func (newsletterSendKeyFilter) Regex(v string) (filter newsletterSendFilterArg) {
+	return newsletterSendFilterArg{filter: sq.Expr("\"newsletter_sends\".\"key\" ~ ?", v)}
+}
+func (newsletterSendKeyFilter) Lte(v string) (filter newsletterSendFilterArg) {
+	return newsletterSendFilterArg{filter: sq.Expr("\"newsletter_sends\".\"key\" <= ?", v)}
+}
+func (newsletterSendKeyFilter) HasSuffix(v string) (filter newsletterSendFilterArg) {
+	return newsletterSendFilterArg{filter: sq.Expr("\"newsletter_sends\".\"key\" LIKE '%' || ?", v)}
+}
+func (newsletterSendKeyFilter) IRegex(v string) (filter newsletterSendFilterArg) {
+	return newsletterSendFilterArg{filter: sq.Expr("\"newsletter_sends\".\"key\" ~* ?", v)}
+}
 func (newsletterSendKeyFilter) Gt(v string) (filter newsletterSendFilterArg) {
 	return newsletterSendFilterArg{filter: sq.Expr("\"newsletter_sends\".\"key\" > ?", v)}
+}
+func (newsletterSendKeyFilter) Lt(v string) (filter newsletterSendFilterArg) {
+	return newsletterSendFilterArg{filter: sq.Expr("\"newsletter_sends\".\"key\" < ?", v)}
 }
 func (newsletterSendKeyFilter) IHasSuffix(v string) (filter newsletterSendFilterArg) {
 	return newsletterSendFilterArg{filter: sq.Expr("\"newsletter_sends\".\"key\" ILIKE '%' || ?", v)}
@@ -5243,6 +5243,12 @@ func (newsletterSendKeyFilter) IHasSuffix(v string) (filter newsletterSendFilter
 
 type newsletterSendRecipientsFilter struct{}
 
+func (newsletterSendRecipientsFilter) Eq(v int64) (filter newsletterSendFilterArg) {
+	return newsletterSendFilterArg{filter: sq.Expr("\"newsletter_sends\".\"recipients\" = ?", v)}
+}
+func (newsletterSendRecipientsFilter) NotEq(v int64) (filter newsletterSendFilterArg) {
+	return newsletterSendFilterArg{filter: sq.Expr("\"newsletter_sends\".\"recipients\" != ?", v)}
+}
 func (newsletterSendRecipientsFilter) Lt(v int64) (filter newsletterSendFilterArg) {
 	return newsletterSendFilterArg{filter: sq.Expr("\"newsletter_sends\".\"recipients\" < ?", v)}
 }
@@ -5254,12 +5260,6 @@ func (newsletterSendRecipientsFilter) Gt(v int64) (filter newsletterSendFilterAr
 }
 func (newsletterSendRecipientsFilter) Gte(v int64) (filter newsletterSendFilterArg) {
 	return newsletterSendFilterArg{filter: sq.Expr("\"newsletter_sends\".\"recipients\" >= ?", v)}
-}
-func (newsletterSendRecipientsFilter) Eq(v int64) (filter newsletterSendFilterArg) {
-	return newsletterSendFilterArg{filter: sq.Expr("\"newsletter_sends\".\"recipients\" = ?", v)}
-}
-func (newsletterSendRecipientsFilter) NotEq(v int64) (filter newsletterSendFilterArg) {
-	return newsletterSendFilterArg{filter: sq.Expr("\"newsletter_sends\".\"recipients\" != ?", v)}
 }
 
 type newsletterSendFilters struct {

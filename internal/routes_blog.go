@@ -121,16 +121,14 @@ func routeBlogPostUnlist(w http.ResponseWriter, r *http.Request) {
 
 	post, err := ctxDB(r).Store.BlogPosts.Get(id)
 	if err != nil {
-		log.Println("Failed to fetch Post", err)
-		http.Error(w, "Failed to fetch Post", http.StatusInternalServerError)
+		HttpErrorInternal(w, "Failed to fetch Post", err)
 		return
 	}
 
 	post.Unlisted = !post.Unlisted
 	err = ctxDB(r).Store.BlogPosts.Update(post)
 	if err != nil {
-		log.Println("Failed to unlist Post", err)
-		http.Error(w, "Failed to unlist Post", http.StatusInternalServerError)
+		HttpErrorInternal(w, "Failed to unlist Post", err)
 		return
 	}
 
@@ -144,8 +142,7 @@ func routeBlogPostDelete(w http.ResponseWriter, r *http.Request) {
 
 	err := ctxDB(r).Store.BlogPosts.Filter(gen.Where.BlogPost.ID.Eq(id)).Delete()
 	if err != nil {
-		log.Println("Failed to delete Post", err)
-		http.Error(w, "Failed to delete Post", http.StatusInternalServerError)
+		HttpErrorInternal(w, "Failed to delete Post", err)
 		return
 	}
 
@@ -160,16 +157,14 @@ func routeBlogPostPublish(w http.ResponseWriter, r *http.Request) {
 
 	post, err := ctxDB(r).Store.BlogPosts.Get(id)
 	if err != nil {
-		log.Println("Failed to fetch Post", err)
-		http.Error(w, "Failed to fetch Post", http.StatusInternalServerError)
+		HttpErrorInternal(w, "Failed to fetch Post", err)
 		return
 	}
 
 	post.Published = published
 	err = ctxDB(r).Store.BlogPosts.Update(post)
 	if err != nil {
-		log.Println("Failed to publish Post", err)
-		http.Error(w, "Failed to publish Post", http.StatusInternalServerError)
+		HttpErrorInternal(w, "Failed to publish Post", err)
 		return
 	}
 
@@ -185,7 +180,7 @@ func routeBlogPostSendNewsletter(w http.ResponseWriter, r *http.Request) {
 	send, err := SendNewsletter(slug, email)
 
 	if err != nil {
-		http.Error(w, "Newsletter send failed\n\n"+err.Error(), http.StatusInternalServerError)
+		HttpErrorInternal(w, "Newsletter send failed", err)
 		return
 	}
 

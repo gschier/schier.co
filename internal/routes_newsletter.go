@@ -17,8 +17,12 @@ func NewsletterRoutes(router *mux.Router) {
 }
 
 func routeNewsletter(w http.ResponseWriter, r *http.Request) {
-	subscribers := ctxDB(r).Store.NewsletterSubscribers.Filter().
-		Sort(gen.OrderBy.NewsletterSubscriber.CreatedAt.Desc).AllP()
+	subscribers, err := ctxDB(r).Store.NewsletterSubscribers.Filter().
+		Sort(gen.OrderBy.NewsletterSubscriber.CreatedAt.Desc).All()
+	if err != nil {
+		HttpErrorInternal(w, "Failed to get subscribers", err)
+		return
+	}
 
 	renderTemplate(w, r, pageTemplate("page/newsletter.html"), &pongo2.Context{
 		"pageTitle":       "Email Newsletter",
@@ -39,16 +43,14 @@ func routeUnsubscribe(w http.ResponseWriter, r *http.Request) {
 
 	sub, err := ctxDB(r).Store.NewsletterSubscribers.Get(id)
 	if err != nil {
-		log.Println("Failed to get subscriber", err.Error())
-		http.Error(w, "Failed to unsubscribe", http.StatusInternalServerError)
+		HttpErrorInternal(w, "Failed to get subscriber", err)
 		return
 	}
 
 	sub.Unsubscribed = true
 	err = ctxDB(r).Store.NewsletterSubscribers.Update(sub)
 	if err != nil {
-		log.Println("Failed to update subscriber for unsub", err.Error())
-		http.Error(w, "Failed to unsubscribe", http.StatusInternalServerError)
+		HttpErrorInternal(w, "Failed to unsubscribe", err)
 		return
 	}
 
@@ -66,7 +68,7 @@ func routeSubscribe(w http.ResponseWriter, r *http.Request) {
 	honeypot := r.Form.Get("username")
 
 	if email == "" {
-		http.Error(w, "Email address required", http.StatusBadRequest)
+		HttpErrorBadRequest(w, "Email address required", nil)
 		return
 	}
 

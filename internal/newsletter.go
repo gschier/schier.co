@@ -20,7 +20,11 @@ func SendNewsletter(slug, email string) (*gen.NewsletterSend, error) {
 		}
 		subscribers = append(subscribers, *s)
 	} else {
-		subscribers = NewStorage().Store.NewsletterSubscribers.AllP()
+		var err error
+		subscribers, err = NewStorage().Store.NewsletterSubscribers.All()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	blogPost, err := NewStorage().Store.BlogPosts.Filter(
