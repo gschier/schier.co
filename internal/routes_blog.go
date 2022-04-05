@@ -378,7 +378,7 @@ func renderBlogPost(w http.ResponseWriter, r *http.Request) {
 	}
 
 	send, _ := ctxDB(r).Store.NewsletterSends.Filter(gen.Where.NewsletterSend.Key.Eq(post.ID)).One()
-	recommendedBlogPosts := recommendedBlogPosts(ctxDB(r).Store, &post.ID, 7).AllP()
+	recommendedBlogPosts := recommendedBlogPosts(ctxDB(r).Store, &post.ID, 3).AllP()
 
 	// Render template
 	postSummary := post.Summary

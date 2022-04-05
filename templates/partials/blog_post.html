@@ -131,15 +131,14 @@
 {% endif %}
 
 <hr class="hr--spaced"/>
+{% include 'partials/full-subscription-form.html' %}
 <div>
   <div class="row-spaced">
-    <h2 class="row-spaced">More Posts ✍🏻</h2>
+    <h2 class="row-spaced">Recommended Posts ✍🏻</h2>
     <small><a href="/blog" title="See all blog posts">See All &raquo;</a></small>
   </div>
   {% include 'partials/post-cards.html' with blogPosts=recommendedBlogPosts %}
 </div>
-
-{% include 'partials/full-subscription-form.html' %}
 
 {% block extraScripts %}
   <script> {# Script for voting #}

@@ -1,5 +1,5 @@
 .subscription-form-wrapper {
-  @apply border border border-primary-100 bg-primary-050 rounded mt-10 relative;
+  @apply border border border-primary-100 bg-primary-050 rounded my-8 relative;
 
   p {
     @apply mb-4;
