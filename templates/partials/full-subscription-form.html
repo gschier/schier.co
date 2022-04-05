@@ -5,7 +5,7 @@
     </a>
     <script>
       (function () {
-        const el = document.querySelector('.subscription-form');
+        const el = document.querySelector('.subscription-form-wrapper');
         const btn = document.querySelector('.subscription-form__hide');
 
         function h() {
@@ -26,11 +26,11 @@
         h();
       })();
     </script>
-    <label for="subscription-email">
-      <p>
-        Updates on <strong>indie dev, productivity, and software</strong> 💌
-      </p>
-    </label>
+    <p>
+      <label for="subscription-email">
+        Subscribe for musings on <strong>indie dev, software, and life</strong> 💌
+      </label>
+    </p>
 
     {% include 'partials/subscription-form.html' %}
   </div>
