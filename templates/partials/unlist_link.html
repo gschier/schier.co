@@ -1,3 +1,4 @@
+{% if blogPost.Published %}
 <form class="inline-form" action="/forms/blog/unlist" method="post">
   {{ csrfField | safe }}
   {% include 'partials/form-input.html' with type='hidden' name='id' value=blogPost.ID %}
@@ -5,3 +6,4 @@
     {{ blogPost.Unlisted | yesno:"List,Unlist" }}
   </button>
 </form>
+{% endif %}
