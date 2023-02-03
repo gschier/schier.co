@@ -1,5 +1,5 @@
 .btn {
-    @apply bg-btn text-btn font-semibold py-2 px-4 text-sm rounded w-auto inline-block cursor-pointer;
+    @apply bg-btn text-btn font-semibold py-2 px-4 text-sm rounded w-auto inline-block cursor-pointer align-middle inline-flex items-center;
     @apply border-0 !important;
 }
 
@@ -25,6 +25,14 @@
 
 .btn.btn--gray {
     @apply bg-gray-200 text-gray-700;
+}
+
+.btn.btn--warning {
+    @apply bg-warning-100 text-warning;
+}
+
+.btn.btn--danger {
+    @apply bg-danger-100 text-danger;
 }
 
 .btn.btn--gray:hover:not(:disabled) {

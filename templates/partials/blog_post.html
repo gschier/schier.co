@@ -1,20 +1,18 @@
 <article class="content blog-post">
+
+  {% if loggedIn %}
+  <div class="notice notice--warning">
+    <a href="/blog/edit/{{ blogPost.ID }}" class="btn btn--warning btn--sm">Edit</a>
+    {% include 'partials/publish_link.html' %}
+    {% include 'partials/unlist_link.html' %}
+    {% include 'partials/delete_link.html' %}
+    {% include 'partials/newsletter_link.html' %}
+  </div>
+  {% endif %}
   <header>
     <h1>{{ blogPost.Title }}</h1>
     {% include 'partials/blog_post_meta.html' %}
   </header>
-
-  {% if loggedIn %}
-    <div>
-      <a href="/blog/edit/{{ blogPost.ID }}" class="btn btn--gray btn--sm">
-        Edit
-      </a>
-      {% include 'partials/publish_link.html' %}
-      {% include 'partials/unlist_link.html' %}
-      {% include 'partials/delete_link.html' %}
-      {% include 'partials/newsletter_link.html' %}
-    </div>
-  {% endif %}
 
   {% if blogPost.EditedAt | default:blogPost.Date | isodateolderdays:365 %}
     <p class="notice notice--warning">

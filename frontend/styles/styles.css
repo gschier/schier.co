@@ -22,6 +22,7 @@
     border-collapse: collapse;
     line-height: inherit;
     font-weight: 400;
+    font-family: inherit;
 }
 
 ::selection {
@@ -32,7 +33,7 @@ html {
     @apply bg-background text-gray-800;
     font-size: 18px;
     line-height: 1.5;
-    font-family: Helvetica, Lato, 'Open Sans', sans-serif;
+    font-family: Lato, 'Helvetica Neue', 'Open Sans', sans-serif;
 }
 
 main {

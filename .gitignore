@@ -7,5 +7,6 @@ static
 vendor
 .idea
 dumps
+.tmp
 
 pkged.go

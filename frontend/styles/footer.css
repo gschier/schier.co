@@ -7,6 +7,10 @@
         p {
             @apply mt-2 mb-0;
         }
+
+        a {
+            @apply no-underline;
+        }
     }
 
     svg {
@@ -15,6 +19,6 @@
     }
 
     a i {
-        @apply text-link no-underline;
+        @apply text-link no-underline !important;
     }
 }

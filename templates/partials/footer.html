@@ -1,34 +1,38 @@
 <footer class="bottom-footer">
-  <div class="container content">
-    <div>
-      {{ 'images/greg-rounded.svg' | inlinestatic | safe }}
+    <div class="container">
+        {{ 'images/greg-rounded.svg' | inlinestatic | safe }}
 
-      <div class="links">
-        <a href="//twitter.com/GregorySchier" rel="noopener">
-          Twitter
-        </a>
-        |
-        <a href="https://mastodon.social/@gschier" rel="me">
-          Mastodon
-        </a>
-        |
-        <a href="//github.com/gschier" rel="noopener">
-          GitHub
-        </a>
-        |
-        <a href="/newsletter">Newsletter</a>
-        <p>
-          {% if loggedIn %}
-            {{ user.Email }} <a href="/logout">Logout</a>
-            <br>
-            <br>
-            <br>
-            <a href="{{ pageUrl }}"><code style="font-size:0.8em">{{ pageUrl }}</code></a>
-          {% else %}
-            &copy; Greg Schier
-          {% endif %}
-        </p>
-      </div>
+        <div class="links">
+            <a href="//twitter.com/GregorySchier" rel="noopener">
+                Twitter
+            </a>
+            |
+            <a href="https://mastodon.social/@gschier" rel="me">
+                Mastodon
+            </a>
+            |
+            <a href="//github.com/gschier" rel="noopener">
+                GitHub
+            </a>
+            |
+            <a href="/newsletter">Newsletter</a>
+            {% if loggedIn %}
+
+            <br><br>
+            <div class="notice notice--warning">
+                {{ user.Email }}
+                |
+                <a href="/logout">Logout</a>
+                |
+                <a href="https://analytics.schier.co/analytics/site_RPutoRaXSMBFj6hyzV">
+                    Analytics
+                </a>
+                <br>
+                <a href="{{ pageUrl }}"><code style="font-size:0.9em;">{{ pageUrl }}</code></a>
+                {% else %}
+                &copy; Greg Schier
+                {% endif %}
+            </div>
+        </div>
     </div>
-  </div>
 </footer>
