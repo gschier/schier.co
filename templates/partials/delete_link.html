@@ -4,9 +4,7 @@
   <button
           class="btn btn--sm btn--danger"
           type="submit"
-          {% if blogPost.Content | words > 100 or blogPost.Published or not blogPost.Unlisted %}
-          disabled="disabled"
-          {% endif %}
+          {% if not blogPost.Published %}disabled="disabled"{% endif %}
   >Delete
   </button>
 </form>
