@@ -496,7 +496,7 @@ details summary:focus {
     }
 
     .container {
-        @apply px-4;
+        @apply px-6;
     }
 
     .hidden-mobile {
