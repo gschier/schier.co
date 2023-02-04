@@ -67,18 +67,18 @@
     }
 
     figure figcaption {
-        @apply text-sm py-0.5 px-2 italic opacity-80;
+        @apply text-sm py-0.5 pr-2 pl-6 relative text-gray-600;
         &:before {
-            content: "↪";
-            @apply mr-1.5 text-syntax1 text-base;
+            @apply h-3 w-3 border-l border-b border-syntax1 inline-block absolute left-2 top-0 rounded-bl-[3px];
+            content: '';
         }
     }
 
     a {
-        @apply border-primary-300 border-b border-dashed;
+        @apply border-syntax1 border-b-2 border-dotted;
 
         &:hover {
-            @apply border-b border-solid border-primary-500 no-underline;
+            @apply border-solid no-underline;
         }
     }
 

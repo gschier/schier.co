@@ -16,24 +16,29 @@ module.exports = {
       '300': 'var(--primary-300)',
       '400': 'var(--primary-400)',
       '500': 'var(--primary-500)',
+      '600': 'var(--primary-600)',
     },
     danger: {
       '100': 'var(--danger-100)',
+      '200': 'var(--danger-200)',
       '400': 'var(--danger-400)',
       '500': 'var(--danger-500)',
     },
     warning: {
       '100': 'var(--warning-100)',
+      '200': 'var(--warning-200)',
       '400': 'var(--warning-400)',
       '500': 'var(--warning-500)',
     },
     notice: {
       '100': 'var(--notice-100)',
+      '200': 'var(--notice-200)',
       '400': 'var(--notice-400)',
       '500': 'var(--notice-500)',
     },
     info: {
       '100': 'var(--info-100)',
+      '200': 'var(--info-200)',
       '400': 'var(--info-400)',
       '500': 'var(--info-500)',
     },
@@ -48,6 +53,10 @@ module.exports = {
       '200': 'var(--gray-200)',
       '100': 'var(--gray-100)',
     },
+    syntax1: 'var(--txt-syntax-1)',
+    syntax2: 'var(--txt-syntax-2)',
+    syntax3: 'var(--txt-syntax-3)',
+    syntax4: 'var(--txt-syntax-4)',
   },
   textColor: {
     btn: {

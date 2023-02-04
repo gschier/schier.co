@@ -28,11 +28,11 @@
 }
 
 .btn.btn--warning {
-    @apply bg-warning-100 text-warning;
+    @apply bg-warning-200 text-warning;
 }
 
 .btn.btn--danger {
-    @apply bg-danger-100 text-danger;
+    @apply bg-danger-200 text-danger;
 }
 
 .btn.btn--gray:hover:not(:disabled) {

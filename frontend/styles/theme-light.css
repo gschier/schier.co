@@ -12,9 +12,9 @@
 
     /* Text */
     --txt-link: hsl(var(--hue), 97%, 43%);
-    --txt-syntax-1: #805AD5;
-    --txt-syntax-2: #3182CE;
-    --txt-syntax-3: #5A67D8;
+    --txt-syntax-1: hsl(258, 100%, 70%);
+    --txt-syntax-2: hsl(203, 100%, 57%);
+    --txt-syntax-3: hsl(296, 100%, 69%);
     --txt-syntax-4: #8e9dad;
     --txt-notice: var(--notice-500);
     --txt-info: var(--info-500);
@@ -24,7 +24,7 @@
 
     /* Generic Colors */
     --gray-100: hsl(var(--hue), 80%, 98%);
-    --gray-200: hsl(var(--hue), 62%, 94%);
+    --gray-200: hsl(var(--hue), 62%, 93%);
     --gray-300: hsl(var(--hue), 52%, 91%);
     --gray-400: hsl(var(--hue), 42%, 84%);
     --gray-500: hsl(var(--hue), 32%, 69%);
@@ -33,21 +33,25 @@
     --gray-800: hsl(var(--hue), 18%, 23%);
     --gray-900: hsl(var(--hue), 12%, 14%);
 
-    --danger-100: #fff5f5;
-    --danger-400: #FC8181;
-    --danger-500: #F56565;
+    --danger-100: #F5656511;
+    --danger-200: #F5656533;
+    --danger-400: #F56565CC;
+    --danger-500: #F56565FF;
 
-    --warning-100: #FFFAF0;
-    --warning-400: #F6AD55;
-    --warning-500: #ED8936;
+    --warning-100: #ED893611;
+    --warning-200: #ED893622;
+    --warning-400: #ED8936CC;
+    --warning-500: #ED8936FF;
 
-    --notice-100: #FFFFF0;
-    --notice-400: #ECC94B;
-    --notice-500: #D69E2E;
+    --notice-100: #D69E2E11;
+    --notice-200: #D69E2E22;
+    --notice-400: #D69E2ECC;
+    --notice-500: #D69E2EFF;
 
-    --info-100: #EBF8FF;
-    --info-400: #63B3ED;
-    --info-500: #4299E1;
+    --info-100: #4299E111;
+    --info-200: #4299E122;
+    --info-400: #4299E1CC;
+    --info-500: #4299E1FF;
 
     --primary-050: hsla(var(--hue), 62%, 50%, 0.07);
     --primary-100: hsla(var(--hue), 62%, 50%, 0.33);
