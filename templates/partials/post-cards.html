@@ -6,7 +6,7 @@
 <!--            <div class="card__image" style="background-image:url('{{ blogPost.Image }}')"></div>-->
 <!--            {% endif %}-->
             <div class="card__content">
-                {% include 'partials/blog_post_meta.html' with class='card__title' hot=true noViews=true %}
+                {% include 'partials/blog_post_meta.html' with class='card__title' hot=true noViews=true noVotes=true %}
                 <div class="card__body">{{ blogPost.Title | truncatechars:"50" }}</div>
                 <a href="/blog/{{ blogPost.Slug }}">Read Post &raquo;</a>
             </div>
