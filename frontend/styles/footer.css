@@ -9,7 +9,7 @@
         }
 
         a {
-            @apply no-underline;
+            @apply no-underline !important;
         }
     }
 
