@@ -6,9 +6,6 @@
           {{ 'images/greg-rounded.svg' | inlinestatic | safe }}
         </a>
       </li>
-<!--      <li>-->
-<!--        <a href="/books">Books</a>-->
-<!--      </li>-->
       <li>
         <a href="/blog/page/1">Blog</a>
       </li>
@@ -17,23 +14,13 @@
       </li>
     </ul>
     <ul>
-      <li data-toggle-theme style="font-size:0">
-        <a href="#" title="Automatic theme" data-theme="auto">
-          {{ 'images/icons/adjust.svg' | inlinestatic | safe }}
-        </a>
-        <a href="#" title="Light theme" data-theme="light" style="display:none">
-          {{ 'images/icons/sun.svg' | inlinestatic | safe }}
-        </a>
-        <a href="#" title="Dark theme" data-theme="dark" style="display:none">
-          {{ 'images/icons/moon.svg' | inlinestatic | safe }}
+      <li>
+        <a href="#" data-toggle-theme style="display:flex;align-items:center;">
+          <span data-theme-icon="light" style="display:none">{{ 'images/icons/sun.svg' | inlinestatic | safe }}</span>
+          <span data-theme-icon="dark" style="display:none">{{ 'images/icons/moon.svg' | inlinestatic | safe }}</span>
         </a>
       </li>
-      <li class="hidden-mobile">
-        <a href="//twitter.com/GregorySchier" rel="noopener" title="Twitter">
-          {{ 'images/icons/twitter.svg' | inlinestatic | safe }}
-        </a>
-      </li>
-      <li class="hidden-mobile">
+      <li>
         <a href="/blog/search" title="search">
           {{ 'images/icons/search.svg' | inlinestatic | safe }}
         </a>

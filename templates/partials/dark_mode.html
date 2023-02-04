@@ -1,0 +1,55 @@
+<script>
+    (function () {
+        const htmlEl = document.querySelector('html');
+
+        function preferredTheme() {
+            return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        }
+
+        function getTheme() {
+            return localStorage.getItem('theme') || preferredTheme();
+        }
+
+        function showIcon() {
+            const theme = getTheme();
+            document.querySelectorAll('[data-toggle-theme]').forEach(el => {
+                const iconLight = el.querySelector('[data-theme-icon="light"]');
+                const iconDark = el.querySelector('[data-theme-icon="dark"]');
+
+                iconLight.style.display = theme === 'light' ? 'inline-block' : 'none';
+                iconDark.style.display = theme === 'dark' ? 'inline-block' : 'none';
+
+                console.log('Using theme', theme);
+            });
+        }
+
+        function storeTheme(theme) {
+            localStorage.setItem('theme', theme);
+            applyTheme();
+        }
+
+        function applyTheme() {
+            const theme = getTheme();
+            htmlEl.setAttribute('theme', theme);
+            showIcon();
+        }
+
+        applyTheme();
+
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function () {
+            // Theme always changes on system change
+            storeTheme(preferredTheme());
+        });
+
+        window.addEventListener('DOMContentLoaded', function () {
+            showIcon();
+            document.querySelectorAll('[data-toggle-theme]').forEach((el) => {
+                el.addEventListener('click', e => {
+                    e.preventDefault();
+                    const newTheme = getTheme() === 'dark' ? 'light' : 'dark';
+                    storeTheme(newTheme);
+                });
+            });
+        });
+    })();
+</script>

@@ -17,6 +17,7 @@ import (
 	"os"
 	"path"
 	"path/filepath"
+	"regexp"
 	"strings"
 	"time"
 )
@@ -103,6 +104,18 @@ func init() {
 			}
 
 			return pongo2.AsValue(t), nil
+		},
+	)
+	if err != nil {
+		panic("failed to register isodate filter: " + err.Error())
+	}
+
+	re := regexp.MustCompile(`[^\w\s-–—:"'!?]`)
+	err = pongo2.RegisterFilter(
+		"sanitize",
+		func(in *pongo2.Value, param *pongo2.Value) (*pongo2.Value, *pongo2.Error) {
+			v := strings.TrimSpace(re.ReplaceAllString(in.String(), ""))
+			return pongo2.AsValue(v), nil
 		},
 	)
 	if err != nil {

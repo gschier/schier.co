@@ -4,7 +4,7 @@
   <meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
-  <title>{% if pageTitle %}{{ pageTitle }} – {% endif %}Gregory Schier</title>
+  <title>{% if pageTitle %}{{ pageTitle | sanitize }} – {% endif %}Gregory Schier</title>
   <meta name="author" content="Gregory Schier">
   <meta name="description" content="{{ pageDescription }}">
 
@@ -41,7 +41,7 @@
   <meta name="twitter:site" content="@GregorySchier" />
   <meta name="twitter:creator" content="@GregorySchier" />
   <meta property="og:url" content="{{ pageUrl }}" />
-  <meta property="og:title" content="{% if pageTitle %}{{ pageTitle }}{% else %}Gregory Schier{% endif %}" />
+  <meta property="og:title" content="{% if pageTitle %}{{ pageTitle | sanitize }}{% else %}Gregory Schier{% endif %}" />
   <meta property="og:description" content="{{ pageDescription }}" />
   {% if pageImage %}
     <meta name="twitter:card" content="summary_large_image" />
@@ -69,18 +69,7 @@
 <body data-deployed="{{ deployTime }}" data-csrf-token="{{ csrfToken }}" data-csrf-Token-header="{{ csrfTokenHeader }}" data-logged-in="{{ loggedIn | yesno:'yes,no' }}">
 
 {# Set theme as soon as possible #}
-<script>
-  (function() {
-    const theme = localStorage.getItem('theme') || '';
-    if (theme) {
-      document.querySelector('html').setAttribute('theme', theme);
-    } else {
-      const preferDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      const autoTheme = preferDark ? 'dark-auto' : 'light-auto';
-      document.querySelector('html').setAttribute('theme', autoTheme);
-    }
-  })();
-</script>
+{% include 'partials/dark_mode.html' %}
 
 {% block body %}{% endblock %}
 

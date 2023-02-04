@@ -1,15 +1,11 @@
 .bottom-footer {
-    @apply bg-gray-100 py-32 mt-24 border-t border-gray-200;
+    @apply bg-gray-100 py-12 mt-24 border-t border-gray-200;
 
     .links {
-        @apply text-center pt-8 text-sm text-gray-700;
+        @apply text-center text-sm text-gray-700;
 
         p {
             @apply mt-2 mb-0;
-        }
-
-        a {
-            @apply no-underline !important;
         }
     }
 
@@ -18,7 +14,11 @@
         width: 7rem;
     }
 
-    a i {
+    a:hover i {
         @apply text-link no-underline !important;
+    }
+    a:hover {
+        @apply underline;
+
     }
 }

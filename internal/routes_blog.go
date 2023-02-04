@@ -13,7 +13,6 @@ import (
 	"net/http"
 	"net/url"
 	"os"
-	"regexp"
 	"strconv"
 	"strings"
 	"time"
@@ -387,9 +386,8 @@ func renderBlogPost(w http.ResponseWriter, r *http.Request) {
 		postSummary = Summary(post.Content)
 	}
 
-	re := regexp.MustCompile(`[^\w\s-–—:"'!?]`)
 	renderTemplate(w, r, pageTemplate("blog/post.html"), &pongo2.Context{
-		"pageTitle":            strings.TrimSpace(re.ReplaceAllString(post.Title, "")),
+		"pageTitle":            post.Title,
 		"pageImage":            post.Image,
 		"pageDescription":      postSummary,
 		"pagePublishedTime":    post.Date,

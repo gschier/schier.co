@@ -11,6 +11,10 @@
     @apply flex flex-row items-center list-none;
 }
 
+.top-nav li {
+    @apply flex items-center;
+}
+
 .top-nav ul:first-child {
     @apply mr-auto;
 }
