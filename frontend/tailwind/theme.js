@@ -1,10 +1,11 @@
 module.exports = {
   content: ["./templates/**/*.html"],
+  extends: {},
   colors: {
     current: 'currentColor',
     background: 'var(--bg)',
     btn: {
-      'default': 'var(--bg-btn)',
+      'DEFAULT': 'var(--bg-btn)',
       'hover': 'var(--bg-btn-hover)',
     },
     selection: 'var(--txt-selection)',
@@ -51,7 +52,7 @@ module.exports = {
   },
   textColor: {
     btn: {
-      'default': 'var(--txt-btn)',
+      'DEFAULT': 'var(--txt-btn)',
       'hover': 'var(--txt-btn-hover)',
     },
     gray: {

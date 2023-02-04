@@ -126,7 +126,7 @@ form .checkbox-buttons {
         @apply flex inline-block mr-2 mb-1;
 
         label {
-            @apply m-0 px-3 py-1 rounded bg-gray-200 text-xs cursor-pointer text-gray-700 whitespace-no-wrap;
+            @apply m-0 px-3 py-1 rounded bg-gray-200 text-xs cursor-pointer text-gray-700 whitespace-nowrap;
 
             &:hover {
                 @apply bg-gray-200 text-gray-700;
@@ -247,7 +247,7 @@ details summary:focus {
 }
 
 .pagination-left {
-    @apply w-24 text-left whitespace-no-wrap;
+    @apply w-24 text-left whitespace-nowrap;
 }
 
 .pagination-right {

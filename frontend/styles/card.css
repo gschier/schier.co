@@ -21,7 +21,7 @@
         }
 
         &__title {
-            @apply text-xs text-gray-700 whitespace-no-wrap;
+            @apply text-xs text-gray-700 whitespace-nowrap;
         }
 
         &__body--big {
