@@ -67,7 +67,7 @@
     }
 
     figure figcaption {
-        @apply text-sm my-1 italic opacity-80;
+        @apply text-sm py-0.5 px-2 italic opacity-80;
         &:before {
             content: "↪";
             @apply mr-1.5 text-syntax1 text-base;
