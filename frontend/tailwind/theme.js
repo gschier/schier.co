@@ -1,6 +1,5 @@
 module.exports = {
   content: ["./templates/**/*.html"],
-  extends: {},
   colors: {
     current: 'currentColor',
     background: 'var(--bg)',

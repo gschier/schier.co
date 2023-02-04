@@ -29,9 +29,7 @@ var deployTime = time.Now().Format(time.RFC3339)
 var chroma = bfchroma.NewRenderer(
 	bfchroma.WithoutAutodetect(),
 	bfchroma.Extend(
-		blackfriday.NewHTMLRenderer(blackfriday.HTMLRendererParameters{
-			Flags: blackfriday.CommonHTMLFlags,
-		}),
+		NewRenderer(),
 	),
 	bfchroma.ChromaOptions(
 		html.WithClasses(),

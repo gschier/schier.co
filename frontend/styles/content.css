@@ -62,8 +62,16 @@
         @apply leading-relaxed;
     }
 
-    p > img, p > a > img {
-        @apply block mx-auto rounded-sm my-8 max-h-[60vh] max-w-full;
+    figure > img, p > a > img {
+        @apply block mx-auto rounded max-h-[60vh] max-w-full;
+    }
+
+    figure figcaption {
+        @apply text-sm my-1 italic opacity-70;
+        &:before {
+            content: "↪";
+            @apply mr-1.5 text-notice
+        }
     }
 
     a {

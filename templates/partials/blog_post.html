@@ -1,239 +1,253 @@
 <article class="content blog-post">
 
-  {% if loggedIn %}
-  <div class="notice notice--warning">
-    <a href="/blog/edit/{{ blogPost.ID }}" class="btn btn--warning btn--sm">Edit</a>
-    {% include 'partials/publish_link.html' %}
-    {% include 'partials/unlist_link.html' %}
-    {% include 'partials/delete_link.html' %}
-    {% include 'partials/newsletter_link.html' %}
-  </div>
-  {% endif %}
-  <header>
-    <h1>{{ blogPost.Title }}</h1>
-    {% include 'partials/blog_post_meta.html' %}
-  </header>
+    {% if loggedIn %}
+        <div class="notice notice--warning">
+            <a href="/blog/edit/{{ blogPost.ID }}" class="btn btn--warning btn--sm">Edit</a>
+            {% include 'partials/publish_link.html' %}
+            {% include 'partials/unlist_link.html' %}
+            {% include 'partials/delete_link.html' %}
+            {% include 'partials/newsletter_link.html' %}
+        </div>
+    {% endif %}
+    <header>
+        <h1>{{ blogPost.Title }}</h1>
+        {% include 'partials/blog_post_meta.html' %}
+    </header>
 
-  {% if blogPost.EditedAt | default:blogPost.Date | isodateolderdays:365 %}
-    <p class="notice notice--warning">
-      This post was last updated
-      <code>{{ blogPost.EditedAt | default:blogPost.Date | isoformat }}</code> and
-      may be out of date </p>
-  {% endif %}
+    {% if blogPost.EditedAt | default:blogPost.Date | isodateolderdays:365 %}
+        <p class="notice notice--warning">
+            This post was last updated
+            <code>{{ blogPost.EditedAt | default:blogPost.Date | isoformat }}</code> and
+            may be out of date </p>
+    {% endif %}
 
-  {% if not blogPost.Date | isodatewithinmonth:blogPost.EditedAt %}
-    <p class="notice">
-      Updated
-      <time datetime="{{ blogPost.EditedAt }}" title="{{ blogPost.EditedAt }}">
-        <strong>{{ blogPost.EditedAt | isoformat:'Jan _2, 2006' }}</strong>
-      </time>
-    </p>
-  {% endif %}
+    {% if not blogPost.Date | isodatewithinmonth:blogPost.EditedAt %}
+        <p class="notice">
+            Updated
+            <time datetime="{{ blogPost.EditedAt }}" title="{{ blogPost.EditedAt }}">
+                <strong>{{ blogPost.EditedAt | isoformat:'Jan _2, 2006' }}</strong>
+            </time>
+        </p>
+    {% endif %}
 
-  {{ blogPost.Content | markdown }}
+    {{ blogPost.Content | markdown }}
 
-  {% if "tutorial" in blogPost.Tags %}
-    <p class="notice notice--info">
-      If you enjoyed this tutorial, please consider
-      <a href="/blog/donate/{{ blogPost.Slug }}">sponsoring my work on GitHub</a> 🤗 </p>
-  {% endif %}
+    {% if "tutorial" in blogPost.Tags %}
+        <p class="notice notice--info">
+            If you enjoyed this tutorial, please consider
+            <a href="/blog/donate/{{ blogPost.Slug }}">sponsoring my work on GitHub</a> 🤗 </p>
+    {% endif %}
 </article>
 
 <div class="row-spaced">
-  <div class="clap-button">
-    <button title="Cheers this post" {% if not blogPost.Published %}disabled="disabled"{% endif %}>
-      {{ 'images/icons/cheers.svg' | inlinestatic | safe }}
-    </button>
-    <div title="{{ blogPost.VotesUsers }} readers">
+    <div class="clap-button">
+        <button title="Cheers this post" {% if not blogPost.Published %}disabled="disabled"{% endif %}>
+            {{ 'images/icons/cheers.svg' | inlinestatic | safe }}
+        </button>
+        <div title="{{ blogPost.VotesUsers }} readers">
       <span class="clap-count">
         {{ blogPost.VotesTotal | default:"Be the first to" }}
       </span>
-      cheers
+            cheers
+        </div>
     </div>
-  </div>
-  {% include 'partials/blog_post_tag.html' with tags=blogPost.Tags %}
+    {% include 'partials/blog_post_tag.html' with tags=blogPost.Tags %}
 </div>
 {% if not hideVoteEgg %}
-  <div class="vote-messages">
-    <div data-votes="50" data-effect="page-flip">
-      <div class="notice notice--danger">
-        Now look what you've done 🌋
-      </div>
-    </div>
-    <div data-votes="39" data-effect="page-shake">
-      <div class="notice notice--danger notice--huge">
-        Stop clicking and run for your life! 😱
-      </div>
-    </div>
-    <div data-votes="25" data-effect="shake">
-      <div class="notice notice--warning notice--big">
-        Uh oh, I don't think the system can't handle it! 🔥
-      </div>
-    </div>
-    <div data-votes="13">
-      <div class="notice notice--warning">
-        Stop it, you're too kind 😄
-      </div>
-    </div>
-    <div data-votes="3">
-      <div class="notice notice--notice">
-        Thanks for the love! ❤️
-      </div>
-    </div>
-    <div data-votes="1">
-      <div class="notice">
-        Thanks, glad you enjoyed it! Care to share?
-        <div class="blog-post__btns">
-          <a
-            data-href="/blog/share/{{ blogPost.Slug }}/hn"
-            target="_blank"
-            rel="nofollow"
-            class="btn btn--xs svg-icon btn--hn"
-          >
-            {{ 'images/icons/hn.svg' | inlinestatic | safe }} Hacker News
-          </a>
-          <a
-            data-href="/blog/share/{{ blogPost.Slug }}/twitter"
-            target="_blank"
-            rel="nofollow"
-            class="btn btn--xs svg-icon btn--twitter"
-          >
-            {{ 'images/icons/twitter.svg' | inlinestatic | safe }} Twitter
-          </a>
-          <a
-            data-href="/blog/share/{{ blogPost.Slug }}/reddit"
-            target="_blank"
-            rel="nofollow"
-            class="btn btn--xs svg-icon btn--reddit"
-          >
-            {{ 'images/icons/reddit.svg' | inlinestatic | safe }} Reddit
-          </a>
-          <a
-            data-href="/blog/share/{{ blogPost.Slug }}/email"
-            target="_blank"
-            rel="nofollow"
-            class="btn btn--xs svg-icon btn--email"
-          >
-            {{ 'images/icons/email.svg' | inlinestatic | safe }} Email
-          </a>
-          <script>
-            // Populate href dynamically so bots don't crawl so easily
-            for (const el of document.querySelectorAll('[data-href]')) {
-              el.setAttribute('href', el.getAttribute('data-href'));
-            }
-          </script>
+    <div class="vote-messages">
+        <div data-votes="50" data-effect="page-flip">
+            <div class="notice notice--danger">
+                Now look what you've done 🌋
+            </div>
         </div>
-      </div>
+        <div data-votes="39" data-effect="page-shake">
+            <div class="notice notice--danger notice--huge">
+                Stop clicking and run for your life! 😱
+            </div>
+        </div>
+        <div data-votes="25" data-effect="shake">
+            <div class="notice notice--warning notice--big">
+                Uh oh, I don't think the system can't handle it! 🔥
+            </div>
+        </div>
+        <div data-votes="13">
+            <div class="notice notice--warning">
+                Stop it, you're too kind 😄
+            </div>
+        </div>
+        <div data-votes="3">
+            <div class="notice notice--notice">
+                Thanks for the love! ❤️
+            </div>
+        </div>
+        <div data-votes="1">
+            <div class="notice">
+                Thanks, glad you enjoyed it! Care to share?
+                <div class="blog-post__btns">
+                    <a
+                            data-href="/blog/share/{{ blogPost.Slug }}/hn"
+                            target="_blank"
+                            rel="nofollow"
+                            class="btn btn--xs svg-icon btn--hn"
+                    >
+                        {{ 'images/icons/hn.svg' | inlinestatic | safe }} Hacker News
+                    </a>
+                    <a
+                            data-href="/blog/share/{{ blogPost.Slug }}/twitter"
+                            target="_blank"
+                            rel="nofollow"
+                            class="btn btn--xs svg-icon btn--twitter"
+                    >
+                        {{ 'images/icons/twitter.svg' | inlinestatic | safe }} Twitter
+                    </a>
+                    <a
+                            data-href="/blog/share/{{ blogPost.Slug }}/reddit"
+                            target="_blank"
+                            rel="nofollow"
+                            class="btn btn--xs svg-icon btn--reddit"
+                    >
+                        {{ 'images/icons/reddit.svg' | inlinestatic | safe }} Reddit
+                    </a>
+                    <a
+                            data-href="/blog/share/{{ blogPost.Slug }}/email"
+                            target="_blank"
+                            rel="nofollow"
+                            class="btn btn--xs svg-icon btn--email"
+                    >
+                        {{ 'images/icons/email.svg' | inlinestatic | safe }} Email
+                    </a>
+                    <script>
+                        // Populate href dynamically so bots don't crawl so easily
+                        for (const el of document.querySelectorAll('[data-href]')) {
+                            el.setAttribute('href', el.getAttribute('data-href'));
+                        }
+                    </script>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
 {% endif %}
 
 <hr class="hr--spaced"/>
 {% include 'partials/full-subscription-form.html' %}
 <div>
-  <div class="row-spaced">
-    <h2 class="row-spaced">Recommended Posts ✍🏻</h2>
-    <small><a href="/blog" title="See all blog posts">See All &raquo;</a></small>
-  </div>
-  {% include 'partials/post-cards.html' with blogPosts=recommendedBlogPosts %}
+    <div class="row-spaced">
+        <h2 class="row-spaced">Recommended Posts ✍🏻</h2>
+        <small><a href="/blog" title="See all blog posts">See All &raquo;</a></small>
+    </div>
+    {% include 'partials/post-cards.html' with blogPosts=recommendedBlogPosts %}
 </div>
 
 {% block extraScripts %}
-  <script> {# Script for voting #}
-  (function () {
-    const msgContainer = document.body.querySelector('.vote-messages');
-    if (!msgContainer) {
-      return;
-    }
-
-    const msgs = msgContainer.querySelectorAll('[data-votes]');
-    const container = document.body.querySelector('.clap-button');
-    const clapCount = container.querySelector('.clap-count');
-    const clapBtn = container.querySelector('button');
-    const localStorageKey = "vote-{{ blogPost.Slug }}";
-
-    function updateDisabledAttr() {
-      const count = JSON.parse(localStorage.getItem(localStorageKey)) || 0;
-      if (count >= 50) {
-        clapBtn.setAttribute('disabled', 'disabled');
-      }
-    }
-
-    updateDisabledAttr();
-
-    // Remove sheers notifications so we can show them later
-    for (const el of msgs) {
-      msgContainer.removeChild(el);
-    }
-
-    clapBtn.addEventListener('click', async function (e) {
-      e.preventDefault();
-      e.stopPropagation();
-
-      let count = parseInt(localStorage.getItem(localStorageKey)) || 0;
-      count = isNaN(count) ? 0 : count;
-
-      const resp = await fetch('/api/blog/vote', {
-        method: 'POST',
-        body: `slug={{ blogPost.Slug }}&count=${count}`,
-        headers: {
-          [document.body.getAttribute(
-            'data-csrf-token-header',
-          )]: document.body.getAttribute('data-csrf-token'),
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-      });
-      const total = await resp.text();
-      localStorage.setItem(localStorageKey, JSON.stringify(count + 1));
-      updateDisabledAttr();
-
-      clapCount.innerHTML = total;
-      for (const el of msgs) {
-        if (count + 1 < parseInt(el.getAttribute('data-votes'))) {
-          continue;
+    <script> {# Script for figcaption #}
+    (function() {
+        document.querySelectorAll('.blog-post img').forEach(function(img) {
+            if (img.alt) {
+                const figure = document.createElement('figure');
+                const figcaption = document.createElement('figcaption');
+                figcaption.innerHTML = img.alt;
+                img.parentNode.appendChild(figure);
+                figure.appendChild(img);
+                figure.appendChild(figcaption);
+            }
+        });
+    })();
+    </script>
+    <script> {# Script for voting #}
+    (function () {
+        const msgContainer = document.body.querySelector('.vote-messages');
+        if (!msgContainer) {
+            return;
         }
 
-        // Append child if it's not already
-        if (!el.parentNode) {
-          msgContainer.prepend(el);
-        } else {
-          // Already there, so no need to do the rest
-          continue;
+        const msgs = msgContainer.querySelectorAll('[data-votes]');
+        const container = document.body.querySelector('.clap-button');
+        const clapCount = container.querySelector('.clap-count');
+        const clapBtn = container.querySelector('button');
+        const localStorageKey = "vote-{{ blogPost.Slug }}";
+
+        function updateDisabledAttr() {
+            const count = JSON.parse(localStorage.getItem(localStorageKey)) || 0;
+            if (count >= 50) {
+                clapBtn.setAttribute('disabled', 'disabled');
+            }
         }
 
-        el.style.animation = 'fade-in 0.5s';
+        updateDisabledAttr();
 
-        if (el.getAttribute('data-effect') === 'shake') {
-          container.style.animation = 'shake 0.5s';
-          container.style.animationIterationCount = 'infinite';
+        // Remove sheers notifications so we can show them later
+        for (const el of msgs) {
+            msgContainer.removeChild(el);
         }
 
-        if (el.getAttribute('data-effect') === 'page-shake') {
-          document.body.style.animation = 'shake 0.6s';
-          document.body.style.animationIterationCount = 'infinite';
-          container.style.animation = '';
-        }
+        clapBtn.addEventListener('click', async function (e) {
+            e.preventDefault();
+            e.stopPropagation();
 
-        if (el.getAttribute('data-effect') === 'page-flip') {
-          document.body.style.animation = 'flip 0.3s';
-          document.body.style.animationFillMode = 'forwards';
-          container.style.animation = '';
-        }
-      }
-    });
-  })();
-  </script>
+            let count = parseInt(localStorage.getItem(localStorageKey)) || 0;
+            count = isNaN(count) ? 0 : count;
 
-  <script> {# Handle header linking #}
-  (function () {
-    document.querySelectorAll('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]').forEach(el => {
-      const a = document.createElement('a');
-      a.href = '#' + el.id;
-      a.classList.add('h-link');
-      a.innerHTML = `{{ 'images/icons/link.svg' | inlinestatic | safe }}`;
-      el.classList.add('header');
-      el.prepend(a);
-    });
-  })();
-  </script>
+            const resp = await fetch('/api/blog/vote', {
+                method: 'POST',
+                body: `slug={{ blogPost.Slug }}&count=${count}`,
+                headers: {
+                    [document.body.getAttribute(
+                        'data-csrf-token-header',
+                    )]: document.body.getAttribute('data-csrf-token'),
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+            });
+            const total = await resp.text();
+            localStorage.setItem(localStorageKey, JSON.stringify(count + 1));
+            updateDisabledAttr();
+
+            clapCount.innerHTML = total;
+            for (const el of msgs) {
+                if (count + 1 < parseInt(el.getAttribute('data-votes'))) {
+                    continue;
+                }
+
+                // Append child if it's not already
+                if (!el.parentNode) {
+                    msgContainer.prepend(el);
+                } else {
+                    // Already there, so no need to do the rest
+                    continue;
+                }
+
+                el.style.animation = 'fade-in 0.5s';
+
+                if (el.getAttribute('data-effect') === 'shake') {
+                    container.style.animation = 'shake 0.5s';
+                    container.style.animationIterationCount = 'infinite';
+                }
+
+                if (el.getAttribute('data-effect') === 'page-shake') {
+                    document.body.style.animation = 'shake 0.6s';
+                    document.body.style.animationIterationCount = 'infinite';
+                    container.style.animation = '';
+                }
+
+                if (el.getAttribute('data-effect') === 'page-flip') {
+                    document.body.style.animation = 'flip 0.3s';
+                    document.body.style.animationFillMode = 'forwards';
+                    container.style.animation = '';
+                }
+            }
+        });
+    })();
+    </script>
+
+    <script> {# Handle header linking #}
+    (function () {
+        document.querySelectorAll('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]').forEach(el => {
+            const a = document.createElement('a');
+            a.href = '#' + el.id;
+            a.classList.add('h-link');
+            a.innerHTML = `{{ 'images/icons/link.svg' | inlinestatic | safe }}`;
+            el.classList.add('header');
+            el.prepend(a);
+        });
+    })();
+    </script>
 {% endblock %}
