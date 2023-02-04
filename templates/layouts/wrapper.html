@@ -62,9 +62,6 @@
 
   {% block extraStyles %}{% endblock %}
 
-  {% if not isDev and not loggedIn %}
-    <script src="https://t.schier.dev/script.js" data-website="site_RPutoRaXSMBFj6hyzV"></script>
-  {% endif %}
 </head>
 <body data-deployed="{{ deployTime }}" data-csrf-token="{{ csrfToken }}" data-csrf-Token-header="{{ csrfTokenHeader }}" data-logged-in="{{ loggedIn | yesno:'yes,no' }}">
 
@@ -73,11 +70,16 @@
 
 {% block body %}{% endblock %}
 
+{% if not isDev and not loggedIn %}
+    <script src="https://t.schier.dev/script.js" data-website="site_RPutoRaXSMBFj6hyzV"></script>
+{% endif %}
+
 {% if isDev %}
   <script src="{{ staticUrl }}/index.all.js"></script>
 {% else %}
   <script>{{ 'index.all.js' | inlinestatic | safe }} </script>
 {% endif %}
+
 {% block extraScripts %}{% endblock %}
 </body>
 </html>
