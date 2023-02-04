@@ -5,11 +5,19 @@
         @apply text-sm px-2 w-full mx-auto block;
 
         &__inner {
-            @apply border border-gray-200 rounded px-4 py-2 mt-4 bg-gray-100;
+            @apply border border-gray-200 rounded mt-4 bg-gray-100 overflow-hidden;
 
             & > *:not(:last-child) {
                 @apply m-0 mb-1 p-0;
             }
+        }
+
+        &__content {
+            @apply px-4 py-2;
+        }
+
+        &__image {
+            @apply bg-cover bg-center bg-no-repeat w-full h-32;
         }
 
         &__title {
