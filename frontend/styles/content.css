@@ -62,7 +62,7 @@
         @apply leading-relaxed;
     }
 
-    figure > img, p > a > img {
+    * > img, p > a > img {
         @apply block mx-auto rounded max-h-[60vh] max-w-full;
     }
 
