@@ -4,7 +4,7 @@ tmp_dir = ".tmp"
 [build]
 bin = "./.tmp/main"
 cmd = "go build -o ./.tmp/main github.com/gschier/schier.co/cmd/web"
-delay = 1000
+delay = 100
 exclude_dir = []
 exclude_file = []
 exclude_regex = []

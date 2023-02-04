@@ -2,9 +2,6 @@
     {% for blogPost in blogPosts %}
     <div class="card card--clicky" onclick="window.location='/blog/{{ blogPost.Slug }}'">
         <div class="card__inner">
-<!--            {% if blogPost.Image %}-->
-<!--            <div class="card__image" style="background-image:url('{{ blogPost.Image }}')"></div>-->
-<!--            {% endif %}-->
             <div class="card__content">
                 {% include 'partials/blog_post_meta.html' with class='card__title' hot=true noViews=true noVotes=true %}
                 <div class="card__body">{{ blogPost.Title | truncatechars:"50" }}</div>
