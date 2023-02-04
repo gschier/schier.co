@@ -218,7 +218,7 @@ details summary:focus {
 }
 
 .meta {
-    @apply block text-sm text-gray-700 font-normal;
+    @apply block text-sm text-gray-700 font-normal mt-1;
 }
 
 .blog-post-preview h2 {
