@@ -291,10 +291,10 @@ details summary:focus {
 }
 
 .tag {
-    @apply mt-2 mr-2 rounded-full border-primary-400 border border-solid uppercase inline-block;
-    @apply border-solid !important;
+    @apply mt-2 mr-2 rounded-full border-solid uppercase inline-block;
+    @apply border border-solid border-primary-300 !important;
     font-size: 0.7em;
-    padding: 0 0.6em;
+    padding: 0.15em 0.75em;
 
     &:hover {
         @apply bg-primary-050;
