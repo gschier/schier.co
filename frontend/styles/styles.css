@@ -48,7 +48,7 @@ strong, strong * {
 
 .container {
     @apply mx-auto px-8;
-    max-width: 40rem;
+    max-width: 42rem;
 }
 
 .link {
@@ -357,10 +357,8 @@ details summary:focus {
 }
 
 .clap-button button {
-    @apply rounded-full border border-gray-600 mr-3;
+    @apply rounded-full border border-gray-600 mr-3 w-10 h-10 cursor-pointer;
     @apply outline-none !important;
-    width: 3rem;
-    height: 3rem;
     transition: transform 100ms;
 }
 

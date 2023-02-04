@@ -1,7 +1,5 @@
 <footer class="bottom-footer">
     <div class="container">
-<!--        {{ 'images/greg-rounded.svg' | inlinestatic | safe }}-->
-
         <div class="links">
             <a href="//twitter.com/GregorySchier" rel="noopener">Twitter</a>
             &centerdot;
@@ -12,21 +10,18 @@
             <a href="/newsletter">Newsletter</a>
 
             {% if loggedIn %}
-            <br><br>
-            <div class="notice notice--warning">
-                <a href="/logout" class="btn btn--sm btn--warning">Logout</a>
-                <a href="https://analytics.schier.co/analytics/site_RPutoRaXSMBFj6hyzV"
-                   class="btn btn--sm btn--warning">Analytics</a>
-                <br>
-                <a href="{{ pageUrl }}"><code style="font-size:0.9em;">{{ pageUrl }}</code></a>
-                &copy; Greg Schier
-            </div>
-            {% else %}
-            <div>
-                <br>
-                &copy; Greg Schier
-            </div>
+                <br><br>
+                <div class="notice notice--warning">
+                    <a href="/logout" class="btn btn--sm btn--warning">Logout</a>
+                    <a href="https://analytics.schier.co/analytics/site_RPutoRaXSMBFj6hyzV"
+                       class="btn btn--sm btn--warning">Analytics</a>
+                    <br>
+                    <br>
+                    <a href="{{ pageUrl }}"><code style="font-size:0.9em;">{{ pageUrl }}</code></a>
+                </div>
             {% endif %}
+            <br>
+            &copy; Greg Schier
         </div>
     </div>
 </footer>

@@ -1,7 +1,7 @@
 pre.chroma {
-    @apply relative block bg-gray-100 p-6 overflow-auto rounded font-mono border border-gray-200 overflow-x-auto cursor-text;
+    @apply relative block bg-gray-100 py-4 px-4 overflow-auto rounded font-mono border border-gray-200 overflow-x-auto cursor-text;
     tab-size: 4;
-    font-size: 0.8em;
+    font-size: 0.75em;
 
     .c,
     .cm,

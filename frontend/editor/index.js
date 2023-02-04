@@ -25,20 +25,20 @@ export function init() {
 }
 
 function handleChange(e) {
-  // Already contains a <!--more-->
-  if (e.target.value.includes('<!--more-->')) {
-    e.target.setCustomValidity('');
-    return;
-  }
-
-  // Only one paragraph, so doesn't need one
-  if (!e.target.value.includes('\n\n')) {
-    e.target.setCustomValidity('');
-    return;
-  }
-
-  const validity = 'Missing <!--more--> tag';
-  e.target.setCustomValidity(validity);
+  // // Already contains a <!--more-->
+  // if (e.target.value.includes('<!--more-->')) {
+  //   e.target.setCustomValidity('');
+  //   return;
+  // }
+  //
+  // // Only one paragraph, so doesn't need one
+  // if (!e.target.value.includes('\n\n')) {
+  //   e.target.setCustomValidity('');
+  //   return;
+  // }
+  //
+  // const validity = 'Missing <!--more--> tag';
+  // e.target.setCustomValidity(validity);
 }
 
 function toggleExpand(e) {

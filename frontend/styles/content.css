@@ -63,9 +63,7 @@
     }
 
     p > img, p > a > img {
-        @apply block mx-auto rounded-sm my-8;
-        max-height: 50vh;
-        max-width: 100%;
+        @apply block mx-auto rounded-sm my-8 max-h-[60vh] max-w-full;
     }
 
     a {
