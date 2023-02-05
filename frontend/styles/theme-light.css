@@ -13,8 +13,8 @@
     /* Text */
     --txt-link: hsl(var(--hue), 97%, 43%);
     --txt-syntax-1: hsl(258, 100%, 70%);
-    --txt-syntax-2: hsl(203, 100%, 57%);
-    --txt-syntax-3: hsl(296, 100%, 69%);
+    --txt-syntax-2: hsl(204, 99%, 44%);
+    --txt-syntax-3: hsl(294, 90%, 61%);
     --txt-syntax-4: #8e9dad;
     --txt-notice: var(--notice-500);
     --txt-info: var(--info-500);

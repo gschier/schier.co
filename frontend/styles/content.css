@@ -4,7 +4,7 @@
     }
 
     h2 {
-        @apply text-2xl pt-2;
+        @apply text-2xl;
     }
 
     h3 {
@@ -140,7 +140,7 @@
     }
 
     h1, h2, h3, h4, h5, h6 {
-        @apply text-gray-900;
+        @apply text-gray-900 mt-10;
     }
 
     h1[id], h2[id], h3[id], h4[id], h5[id], h6[id] {
