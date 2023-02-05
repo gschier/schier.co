@@ -1,36 +1,36 @@
 {% extends 'layouts/base.html' %} {% block content %}
 
-<div class="container">
-  <div class="home-hero">
-    <div class="home-hero__avatar">
-      <img
-        src="data:image/jpg;base64,{{ 'images/me.jpg' | inlinestatic:'base64' }}"
-        alt="{{ project.Name }} icon"
-      />
+    <div class="container">
+        <div class="home-hero">
+            <div class="home-hero__avatar">
+                <img
+                        src="data:image/jpg;base64,{{ 'images/me.jpg' | inlinestatic:'base64' }}"
+                        alt="{{ project.Name }} icon"
+                />
+            </div>
+            <div class="home-hero__bio content">
+                <h1>Hey there, I'm Greg! 👋</h1>
+                <p>
+                    I'm a software dev in Canada 🇨🇦, best known for <a href="https://insomnia.rest">Insomnia</a>
+                    (acquired in 2019). I'm currently making app deployments easier at <a href="https://railway.app">Railway</a>
+                    while also hacking on <a href="https://kabook.app">Kabook!</a> and a few <a href="/projects">other
+                    projects</a>.
+                </p>
+            </div>
+        </div>
+
+        <hr class="hr--spaced"/>
+
+        <div class="content">
+            <h2>Recent Writings ✍🏻</h2>
+            <p>
+                Here are some notable posts from my <a href="/blog">Blog</a>, where I write about
+                business, personal health, and software.
+            </p>
+        </div>
+        {% include 'partials/post-cards.html' %}
+        <br/>
+
+        {% include 'partials/full-subscription-form.html' %}
     </div>
-    <div class="home-hero__bio content">
-      <h1>Hey there, I'm Greg! 👋</h1>
-      <p>
-        I'm a software dev in Canada 🇨🇦, best known for <a href="https://insomnia.rest">Insomnia</a>
-        (acquired in 2019). I'm currently making app deployments easier at <a href="https://railway.app">Railway</a>
-        while also hacking on <a href="https://kabook.app">Kabook!</a> and a few <a href="/projects">other
-        projects</a>.
-      </p>
-    </div>
-  </div>
-
-  <hr class="hr--spaced"/>
-
-  <div class="content">
-    <h2>Recent Writings ✍🏻</h2>
-    <p>
-      Here are some notable posts from my <a href="/blog">Blog</a>, where I write about indie development,
-      productivity, personal health, and software.
-    </p>
-  </div>
-  {% include 'partials/post-cards.html' %}
-  <br/>
-
-  {% include 'partials/full-subscription-form.html' %}
-</div>
 {% endblock %}

@@ -289,7 +289,7 @@ func renderTemplate(w http.ResponseWriter, r *http.Request, template *pongo2.Tem
 		"doNotTrack":       loggedIn,
 		"isDev":            isDev,
 		"loggedIn":         loggedIn,
-		"pageDescription":  "Thoughts on software and technology, by an independent software developer",
+		"pageDescription":  "Thoughts on software, technology, and life.",
 		"pageImage":        "",
 		"pageImageDefault": os.Getenv("BASE_URL") + "/static/images/social/default.png",
 		"pageTitle":        "",
