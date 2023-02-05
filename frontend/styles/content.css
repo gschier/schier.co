@@ -91,11 +91,7 @@
         }
 
         &[target="_blank"] {
-            @apply mr-0.5;
-            &:after {
-                @apply text-[0.6em] relative -top-1 -right-0.5 stroke-current font-bold;
-                content: '↗';
-            }
+            /** TODO: Figure out strategy here */
         }
     }
 
