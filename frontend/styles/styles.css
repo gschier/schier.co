@@ -198,6 +198,9 @@ details {
 
 .blog-post > header {
     @apply pb-4;
+    h1 {
+        @apply mt-0;
+    }
 }
 
 .blog-post-preview {

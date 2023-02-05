@@ -1,30 +1,42 @@
 <nav class="top-nav">
-  <div class="container">
-    <ul>
-      <li>
-        <a href="/" class="logo" title="home">
-          {{ 'images/greg-rounded.svg' | inlinestatic | safe }}
-        </a>
-      </li>
-      <li>
-        <a href="/blog/page/1">Blog</a>
-      </li>
-      <li>
-        <a href="/projects">Projects</a>
-      </li>
-    </ul>
-    <ul>
-      <li>
-        <a href="#" data-toggle-theme style="display:flex;align-items:center;">
-          <span data-theme-icon="light" style="display:none">{{ 'images/icons/sun.svg' | inlinestatic | safe }}</span>
-          <span data-theme-icon="dark" style="display:none">{{ 'images/icons/moon.svg' | inlinestatic | safe }}</span>
-        </a>
-      </li>
-      <li>
-        <a href="/blog/search" title="search">
-          {{ 'images/icons/search.svg' | inlinestatic | safe }}
-        </a>
-      </li>
-    </ul>
-  </div>
+    <div class="container">
+        <ul>
+            <li>
+                <a href="/" class="logo" title="home">
+                    {{ 'images/greg-rounded.svg' | inlinestatic | safe }}
+                </a>
+            </li>
+            <li>
+                <a href="/blog/page/1">Blog</a>
+            </li>
+            <li>
+                <a href="/projects">Projects</a>
+            </li>
+        </ul>
+        <ul>
+            <li>
+                <a href="https://twitter.com/gregoryschier" title="twitter">
+                    {{ 'images/icons/twitter.svg' | inlinestatic | safe }}
+                </a>
+            </li>
+            <li>
+                <a href="https://github.com/gschier" title="GitHub">
+                    {{ 'images/icons/github.svg' | inlinestatic | safe }}
+                </a>
+            </li>
+            <li>
+                <a href="#" data-toggle-theme style="display:flex;align-items:center;">
+                    <span data-theme-icon="light"
+                          style="display:none">{{ 'images/icons/sun.svg' | inlinestatic | safe }}</span>
+                    <span data-theme-icon="dark"
+                          style="display:none">{{ 'images/icons/moon.svg' | inlinestatic | safe }}</span>
+                </a>
+            </li>
+            <li>
+                <a href="/blog/search" title="search">
+                    {{ 'images/icons/search.svg' | inlinestatic | safe }}
+                </a>
+            </li>
+        </ul>
+    </div>
 </nav>
