@@ -8,8 +8,8 @@
       <thead>
       <tr>
         <th>Title</th>
-        <th style="text-align:right;">Wrd</th>
-        <th style="text-align:right;">Stg</th>
+        <th style="text-align:right;">Words</th>
+{#        <th style="text-align:right;">Stg</th>#}
         <th><a href="/blog/new" class="btn btn--xs">New</a></th>
       </tr>
       </thead>
@@ -24,9 +24,9 @@
           <td style="width:2rem;text-align:right;">
             {{ blogPost.Content | words }}
           </td>
-          <td style="width:2rem;text-align:right;">
-            {{ blogPost.Stage }}
-          </td>
+{#          <td style="width:2rem;text-align:right;">#}
+{#            {{ blogPost.Stage }}#}
+{#          </td>#}
           <td style="width:2rem;">
             <a href="/blog/edit/{{ blogPost.ID }}" class="btn btn--gray btn--xs">Edit</a>
           </td>

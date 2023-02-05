@@ -99,11 +99,11 @@ h2 {
 }
 
 .form-wrapper form {
-    @apply my-6;
+    @apply my-4;
 }
 
 .form-row {
-    @apply mb-6;
+    @apply mb-4;
     box-sizing: border-box;
 }
 
@@ -116,7 +116,7 @@ h2 {
 }
 
 form label {
-    @apply block text-gray-700 text-sm font-bold mb-2;
+    @apply block text-gray-500 text-xs uppercase font-semibold mb-1;
 }
 
 form .checkbox-buttons {
@@ -177,11 +177,15 @@ form input:invalid {
 }
 
 details summary {
-    @apply cursor-pointer;
+    @apply cursor-pointer py-2 select-none;
 }
 
 details summary:focus {
     @apply outline-none;
+}
+
+details {
+    @apply border-dashed border px-4 rounded-md;
 }
 
 /*****************/

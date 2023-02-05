@@ -67,10 +67,9 @@ func NewRenderer() blackfriday.Renderer {
 		headingIDs: map[string]int{},
 		base: blackfriday.NewHTMLRenderer(blackfriday.HTMLRendererParameters{
 			Flags: blackfriday.CommonHTMLFlags |
-				blackfriday.NoopenerLinks |
-				blackfriday.NoreferrerLinks,
+				blackfriday.HrefTargetBlank |
+				blackfriday.NoopenerLinks,
 			//blackfriday.TOC,
-			HeadingIDSuffix: "",
 		}),
 	}
 }

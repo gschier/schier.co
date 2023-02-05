@@ -44,7 +44,6 @@
     details,
     form,
     table,
-    summary,
     & > div,
     & > header,
     & > dl,
@@ -89,6 +88,14 @@
 
         &:hover {
             @apply border-syntax1 no-underline;
+        }
+
+        &[target="_blank"] {
+            @apply mr-0.5;
+            &:after {
+                @apply text-sm relative -top-1 -right-0.5;
+                content: '⤴';
+            }
         }
     }
 

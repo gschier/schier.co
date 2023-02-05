@@ -21,13 +21,13 @@
         </div>
         {% include 'partials/form-input.html' with label='Summary' type='text' name='summary' value=blogPost.Summary placeholder='Summary' %}
         {% include 'partials/form-input.html' with label='Social Image' type='url' name='image' value=blogPost.Image placeholder='Image' %}
-        {% include 'partials/form-input.html' with label='Stage' type=blogPost.Published|yesno:"hidden,number" name='stage' value=blogPost.Stage placeholder='0' %}
+{#        {% include 'partials/form-input.html' with label='Stage' type=blogPost.Published|yesno:"hidden,number" name='stage' value=blogPost.Stage placeholder='0' %}#}
       </details>
 
       <div class="form-row">
         <div style="display:flex">
           <label for="i-content">Content</label>
-          <a data-toggle-expand href="#" style="margin-left:auto;font-size:0.8em;">
+          <a data-toggle-expand href="#" class="btn btn--sm btn--gray" style="margin-left:auto;position:relative;top:-0.5em;">
             Full Screen
           </a>
         </div>
