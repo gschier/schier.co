@@ -49,6 +49,14 @@ strong, strong * {
 .container {
     @apply mx-auto px-8;
     max-width: 42rem;
+
+    &--spaced {
+        @apply my-8;
+    }
+
+    &--spaced-2 {
+        @apply my-16;
+    }
 }
 
 .link {
@@ -87,7 +95,7 @@ h1 {
 }
 
 h2 {
-    @apply text-xl text-gray-800;
+    @apply text-xl text-gray-900;
 }
 
 /*********/
@@ -342,11 +350,19 @@ details {
 /*************/
 
 .home-hero {
-    @apply flex items-center justify-between mt-6;
+    @apply flex items-center justify-between;
+
+    h1 {
+        @apply mt-0;
+    }
+
+    p:last-child {
+        @apply mb-0;
+    }
 }
 
 .home-hero__avatar {
-    @apply pr-8 mt-6;
+    @apply pr-8;
 }
 
 .home-hero__avatar img {
@@ -517,7 +533,7 @@ details {
     }
 
     .home-hero__avatar {
-        @apply mx-auto w-auto;
+        @apply mx-auto w-auto mb-12 mt-4 px-0;
         max-width: 12rem;
     }
 }

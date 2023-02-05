@@ -1,5 +1,5 @@
 .top-nav {
-    @apply mb-10 text-sm;
+    @apply mb-8 text-sm;
 }
 
 .top-nav .container {
@@ -31,7 +31,7 @@
 }
 
 .top-nav a svg {
-    @apply h-4 w-4 stroke-current float-left;
+    @apply h-4 w-4 stroke-current float-left opacity-90;
 }
 
 .top-nav li {
