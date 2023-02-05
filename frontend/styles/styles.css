@@ -505,7 +505,7 @@ details {
     }
 
     .hidden-mobile {
-        @apply hidden;
+        @apply hidden !important;
     }
 
     .h-link {
