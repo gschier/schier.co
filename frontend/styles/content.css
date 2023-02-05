@@ -15,11 +15,20 @@
         @apply list-disc ml-6;
     }
 
-    ol li {
-        @apply list-decimal ml-6;
+    ul li, ol li {
+        @apply my-0.5;
     }
 
-    dl {
+    ol {
+        @apply ml-6 list-none;
+        counter-reset: li;
+
+        & > li::before {
+            @apply bg-gray-300 text-gray-700 rounded-full relative inline-block w-[1.5em] h-[1.5em] mr-[0.9em] font-mono;
+            @apply -top-[0.15em] -ml-6 text-[0.8em] inline-flex items-center justify-center;
+            counter-increment: li;
+            content: counter(li);
+        }
     }
 
     dl dt {
@@ -68,6 +77,7 @@
 
     figure figcaption {
         @apply text-sm py-0.5 pr-2 pl-6 relative text-gray-600;
+
         &:before {
             @apply h-3 w-3 border-l border-b border-syntax1 inline-block absolute left-2 top-0 rounded-bl-[3px];
             content: '';
@@ -75,23 +85,27 @@
     }
 
     a {
-        @apply border-syntax1 border-b-2 border-dotted;
+        @apply border-gray-500 border-b-2 border-dotted;
 
         &:hover {
-            @apply border-solid no-underline;
+            @apply border-syntax1 no-underline;
+        }
+    }
+
+    sup a {
+        @apply border-none text-xs pl-0.5;
+
+        &:before {
+            content: '[';
+        }
+
+        &:after {
+            content: ']';
         }
     }
 
     .footnotes {
-        @apply text-sm opacity-80 my-10 italic;
-    }
-
-    .footnotes li {
-        @apply ml-5;
-    }
-
-    .footnotes hr {
-        @apply hidden;
+        @apply text-sm opacity-70 my-10 italic;
     }
 
     :not(pre) code {
@@ -128,7 +142,7 @@
 
     h1[id], h2[id], h3[id], h4[id], h5[id], h6[id] {
         .h-link {
-            @apply absolute pl-8 pr-2 invisible;
+            @apply absolute pl-8 pr-2 invisible border-0;
             right: 100%;
             color: inherit;
 
