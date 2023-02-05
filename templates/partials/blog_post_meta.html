@@ -8,7 +8,7 @@
   {% if showWordCount %}
     &bull; {{ blogPost.Content | words }} words
   {% endif %}
-  {% if not noVotes && blogPost.VotesTotal > 0 %}
+  {% if not noVotes and loggedIn and blogPost.VotesTotal > 0 %}
     <span title="{{ blogPost.VotesUsers }} readers voted">
       &bull; {{ blogPost.VotesTotal }} votes
       {% if hot and blogPost.VotesUsers > 10 and not blogPost.Date | isodateolderdays:7 %}
