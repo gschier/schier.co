@@ -18,8 +18,14 @@
     @apply mr-auto;
 }
 
+.top-nav ul,
+.top-nav li,
+.top-nav li a {
+    @apply h-full flex items-center;
+}
+
 .top-nav a {
-    @apply text-gray-700 h-full block;
+    @apply text-gray-700 h-full block px-3;
 }
 
 .top-nav a:hover {
@@ -27,15 +33,23 @@
 }
 
 .top-nav a.logo svg {
-    @apply h-8 w-8 overflow-visible my-3;
+    @apply h-8 w-8 overflow-visible opacity-90;
+}
+
+.top-nav a.logo svg:hover {
+    @apply opacity-100;
 }
 
 .top-nav a svg {
     @apply h-4 w-4 stroke-current float-left opacity-90;
 }
 
-.top-nav li {
-    @apply ml-6;
+.top-nav ul:first-child li:first-child a {
+    @apply pl-0;
+}
+
+.top-nav ul:last-child li:last-child a {
+    @apply pr-0;
 }
 
 .top-nav li:first-child {

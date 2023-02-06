@@ -362,7 +362,7 @@ details {
 }
 
 .home-hero__avatar {
-    @apply pr-8;
+    @apply pr-10;
 }
 
 .home-hero__avatar img {
@@ -517,7 +517,7 @@ details {
     }
 
     .container {
-        @apply px-6;
+        @apply px-5;
     }
 
     .hidden-mobile {
