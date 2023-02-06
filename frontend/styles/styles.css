@@ -206,6 +206,7 @@ details {
 
 .blog-post > header {
     @apply pb-4;
+
     h1 {
         @apply mt-0;
     }
@@ -216,7 +217,7 @@ details {
 }
 
 .blog-post-continue {
-    @apply flex flex-wrap;
+    @apply flex flex-wrap items-center;
 
     & > a:last-child {
         @apply ml-auto text-sm;
@@ -297,11 +298,19 @@ details {
 /* TAGS */
 /********/
 
+.tags {
+    @apply flex items-center;
+
+    .tag {
+        @apply my-0;
+    }
+}
+
 .all-tags {
     @apply flex flex-wrap justify-between;
 
     .tag {
-        @apply mt-2
+        @apply mt-2;
     }
 }
 
