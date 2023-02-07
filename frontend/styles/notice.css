@@ -5,7 +5,7 @@
         color: inherit;
 
         &:not(.btn) {
-            @apply underline;
+            @apply underline border-0;
         }
 
         &:hover {
