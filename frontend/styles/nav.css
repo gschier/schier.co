@@ -1,5 +1,5 @@
 .top-nav {
-    @apply mb-8 text-sm;
+    @apply bg-background text-sm;
 }
 
 .top-nav .container {

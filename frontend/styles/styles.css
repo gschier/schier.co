@@ -30,16 +30,14 @@
 }
 
 html {
-    @apply bg-background text-gray-800;
+    @apply bg-gray-100 text-gray-800;
     font-size: 18px;
     line-height: 1.5;
     font-family: Lato, 'Helvetica Neue', 'Open Sans', sans-serif;
 }
 
 main {
-    margin-left: auto;
-    margin-right: auto;
-    min-height: 30vh;
+    @apply bg-background mx-auto overflow-hidden pb-24;
 }
 
 strong, strong * {
@@ -47,8 +45,7 @@ strong, strong * {
 }
 
 .container {
-    @apply mx-auto px-8;
-    max-width: 42rem;
+    @apply mx-auto px-8 max-w-[42rem];
 
     &--spaced {
         @apply my-8;

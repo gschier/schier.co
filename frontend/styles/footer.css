@@ -1,5 +1,5 @@
 .bottom-footer {
-    @apply bg-gray-100 py-12 mt-24 border-t border-gray-200;
+    @apply py-12 border-t border-gray-200;
 
     .links {
         @apply text-center text-sm text-gray-700;
