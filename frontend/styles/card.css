@@ -24,6 +24,10 @@
             @apply text-xs text-gray-700 whitespace-nowrap;
         }
 
+        &__body {
+            @apply my-0.5;
+        }
+
         &__body--big {
             @apply text-3xl font-thin;
         }
