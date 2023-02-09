@@ -295,6 +295,7 @@ func renderTemplate(w http.ResponseWriter, r *http.Request, template *pongo2.Tem
 		"pageTitle":        "",
 		"pageUrl":          os.Getenv("BASE_URL") + r.URL.EscapedPath(),
 		"rssUrl":           "/rss.xml",
+		"cacheKey":         staticBreaker,
 		"staticUrl":        fmt.Sprintf("%s-%d", os.Getenv("STATIC_URL"), staticBreaker),
 		"user":             user,
 		csrf.TemplateTag:   csrf.TemplateField(r),
