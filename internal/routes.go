@@ -108,7 +108,7 @@ func routeStatic(w http.ResponseWriter, r *http.Request) {
 		if w.Header().Get("Content-Type") == "" {
 			w.Header().Set("Content-Type", mime.TypeByExtension(filepath.Ext(r.URL.Path)))
 		}
-		w.Header().Set("cache-control", "max-age=3600")
+		w.Header().Set("cache-control", "public, max-age=86400")
 		b, err := readFile(fullPath)
 		if err != nil {
 			routeNotFound(w, r)
