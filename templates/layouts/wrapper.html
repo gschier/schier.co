@@ -1,69 +1,76 @@
 <!DOCTYPE html>
 <html lang="en-US">
 <head>
-  <meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
-  <title>{% if pageTitle %}{{ pageTitle | sanitize }} – {% endif %}Gregory Schier</title>
-  <meta name="author" content="Gregory Schier">
-  <meta name="description" content="{{ pageDescription }}">
+    <title>{% if pageTitle %}{{ pageTitle | sanitize }} – {% endif %}Gregory Schier</title>
+    <meta name="author" content="Gregory Schier">
+    <meta name="description" content="{{ pageDescription }}">
 
-  {# Meta #}
-  <meta name="HandheldFriendly" content="True">
-  <meta name="MobileOptimized" content="320">
-  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5">
-  <link rel="canonical" href="{{ pageUrl }}" />
+    {# Meta #}
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5">
+    <link rel="canonical" href="{{ pageUrl }}"/>
 
-  {% if pagePublishedTime %}
-    <meta property="article:published_time" content="{{ pagePublishedTime }}" />
-  {% endif %}
+    {% if pagePublishedTime %}
+        <meta property="article:published_time" content="{{ pagePublishedTime }}"/>
+    {% endif %}
 
-  {% if pageModifiedTime %}
-    <meta property="article:modified_time" content="{{ pageModifiedTime }}" />
-    <meta property="og:updated_time" content="{{ pageModifiedTime }}" />
-  {% endif %}
+    {% if pageModifiedTime %}
+        <meta property="article:modified_time" content="{{ pageModifiedTime }}"/>
+        <meta property="og:updated_time" content="{{ pageModifiedTime }}"/>
+    {% endif %}
 
-  {# RSS #}
-  <link href="{{ rssUrl }}" rel="alternate" type="application/rss+xml" title="Gregory Schier" />
-  <link href="{{ rssUrl }}" rel="feed" type="application/rss+xml" title="Gregory Schier" />
+    {# RSS #}
+    <link href="{{ rssUrl }}" rel="alternate" type="application/rss+xml" title="Gregory Schier"/>
+    <link href="{{ rssUrl }}" rel="feed" type="application/rss+xml" title="Gregory Schier"/>
 
-  {# Favicon #}
-  <link rel="apple-touch-icon" sizes="180x180" href="{{ staticUrl }}/favicon/apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="{{ staticUrl }}/favicon/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="{{ staticUrl }}/favicon/favicon-16x16.png">
-  <link rel="manifest" href="{{ staticUrl }}/favicon/site.webmanifest">
-  <link rel="shortcut icon" href="{{ staticUrl }}/favicon/favicon.ico">
-  <meta name="msapplication-TileColor" content="#2d89ef">
-  <meta name="msapplication-config" content="{{ staticUrl }}/favicon/browserconfig.xml">
-  <meta name="theme-color" content="#ffffff">
+    {# Favicon #}
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ staticUrl }}/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ staticUrl }}/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ staticUrl }}/favicon/favicon-16x16.png">
+    <link rel="manifest" href="{{ staticUrl }}/favicon/site.webmanifest">
+    <link rel="shortcut icon" href="{{ staticUrl }}/favicon/favicon.ico">
+    <meta name="msapplication-TileColor" content="#2d89ef">
+    <meta name="msapplication-config" content="{{ staticUrl }}/favicon/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
 
-  {# Social Metadata #}
-  <meta name="twitter:site" content="@GregorySchier" />
-  <meta name="twitter:creator" content="@GregorySchier" />
-  <meta property="og:url" content="{{ pageUrl }}" />
-  <meta property="og:title" content="{% if pageTitle %}{{ pageTitle | sanitize }}{% else %}Gregory Schier{% endif %}" />
-  <meta property="og:description" content="{{ pageDescription }}" />
-  {% if pageImage %}
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta property="og:image" content="{{ pageImage }}" />
-  {% else %}
-    <meta name="twitter:card" content="summary" />
-    <meta property="og:image" content="{{ pageImageDefault }}" />
-  {% endif %}
+    {# Social Metadata #}
+    <meta name="twitter:site" content="@GregorySchier"/>
+    <meta name="twitter:creator" content="@GregorySchier"/>
+    <meta property="og:url" content="{{ pageUrl }}"/>
+    <meta property="og:title"
+          content="{% if pageTitle %}{{ pageTitle | sanitize }}{% else %}Gregory Schier{% endif %}"/>
+    <meta property="og:description" content="{{ pageDescription }}"/>
+    {% if pageImage %}
+        <meta name="twitter:card" content="summary_large_image"/>
+        <meta property="og:image" content="{{ pageImage }}"/>
+    {% else %}
+        <meta name="twitter:card" content="summary"/>
+        <meta property="og:image" content="{{ pageImageDefault }}"/>
+    {% endif %}
 
-  {# Scripts and Styles #}
-  {% if isDev %}
-    {# HMR-able styles/scripts #}
-    <link rel="stylesheet" href="{{ staticUrl }}/index.all.css">
-  {% else %}
-    {# inlineable styles #}
-    <style>{{ "index.all.css" | inlinestatic | safe }}</style>
-  {% endif %}
+    {# Scripts and Styles #}
+    {% if isDev %}
+        {# HMR-able styles/scripts #}
+        <link rel="stylesheet" href="{{ staticUrl }}/index.all.css">
+    {% else %}
+        {# inlineable styles #}
+        <style>{{ "index.all.css" | inlinestatic | safe }}</style>
+    {% endif %}
 
-  {% block extraStyles %}{% endblock %}
+    {% block extraStyles %}{% endblock %}
 
+    {% if loggedIn %}
+        <script>localStorage.disableAnalytics = "true";</script>
+    {% endif %}
 </head>
-<body data-deployed="{{ deployTime }}" data-csrf-token="{{ csrfToken }}" data-csrf-Token-header="{{ csrfTokenHeader }}" data-logged-in="{{ loggedIn | yesno:'yes,no' }}">
+<body data-deployed="{{ deployTime }}"
+      data-csrf-token="{{ csrfToken }}"
+      data-csrf-Token-header="{{ csrfTokenHeader }}"
+      data-logged-in="{{ loggedIn | yesno:'yes,no' }}">
 
 {# Set theme as soon as possible #}
 {% include 'partials/dark_mode.html' %}
@@ -71,13 +78,13 @@
 {% block body %}{% endblock %}
 
 {% if not isDev and not loggedIn %}
-    <script src="https://t.schier.dev/script.js" data-website="site_RPutoRaXSMBFj6hyzV"></script>
+    <script src="https://t.schier.dev/script.js?c=1" data-website="site_RPutoRaXSMBFj6hyzV"></script>
 {% endif %}
 
 {% if isDev %}
-  <script src="{{ staticUrl }}/index.all.js"></script>
+    <script src="{{ staticUrl }}/index.all.js"></script>
 {% else %}
-  <script>{{ 'index.all.js' | inlinestatic | safe }} </script>
+    <script>{{ 'index.all.js' | inlinestatic | safe }} </script>
 {% endif %}
 
 {% block extraScripts %}{% endblock %}
