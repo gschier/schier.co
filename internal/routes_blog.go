@@ -619,7 +619,7 @@ func routeUploadAsset(w http.ResponseWriter, r *http.Request) {
 	body, _ := json.Marshal(struct {
 		URL string `json:"url"`
 	}{
-		URL: "https://assets.schier.dev/" + uploadPath,
+		URL: "https://schierco.nyc3.digitaloceanspaces.com/" + uploadPath,
 	})
 	w.Header().Set("Content-Type", "application/json")
 	_, _ = w.Write(body)
