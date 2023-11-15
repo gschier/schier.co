@@ -20,14 +20,25 @@ type Storage struct {
 }
 
 func NewStorage() *Storage {
-	if _s == nil {
-		_s = NewStorageWithSource(rand.NewSource(time.Now().Unix()))
+	if _s != nil {
+		return _s
 	}
 
-	return _s
+	var err error
+	for i := 0; i < 5; i++ {
+		_s, err = NewStorageWithSource(rand.NewSource(time.Now().Unix()))
+		if err != nil {
+			fmt.Println("Failed to connect to database", err)
+			time.Sleep(1 * time.Second)
+		} else {
+			return _s
+		}
+	}
+
+	panic("Failed to connect to database")
 }
 
-func NewStorageWithSource(source rand.Source) *Storage {
+func NewStorageWithSource(source rand.Source) (*Storage, error) {
 	url := os.Getenv("DATABASE_URL")
 	if strings.Contains(url, "railway.app") {
 		url += "?sslmode=disable"
@@ -35,7 +46,7 @@ func NewStorageWithSource(source rand.Source) *Storage {
 
 	sqlDB, err := sql.Open("postgres", url)
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 
 	random := rand.New(source)
@@ -95,7 +106,7 @@ func NewStorageWithSource(source rand.Source) *Storage {
 
 	return &Storage{
 		Store: store,
-	}
+	}, nil
 }
 
 func recentBlogPosts(store *gen.Store, limit uint64) *gen.BlogPostQueryset {

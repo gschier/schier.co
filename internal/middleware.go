@@ -55,12 +55,12 @@ func (w *writer) tryWriteDefaultHeaders() {
 	}
 }
 
-// LogMiddleware logs each request
+// LoggerMiddleware logs each request
 func LoggerMiddleware(next http.Handler) http.Handler {
 	return handlers.LoggingHandler(os.Stdout, next)
 }
 
-// DeployMiddleware adds deploy time as a header to all responses
+// DeployHeadersMiddleware adds deploy time as a header to all responses
 func DeployHeadersMiddleware(next http.Handler) http.Handler {
 	var deploy = time.Now().Format(time.RFC3339)
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

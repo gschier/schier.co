@@ -1,6 +1,6 @@
 module github.com/gschier/schier.co
 
-go 1.17
+go 1.21
 
 require (
 	github.com/Depado/bfchroma v1.2.0
@@ -50,6 +50,5 @@ require (
 	golang.org/x/sys v0.0.0-20211019181941-9d821ace8654 // indirect
 	golang.org/x/text v0.3.7 // indirect
 	gopkg.in/ini.v1 v1.56.0 // indirect
-	gopkg.in/yaml.v2 v2.2.7 // indirect
 	gopkg.in/yaml.v3 v3.0.0-20200313102051-9f266ea9e77c // indirect
 )
