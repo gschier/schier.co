@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	_ "github.com/lib/pq"
+	"github.com/pkg/errors"
 	"math/rand"
 	"os"
 	"sort"
@@ -47,6 +48,10 @@ func NewStorageWithSource(source rand.Source) (*Storage, error) {
 	sqlDB, err := sql.Open("postgres", url)
 	if err != nil {
 		return nil, err
+	}
+	_, err = sqlDB.Query("SELECT 1")
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to ping database")
 	}
 
 	random := rand.New(source)
