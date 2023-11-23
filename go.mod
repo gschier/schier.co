@@ -18,6 +18,7 @@ require (
 	github.com/markbates/pkger v0.17.0
 	github.com/mileusna/useragent v0.0.0-20190129205925-3e331f0949a5
 	github.com/minio/minio-go v6.0.14+incompatible
+	github.com/pkg/errors v0.9.1
 	github.com/russross/blackfriday/v2 v2.0.1
 	github.com/spf13/cobra v1.0.0
 	github.com/stretchr/testify v1.7.0
@@ -39,7 +40,6 @@ require (
 	github.com/lann/builder v0.0.0-20180802200727-47ae307949d0 // indirect
 	github.com/lann/ps v0.0.0-20150810152359-62de8c46ede0 // indirect
 	github.com/mitchellh/go-homedir v1.1.0 // indirect
-	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/rainycape/unidecode v0.0.0-20150907023854-cb7f23ec59be // indirect
 	github.com/shurcooL/sanitized_anchor_name v1.0.0 // indirect

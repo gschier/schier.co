@@ -5,7 +5,7 @@ WORKDIR /app/frontend
 RUN npm install && npm run build
 
 # Backend Build
-FROM golang:1.14-alpine AS backend
+FROM golang:1.21-alpine AS backend
 WORKDIR /app
 ADD . .
 RUN apk add --no-cache git && go get github.com/markbates/pkger/cmd/pkger
