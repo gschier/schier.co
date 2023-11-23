@@ -18,12 +18,6 @@ import (
 )
 
 func main() {
-	// Print bold heading
-	fmt.Println()
-	fmt.Printf("\u001B[32;1m~~~~~~~~~~~~~~~~~\u001B[0m\n")
-	fmt.Printf("\u001B[32;1m~   schier.co   ~\u001B[0m\n")
-	fmt.Printf("\u001B[32;1m~~~~~~~~~~~~~~~~~\u001B[0m\n")
-
 	db := internal.NewStorage()
 
 	// Run migrations
@@ -72,12 +66,13 @@ func applyMiddleware(r *mux.Router) http.Handler {
 	// Apply global middleware. Note, we're doing it this way
 	// because Gorilla doesn't apply middleware to 404
 	var handler http.Handler = r
+	var logger = internal.NewLogger("router")
 
 	// Global middleware
 	handler = internal.CORSMiddleware(handler)
 	handler = internal.DeployHeadersMiddleware(handler)
 	handler = internal.CacheHeadersMiddleware(handler)
-	handler = internal.LoggerMiddleware(handler)
+	handler = internal.LoggingMiddleware(logger)(handler)
 
 	return handler
 }

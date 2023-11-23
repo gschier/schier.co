@@ -1,13 +1,16 @@
 package internal
 
 import (
+	"fmt"
 	"github.com/gorilla/csrf"
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"log"
+	"log/slog"
 	"net/http"
 	"os"
 	"regexp"
+	"runtime/debug"
 	"time"
 
 	"github.com/gschier/schier.co/internal/db"
@@ -53,11 +56,6 @@ func (w *writer) tryWriteDefaultHeaders() {
 			w.wOG.Header().Set(name, value)
 		}
 	}
-}
-
-// LoggerMiddleware logs each request
-func LoggerMiddleware(next http.Handler) http.Handler {
-	return handlers.LoggingHandler(os.Stdout, next)
 }
 
 // DeployHeadersMiddleware adds deploy time as a header to all responses
@@ -155,5 +153,74 @@ func NewContextMiddleware(db *Storage) mux.MiddlewareFunc {
 
 			next.ServeHTTP(w, r)
 		})
+	}
+}
+
+// responseWriter is a minimal wrapper for http.ResponseWriter that allows the
+// written HTTP status code to be captured for logging.
+type responseWriter struct {
+	http.ResponseWriter
+	status      int
+	wroteHeader bool
+}
+
+func wrapResponseWriter(w http.ResponseWriter) *responseWriter {
+	return &responseWriter{ResponseWriter: w}
+}
+
+func (rw *responseWriter) Status() int {
+	return rw.status
+}
+
+func (rw *responseWriter) WriteHeader(code int) {
+	if rw.wroteHeader {
+		return
+	}
+
+	rw.status = code
+	rw.ResponseWriter.WriteHeader(code)
+	rw.wroteHeader = true
+
+	return
+}
+
+// LoggingMiddleware logs the incoming HTTP request & its duration.
+func LoggingMiddleware(logger *slog.Logger) func(http.Handler) http.Handler {
+	return func(next http.Handler) http.Handler {
+		fn := func(w http.ResponseWriter, r *http.Request) {
+			defer func() {
+				if err := recover(); err != nil {
+					w.WriteHeader(http.StatusInternalServerError)
+					logger.Error(
+						fmt.Sprintf("%s\n%s", err, debug.Stack()),
+					)
+				}
+			}()
+
+			start := time.Now()
+			wrapped := wrapResponseWriter(w)
+			next.ServeHTTP(wrapped, r)
+			fn := logger.Info
+			if wrapped.status >= 500 {
+				fn = logger.Error
+			} else if wrapped.status >= 400 {
+				fn = logger.Warn
+			} else if wrapped.status >= 300 {
+				fn = logger.Debug
+			} else if wrapped.status >= 200 {
+				fn = logger.Info
+			} else {
+				fn = logger.Debug
+			}
+			fn(
+				"Request completed to "+r.URL.EscapedPath(),
+				"status", wrapped.status,
+				"method", r.Method,
+				"path", r.URL.EscapedPath(),
+				"duration", time.Since(start),
+			)
+		}
+
+		return http.HandlerFunc(fn)
 	}
 }
