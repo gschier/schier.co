@@ -319,7 +319,7 @@ func RenderMarkdownStr(md string) string {
 }
 
 // staticLoader implements pongo2.Loader in order to read templates
-// from pkger instead of from the filesystem
+// from embedded files instead of from the filesystem
 type staticLoader struct{}
 
 func (t staticLoader) Abs(_, name string) string {

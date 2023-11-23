@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"github.com/flosch/pongo2"
 	"github.com/gorilla/mux"
-	"github.com/markbates/pkger"
 	"mime"
 	"net/http"
 	"os"
@@ -14,10 +13,6 @@ import (
 	"strings"
 	"time"
 )
-
-func init() {
-	pkger.Include(staticRoot)
-}
 
 const staticRoot = "/frontend/static"
 const robots = `

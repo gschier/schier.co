@@ -15,7 +15,6 @@ require (
 	github.com/gschier/banister v0.0.0-20220404061145-ffd28642d125
 	github.com/lib/pq v1.10.4
 	github.com/mailjet/mailjet-apiv3-go v0.0.0-20190724151621-55e56f74078c
-	github.com/markbates/pkger v0.17.0
 	github.com/mileusna/useragent v0.0.0-20190129205925-3e331f0949a5
 	github.com/minio/minio-go v6.0.14+incompatible
 	github.com/pkg/errors v0.9.1
@@ -32,7 +31,6 @@ require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/dlclark/regexp2 v1.1.6 // indirect
 	github.com/go-ini/ini v1.51.1 // indirect
-	github.com/gobuffalo/here v0.6.0 // indirect
 	github.com/gorilla/securecookie v1.1.1 // indirect
 	github.com/iancoleman/strcase v0.2.0 // indirect
 	github.com/inconshreveable/mousetrap v1.0.0 // indirect
@@ -50,5 +48,6 @@ require (
 	golang.org/x/sys v0.0.0-20211019181941-9d821ace8654 // indirect
 	golang.org/x/text v0.3.7 // indirect
 	gopkg.in/ini.v1 v1.56.0 // indirect
+	gopkg.in/yaml.v2 v2.2.7 // indirect
 	gopkg.in/yaml.v3 v3.0.0-20200313102051-9f266ea9e77c // indirect
 )
