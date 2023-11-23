@@ -8,9 +8,8 @@ RUN npm install && npm run build
 FROM golang:1.21-alpine AS backend
 WORKDIR /app
 ADD . .
-RUN apk add --no-cache git && go get github.com/markbates/pkger/cmd/pkger
 COPY --from=frontend /app/frontend/static ./frontend/static
-RUN pkger list && pkger  && go install ./...
+RUN go install ./...
 
 # Production Image
 FROM alpine:3.11

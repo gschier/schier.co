@@ -1,3 +1,15 @@
 package schierco
 
-// This is only here because pkger needs a root Go file
+import (
+	"embed"
+	"net/http"
+)
+
+//go:embed frontend/static
+var static embed.FS
+
+//go:embed templates
+var templates embed.FS
+
+var StaticFilesFS = http.FS(static)
+var TemplatesFS = http.FS(templates)

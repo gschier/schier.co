@@ -7,10 +7,9 @@ import (
 	"github.com/alecthomas/chroma/formatters/html"
 	"github.com/flosch/pongo2"
 	"github.com/gorilla/csrf"
-	"github.com/markbates/pkger"
+	schierco "github.com/gschier/schier.co"
 	"github.com/russross/blackfriday/v2"
 	"io"
-	"io/ioutil"
 	"log"
 	"math"
 	"net/http"
@@ -40,11 +39,9 @@ var bfExtensions = blackfriday.WithExtensions(
 		blackfriday.NoEmptyLineBeforeBlock,
 )
 
-var pongo2Set = pongo2.NewSet("schier.co", pkgerLoader{})
+var pongo2Set = pongo2.NewSet("schier.co", staticLoader{})
 
 func init() {
-	pkger.Include("/templates")
-
 	// pongo2.DefaultLoader
 	err := pongo2.RegisterFilter(
 		"isoformat",
@@ -321,11 +318,11 @@ func RenderMarkdownStr(md string) string {
 	return string(RenderMarkdown(md))
 }
 
-// pkgerLoader implements pongo2.Loader in order to read templates
+// staticLoader implements pongo2.Loader in order to read templates
 // from pkger instead of from the filesystem
-type pkgerLoader struct{}
+type staticLoader struct{}
 
-func (t pkgerLoader) Abs(_, name string) string {
+func (t staticLoader) Abs(_, name string) string {
 	if filepath.IsAbs(name) {
 		return name
 	}
@@ -333,17 +330,17 @@ func (t pkgerLoader) Abs(_, name string) string {
 	return abs
 }
 
-func (t pkgerLoader) Get(path string) (io.Reader, error) {
-	return pkger.Open(path)
+func (t staticLoader) Get(path string) (io.Reader, error) {
+	return schierco.TemplatesFS.Open(path)
 }
 
 func readFile(path string) ([]byte, error) {
-	f, err := pkger.Open(path)
+	f, err := schierco.StaticFilesFS.Open(path)
 	if err != nil {
 		return nil, err
 	}
 
-	b, err := ioutil.ReadAll(f)
+	b, err := io.ReadAll(f)
 	if err != nil {
 		return nil, err
 	}
