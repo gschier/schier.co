@@ -91,6 +91,7 @@ func routeHealthCheck() http.HandlerFunc {
 			"blog_posts", blogPostCount,
 			"base_url", os.Getenv("BASE_URL"),
 			"host", r.Host,
+			"url", r.URL.String(),
 		)
 
 		if err != nil {

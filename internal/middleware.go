@@ -218,6 +218,7 @@ func LoggingMiddleware(logger *slog.Logger) func(http.Handler) http.Handler {
 				"method", r.Method,
 				"path", r.URL.EscapedPath(),
 				"duration", time.Since(start),
+				"host", r.Host,
 			)
 		}
 
