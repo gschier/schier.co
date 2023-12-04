@@ -85,6 +85,13 @@ func routeHealthCheck() http.HandlerFunc {
 			"deployed": fmt.Sprintf("%d seconds ago", int(time.Now().Sub(startTime).Seconds())),
 			"pg_conns": pgConns,
 		})
+		NewLogger("healthcheck").Debug(
+			"Healthcheck",
+			"pg_conns", pgConns,
+			"blog_posts", blogPostCount,
+			"base_url", os.Getenv("BASE_URL"),
+			"host", r.Host,
+		)
 
 		if err != nil {
 			http.Error(w, "JSON failure", http.StatusInternalServerError)

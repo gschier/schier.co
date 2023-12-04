@@ -30,7 +30,7 @@ func NewStorage() *Storage {
 		_s, err = NewStorageWithSource(rand.NewSource(time.Now().Unix()))
 		if err != nil {
 			fmt.Println("Failed to connect to database", err)
-			time.Sleep(1 * time.Second)
+			time.Sleep(100 * time.Millisecond)
 		} else {
 			return _s
 		}
