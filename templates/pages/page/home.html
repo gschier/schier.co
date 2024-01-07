@@ -1,33 +1,36 @@
 {% extends 'layouts/base.html' %} {% block content %}
-    <div class="container container--spaced-2">
-        <div class="home-hero">
-            <div class="home-hero__avatar">
-                <img
-                        src="data:image/jpg;base64,{{ 'images/me.jpg' | inlinestatic:'base64' }}"
-                        alt="{{ project.Name }} icon"
-                />
-            </div>
-            <div class="home-hero__bio content">
-                <h1>Hey there, I'm Greg! 👋</h1>
-                <p>
-                    I'm a software dev in Canada 🇨🇦, best known for <a href="https://insomnia.rest">Insomnia</a>
-                    (acquired in 2019). I'm currently making app deployments easier at <a href="https://railway.app">Railway</a>
-                    while also hacking on <a href="https://yaak.app">Yaak</a> and a few <a href="/projects">other
-                    projects</a>.
-                </p>
-            </div>
-        </div>
-    </div>
+  <div class="container container--spaced-2">
+    <div class="home-hero">
+      <div class="home-hero__avatar">
+        <img
+            src="data:image/jpg;base64,{{ 'images/me.jpg' | inlinestatic:'base64' }}"
+            alt="{{ project.Name }} icon"
+        />
+      </div>
+      <div class="home-hero__bio content">
+        <h1>Hey there, I'm Greg! 👋</h1>
+        <p>
+          I'm a software dev in Canada 🇨🇦, working at <a href="https://railway.app">Railway</a> and
+          hacking on <a href="https://yaak.app">Yaak</a> and some other <a href="/projects">projects</a>.
 
-    <div class="container container--spaced-2">
-        <h2>Recommended Reading👇</h2>
-        {% include 'partials/post-cards.html' %}
-        <div style="padding-top:0.75em;text-align:right;">
-            <small><a href="/blog" title="See all blog posts">See All &raquo;</a></small>
-        </div>
+          best known for <a href="https://insomnia.rest">Insomnia</a>
+          (acquired in 2019). I'm currently making app deployments easier at <a href="https://railway.app">Railway</a>
+          while also hacking on <a href="https://yaak.app">Yaak</a> and a few <a href="/projects">other
+          projects</a>.
+        </p>
+      </div>
     </div>
+  </div>
 
-    <div class="container">
-        {% include 'partials/full-subscription-form.html' %}
+  <div class="container container--spaced-2">
+    <h2>Recommended Reading👇</h2>
+    {% include 'partials/post-cards.html' %}
+    <div style="padding-top:0.75em;text-align:right;">
+      <small><a href="/blog" title="See all blog posts">See All &raquo;</a></small>
     </div>
+  </div>
+
+  <div class="container">
+    {% include 'partials/full-subscription-form.html' %}
+  </div>
 {% endblock %}
