@@ -212,12 +212,19 @@ func LoggingMiddleware(logger *slog.Logger) func(http.Handler) http.Handler {
 			} else {
 				fn = logger.Debug
 			}
+
+			status := wrapped.status
+			if status == 0 {
+				status = 200
+			}
+
 			fn(
 				"Request completed to "+r.URL.EscapedPath(),
-				"status", wrapped.status,
+				"status", status,
 				"method", r.Method,
+				"addr", r.RemoteAddr,
 				"path", r.URL.EscapedPath(),
-				"duration", time.Since(start),
+				"duration", time.Since(start).String(),
 				"host", r.Host,
 			)
 		}
