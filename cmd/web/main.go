@@ -69,6 +69,7 @@ func applyMiddleware(r *mux.Router) http.Handler {
 	// Global middleware
 	handler = internal.CORSMiddleware(handler)
 	handler = internal.DeployHeadersMiddleware(handler)
+	handler = internal.BlockUserAgentsMiddleware(handler, []string{"Go-http-client/2.0"})
 	handler = internal.CacheHeadersMiddleware(handler)
 	handler = internal.LoggingMiddleware(logger)(handler)
 

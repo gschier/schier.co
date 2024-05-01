@@ -68,6 +68,20 @@ func DeployHeadersMiddleware(next http.Handler) http.Handler {
 	})
 }
 
+// BlockUserAgentsMiddleware blocks a blacklist of unwanted user agents from accessing the page
+func BlockUserAgentsMiddleware(next http.Handler, userAgents []string) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		for _, ua := range userAgents {
+			if r.Header.Get("User-Agent") == ua {
+				w.WriteHeader(http.StatusNoContent)
+				return
+			}
+		}
+
+		next.ServeHTTP(w, r)
+	})
+}
+
 // CacheHeadersMiddleware configures Cache-Control header
 func CacheHeadersMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
