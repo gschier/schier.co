@@ -73,6 +73,7 @@ func BlockUserAgentsMiddleware(next http.Handler, userAgents []string) http.Hand
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		for _, ua := range userAgents {
 			if r.Header.Get("User-Agent") == ua {
+				w.Header().Set("X-Blocked", "1")
 				w.WriteHeader(http.StatusNoContent)
 				return
 			}
@@ -230,6 +231,10 @@ func LoggingMiddleware(logger *slog.Logger) func(http.Handler) http.Handler {
 			status := wrapped.status
 			if status == 0 {
 				status = 200
+			}
+
+			if w.Header().Get("X-Blocked") != "" {
+				return
 			}
 
 			fn(
