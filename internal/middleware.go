@@ -222,6 +222,7 @@ func LoggingMiddleware(logger *slog.Logger) func(http.Handler) http.Handler {
 				"Request completed to "+r.URL.EscapedPath(),
 				"status", status,
 				"method", r.Method,
+				"headers", r.Header,
 				"addr", r.RemoteAddr,
 				"path", r.URL.EscapedPath(),
 				"duration", time.Since(start).String(),
