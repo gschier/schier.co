@@ -214,23 +214,22 @@ func LoggingMiddleware(logger *slog.Logger) func(http.Handler) http.Handler {
 
 			start := time.Now()
 			wrapped := wrapResponseWriter(w)
-			next.ServeHTTP(wrapped, r)
-			fn := logger.Info
-			if wrapped.status >= 500 {
-				fn = logger.Error
-			} else if wrapped.status >= 400 {
-				fn = logger.Warn
-			} else if wrapped.status >= 300 {
-				fn = logger.Debug
-			} else if wrapped.status >= 200 {
-				fn = logger.Info
-			} else {
-				fn = logger.Debug
-			}
-
 			status := wrapped.status
 			if status == 0 {
 				status = 200
+			}
+			next.ServeHTTP(wrapped, r)
+			fn := logger.Info
+			if status >= 500 {
+				fn = logger.Error
+			} else if status >= 400 {
+				fn = logger.Warn
+			} else if status >= 300 {
+				fn = logger.Debug
+			} else if status >= 200 {
+				fn = logger.Info
+			} else {
+				fn = logger.Debug
 			}
 
 			if w.Header().Get("X-Blocked") != "" {
