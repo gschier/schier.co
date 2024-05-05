@@ -2,7 +2,7 @@
 FROM node:12-alpine AS frontend
 ADD . ./app
 WORKDIR /app/frontend
-RUN npm install && npm run build
+RUN npm install && PARCEL_WORKERS=4 npm run build
 
 # Backend Build
 FROM golang:1.22-alpine AS backend
