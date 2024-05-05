@@ -1,13 +1,6 @@
-version: "3"
 services:
   web:
-    command: >
-      reflex \
-        --start-service \
-        --regex='\.(go)$$' \
-        --inverse-regex='\/node_modules\/' \
-        --decoration=none \
-        go run github.com/gschier/schier.co/cmd/web
+    command: air
     build:
       context: .
       dockerfile: Dockerfile.dev

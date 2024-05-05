@@ -1,8 +1,8 @@
-FROM golang:1.14-alpine
+FROM golang:1.22-alpine
 
 RUN apk update && apk upgrade && \
     apk add --no-cache bash git openssh && \
-    go get -u github.com/cespare/reflex
+    go install github.com/cosmtrek/air@latest
 
 WORKDIR /app
 
