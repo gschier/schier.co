@@ -135,7 +135,6 @@ func recommendedBlogPosts(store *gen.Store, ignoreID *string, limit uint64) *gen
 			gen.Where.BlogPost.Published.True(),
 			gen.Where.BlogPost.Unlisted.False(),
 			gen.Where.BlogPost.ID.NotEq(*ignoreID),
-			gen.Where.BlogPost.Image.NotEq(""),
 		).
 		Limit(limit).
 		Sort(gen.OrderBy.BlogPost.Score.Desc)
