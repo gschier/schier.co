@@ -1,4 +1,4 @@
-# schier.c
+# schier.co
 
 This is the source code for my website [schier.co](https://schier.co).
 
