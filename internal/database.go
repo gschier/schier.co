@@ -135,7 +135,7 @@ func recommendedBlogPosts(store *gen.Store, ignoreID *string, limit uint64) *gen
 			gen.Where.BlogPost.Published.True(),
 			gen.Where.BlogPost.Unlisted.False(),
 			gen.Where.BlogPost.ID.NotEq(*ignoreID),
-			gen.Where.BlogPost.CreatedAt.After(time.Now().Add(-time.Hour*24*365*2)),
+			gen.Where.BlogPost.CreatedAt.After(time.Now().Add(-time.Hour*24*365*4)),
 		).
 		Limit(limit).
 		Sort(gen.OrderBy.BlogPost.Score.Desc)
