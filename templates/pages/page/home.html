@@ -1,31 +1,29 @@
-{% extends 'layouts/base.html' %} {% block content %}
+{% extends 'layouts/base.html' %}
+{% block content %}
 <div class="container container--spaced-2">
-    <div class="home-hero">
-        <div class="home-hero__avatar">
-            <img
-                    src="data:image/jpg;base64,{{ 'images/me.jpg' | inlinestatic:'base64' }}"
-                    alt="{{ project.Name }} icon"
-            />
-        </div>
-        <div class="home-hero__bio content">
-            <h1>Hey, I'm Greg! 👋</h1>
-            <p>
-                I'm a software dev in Canada 🇨🇦 building the <a href="https://yaak.app">Yaak API Client</a>, a delightful tool
-                for interacting with network APIs.
-            </p>
-        </div>
+  <div class="home-hero">
+    <div class="home-hero__avatar">
+      <img src="data:image/jpg;base64,{{ 'images/me.jpg' | inlinestatic:'base64' }}" alt="{{ project.Name }} icon"/>
     </div>
+    <div class="home-hero__bio content">
+      <h1>Hey, I'm Greg! 👋</h1>
+      <p>
+        I'm a software dev in Canada 🇨🇦 building the <a href="https://yaak.app">Yaak API Client</a>, a delightful tool
+        for interacting with network APIs.
+      </p>
+    </div>
+  </div>
 </div>
 
 <div class="container container--spaced-2">
-    <h2>Recommended Reading👇</h2>
-    {% include 'partials/post-cards.html' %}
-    <div style="padding-top:0.75em;text-align:right;">
-        <small><a href="/blog" title="See all blog posts">See All &raquo;</a></small>
-    </div>
+  <h2>Blog Posts 👇🏼</h2>
+  {% include 'partials/post-cards.html' %}
+  <div style="padding-top:0.75em;text-align:right;">
+    <small><a href="/blog" title="See all blog posts">See All &raquo;</a></small>
+  </div>
 </div>
 
 <div class="container">
-    {% include 'partials/full-subscription-form.html' %}
+  {% include 'partials/full-subscription-form.html' %}
 </div>
 {% endblock %}

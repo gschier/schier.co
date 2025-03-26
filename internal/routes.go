@@ -55,7 +55,7 @@ func routeProjects(w http.ResponseWriter, r *http.Request) {
 
 func routeHome(w http.ResponseWriter, r *http.Request) {
 	renderTemplate(w, r, pageTemplate("page/home.html"), &pongo2.Context{
-		"blogPosts": recommendedBlogPosts(ctxDB(r).Store, nil, 7).AllP(),
+		"blogPosts": recentBlogPosts(ctxDB(r).Store, 5).AllP(),
 		"pageTitle": "",
 	})
 }

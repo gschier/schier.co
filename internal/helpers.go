@@ -155,8 +155,7 @@ func IsDevelopment() bool {
 }
 
 // CalculateScore calculates a blog posts score. It sums votes and views,
-// then divides by the age. The age is capped to 𝑥 days so old posts don't
-// go down to zero
+// then divides by the age.
 func CalculateScore(age time.Duration, votes, views int64, words int) int64 {
 	days := float64(age / time.Hour / 24)
 
