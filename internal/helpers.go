@@ -165,6 +165,11 @@ func CalculateScore(age time.Duration, votes, views int64, words int) int64 {
 		return 999999
 	}
 
+	// Hide old posts
+	if days > 365 {
+		return 0
+	}
+
 	score := float64(votes*400+views) / (days + 1)
 
 	if words < 200 {
