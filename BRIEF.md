@@ -250,7 +250,7 @@ it), `BASE_URL`, `MCP_TOKEN`, `AWS_ENDPOINT_URL`,
 `SENTRY_DSN`, `VITE_OPENPANEL_CLIENT_ID`. The DO_SPACES_*, MAILJET_* and
 CSRF_KEY variables are removed after the asset migration has run.
 
-## Cutover (planned 2026-10-13, not yet done)
+## Cutover (done 2026-10-13, 18:55 UTC)
 
 The planning session does these, in order, with Greg's go-ahead at each
 step that touches production.
@@ -269,8 +269,14 @@ step that touches production.
    images until step 5, so do it just before cutover, or do the copy early
    and the rewrite at cutover (the script's two halves are idempotent).
 3. Mark the Prisma baseline applied on production:
-   `npx prisma migrate resolve --applied <baseline folder>` with
-   `DATABASE_URL` set to production. No schema change happens.
+   `npx prisma migrate resolve --applied <baseline folder>` with BOTH
+   `DIRECT_URL` and `DATABASE_URL` set to production on the command line.
+   `prisma.config.ts` loads `.env` first and prefers `DIRECT_URL`, so with
+   only `DATABASE_URL` overridden the command silently runs against the
+   local database and reports success. That happened on 2026-10-13: the
+   first deploy failed its pre-deploy migrate with P3005 (schema not
+   empty) until the resolve was rerun with both set. No schema change
+   happens.
 4. Reconfigure the Web service before the push so the first build of the
    new code is right: builder Railpack (replacing the Heroku builder),
    pre-deploy command `npm run migrate` (a service setting; the CLI's
@@ -278,10 +284,12 @@ step that touches production.
    `railway environment edit --json` and
    `{"services":{"<web id>":{"deploy":{"preDeployCommand":["npm run migrate"]}}}}`),
    start `npm start`, health check `/debug/health` kept, replicas as now.
-5. Commit (the Go code deleted, the app at the root) and push `master`.
-   Watch the build and deploy logs, then the compare script against
-   https://schier.co and a sign-in at `/admin?token=...`. Rollback is
-   `git revert` and push, with the builder set back to Heroku.
+5. Done: commit 570623a pushed; the first two deployments failed on the
+   P3005 above, the third (816076c0) succeeded. Verified live: every
+   public page and redirect, 20 RSS items, Shiki code blocks, images still
+   from the old CDN, `/mcp` 401 without and initialised with the token,
+   `/admin?token=` sets the cookie. Rollback would be `git revert` and
+   push, with the builder set back to Heroku.
 6. Remove `DO_SPACES_*` (after the asset migration), `MAILJET_*`,
    `CSRF_KEY`, `MIGRATE_ON_START`, `STATIC_URL` from the service.
 7. Register the admin MCP in Claude Code at user scope as `schier-co`,
@@ -307,6 +315,15 @@ step that touches production.
   any accepted ones.
 - Before cutover, a crawl of every URL in the RSS feed and the nav on both
   sites compares status codes and titles.
+
+## Follow-ups noted at cutover
+
+- A signed-out visit to `/admin` gets the 404 page with the title "Posts
+  – Gregory Schier"; the title should be the plain 404's.
+- Prisma prints an upgrade notice (7.10 to 8.0 rc) in the pre-deploy log;
+  ignore until 8 is stable.
+- Register the MCP in Claude Code (step 7) from Greg's own machine
+  profile; this session's `claude` has no user-scope servers.
 
 ## Later, not in the port
 
