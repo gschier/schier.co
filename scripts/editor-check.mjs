@@ -1,17 +1,21 @@
 #!/usr/bin/env node
 // The admin and the editor in a real browser, on a running dev server:
 //
-//   MCP_TOKEN=test npm run dev        (in another terminal)
+//   npm run dev                       (in another terminal)
 //   node scripts/editor-check.mjs [port-url]
 //
-// Signs in with the token URL, tries the body's keys, writes a post (a
+// Makes a throwaway user in the local database (DATABASE_URL, localhost
+// only; never anyone else's row), signs in with it through the form at
+// /login, tries the body's keys, writes a post (a
 // heading, a list and a code block), waits for the live preview, uploads a
 // small PNG it makes and waits for the image in the preview, drops another
 // on the social image field, saves with Cmd-S, publishes, opens the public
-// post, and deletes the post again, so the database is left as it was (the
-// uploaded files are removed from ASSETS_DIR too). Screenshots of the list
-// and the editor at 1280 wide, light and dark, go to shots/admin-*.png and
-// shots/editor-*.png. Default address http://localhost:3200.
+// post, deletes the post again and signs out, and deletes the user, so the
+// database is left as it was (the uploaded files are removed from
+// ASSETS_DIR too). Screenshots of /login at 1280 and 390 wide, and of the
+// list and the editor at 1280, light and dark, go to shots/login-*.png,
+// shots/admin-*.png and shots/editor-*.png. Default address
+// http://localhost:3200.
 //
 // The browser is Playwright's headless shell (never Google Chrome.app; see
 // AGENTS.md), closed however the run ends.
@@ -21,12 +25,19 @@ import { mkdirSync, readdirSync, rmSync } from 'node:fs'
 import { homedir } from 'node:os'
 import { join } from 'node:path'
 import { crc32, deflateSync } from 'node:zlib'
+import bcrypt from 'bcryptjs'
+import pg from 'pg'
 import { chromium } from 'playwright-core'
 
 const [BASE = 'http://localhost:3200'] = process.argv.slice(2)
 const root = new URL('..', import.meta.url).pathname
 const out = join(root, 'shots')
 const WIDTH = 1280
+
+// The local database the dev server uses, and nothing else.
+const DATABASE = new URL(process.env.DATABASE_URL ?? 'postgresql://schierco:schierco@localhost:5439/schierco')
+assert.ok(['localhost', '127.0.0.1'].includes(DATABASE.hostname), `the check makes its user on localhost only, not ${DATABASE.hostname}`)
+const CHECKER = { id: `usr_check${Date.now().toString(36)}`.slice(0, 25), email: `editor-check-${Date.now()}@example.invalid`, password: `check-${Math.random().toString(36).slice(2)}` }
 
 function headlessShell() {
   if (process.env.PLAYWRIGHT_HEADLESS_SHELL) return process.env.PLAYWRIGHT_HEADLESS_SHELL
@@ -66,7 +77,17 @@ function png(width, height) {
 const MARKDOWN = ['## A heading for the check', '', 'Some words in a paragraph.', '', '- one', '- two', '', '```js', 'const answer = 42', 'console.log(answer)', '```', ''].join('\n')
 
 mkdirSync(out, { recursive: true })
-const browser = await chromium.launch({ executablePath: headlessShell(), headless: true })
+const database = new pg.Client({ connectionString: DATABASE.href })
+await database.connect()
+await database.query('INSERT INTO users (id, email, name, password_hash) VALUES ($1, $2, $3, $4)', [CHECKER.id, CHECKER.email, 'Editor check', await bcrypt.hash(CHECKER.password, 10)])
+let browser
+try {
+  browser = await chromium.launch({ executablePath: headlessShell(), headless: true })
+} catch (error) {
+  await database.query('DELETE FROM users WHERE id = $1', [CHECKER.id])
+  await database.end()
+  throw error
+}
 const errors = []
 let created = null
 let uploaded = null
@@ -87,20 +108,46 @@ async function context(mode) {
 try {
   // Signed out, the admin is a 404.
   const stranger = await browser.newContext()
-  for (const path of ['/admin', '/admin/new', '/admin/edit/x']) assert.equal((await (await stranger.newPage()).goto(BASE + path)).status(), 404, path)
+  for (const path of ['/admin', '/admin/new', '/admin/edit/x', '/admin?token=test']) assert.equal((await (await stranger.newPage()).goto(BASE + path)).status(), 404, path)
   await stranger.close()
-  step('signed out, /admin, /admin/new and /admin/edit/x are the 404 page')
+  step('signed out, /admin, /admin/new, /admin/edit/x and /admin?token= are the 404 page')
+
+  // The sign-in form, as a stranger sees it.
+  for (const width of [1280, 390]) {
+    for (const mode of ['light', 'dark']) {
+      const shot = await browser.newContext({ viewport: { width, height: 900 }, deviceScaleFactor: 1, colorScheme: mode })
+      const login = await shot.newPage()
+      assert.equal((await login.goto(`${BASE}/login`, { waitUntil: 'networkidle' })).status(), 200)
+      await login.screenshot({ path: join(out, `login-${width}-${mode}.png`), fullPage: true })
+      await shot.close()
+    }
+  }
+  step('screenshots of /login at 1280 and 390 wide, light and dark')
 
   const { ctx, page } = await context('light')
 
-  await page.goto(`${BASE}/admin?token=test`)
-  assert.equal(new URL(page.url()).pathname, '/admin')
-  assert.equal(new URL(page.url()).search, '')
+  // A wrong password is refused on the form, and signs nobody in.
+  await page.goto(`${BASE}/login`, { waitUntil: 'networkidle' })
+  await page.fill('#i-email', CHECKER.email)
+  await page.fill('#i-password', 'not the password')
+  await page.getByRole('button', { name: 'Login' }).click()
+  await page.locator('.notice--danger', { hasText: 'Invalid username or password' }).waitFor()
+  assert.equal(await page.inputValue('#i-email'), CHECKER.email, 'the email is kept')
+  assert.equal(await page.inputValue('#i-password'), '', 'the password is not')
+  assert.equal((await ctx.cookies()).find((c) => c.name === 'sid'), undefined)
+  await page.screenshot({ path: join(out, 'login-1280-light-refused.png') })
+  step('a wrong password: the form says so, keeps the email, and no cookie is set')
+
+  await page.fill('#i-password', CHECKER.password)
+  await page.getByRole('button', { name: 'Login' }).click()
+  await page.waitForURL('**/admin')
   await page.getByRole('heading', { name: 'Posts', level: 1 }).waitFor()
   await page.waitForLoadState('networkidle')
-  const cookie = (await ctx.cookies()).find((c) => c.name === 'sc_admin')
-  assert.ok(cookie?.httpOnly, 'the admin cookie is httpOnly')
-  step(`signed in with the token URL: back at /admin, cookie ${cookie.name} httpOnly`)
+  const cookie = (await ctx.cookies()).find((c) => c.name === 'sid')
+  assert.ok(cookie?.httpOnly, 'the session cookie is httpOnly')
+  assert.equal(cookie.sameSite, 'Lax')
+  assert.ok(cookie.expires * 1000 > Date.now() + 6.9 * 24 * 3600 * 1000, 'and lasts seven days')
+  step(`signed in through /login: at /admin, cookie ${cookie.name} httpOnly, SameSite=Lax, seven days`)
   await page.screenshot({ path: join(out, 'admin-1280-light.png') })
 
   await page.getByRole('link', { name: 'New post' }).click()
@@ -209,6 +256,15 @@ try {
   assert.equal((await (await gone.newPage()).goto(`${BASE}/blog/${slug}`)).status(), 404)
   await gone.close()
   step('deleted: the editor went back to /admin, and the post is a 404')
+
+  // Signing out with the footer's Logout.
+  await page.getByRole('link', { name: 'Logout' }).click()
+  await page.waitForURL((url) => url.pathname === '/')
+  assert.equal((await ctx.cookies()).find((c) => c.name === 'sid'), undefined, 'the cookie is cleared')
+  assert.equal((await page.goto(`${BASE}/admin`)).status(), 404)
+  const { rows } = await database.query('SELECT id FROM sessions WHERE user_id = $1', [CHECKER.id])
+  assert.deepEqual(rows, [], 'the session is deleted')
+  step('signed out with the footer link: home, cookie cleared, session deleted, /admin a 404 again')
   await ctx.close()
 
   if (errors.length) console.log(`\nbrowser errors:\n${errors.join('\n')}`)
@@ -229,4 +285,6 @@ try {
     rmSync(join(dir, '.meta', `${key}.json`), { force: true })
   }
   await browser.close().catch(() => {})
+  await database.query('DELETE FROM users WHERE id = $1', [CHECKER.id]).catch((error) => console.error(`left behind: user ${CHECKER.email} (${error.message})`))
+  await database.end().catch(() => {})
 }

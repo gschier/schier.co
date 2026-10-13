@@ -14,5 +14,9 @@ npm run dev               # http://localhost:3200
 Dev needs no bucket: images are kept in `.media/`, and one a post uses but
 `.media/` lacks is fetched once from `ASSETS_FALLBACK_URL` (the old CDN).
 
+The admin pages are under `/admin`, after signing in at `/login` with a
+user from the local database. `/register` makes one while
+`REGISTRATION=enable`.
+
 `npm run typecheck` and `npm test` check it; the tests make their own
 scratch databases on the same Postgres.

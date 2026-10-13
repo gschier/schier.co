@@ -8,11 +8,11 @@ import { THEME_SCRIPT } from '#/components/site'
 import { isAdmin } from '#/server/admin'
 import appCss from '../styles.css?url'
 
-/// Whether this visit is Greg's, signed in to the admin (src/server/admin.ts),
+/// Whether this visit is Greg's, signed in at /login (src/server/auth.ts),
 /// so analytics leaves it out and the pages show him the admin's links; and
 /// the site's address, for the absolute links in a page's head and footer.
 const getSite = createServerFn({ method: 'GET' }).handler(async () => ({
-  admin: isAdmin(),
+  admin: await isAdmin(),
   baseUrl: (process.env.BASE_URL ?? '').replace(/\/+$/, ''),
 }))
 

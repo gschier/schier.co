@@ -74,8 +74,12 @@ guess. Decisions are Greg's.
 - The tables are the Go site's, mapped in `prisma/schema.prisma`. The
   baseline migration matches production exactly, where it is marked
   applied rather than run; a schema change is a new migration.
-- The admin MCP is `src/routes/mcp.ts` (bearer `MCP_TOKEN`); the admin
-  pages sign in at `/admin?token=...`.
+- The admin MCP is `src/routes/mcp.ts` (bearer `MCP_TOKEN`, for the MCP
+  only). The admin pages sign in with the login form at `/login`: email and
+  password against `users`, a row in `sessions` and the `sid` cookie
+  (`src/server/auth.ts`). Locally that is a user in the local database; a
+  check makes its own throwaway user and deletes it after, and never
+  changes Greg's. Tests sign in with `signedIn()` from `test/help.ts`.
 
 ## Writing
 

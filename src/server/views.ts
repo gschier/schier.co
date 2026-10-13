@@ -4,7 +4,7 @@
 
 import type { BlogPost } from '#/generated/prisma/client'
 import type { CardView, MetaView, PostView, PreviewView } from '#/lib/views'
-import { isAdmin } from '#/server/admin'
+import { isKnownAdmin } from '#/server/admin'
 import { renderMarkdown, summarize } from '#/server/markdown'
 import { readTime, wordCount } from '#/server/posts'
 
@@ -61,14 +61,9 @@ export function truncateChars(text: string, length: number): string {
 /// the opening of its content.
 export const description = (post: Pick<BlogPost, 'summary' | 'content'>) => post.summary || summarize(post.content)
 
-/// Whether this request is the admin's; false outside a request (tests).
-function admin(): boolean {
-  try {
-    return isAdmin()
-  } catch {
-    return false
-  }
-}
+/// Whether this request is the admin's, as the request middleware found
+/// (src/start.ts); false outside a request (tests).
+const admin = (): boolean => isKnownAdmin()
 
 /// The meta line's facts. Views and score are the admin's to see, so
 /// nobody else's page carries them.

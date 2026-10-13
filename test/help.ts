@@ -6,10 +6,12 @@
 // dropped after. Only ever localhost: anything else is refused.
 
 import assert from 'node:assert/strict'
+import { spawn } from 'node:child_process'
 import { readFileSync, readdirSync } from 'node:fs'
 import { createServer as createHttpServer, type IncomingHttpHeaders } from 'node:http'
-import type { AddressInfo } from 'node:net'
+import { createServer as createNetServer, type AddressInfo } from 'node:net'
 import { join } from 'node:path'
+import bcrypt from 'bcryptjs'
 import pg from 'pg'
 import { createServer, type ViteDevServer } from 'vite'
 
@@ -44,6 +46,20 @@ export async function scratch(name: string, until?: string) {
       await admin.end()
     },
   }
+}
+
+/// A user with a known password and a session, in the scratch database
+/// [s]: the cookie that signs a request in as them, as /login would have
+/// set it. Each call makes its own user and session.
+let users = 0
+export async function signedIn(s: { rows: Awaited<ReturnType<typeof scratch>>['rows'] }, password = 'a password') {
+  const n = ++users
+  const userId = `usr_test${String(n).padStart(8, '0')}`
+  const sessionId = `ses_test${String(n).padStart(8, '0')}`
+  const email = `author${n}@example.com`
+  await s.rows('INSERT INTO users (id, email, name, password_hash) VALUES ($1, $2, $3, $4)', [userId, email, `Author ${n}`, await bcrypt.hash(password, 4)])
+  await s.rows('INSERT INTO sessions (id, user_id) VALUES ($1, $2)', [sessionId, userId])
+  return { userId, sessionId, email, password, cookie: `sid=${sessionId}` }
 }
 
 type Site = { load: <T>(module: string) => Promise<T>; close: () => Promise<void> }
@@ -145,4 +161,38 @@ export async function fakeS3(bucket: string, objects: Record<string, { body: str
     failing,
     close: () => new Promise<void>((resolve) => server.close(() => resolve())),
   }
+}
+
+/// A dev server of the site's own on a free port, with [env] over this
+/// process's: its address, and stop() to end it.
+export async function devServer(env: Record<string, string | undefined>) {
+  const port = await new Promise<number>((resolve, reject) => {
+    const probe = createNetServer()
+    probe.once('error', reject)
+    probe.listen(0, () => {
+      const { port } = probe.address() as AddressInfo
+      probe.close(() => resolve(port))
+    })
+  })
+  const base = `http://localhost:${port}`
+  const server = spawn(process.execPath, [join(root, 'node_modules/vite/bin/vite.js'), 'dev', '--port', String(port), '--strictPort'], {
+    cwd: root,
+    env: { ...process.env, BASE_URL: base, ...env },
+    stdio: ['ignore', 'pipe', 'pipe'],
+  })
+  let output = ''
+  server.stdout!.on('data', (d) => (output += d))
+  server.stderr!.on('data', (d) => (output += d))
+  const stop = () => void server.kill('SIGTERM')
+  const deadline = Date.now() + 60000
+  while (Date.now() < deadline) {
+    try {
+      if ((await fetch(`${base}/debug/health`)).ok) return { base, stop, output: () => output }
+    } catch {
+      // Not up yet.
+    }
+    await new Promise((r) => setTimeout(r, 250))
+  }
+  stop()
+  throw new Error(`the dev server did not start:\n${output}`)
 }

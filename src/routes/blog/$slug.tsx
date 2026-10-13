@@ -21,7 +21,7 @@ const getPost = createServerFn({ method: 'GET' })
   .validator((slug: string) => slug)
   .handler(async ({ data: slug }) => {
     const post = await postBySlug(slug)
-    const admin = isAdmin()
+    const admin = await isAdmin()
     if (!post || (!post.published && !admin)) return notFoundData()
     const sent = admin ? (await sendStatus(post)).send : null
     const [view, recommended] = await Promise.all([postView(post, sent?.recipients ?? null), recommendedPosts(post.id)])

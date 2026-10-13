@@ -1,31 +1,17 @@
-import { createFileRoute, redirect } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
 import { createServerFn } from '@tanstack/react-start'
 import { NotFound, Site, adminLinks, pageHead } from '#/components/site'
-import { signIn } from '#/server/admin'
 import { adminList, type ListRow } from '#/server/editor'
 import { notFoundData } from '#/server/pages'
 
 // The admin's home, replacing the Go site's /blog/drafts: every draft, then
-// every published post, each a click from its editor. Sign in by opening
-// /admin?token=<MCP_TOKEN> once (src/server/admin.ts); without the cookie
-// this is the site's 404.
+// every published post, each a click from its editor. Signed in at /login
+// (src/server/auth.ts); signed out this is the site's 404.
 
-const getAdmin = createServerFn({ method: 'GET' })
-  .validator((token: string | undefined) => token)
-  .handler(async ({ data: token }) => {
-    if (token !== undefined) {
-      if (!signIn(token)) return notFoundData()
-      throw redirect({ to: '/admin', search: { token: undefined } })
-    }
-    return (await adminList()) ?? notFoundData()
-  })
+const getAdmin = createServerFn({ method: 'GET' }).handler(async () => (await adminList()) ?? notFoundData())
 
 export const Route = createFileRoute('/admin/')({
-  validateSearch: (search: Record<string, unknown>) => ({
-    token: typeof search.token === 'string' ? search.token : undefined,
-  }),
-  loaderDeps: ({ search }) => ({ token: search.token }),
-  loader: ({ deps }) => getAdmin({ data: deps.token }),
+  loader: () => getAdmin(),
   head: (ctx) => {
     const head = pageHead({ title: 'Posts' }, ctx)
     return { ...head, meta: [...head.meta, { name: 'robots', content: 'noindex' }] }

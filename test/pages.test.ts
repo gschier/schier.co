@@ -13,7 +13,7 @@ import { spawn, type ChildProcess } from 'node:child_process'
 import { createServer } from 'node:net'
 import { join } from 'node:path'
 import { after, before, describe, test } from 'node:test'
-import { handler, root, scratch, site } from './help.ts'
+import { handler, root, scratch, signedIn, site } from './help.ts'
 
 type Posts = typeof import('../src/server/posts.ts')
 type Mail = typeof import('../src/server/mail.ts')
@@ -353,7 +353,7 @@ describe('the pages, from a dev server', () => {
     const pub = await page('/blog/a-draft')
     assert.equal(pub.status, 404)
     assert.match(pub.html, /Page Not Found/)
-    const admin = await page('/blog/a-draft', { cookie: 'sc_admin=dev' })
+    const admin = await page('/blog/a-draft', { cookie: (await signedIn(s)).cookie })
     assert.equal(admin.status, 200)
     assert.match(admin.html, /&bull; Draft/)
   })

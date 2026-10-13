@@ -15,7 +15,7 @@
     "db:migrate": "prisma migrate dev && prisma generate",
     "db:studio": "prisma studio",
     "typecheck": "tsc --noEmit",
-    "test": "node --test test/db.test.ts test/newsletter.test.ts test/assets.test.ts test/markdown.test.ts test/mcp.test.ts test/pages.test.ts test/admin.test.ts"
+    "test": "node --test test/db.test.ts test/newsletter.test.ts test/assets.test.ts test/markdown.test.ts test/mcp.test.ts test/pages.test.ts test/admin.test.ts test/auth.test.ts"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.30.1",
@@ -29,6 +29,7 @@
     "@tanstack/react-router": "latest",
     "@tanstack/react-router-devtools": "latest",
     "@tanstack/react-start": "latest",
+    "bcryptjs": "^3.0.3",
     "dotenv": "^18.0.4",
     "nitro": "3.0.260610-beta",
     "pg": "^8.23.0",

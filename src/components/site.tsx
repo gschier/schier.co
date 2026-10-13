@@ -11,13 +11,13 @@ import { metaInner, sanitizeTitle, type MetaOptions } from '#/lib/html'
 import type { CardView, HeadView, MetaView, PreviewView } from '#/lib/views'
 
 /// Where the admin's links go. The admin pages live under /admin (BRIEF.md,
-/// Admin and auth); these are the Go site's edit, drafts, new and logout
-/// links pointed there.
+/// Admin and auth); these are the Go site's edit, drafts and new links
+/// pointed there, and its logout link as it was.
 export const adminLinks = {
   drafts: '/admin',
   newPost: '/admin/new',
   edit: (id: string) => `/admin/edit/${encodeURIComponent(id)}`,
-  logout: '/admin/logout',
+  logout: '/logout',
 }
 
 const ANALYTICS = 'https://analytics.schier.co/analytics/site_RPutoRaXSMBFj6hyzV'

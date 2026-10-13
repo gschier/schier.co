@@ -9,7 +9,7 @@ import { isoformat } from '#/server/views'
 // for the admin every subscriber.
 
 const getSubscribers = createServerFn({ method: 'GET' }).handler(async () => {
-  if (!isAdmin()) return null
+  if (!(await isAdmin())) return null
   return (await listSubscribers()).map((s) => ({ id: s.id, created: isoformat(s.createdAt), email: s.email, unsubscribed: s.unsubscribed }))
 })
 

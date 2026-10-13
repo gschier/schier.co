@@ -3,11 +3,11 @@ import { notFoundData } from '#/server/pages'
 import { editorData, newsletterStatus, preview, publish, remove, savePost, sendNewsletter, setListed, unpublish, type SaveInput } from '#/server/editor'
 
 // The admin pages' server functions, each a call into src/server/editor.ts,
-// which checks the admin cookie and the input. In the browser these are
+// which checks a signed-in session and the input. In the browser these are
 // fetches to the server; the module they call is never sent there.
 
-/// The editor's post, or nothing for a new one; the site's 404 without the
-/// admin cookie or for an id no post has.
+/// The editor's post, or nothing for a new one; the site's 404 signed out
+/// or for an id no post has.
 export const getEditor = createServerFn({ method: 'GET' })
   .validator((id: string | null) => id)
   .handler(async ({ data }) => (await editorData(data)) ?? notFoundData())

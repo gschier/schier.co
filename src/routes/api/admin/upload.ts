@@ -8,7 +8,7 @@ import { uploadImage } from '#/server/uploads'
 // with the image as `file`, kept in storage as images/a/{unix}{ext}; answers
 // { url: "/media/images/a/..." } for the post's markdown or social image.
 // Images only, up to 25 MB, as the MCP's upload_image takes them. Without
-// the admin cookie this is a 404, like every admin page.
+// a signed-in session this is a 404, like every admin page.
 
 /// The largest image taken.
 const MAX_IMAGE_BYTES = 25 * 1024 * 1024
@@ -17,7 +17,7 @@ export const Route = createFileRoute('/api/admin/upload')({
   server: {
     handlers: {
       POST: async ({ request }) => {
-        if (!isAdminRequest(request)) return textError(404, 'Not Found')
+        if (!(await isAdminRequest(request))) return textError(404, 'Not Found')
         if (!sameOrigin(request)) return textError(403, 'Forbidden')
         let form: FormData
         try {

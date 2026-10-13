@@ -12,12 +12,14 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SplatRouteImport } from './routes/$'
 import { Route as BooksRouteImport } from './routes/books'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as LogoutRouteImport } from './routes/logout'
 import { Route as McpRouteImport } from './routes/mcp'
 import { Route as ProjectsRouteImport } from './routes/projects'
+import { Route as RegisterRouteImport } from './routes/register'
 import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
 import { Route as RssDotxmlRouteImport } from './routes/rss[.]xml'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
-import { Route as AdminLogoutRouteImport } from './routes/admin/logout'
 import { Route as AdminNewRouteImport } from './routes/admin/new'
 import { Route as BlogIndexRouteImport } from './routes/blog/index'
 import { Route as BlogSlugRouteImport } from './routes/blog/$slug'
@@ -56,6 +58,16 @@ const BooksRoute = BooksRouteImport.update({
   path: '/books',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LogoutRoute = LogoutRouteImport.update({
+  id: '/logout',
+  path: '/logout',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const McpRoute = McpRouteImport.update({
   id: '/mcp',
   path: '/mcp',
@@ -64,6 +76,11 @@ const McpRoute = McpRouteImport.update({
 const ProjectsRoute = ProjectsRouteImport.update({
   id: '/projects',
   path: '/projects',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RegisterRoute = RegisterRouteImport.update({
+  id: '/register',
+  path: '/register',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RobotsDottxtRoute = RobotsDottxtRouteImport.update({
@@ -79,11 +96,6 @@ const RssDotxmlRoute = RssDotxmlRouteImport.update({
 const AdminIndexRoute = AdminIndexRouteImport.update({
   id: '/admin/',
   path: '/admin/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AdminLogoutRoute = AdminLogoutRouteImport.update({
-  id: '/admin/logout',
-  path: '/admin/logout',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminNewRoute = AdminNewRouteImport.update({
@@ -202,11 +214,13 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
   '/books': typeof BooksRoute
+  '/login': typeof LoginRoute
+  '/logout': typeof LogoutRoute
   '/mcp': typeof McpRoute
   '/projects': typeof ProjectsRoute
+  '/register': typeof RegisterRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/rss.xml': typeof RssDotxmlRoute
-  '/admin/logout': typeof AdminLogoutRoute
   '/admin/new': typeof AdminNewRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/blog/rss.xml': typeof BlogRssDotxmlRoute
@@ -235,11 +249,13 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
   '/books': typeof BooksRoute
+  '/login': typeof LoginRoute
+  '/logout': typeof LogoutRoute
   '/mcp': typeof McpRoute
   '/projects': typeof ProjectsRoute
+  '/register': typeof RegisterRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/rss.xml': typeof RssDotxmlRoute
-  '/admin/logout': typeof AdminLogoutRoute
   '/admin/new': typeof AdminNewRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/blog/rss.xml': typeof BlogRssDotxmlRoute
@@ -269,11 +285,13 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
   '/books': typeof BooksRoute
+  '/login': typeof LoginRoute
+  '/logout': typeof LogoutRoute
   '/mcp': typeof McpRoute
   '/projects': typeof ProjectsRoute
+  '/register': typeof RegisterRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/rss.xml': typeof RssDotxmlRoute
-  '/admin/logout': typeof AdminLogoutRoute
   '/admin/new': typeof AdminNewRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/blog/rss.xml': typeof BlogRssDotxmlRoute
@@ -304,11 +322,13 @@ export interface FileRouteTypes {
     | '/'
     | '/$'
     | '/books'
+    | '/login'
+    | '/logout'
     | '/mcp'
     | '/projects'
+    | '/register'
     | '/robots.txt'
     | '/rss.xml'
-    | '/admin/logout'
     | '/admin/new'
     | '/blog/$slug'
     | '/blog/rss.xml'
@@ -337,11 +357,13 @@ export interface FileRouteTypes {
     | '/'
     | '/$'
     | '/books'
+    | '/login'
+    | '/logout'
     | '/mcp'
     | '/projects'
+    | '/register'
     | '/robots.txt'
     | '/rss.xml'
-    | '/admin/logout'
     | '/admin/new'
     | '/blog/$slug'
     | '/blog/rss.xml'
@@ -370,11 +392,13 @@ export interface FileRouteTypes {
     | '/'
     | '/$'
     | '/books'
+    | '/login'
+    | '/logout'
     | '/mcp'
     | '/projects'
+    | '/register'
     | '/robots.txt'
     | '/rss.xml'
-    | '/admin/logout'
     | '/admin/new'
     | '/blog/$slug'
     | '/blog/rss.xml'
@@ -404,11 +428,13 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   SplatRoute: typeof SplatRoute
   BooksRoute: typeof BooksRoute
+  LoginRoute: typeof LoginRoute
+  LogoutRoute: typeof LogoutRoute
   McpRoute: typeof McpRoute
   ProjectsRoute: typeof ProjectsRoute
+  RegisterRoute: typeof RegisterRoute
   RobotsDottxtRoute: typeof RobotsDottxtRoute
   RssDotxmlRoute: typeof RssDotxmlRoute
-  AdminLogoutRoute: typeof AdminLogoutRoute
   AdminNewRoute: typeof AdminNewRoute
   BlogSlugRoute: typeof BlogSlugRoute
   BlogRssDotxmlRoute: typeof BlogRssDotxmlRoute
@@ -457,6 +483,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BooksRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/logout': {
+      id: '/logout'
+      path: '/logout'
+      fullPath: '/logout'
+      preLoaderRoute: typeof LogoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/mcp': {
       id: '/mcp'
       path: '/mcp'
@@ -469,6 +509,13 @@ declare module '@tanstack/react-router' {
       path: '/projects'
       fullPath: '/projects'
       preLoaderRoute: typeof ProjectsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/register': {
+      id: '/register'
+      path: '/register'
+      fullPath: '/register'
+      preLoaderRoute: typeof RegisterRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/robots.txt': {
@@ -490,13 +537,6 @@ declare module '@tanstack/react-router' {
       path: '/admin'
       fullPath: '/admin/'
       preLoaderRoute: typeof AdminIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/admin/logout': {
-      id: '/admin/logout'
-      path: '/admin/logout'
-      fullPath: '/admin/logout'
-      preLoaderRoute: typeof AdminLogoutRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/new': {
@@ -660,11 +700,13 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   SplatRoute: SplatRoute,
   BooksRoute: BooksRoute,
+  LoginRoute: LoginRoute,
+  LogoutRoute: LogoutRoute,
   McpRoute: McpRoute,
   ProjectsRoute: ProjectsRoute,
+  RegisterRoute: RegisterRoute,
   RobotsDottxtRoute: RobotsDottxtRoute,
   RssDotxmlRoute: RssDotxmlRoute,
-  AdminLogoutRoute: AdminLogoutRoute,
   AdminNewRoute: AdminNewRoute,
   BlogSlugRoute: BlogSlugRoute,
   BlogRssDotxmlRoute: BlogRssDotxmlRoute,

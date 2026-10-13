@@ -4,12 +4,12 @@
 // Over a scratch database it makes and drops. Two halves:
 // - The editor's functions (src/server/editor.ts, which every server
 //   function in src/lib/adminFns.ts calls) run in-process inside a request of
-//   Start's own, with and without the admin cookie, with a RecordingMailer
+//   Start's own, with and without a session cookie, with a RecordingMailer
 //   in place of Resend; and the upload route is called as the server calls
 //   it, with storage in a scratch directory.
-// - The pages, sign-in, logout and the server functions themselves over
-//   HTTP, from a dev server of the site's own started on a free port, called
-//   as the browser calls them.
+// - The pages and the server functions themselves over HTTP, from a dev
+//   server of the site's own started on a free port, called as the browser
+//   calls them. Signing in and out is test/auth.test.ts's.
 
 import assert from 'node:assert/strict'
 import { spawn, type ChildProcess } from 'node:child_process'
@@ -19,7 +19,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { after, before, beforeEach, describe, test } from 'node:test'
 import { fromCrossJSON, toJSONAsync } from 'seroval'
-import { handler, root, scratch, site, type Handler } from './help.ts'
+import { handler, root, scratch, signedIn, site, type Handler } from './help.ts'
 
 type Editor = typeof import('../src/server/editor.ts')
 type Mail = typeof import('../src/server/mail.ts')
@@ -36,7 +36,8 @@ let upload: Handler
 let assets: string
 
 const AWS = ['AWS_ENDPOINT_URL', 'AWS_ACCESS_KEY_ID', 'AWS_SECRET_ACCESS_KEY', 'AWS_S3_BUCKET_NAME', 'AWS_DEFAULT_REGION'] as const
-const COOKIE = 'sc_admin=a-token'
+/// A signed-in session's cookie (test/help.ts), made in before().
+let COOKIE = ''
 
 before(async () => {
   delete process.env.RESEND_API_KEY
@@ -46,6 +47,7 @@ before(async () => {
   process.env.ASSETS_DIR = assets
   process.env.BASE_URL = 'https://schier.test'
   s = await scratch('admin')
+  COOKIE = (await signedIn(s)).cookie
   app = await site(s.url)
   editor = await app.load<Editor>('/src/server/editor.ts')
   mail = await app.load<Mail>('/src/server/mail.ts')
@@ -71,7 +73,7 @@ after(async () => {
 /// Runs [fn] inside a request of Start's own, as a server function runs,
 /// carrying [cookie] if given. The request store is Start's (its
 /// AsyncLocalStorage, shared through a global symbol), so isAdmin() reads
-/// this request's cookie as it does on the server.
+/// this request's session cookie as it does on the server.
 function as<T>(cookie: string | null, fn: () => Promise<T>): Promise<T> {
   const storage = (globalThis as Record<symbol, { run: (store: unknown, fn: () => Promise<T>) => Promise<T> } | undefined>)[Symbol.for('tanstack-start:event-storage')]
   assert.ok(storage, "Start's request store is loaded")
@@ -114,7 +116,7 @@ async function subscriber(email: string) {
 // ---------------------------------------------------------------------------
 
 describe("the editor's functions", () => {
-  test('without the admin cookie, the pages have no data and every action is refused', async () => {
+  test('signed out, the pages have no data and every action is refused', async () => {
     const post = await db.blogPost.create({ data: { id: newId('pst_'), slug: 'existing', title: 'Existing', content: 'Words.', image: '' } })
     assert.equal(await stranger(() => editor.adminList()), null)
     assert.equal(await stranger(() => editor.editorData(null)), null)
@@ -317,8 +319,8 @@ describe('the admin over HTTP, from a dev server', () => {
     return fromCrossJSON(body, { refs: new Map(), plugins: [] }) as { result: unknown }
   }
 
-  test('without the cookie, the admin pages are the 404 page', async () => {
-    for (const path of ['/admin', '/admin/new', '/admin/edit/x', '/admin/logout']) {
+  test('signed out, the admin pages are the 404 page', async () => {
+    for (const path of ['/admin', '/admin/new', '/admin/edit/x', '/admin/logout', '/blog/new', '/blog/drafts']) {
       const res = await get(path)
       assert.equal(res.status, 404, path)
       assert.match(await res.text(), /Page Not Found/, path)
@@ -326,32 +328,23 @@ describe('the admin over HTTP, from a dev server', () => {
     assert.equal((await get('/admin/edit/pst_nosuchpost00', COOKIE)).status, 404, 'an id no post has')
   })
 
-  test('the token signs in with an httpOnly cookie, and back at /admin', async () => {
-    const res = await get('/admin?token=the-token')
-    assert.ok([302, 307].includes(res.status), `status ${res.status}`)
-    assert.equal(new URL(res.headers.get('location')!, base).pathname, '/admin')
-    assert.equal(new URL(res.headers.get('location')!, base).search, '')
-    const cookie = res.headers.getSetCookie().find((c) => c.startsWith('sc_admin='))!
-    assert.ok(cookie, 'sets the admin cookie')
-    assert.match(cookie, /^sc_admin=the-token;/)
-    assert.match(cookie, /; HttpOnly/i)
-    assert.match(cookie, /; Path=\//i)
-
-    const page = await get('/admin', 'sc_admin=the-token')
+  test('a session signs in to the admin pages', async () => {
+    const page = await get('/admin', COOKIE)
     assert.equal(page.status, 200)
     const html = await page.text()
     assert.match(html, /<h1[^>]*>Posts<\/h1>/)
     assert.match(html, /New post/)
-    assert.equal((await get('/admin/new', 'sc_admin=the-token')).status, 200)
+    assert.match(html, /href="\/logout"[^>]*>Logout</, "the footer's Logout goes to /logout")
+    assert.equal((await get('/admin/new', COOKIE)).status, 200)
   })
 
-  test('logout clears the cookie and goes home', async () => {
-    const res = await get('/admin/logout', 'sc_admin=the-token')
-    assert.ok([302, 307].includes(res.status), `status ${res.status}`)
-    assert.equal(new URL(res.headers.get('location')!, base).pathname, '/')
-    const cookie = res.headers.getSetCookie().find((c) => c.startsWith('sc_admin='))!
-    assert.match(cookie, /^sc_admin=;/)
-    assert.match(cookie, /Max-Age=0/i)
+  test('the MCP token no longer signs in, at /admin?token= or as a cookie', async () => {
+    const res = await get('/admin?token=the-token')
+    assert.equal(res.status, 404)
+    assert.match(await res.text(), /Page Not Found/)
+    assert.deepEqual(res.headers.getSetCookie(), [], 'sets no cookie')
+    assert.equal((await get('/admin', 'sc_admin=the-token')).status, 404, 'the old token cookie')
+    assert.equal((await get('/admin', 'sid=the-token')).status, 404, 'the token as a session id')
   })
 
   test('the server functions refuse without the cookie and answer with it', async () => {

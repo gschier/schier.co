@@ -4,11 +4,11 @@
 // newsletter (src/server/newsletter.ts); src/lib/adminFns.ts makes them the
 // server functions the pages call.
 //
-// Every one checks the admin cookie first. A page's data is null without it,
-// so the page is the site's 404; an action throws, so its server function
-// answers an error. A refusal (a taken slug, a post too old to send) comes
-// back as { ok: false, error } for the editor to show beside its buttons;
-// anything else is a fault and is thrown.
+// Every one checks for a signed-in session first (src/server/auth.ts). A
+// page's data is null without one, so the page is the site's 404; an action
+// throws, so its server function answers an error. A refusal (a taken slug,
+// a post too old to send) comes back as { ok: false, error } for the editor
+// to show beside its buttons; anything else is a fault and is thrown.
 
 import { z } from 'zod'
 import type { BlogPost } from '#/generated/prisma/client'
@@ -33,7 +33,7 @@ import {
 import { readTime, tagCounts, wordCount } from '#/server/posts'
 import { goTime, isoformat } from '#/server/views'
 
-/// Thrown by an action asked for without the admin cookie. It says no more
+/// Thrown by an action asked for without a signed-in session. It says no more
 /// than a 404 would.
 export class NotAdmin extends Error {
   constructor() {
@@ -42,15 +42,15 @@ export class NotAdmin extends Error {
   }
 }
 
-export function requireAdmin() {
-  if (!isAdmin()) throw new NotAdmin()
+export async function requireAdmin() {
+  if (!(await isAdmin())) throw new NotAdmin()
 }
 
 /// What an action gives the editor: its value, or a refusal's message.
 export type Outcome<T> = { ok: true; value: T } | { ok: false; error: string }
 
 async function attempt<T>(action: () => Promise<T>): Promise<Outcome<T>> {
-  requireAdmin()
+  await requireAdmin()
   try {
     return { ok: true, value: await action() }
   } catch (error) {
@@ -89,9 +89,9 @@ const row = (post: PostSummary): ListRow => ({
 
 /// Drafts, furthest along and then last edited first, as the Go site's
 /// drafts page had them; then every published post, newest first. Null
-/// without the admin cookie.
+/// without a signed-in session.
 export async function adminList(): Promise<{ drafts: ListRow[]; posts: ListRow[] } | null> {
-  if (!isAdmin()) return null
+  if (!(await isAdmin())) return null
   const [drafts, posts] = await Promise.all([listPosts({ drafts: 'only', limit: 500 }), listPosts({ drafts: 'exclude', limit: 500 })])
   return { drafts: drafts.posts.map(row), posts: posts.posts.map(row) }
 }
@@ -165,10 +165,10 @@ export type EditorData = {
 }
 
 /// What the editor opens with: the post [id], or nothing for a new post.
-/// Null without the admin cookie, or for an id no post has, so the page is
+/// Null without a signed-in session, or for an id no post has, so the page is
 /// a 404.
 export async function editorData(id: string | null): Promise<EditorData | null> {
-  if (!isAdmin()) return null
+  if (!(await isAdmin())) return null
   const post = id === null ? null : await findPost(id)
   if (id !== null && (!post || post.id !== id)) return null
   const counts = await tagCounts()
@@ -204,7 +204,7 @@ function parse<T>(schema: z.ZodType<T>, input: unknown): T {
 /// Saves the editor's fields: creates the post when there is no id, else
 /// updates it. Returns the post as saved (title capitalised, slug made).
 export async function savePost(input: SaveInput): Promise<Outcome<EditorPost>> {
-  requireAdmin()
+  await requireAdmin()
   const { id, ...fields } = parse(saveInput, input)
   return attempt(async () => editorPost(id ? await updatePost(id, fields) : await createPost(fields)))
 }
@@ -218,7 +218,7 @@ export const remove = (id: string) => attempt(async () => editorPost(await delet
 const listedInput = z.object({ id: idInput, unlisted: z.boolean() })
 
 export async function setListed(input: { id: string; unlisted: boolean }): Promise<Outcome<EditorPost>> {
-  requireAdmin()
+  await requireAdmin()
   const { id, unlisted } = parse(listedInput, input)
   return attempt(async () => editorPost(await setUnlisted(id, unlisted)))
 }
@@ -237,7 +237,7 @@ const previewInput = z.object({ markdown: z.string().max(5_000_000), date: z.str
 /// [markdown] as the post page renders it, and the meta line's word count
 /// and date, for the editor's live preview.
 export async function preview(input: { markdown: string; date?: string }): Promise<Preview> {
-  requireAdmin()
+  await requireAdmin()
   const { markdown, date } = parse(previewInput, input)
   return previewOf(markdown, date && !Number.isNaN(new Date(date).getTime()) ? new Date(date) : new Date())
 }
@@ -252,7 +252,7 @@ async function previewOf(markdown: string, date: Date): Promise<Preview> {
 // The newsletter
 
 export async function newsletterStatus(id: string): Promise<NewsletterView> {
-  requireAdmin()
+  await requireAdmin()
   return newsletterView(await getPost(parse(idInput, id)))
 }
 
@@ -278,7 +278,7 @@ export type Sent = {
 /// so a refusal is shown in the editor and what sendPost still throws is a
 /// fault.
 export async function sendNewsletter(input: { id: string; to?: string; dryRun?: boolean }): Promise<Outcome<Sent>> {
-  requireAdmin()
+  await requireAdmin()
   const { id, to, dryRun } = parse(sendInput, input)
   return attempt(async () => {
     const post = await getPost(id)

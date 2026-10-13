@@ -98,8 +98,8 @@ before it is dropped.
 - `/robots.txt`, `/debug/health`.
 - `/media/{key}` serves stored objects (see Images).
 - `/mcp` the admin MCP.
-- `/admin` sign-in and the editor, replacing `/blog/new`, `/blog/drafts`,
-  `/login`, `/register`, `/logout`.
+- `/login`, `/logout`, `/register` (only with `REGISTRATION=enable`), and
+  `/admin` with the editor, replacing `/blog/new` and `/blog/drafts`.
 
 Votes and donations are carried as data. Their public UI (vote button,
 donate link) is ported as-is for now; dropping it is a redesign decision.
@@ -125,20 +125,30 @@ token colours. Decisions taken there:
   token. The vote endpoint is `/api/blog/vote`.
 - The old `t.schier.co` analytics script is not ported; OpenPanel takes
   over.
-- Admin URLs are `/admin` (sign-in and drafts), `/admin/new`,
-  `/admin/edit/{id}` and `/admin/logout`, from `adminLinks` in
-  `src/components/site.tsx`. `/blog/drafts`, `/blog/new`, `/login` and
-  `/register` are 404.
+- Admin URLs are `/admin` (drafts and posts), `/admin/new` and
+  `/admin/edit/{id}`, from `adminLinks` in `src/components/site.tsx`;
+  sign-in is `/login`, sign-out `/logout`. `/blog/drafts` and `/blog/new`
+  are 404.
 - Favicons and images live under `/static/...` as on the Go site.
 
 ## Admin and auth
 
-- Greg is the only author. Public registration goes away. Sign-in is the
-  Platform Pixels pattern: `MCP_TOKEN`, handed over once as
-  `/admin?token=...` and kept in an httpOnly cookie; on a dev server any
-  token signs in.
-- The `users` and `sessions` tables stay for now (posts reference
-  `user_id`) and are dropped in a later migration once nothing reads them.
+- Greg is the only author. Sign-in is the login form, as on the Go site
+  (decided 2026-10-13 after cutover: "I want the login form back. That
+  was just a stop gap for pp"): `/login` with email and password checked
+  against `users.password_hash` (bcrypt, `$2a$10$`), a row in `sessions`
+  and a seven-day httpOnly cookie holding the session id, refreshed on
+  each request as Go did; `/logout` deletes the session and clears the
+  cookie. `/register` exists only while `REGISTRATION=enable`, as in Go.
+  The token sign-in at `/admin?token=` is removed; `MCP_TOKEN` stays the
+  bearer for `/mcp` only. The `users` and `sessions` tables are therefore
+  kept for good. Built 2026-10-13 (`src/server/auth.ts`, a request
+  middleware in `src/start.ts` that refreshes the cookie, 16 tests).
+  Decisions taken there: sign-in lands on `/admin` (Go went to `/`); a
+  wrong email takes as long as a wrong password; a stale cookie is
+  cleared; new hashes are `$2b$`, old `$2a$` still check; sessions never
+  expire on the server, as in Go, and the 83 rows copied from production
+  stay valid, so server-side expiry is a follow-up.
 - The MCP at `/mcp`: streamable HTTP, stateless, bearer `MCP_TOKEN`,
   JSON responses. Tools: list posts (with drafts), get a post, create or
   update a draft, publish, unpublish, unlist, delete, render a markdown
@@ -290,8 +300,11 @@ step that touches production.
    from the old CDN, `/mcp` 401 without and initialised with the token,
    `/admin?token=` sets the cookie. Rollback would be `git revert` and
    push, with the builder set back to Heroku.
-6. Remove `DO_SPACES_*` (after the asset migration), `MAILJET_*`,
-   `CSRF_KEY`, `MIGRATE_ON_START`, `STATIC_URL` from the service.
+6. Asset migration run 2026-10-13 against production: 283 objects
+   copied (265 MB), 0 failed, 42 posts rewritten to `/media/`; the live
+   site serves them from the bucket. The Space stays up for inbound links
+   for now. `DO_SPACES_*`, `MAILJET_*`, `CSRF_KEY`, `MIGRATE_ON_START` and
+   `STATIC_URL` removed from the service the same day.
 7. Register the admin MCP in Claude Code at user scope as `schier-co`,
    with the bearer token in `~/.schierco-mcp-token`, as Platform Pixels
    does with `platform-pixels` and `~/.platformpixels-mcp-token`.
