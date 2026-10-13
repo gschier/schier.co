@@ -1,0 +1,90 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// The tables as the Go site made them (migrations/ at the repo root), kept
+// as they are so the baseline migration is a no-op on production: snake_case
+// columns under camelCase fields, VARCHAR(25) ids the app makes
+// (src/server/db.ts newId: pst_, usr_, ses_, sub_, snd_ and 12 random
+// characters), TIMESTAMP(3) without time zone.
+
+/// A blog post, draft or published. `date` is the date it was written for,
+/// `editedAt` the last edit, both set by the app.
+model BlogPost {
+  id         String   @id @db.VarChar(25)
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @default(now()) @updatedAt @map("updated_at")
+  userId     String?  @map("user_id") @db.VarChar(25)
+  content    String
+  date       DateTime @default(now())
+  editedAt   DateTime @default(now()) @map("edited_at")
+  image      String
+  published  Boolean  @default(false)
+  score      Int      @default(0)
+  shares     Int      @default(0)
+  slug       String   @unique
+  stage      Int      @default(0)
+  title      String
+  unlisted   Boolean  @default(false)
+  views      Int      @default(0)
+  votesTotal Int      @default(0) @map("votes_total")
+  votesUsers Int      @default(0) @map("votes_users")
+  tags       String[] @default([])
+  donations  Int      @default(0)
+  summary    String   @default("")
+  user       User?    @relation(fields: [userId], references: [id], onDelete: SetNull, onUpdate: NoAction)
+
+  @@map("blog_posts")
+}
+
+/// Carried over for the data: posts reference their author. Nothing signs
+/// in with these any more (see BRIEF.md, Admin and auth).
+model User {
+  id           String     @id @db.VarChar(25)
+  createdAt    DateTime   @default(now()) @map("created_at")
+  email        String     @unique
+  name         String
+  passwordHash String     @map("password_hash")
+  posts        BlogPost[]
+  sessions     Session[]
+
+  @@map("users")
+}
+
+/// Carried over for the data, with users.
+model Session {
+  id        String   @id @db.VarChar(25)
+  createdAt DateTime @default(now()) @map("created_at")
+  userId    String   @map("user_id") @db.VarChar(25)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@map("sessions")
+}
+
+model NewsletterSubscriber {
+  id           String   @id @db.VarChar(25)
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @default(now()) @updatedAt @map("updated_at")
+  email        String   @unique
+  name         String
+  unsubscribed Boolean  @default(false)
+
+  @@map("newsletter_subscribers")
+}
+
+/// One send of the newsletter; `key` (post:{slug}) keeps a post from going
+/// out twice.
+model NewsletterSend {
+  id          String   @id @db.VarChar(25)
+  createdAt   DateTime @default(now()) @map("created_at")
+  description String   @default("")
+  key         String   @unique
+  recipients  Int
+
+  @@map("newsletter_sends")
+}

@@ -1,44 +1,19 @@
+# Local Postgres for development. Production uses Railway's Postgres;
+# locally one direct connection is fine for both URLs. Port 5439: 5433 is
+# Platform Pixels' and 5438 the old Go compose's at the repo root. Named,
+# because Docker would otherwise take this for Platform Pixels' (also in a
+# web/ folder), and not plain "schierco", which is the root compose's.
+name: schierco-web
 services:
-  web:
-    command: air
-    build:
-      context: .
-      dockerfile: Dockerfile.dev
-    volumes:
-      # Only add the things we absolutely need
-      - ./internal:/app/internal
-      - ./migrations:/app/migrations
-      - ./templates:/app/templates
-      - ./cmd:/app/cmd
-      - ./frontend/static:/app/frontend/static
-      - ./go.mod:/app/go.mod
-      - ./go.sum:/app/go.sum
-      - ./schier.go:/app/schier.go
-    ports:
-      - "8084:8084"
-    restart: always
+  db:
+    image: postgres:17-alpine
     environment:
-      BASE_URL: http://localhost:8084
-      CSRF_KEY: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-      DEV_ENVIRONMENT: development
-      DATABASE_URL: 'postgres://user:pass@postgres:5432/postgres?sslmode=disable'
-      DO_SPACES_DOMAIN: nyc3.digitaloceanspaces.com
-      MIGRATE_ON_START: enable
-      REGISTRATION: enable
-      DO_SPACES_SPACE: schierco
-      PORT: "8084"
-      STATIC_URL: /static
-    depends_on:
-      - postgres
-  postgres:
+      POSTGRES_USER: schierco
+      POSTGRES_PASSWORD: schierco
+      POSTGRES_DB: schierco
     ports:
-      - "5438:5432"
-    image: postgres:12
-    environment:
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: pass
-    restart: always
+      - '5439:5432'
     volumes:
-      - postgres:/var/lib/postgresql/data
+      - pgdata:/var/lib/postgresql/data
 volumes:
-  postgres: ~
+  pgdata:

@@ -1,22 +1,18 @@
 # schier.co
 
-This is the source code for my website [schier.co](https://schier.co).
+Greg's personal site and blog, a TanStack Start app on Railway. See
+`AGENTS.md` for how to work in the repo and `BRIEF.md` for every decision.
 
-## Requirements
-
-- [wyp](https://github.com/gschier/will-you-please) for running tasks
-- [Docker](https://www.docker.com) for running the server
-- [NodeJS](https://nodejs.org/en/) for running the frontend
-
-## Development
-
-```bash
-# Migrate/init database
-wyp migrate
-
-# Run Tests
-wyp test
-
-# Run backend and frontend
-wyp start
+```sh
+docker compose up -d      # local Postgres on 5439
+cp .env.example .env
+npm install
+npm run db:migrate
+npm run dev               # http://localhost:3200
 ```
+
+Dev needs no bucket: images are kept in `.media/`, and one a post uses but
+`.media/` lacks is fetched once from `ASSETS_FALLBACK_URL` (the old CDN).
+
+`npm run typecheck` and `npm test` check it; the tests make their own
+scratch databases on the same Postgres.
