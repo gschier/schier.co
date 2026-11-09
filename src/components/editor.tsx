@@ -188,6 +188,7 @@ export function Editor({ data }: { data: EditorData }) {
   const replacing = useRef<number | null>(null)
   const replacer = useRef<HTMLInputElement>(null)
   const heading = useRef(-1)
+  const unaligned = useRef(false)
   const current = useRef(fields)
   current.current = fields
   const leaving = useRef(false)
@@ -237,7 +238,11 @@ export function Editor({ data }: { data: EditorData }) {
   // One pane or two, as the window is.
   useEffect(() => {
     const query = window.matchMedia(ONE_PANE)
-    const read = () => setOnePane(query.matches)
+    const read = () => {
+      setOnePane(query.matches)
+      // Full screen is for two panes; one pane is the page already.
+      if (query.matches) setFull(false)
+    }
     read()
     query.addEventListener('change', read)
     return () => query.removeEventListener('change', read)
@@ -337,14 +342,20 @@ export function Editor({ data }: { data: EditorData }) {
   const articleHtml = articleInner(post, false, '')
   useEffect(() => {
     if (article.current) caption(article.current)
+    // A heading typed before the preview had drawn it is gone to now.
+    if (unaligned.current) showHeading(false)
   }, [articleHtml])
 
   /// Scrolls the preview to the heading the cursor is under, or its top.
+  /// Until the preview has that heading, it stays where it is and goes there
+  /// when the preview is drawn again.
   function showHeading(smooth: boolean) {
     const box = scroller.current
     const page = article.current
     if (!box || !page || box.offsetParent === null) return
     const target = heading.current < 0 ? null : page.querySelectorAll<HTMLElement>(HEADINGS)[heading.current]
+    unaligned.current = heading.current >= 0 && !target
+    if (unaligned.current) return
     const behavior = smooth ? 'smooth' : 'instant'
     if (window.matchMedia(ONE_PANE).matches) {
       // One pane: the page scrolls, under the app bar.
@@ -427,7 +438,10 @@ export function Editor({ data }: { data: EditorData }) {
       // stays as it is, so the cursor and what is being typed are not
       // disturbed.
       clearDraft(draftKey(undefined))
-      window.history.replaceState(window.history.state, '', adminLinks.edit(post.id))
+      // The browser's own replaceState: the router patches the one on
+      // window.history to navigate, which would make the editor anew and
+      // lose the body's undo history and any upload under way.
+      History.prototype.replaceState.call(window.history, window.history.state, '', adminLinks.edit(post.id))
     }
   }
 
@@ -477,7 +491,8 @@ export function Editor({ data }: { data: EditorData }) {
     return done
   }
 
-  const save = () => run('save', null, 'Saved')
+  // Not while a kept copy waits for Restore or Discard.
+  const save = () => (kept ? undefined : run('save', null, 'Saved'))
   saveKey.current = save
 
   const publish = () =>
@@ -664,12 +679,12 @@ export function Editor({ data }: { data: EditorData }) {
               All posts
             </a>
           </div>
-          <input id="i-title" name="title" type="text" value={fields.title} placeholder="My Blog Post" autoFocus={!saved} onChange={(e) => set('title', e.target.value)} />
+          <input id="i-title" name="title" type="text" value={fields.title} placeholder="My Blog Post" autoFocus={!saved} readOnly={!!kept} onChange={(e) => set('title', e.target.value)} />
         </div>
 
         {kept && (
           <div className="notice notice--info editor__kept" role="status">
-            <p>This browser kept changes from {keptAt(kept.at)} that were not saved.</p>
+            <p>This browser kept changes from {keptAt(kept.at)} that were not saved. Restore or discard them to go on writing.</p>
             <div>
               <button type="button" className="btn btn--sm" onClick={restore}>
                 Restore
@@ -681,7 +696,9 @@ export function Editor({ data }: { data: EditorData }) {
           </div>
         )}
 
-        <details className="editor__other" open={other} onToggle={(e) => setOther(e.currentTarget.open)}>
+        {/* Nothing can be changed while a kept copy waits for Restore or
+            Discard, so no change goes unkept. */}
+        <details className="editor__other" open={other} inert={!!kept} onToggle={(e) => setOther(e.currentTarget.open)}>
           <summary>
             <Ico name="chevron" />
             <span className="editor__other-name">Other Fields</span>
@@ -803,7 +820,7 @@ export function Editor({ data }: { data: EditorData }) {
           </div>
         </details>
 
-        <div className="editor__panes">
+        <div className="editor__panes" inert={!!kept}>
           <section className="editor__pane editor__pane--write">
             <div className="editor__bar">
               <span id="l-content" className="editor__label">
@@ -865,7 +882,7 @@ export function Editor({ data }: { data: EditorData }) {
 
         {/* One pane: Write or Preview, an image, Publish and Save, at the
             thumb and above the keyboard. */}
-        <div className="editor__actionbar">
+        <div className="editor__actionbar" inert={!!kept}>
           <div className="editor__actionbar-in">
             <button type="button" className="editor__icon-btn" onClick={() => setView(view === 'write' ? 'preview' : 'write')}>
               <Ico name={view === 'write' ? 'eye' : 'pencil'} />

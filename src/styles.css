@@ -1864,6 +1864,11 @@ form input#i-title {
   gap: 0.5rem;
 }
 
+/* The rest waits, quieter, until Restore or Discard. */
+.editor [inert] {
+  opacity: 0.55;
+}
+
 /* Other Fields: folded, with what is in them said beside the summary. */
 .editor__other {
   flex: none;
@@ -2693,6 +2698,13 @@ form .editor__upload input {
 
   .editor__message.notice--danger {
     background-image: linear-gradient(var(--danger-100), var(--danger-100));
+  }
+
+  /* Over the sheet while it is open, above its buttons, so what its
+   * actions say is seen. */
+  .editor--other .editor__message {
+    z-index: 42;
+    bottom: calc(var(--safe-bottom) + 5rem);
   }
 
   .editor__message-close {

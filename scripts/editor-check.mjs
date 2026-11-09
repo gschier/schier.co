@@ -308,6 +308,36 @@ try {
   assert.ok((await bodyText(page)).includes(`![stripes.png](/media/${first})`), 'redo puts it back')
   step('undo takes the pasted image out in one step, redo puts it back')
 
+  // Two images pasted at once go in one after the other, in order. Each
+  // upload is held a second, since two in the same second share a key.
+  await cursorAt(page, 'The end.')
+  await page.keyboard.press('Enter')
+  await page.route('**/api/admin/upload', async (route) => {
+    await new Promise((r) => setTimeout(r, 1100))
+    await route.continue()
+  })
+  const pair = [[...png(40, 20)], [...png(50, 20)]]
+  await page.evaluate((pair) => {
+    const data = new DataTransfer()
+    pair.forEach((bytes, i) => data.items.add(new File([new Uint8Array(bytes)], `pair-${i + 1}.png`, { type: 'image/png' })))
+    document.querySelector('.editor .cm-content').dispatchEvent(new ClipboardEvent('paste', { clipboardData: data, bubbles: true, cancelable: true }))
+  }, pair)
+  await page.waitForFunction(() => /pair-2\.png\]\(\/media\//.test(document.querySelector('.editor .cm-content').cmTile.root.view.state.doc.toString()), null, { timeout: 15000 })
+  await page.unroute('**/api/admin/upload')
+  const pairText = await bodyText(page)
+  const pairKeys = [...pairText.matchAll(/!\[pair-\d\.png\]\(\/media\/(images\/a\/\d+\.png)\)/g)].map((m) => m[1])
+  uploads.push(...pairKeys)
+  assert.ok(pairText.indexOf('pair-1.png') < pairText.indexOf('pair-2.png'), 'the pair keeps its order')
+  assert.match(pairText, /The end\.\n!\[pair-1\.png\]\([^)]+\)\n!\[pair-2\.png\]\([^)]+\)\n/)
+  // Out again, so the rest of the check sees the post it expects.
+  await page.evaluate(() => {
+    const view = document.querySelector('.editor .cm-content').cmTile.root.view
+    const text = view.state.doc.toString()
+    const from = text.indexOf('The end.') + 'The end.'.length
+    view.dispatch({ changes: { from, to: text.length, insert: '\n' } })
+  })
+  step('two images pasted at once went in one after the other, in order')
+
   // Replace: a new file, uploaded, its URL written over the old one.
   await page.waitForTimeout(1100)
   const [chooser] = await Promise.all([page.waitForEvent('filechooser'), page.locator('.cm-image .cm-image__replace').click()])
@@ -344,11 +374,14 @@ try {
   step(`dropped an image on the social image field: /media/${social}; with Other Fields open, the buttons hold at the window's bottom`)
 
   await cursorAt(page, 'The end.')
+  await page.evaluate(() => (document.querySelector('.editor .cm-content').dataset.check = 'same'))
   await page.keyboard.press('ControlOrMeta+s')
   await page.waitForFunction(() => /\/admin\/edit\/pst_/.test(location.pathname))
   await page.locator('.editor__actions .editor__save', { hasText: 'Saved' }).waitFor()
+  await page.waitForTimeout(500)
+  assert.equal(await page.locator('.editor .cm-content').getAttribute('data-check'), 'same', 'the first save keeps the editor as it is, undo history and all')
   created = new URL(page.url()).pathname.split('/').pop()
-  step(`saved with Cmd-S from the body: the page moved to /admin/edit/${created}, and Save says Saved`)
+  step(`saved with Cmd-S from the body: the page moved to /admin/edit/${created} without being made anew, and Save says Saved`)
 
   await page.locator('.editor__actions').getByRole('button', { name: 'Publish' }).click()
   await page.getByText('Published and dated now').waitFor()
@@ -396,6 +429,7 @@ try {
   await ready(page)
   await page.locator('.editor__kept').waitFor()
   assert.ok(!(await bodyText(page)).includes('Kept in the browser.'), 'not restored silently')
+  assert.notEqual(await page.locator('.editor__panes').getAttribute('inert'), null, 'nothing can be changed until Restore or Discard')
   await shot(page, 'editor-1280-light-kept')
   await page.getByRole('button', { name: 'Restore' }).click()
   assert.ok((await bodyText(page)).includes('The end. Kept in the browser.'), 'Restore puts it back')
@@ -462,6 +496,12 @@ try {
       await sheet.getByLabel('Test address').fill('nobody@example.invalid')
       await sheet.getByRole('button', { name: 'Test send' }).click()
       await p.locator('.editor__message.notice--danger', { hasText: 'No subscriber has the address' }).waitFor()
+      const over = await p.evaluate(() => {
+        const box = document.querySelector('.editor__message').getBoundingClientRect()
+        return document.elementFromPoint(box.left + box.width / 2, box.top + box.height / 2)?.closest('.editor__message') !== null
+      })
+      assert.ok(over, 'the refusal shows over the open sheet')
+      await shot(p, `editor-390-${mode}-sheet-refusal`)
     }
     await sheet.getByRole('button', { name: 'Done' }).click()
     assert.equal(await sheet.isVisible(), false, 'Done closes the sheet')

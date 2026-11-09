@@ -334,43 +334,54 @@ export function cancelUpload(id: number) {
   controllers.get(id)?.abort()
 }
 
-async function run(view: EditorView, file: File, pos: number, replace: boolean, upload: Uploader, failed: Failure, done: (url: string, at: Upload) => void) {
+/// Uploads [file], drawn at [pos] while it goes, then calls [done] with its
+/// URL and where it is now. Returns where the next one should go: after
+/// what [done] put in, or where this one was.
+async function run(view: EditorView, file: File, pos: number, replace: boolean, upload: Uploader, failed: Failure, done: (url: string, at: Upload) => number | void) {
   const id = ++uploadIds
   const src = URL.createObjectURL(file)
   const controller = new AbortController()
   controllers.set(id, controller)
-  view.dispatch({ effects: addUpload.of({ id, pos, name: file.name, src, replace }) })
+  view.dispatch({ effects: addUpload.of({ id, pos: Math.min(pos, view.state.doc.length), name: file.name, src, replace }) })
   const current = () => view.state.field(uploads, false)?.find((u) => u.id === id)
+  let next = pos
   try {
     const url = await upload(file, controller.signal)
     const at = current()
-    if (at) done(url, at)
+    if (at) next = done(url, at) ?? at.pos
   } catch (error) {
     if (!controller.signal.aborted) failed(file, error)
   } finally {
     controllers.delete(id)
     // The editor may be gone by now, with the page.
-    if (current()) view.dispatch({ effects: endUpload.of(id) })
+    const at = current()
+    if (at) {
+      next = at.pos
+      view.dispatch({ effects: endUpload.of(id) })
+    }
     URL.revokeObjectURL(src)
   }
+  return next
 }
 
 /// Uploads [files] one after another, each drawn at [pos] while it goes,
-/// then its markdown put there on a line of its own.
+/// then its markdown put there on a line of its own; the next goes after it.
 export async function uploadImages(view: EditorView, files: File[], pos: number, upload: Uploader, failed: Failure) {
+  let at = pos
   for (const file of files) {
-    await run(view, file, pos, false, upload, failed, (url, at) => {
+    at = await run(view, file, at, false, upload, failed, (url, upload) => {
       const { state } = view
-      const line = state.doc.lineAt(at.pos)
-      const insert = `${at.pos === line.from ? '' : '\n'}![${file.name}](${url})\n`
+      const line = state.doc.lineAt(upload.pos)
+      const insert = `${upload.pos === line.from ? '' : '\n'}![${file.name}](${url})\n`
       const main = state.selection.main
       view.dispatch({
-        changes: { from: at.pos, insert },
-        effects: endUpload.of(at.id),
+        changes: { from: upload.pos, insert },
+        effects: endUpload.of(upload.id),
         // The cursor follows only if it was still where the image went.
-        selection: main.empty && main.head === at.pos ? EditorSelection.cursor(at.pos + insert.length) : undefined,
+        selection: main.empty && main.head === upload.pos ? EditorSelection.cursor(upload.pos + insert.length) : undefined,
         userEvent: 'input.paste',
       })
+      return upload.pos + insert.length
     })
   }
 }
