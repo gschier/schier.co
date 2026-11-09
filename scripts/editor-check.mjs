@@ -11,12 +11,14 @@
 // with headings, a list and a code block, waiting for the live preview. It
 // pastes an image (the upload held back a moment, to see the file drawn
 // dimmed while it goes), checks its markdown and thumbnail, undoes and
-// redoes it, replaces it through the decoration's Replace, drops another on
-// the social image field, saves with Cmd-S, publishes, checks the preview
-// follows the cursor to a heading, goes full screen, and reloads with an
-// unsaved change to restore it from the browser's copy. At phone size it
-// switches Write and Preview from the bottom bar, opens Other Fields as a
-// sheet and saves from the bar. Last it opens the public post, deletes it,
+// redoes it, pastes two at once, replaces one through the decoration's
+// Replace (and deletes one while its replacement uploads), drops another on
+// the social image field, saves with Cmd-S (the editor kept as it is),
+// publishes, checks the preview follows the cursor to a heading, goes full
+// screen, and reloads with an unsaved change to restore it from the
+// browser's copy. At phone size it switches Write and Preview from the
+// bottom bar, opens Other Fields as a sheet, shows a refusal over it and
+// saves from the bar. Last it opens the public post, deletes it,
 // signs out and deletes the user, so the database is left as it was (the
 // uploaded files are removed from ASSETS_DIR too).
 //
@@ -98,7 +100,11 @@ const MARKDOWN = [
   'console.log(answer)',
   '```',
   '',
-  ...Array.from({ length: 8 }, () => [PARAGRAPH, '']).flat(),
+  ...Array.from({ length: 4 }, () => [PARAGRAPH, '']).flat(),
+  'An underlined heading',
+  '=====================',
+  '',
+  ...Array.from({ length: 4 }, () => [PARAGRAPH, '']).flat(),
   '## The second heading',
   '',
   'The end.',
@@ -263,6 +269,17 @@ try {
   assert.ok((await page.locator('.editor .cm-content').getAttribute('spellcheck')) === 'true', 'spelling is checked')
   step('typed headings, a list, a quote and a code block: styled in the body with the marks kept, and drawn in the preview')
 
+  // An image in an indented code block is code, and gets no thumbnail.
+  await page.evaluate(() => {
+    const view = document.querySelector('.editor .cm-content').cmTile.root.view
+    view.dispatch({ changes: { from: view.state.doc.length, insert: '\n    ![code](/not-an-image.png)\n' } })
+  })
+  await page.waitForTimeout(100)
+  assert.equal(await page.locator('.editor .cm-image').count(), 0, 'no thumbnail in indented code')
+  await page.keyboard.press('ControlOrMeta+z')
+  assert.equal(await bodyText(page), MARKDOWN)
+  step('an image line in an indented code block gets no thumbnail')
+
   // A pasted image: drawn dimmed from the file while it uploads, then its
   // markdown at the cursor and its thumbnail under the line.
   await cursorAt(page, 'console.log(answer)')
@@ -352,6 +369,44 @@ try {
   await page.waitForFunction(() => document.querySelector('.cm-image img[src^="/media/"]')?.naturalWidth === 180)
   step(`Replace uploaded another file and rewrote the URL in place: /media/${second}, alt text kept`)
 
+  // An image deleted while its replacement uploads stays deleted, and the
+  // image after it is left alone.
+  const before = await bodyText(page)
+  await page.evaluate((url) => {
+    const view = document.querySelector('.editor .cm-content').cmTile.root.view
+    const at = view.state.doc.toString().indexOf(`![stripes.png](${url})`)
+    view.dispatch({ changes: { from: view.state.doc.lineAt(at).to, insert: '\n![neighbour](/static/favicon/favicon-32x32.png)' } })
+  }, `/media/${second}`)
+  let let_go
+  const holding = new Promise((r) => (let_go = r))
+  await page.route('**/api/admin/upload', async (route) => {
+    await holding
+    await route.continue()
+  })
+  await page.waitForTimeout(1100)
+  const [picker] = await Promise.all([page.waitForEvent('filechooser'), page.locator('.cm-image .cm-image__replace').first().click()])
+  await picker.setFiles({ name: 'late.png', mimeType: 'image/png', buffer: png(30, 30) })
+  await page.waitForSelector('.cm-image--uploading')
+  await page.evaluate((url) => {
+    const view = document.querySelector('.editor .cm-content').cmTile.root.view
+    const line = view.state.doc.lineAt(view.state.doc.toString().indexOf(`![stripes.png](${url})`))
+    view.dispatch({ changes: { from: line.from, to: line.to + 1 } })
+  }, `/media/${second}`)
+  const answered = page.waitForResponse('**/api/admin/upload')
+  let_go()
+  const late = /\/media\/(images\/a\/\d+\.png)/.exec((await (await answered).json()).url)[1]
+  uploads.push(late)
+  await page.unroute('**/api/admin/upload')
+  await page.waitForTimeout(300)
+  const after = await bodyText(page)
+  assert.ok(after.includes('![neighbour](/static/favicon/favicon-32x32.png)'), 'the next image keeps its URL')
+  assert.ok(!after.includes(late), 'the late upload went nowhere')
+  await page.evaluate((text) => {
+    const view = document.querySelector('.editor .cm-content').cmTile.root.view
+    view.dispatch({ changes: { from: 0, to: view.state.doc.length, insert: text } })
+  }, before)
+  step('an image deleted while its replacement uploaded stayed deleted, and the image after it kept its URL')
+
   // An image dropped on the social image field is uploaded into it.
   await page.locator('.editor__other > summary').click()
   await page.waitForTimeout(1100)
@@ -407,7 +462,7 @@ try {
     const offset = heading.getBoundingClientRect().top - box.getBoundingClientRect().top
     return offset >= 0 && offset < 60
   })
-  step('the preview scrolls to the heading the cursor is under, down and back up')
+  step('the preview scrolls to the heading the cursor is under, down and back up, counting an underlined heading')
 
   await cursorAt(page, 'A quote, quieter.')
   await page.waitForTimeout(400)
@@ -481,6 +536,18 @@ try {
     await shot(p, `editor-390-${mode}-preview`)
     await bar.getByRole('button', { name: 'Write' }).click()
     await p.locator('.editor .cm-content').waitFor()
+    if (mode === 'light') {
+      // Back from Preview, the cursor is where it was, in view.
+      await cursorAt(p, 'The end.')
+      await bar.getByRole('button', { name: 'Preview' }).click()
+      await p.evaluate(() => window.scrollTo(0, 0))
+      await bar.getByRole('button', { name: 'Write' }).click()
+      await p.waitForFunction(() => {
+        const line = [...document.querySelectorAll('.editor .cm-line')].find((l) => l.textContent.startsWith('The end.'))
+        const top = line?.getBoundingClientRect().top
+        return top !== undefined && top > 0 && top < window.innerHeight - 60
+      })
+    }
 
     await p.locator('.editor__other > summary').click()
     const sheet = p.locator('.editor__sheet')

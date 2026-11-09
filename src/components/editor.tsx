@@ -25,7 +25,6 @@
 import { useEffect, useRef, useState, type ClipboardEvent, type DragEvent, type ReactNode } from 'react'
 import type { EditorView } from '@codemirror/view'
 import { Site, Tags, adminLinks, pageHead } from '#/components/site'
-import { cancelUpload, createBody, headingAt, isImage, replaceImage, setBody, uploadImages } from '#/components/editor/codemirror'
 import { clearDraft, draftKey, readDraft, writeDraft, type Draft } from '#/components/editor/draft'
 import { Ico } from '#/components/editor/icons'
 import {
@@ -115,7 +114,11 @@ function saveInput(fields: Fields, baseline: Fields, id: string | undefined): Sa
 // ---------------------------------------------------------------------------
 // Images
 
-const imagesIn = (files: FileList | null | undefined) => [...(files ?? [])].filter(isImage)
+/// The body's module (src/components/editor/codemirror.ts), loaded with the
+/// editor.
+type Body = typeof import('#/components/editor/codemirror')
+
+const imagesIn = (files: FileList | null | undefined) => [...(files ?? [])].filter((file) => file.type.startsWith('image/'))
 
 /// Uploads [file] (src/routes/api/admin/upload.ts) and returns its /media/ path.
 async function upload(file: File, signal?: AbortSignal): Promise<string> {
@@ -183,6 +186,7 @@ export function Editor({ data }: { data: EditorData }) {
 
   const host = useRef<HTMLDivElement>(null)
   const body = useRef<EditorView | null>(null)
+  const cm = useRef<Body | null>(null)
   const scroller = useRef<HTMLDivElement>(null)
   const article = useRef<HTMLElement>(null)
   const replacing = useRef<number | null>(null)
@@ -200,13 +204,30 @@ export function Editor({ data }: { data: EditorData }) {
   const set = <K extends keyof Fields>(key: K, value: Fields[K]) => setFields((f) => ({ ...f, [key]: value }))
   const fail = (file: File, error: unknown) => setMessage({ kind: 'error', text: `${file.name}: ${reason(error)}` })
 
-  // The body. Made once the page is in the browser; the server draws the
-  // text alone until then.
+  // The body. Made once the page is in the browser, with CodeMirror loaded
+  // then, so the public pages never carry it; the server draws the text
+  // alone until then.
   useEffect(() => {
-    if (!host.current) return
-    const editor = createBody({
+    let editor: EditorView | null = null
+    let gone = false
+    void import('#/components/editor/codemirror').then((mod) => {
+      if (gone || !host.current) return
+      cm.current = mod
+      editor = mount(mod, host.current)
+      body.current = editor
+      setReady(true)
+    })
+    return () => {
+      gone = true
+      editor?.destroy()
+      body.current = null
+    }
+  }, [])
+
+  function mount(mod: Body, parent: HTMLElement): EditorView {
+    const editor: EditorView = mod.createBody({
       doc: current.current.content,
-      parent: host.current,
+      parent,
       labelledBy: 'l-content',
       // One pane: the app bar above, and the bottom bar (with the keyboard
       // under it) below.
@@ -217,23 +238,18 @@ export function Editor({ data }: { data: EditorData }) {
         return { top: top + 8, bottom: bar === undefined ? 0 : window.innerHeight - bar + 8 }
       },
       onChange: (text) => setFields((f) => (f.content === text ? f : { ...f, content: text })),
-      onCursor: (state) => follow(headingAt(state, state.selection.main.head)),
-      onFiles: (files, pos) => void uploadImages(editor, files, pos, upload, fail),
+      onCursor: (state) => follow(mod.headingAt(state, state.selection.main.head)),
+      onFiles: (files, pos) => void mod.uploadImages(editor, files, pos, upload, fail),
       actions: {
         replace: (_, pos) => {
           replacing.current = pos
           replacer.current?.click()
         },
-        cancel: cancelUpload,
+        cancel: mod.cancelUpload,
       },
     })
-    body.current = editor
-    setReady(true)
-    return () => {
-      editor.destroy()
-      body.current = null
-    }
-  }, [])
+    return editor
+  }
 
   // One pane or two, as the window is.
   useEffect(() => {
@@ -286,7 +302,7 @@ export function Editor({ data }: { data: EditorData }) {
     holding.current = false
     setKept(null)
     setFields(kept.fields)
-    if (body.current) setBody(body.current, kept.fields.content)
+    if (body.current) cm.current?.setBody(body.current, kept.fields.content)
   }
 
   function discard() {
@@ -377,7 +393,7 @@ export function Editor({ data }: { data: EditorData }) {
   useEffect(() => {
     if (!onePane) return
     if (view === 'preview') showHeading(false)
-    else body.current?.focus()
+    else if (body.current) cm.current?.revealCursor(body.current)
   }, [view])
 
   // Unsaved changes are not lost by leaving the page.
@@ -430,7 +446,7 @@ export function Editor({ data }: { data: EditorData }) {
     setBaseline(fresh)
     if (!sent || same(current.current, sent)) {
       setFields(fresh)
-      if (body.current) setBody(body.current, fresh.content)
+      if (body.current) cm.current?.setBody(body.current, fresh.content)
     }
     setOffered((tags) => [...new Set([...tags, ...post.tags])])
     if (!saved || saved.id !== post.id) {
@@ -549,16 +565,16 @@ export function Editor({ data }: { data: EditorData }) {
   // Images picked with Upload image go where the cursor is.
   function uploadToBody(files: File[]) {
     const editor = body.current
-    if (!editor || !files.length) return
-    void uploadImages(editor, files, editor.state.selection.main.head, upload, fail)
+    if (!editor || !cm.current || !files.length) return
+    void cm.current.uploadImages(editor, files, editor.state.selection.main.head, upload, fail)
   }
 
   function replaceWith(files: File[]) {
     const editor = body.current
     const pos = replacing.current
     replacing.current = null
-    if (!editor || pos === null || !files[0]) return
-    void replaceImage(editor, pos, files[0], upload, fail)
+    if (!editor || !cm.current || pos === null || !files[0]) return
+    void cm.current.replaceImage(editor, pos, files[0], upload, fail)
   }
 
   async function uploadToImage(files: File[]) {

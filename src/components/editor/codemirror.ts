@@ -13,10 +13,10 @@
 //   transaction, so undo takes it out and a save mid-upload stores nothing
 //   half done.
 
-import { EditorSelection, EditorState, Facet, Prec, StateEffect, StateField, type ChangeSpec, type Extension } from '@codemirror/state'
+import { EditorSelection, EditorState, Facet, MapMode, Prec, StateEffect, StateField, type ChangeSet, type ChangeSpec, type Extension } from '@codemirror/state'
 import { Decoration, EditorView, ViewPlugin, WidgetType, highlightActiveLine, keymap, placeholder, type DecorationSet, type ViewUpdate } from '@codemirror/view'
 import { defaultKeymap, history, historyKeymap } from '@codemirror/commands'
-import { HighlightStyle, syntaxHighlighting, syntaxTree } from '@codemirror/language'
+import { HighlightStyle, ensureSyntaxTree, syntaxHighlighting, syntaxTree } from '@codemirror/language'
 import { markdown, markdownLanguage } from '@codemirror/lang-markdown'
 import { tags as t } from '@lezer/highlight'
 
@@ -166,16 +166,26 @@ type Upload = {
   name: string
   /// The local file, shown while it uploads.
   src: string
-  replace: boolean
+  /// For a replacement, the URL it replaces.
+  replacing: string | null
 }
 
 const addUpload = StateEffect.define<Upload>()
 const endUpload = StateEffect.define<number>()
 
+/// An upload's place through a change: a new image's follows the text, and
+/// a replacement is dropped when its image's start is deleted, so it never
+/// lands on another image.
+function mapUpload(upload: Upload, changes: ChangeSet): Upload | null {
+  if (upload.replacing === null) return { ...upload, pos: changes.mapPos(upload.pos, 1) }
+  const pos = changes.mapPos(upload.pos, -1, MapMode.TrackAfter)
+  return pos === null ? null : { ...upload, pos }
+}
+
 const uploads = StateField.define<Upload[]>({
   create: () => [],
   update(list, tr) {
-    let next = tr.docChanged ? list.map((u) => ({ ...u, pos: tr.changes.mapPos(u.pos, u.replace ? -1 : 1) })) : list
+    let next = tr.docChanged ? list.map((u) => mapUpload(u, tr.changes)).filter((u) => u !== null) : list
     for (const effect of tr.effects) {
       if (effect.is(addUpload)) next = [...next, effect.value]
       else if (effect.is(endUpload)) next = next.filter((u) => u.id !== effect.value)
@@ -197,10 +207,11 @@ const actions = Facet.define<ImageActions, ImageActions | null>({ combine: (valu
 // ---------------------------------------------------------------------------
 // Images: the decorations
 
-/// `![alt](url)` or `![alt](url "title")`, alone on its line.
-const IMAGE_LINE = /^\s*!\[([^\]]*)\]\(([^\s)]+)(?:\s+"[^"]*")?\)\s*$/
+/// `![alt](url)` or `![alt](url "title")`, alone on its line, indented less
+/// than an indented code block would be.
+const IMAGE_LINE = /^ {0,3}!\[([^\]]*)\]\(([^\s)]+)(?:\s+"[^"]*")?\)\s*$/
 /// The part of an image line before its URL, and the URL.
-const IMAGE_URL = /^(\s*!\[[^\]]*\]\()([^\s)]+)/
+const IMAGE_URL = /^( {0,3}!\[[^\]]*\]\()([^\s)]+)/
 
 function el<K extends keyof HTMLElementTagNameMap>(tag: K, className: string, text?: string) {
   const node = document.createElement(tag)
@@ -303,11 +314,11 @@ function imageDecorations(state: EditorState): DecorationSet {
     if (fence !== null) continue
     const image = IMAGE_LINE.exec(line.text)
     if (!image) continue
-    const replacing = pending.find((u) => u.replace && state.doc.lineAt(u.pos).number === n) ?? null
+    const replacing = pending.find((u) => u.replacing !== null && state.doc.lineAt(u.pos).number === n) ?? null
     ranges.push(Decoration.widget({ widget: new ImageWidget(image[1]!, image[2]!, replacing), block: true, side: 1 }).range(line.to))
   }
   for (const upload of pending) {
-    if (!upload.replace) ranges.push(Decoration.widget({ widget: new PendingWidget(upload), block: true, side: 1 }).range(state.doc.lineAt(upload.pos).to))
+    if (upload.replacing === null) ranges.push(Decoration.widget({ widget: new PendingWidget(upload), block: true, side: 1 }).range(state.doc.lineAt(upload.pos).to))
   }
   return Decoration.set(ranges, true)
 }
@@ -337,12 +348,12 @@ export function cancelUpload(id: number) {
 /// Uploads [file], drawn at [pos] while it goes, then calls [done] with its
 /// URL and where it is now. Returns where the next one should go: after
 /// what [done] put in, or where this one was.
-async function run(view: EditorView, file: File, pos: number, replace: boolean, upload: Uploader, failed: Failure, done: (url: string, at: Upload) => number | void) {
+async function run(view: EditorView, file: File, pos: number, replacing: string | null, upload: Uploader, failed: Failure, done: (url: string, at: Upload) => number | void) {
   const id = ++uploadIds
   const src = URL.createObjectURL(file)
   const controller = new AbortController()
   controllers.set(id, controller)
-  view.dispatch({ effects: addUpload.of({ id, pos: Math.min(pos, view.state.doc.length), name: file.name, src, replace }) })
+  view.dispatch({ effects: addUpload.of({ id, pos: Math.min(pos, view.state.doc.length), name: file.name, src, replacing }) })
   const current = () => view.state.field(uploads, false)?.find((u) => u.id === id)
   let next = pos
   try {
@@ -369,7 +380,7 @@ async function run(view: EditorView, file: File, pos: number, replace: boolean, 
 export async function uploadImages(view: EditorView, files: File[], pos: number, upload: Uploader, failed: Failure) {
   let at = pos
   for (const file of files) {
-    at = await run(view, file, at, false, upload, failed, (url, upload) => {
+    at = await run(view, file, at, null, upload, failed, (url, upload) => {
       const { state } = view
       const line = state.doc.lineAt(upload.pos)
       const insert = `${upload.pos === line.from ? '' : '\n'}![${file.name}](${url})\n`
@@ -387,12 +398,15 @@ export async function uploadImages(view: EditorView, files: File[], pos: number,
 }
 
 /// Uploads [file] in place of the image on the line starting at [pos], and
-/// rewrites that image's URL.
+/// rewrites that image's URL, if it is still that image. One deleted while
+/// the file uploads is left gone.
 export function replaceImage(view: EditorView, pos: number, file: File, upload: Uploader, failed: Failure) {
-  return run(view, file, pos, true, upload, failed, (url, at) => {
+  const was = IMAGE_URL.exec(view.state.doc.lineAt(pos).text)?.[2]
+  if (!was) return Promise.resolve(pos)
+  return run(view, file, pos, was, upload, failed, (url, at) => {
     const line = view.state.doc.lineAt(at.pos)
     const image = IMAGE_URL.exec(line.text)
-    if (!image) return failed(file, new Error('The image line changed while it uploaded'))
+    if (!image || image[2] !== was) return failed(file, new Error('The image changed while its replacement uploaded, so it was left as it is'))
     const from = line.from + image[1]!.length
     view.dispatch({ changes: { from, to: from + image[2]!.length, insert: url }, effects: endUpload.of(at.id), userEvent: 'input.replace' })
   })
@@ -427,19 +441,17 @@ function imageEvents(onFiles: (files: File[], pos: number) => void) {
 // ---------------------------------------------------------------------------
 // The headings, for the preview to follow the cursor
 
-/// How many ATX headings (outside code fences) start at or before [pos]'s
-/// line, less one: the index of the heading the cursor is under, or -1.
+const HEADING = /^(ATX|Setext)Heading\d$/
+
+/// How many of the post's own headings (# and underlined, at the top level
+/// as the preview's article has them) start at or before [pos]'s line, less
+/// one: the index of the heading the cursor is under, or -1.
 export function headingAt(state: EditorState, pos: number): number {
-  const last = state.doc.lineAt(pos).number
+  const end = state.doc.lineAt(pos).to
+  const tree = ensureSyntaxTree(state, end, 50) ?? syntaxTree(state)
   let count = -1
-  let fence: string | null = null
-  for (let n = 1; n <= last; n++) {
-    const text = state.doc.line(n).text
-    const marker = /^ {0,3}(`{3,}|~{3,})/.exec(text)?.[1]
-    if (marker) {
-      if (fence === null) fence = marker
-      else if (marker[0] === fence[0] && marker.length >= fence.length) fence = null
-    } else if (fence === null && /^ {0,3}#{1,6}(\s|$)/.test(text)) count++
+  for (let node = tree.topNode.firstChild; node && node.from <= end; node = node.nextSibling) {
+    if (HEADING.test(node.name)) count++
   }
   return count
 }
@@ -492,6 +504,12 @@ export function createBody(options: BodyOptions): EditorView {
     }),
   ]
   return new EditorView({ parent: options.parent, state: EditorState.create({ doc: options.doc, extensions }) })
+}
+
+/// Brings the cursor into view, as when coming back to the body.
+export function revealCursor(view: EditorView) {
+  view.focus()
+  view.dispatch({ effects: EditorView.scrollIntoView(view.state.selection.main.head, { y: 'center' }) })
 }
 
 /// Puts [text] in place of the whole body, as one step undo can take back.
