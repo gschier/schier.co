@@ -257,8 +257,11 @@ runs `npm run migrate`. Variables on the Web service after cutover:
 it), `BASE_URL`, `MCP_TOKEN`, `AWS_ENDPOINT_URL`,
 `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_S3_BUCKET_NAME`,
 `AWS_DEFAULT_REGION`, `RESEND_API_KEY`, `MAIL_FROM`, and optionally
-`SENTRY_DSN`, `VITE_OPENPANEL_CLIENT_ID`. The DO_SPACES_*, MAILJET_* and
-CSRF_KEY variables are removed after the asset migration has run.
+`SENTRY_DSN`, `VITE_OPENPANEL_CLIENT_ID`, `VITE_OPENPANEL_API_URL`
+(`https://op.mountainlooplabs.com/api`; both are baked in at build time).
+The OpenPanel project is `Schier.co` in the Mountain Loop OpenPanel. The
+DO_SPACES_*, MAILJET_* and CSRF_KEY variables are removed after the asset
+migration has run.
 
 ## Cutover (done 2026-10-13, 18:55 UTC)
 
