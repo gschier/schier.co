@@ -163,10 +163,13 @@ describe("the editor's functions", () => {
     assert.equal(saved.id, created.id)
     assert.equal(saved.content, '## A heading\n\nMore words.\n')
     assert.equal(saved.stage, 2)
+    // When the row last changed, for the editor's copy kept in the browser.
+    assert.ok(Date.parse(saved.updatedAt) >= Date.parse(created.updatedAt))
     assert.match(refusal(await admin(() => editor.savePost(fields({ slug: 'a-post-about-writing' })))), /already has the slug "a-post-about-writing"/)
 
     const data = (await admin(() => editor.editorData(created.id)))!
     assert.equal(data.post!.id, created.id)
+    assert.equal(data.post!.updatedAt, saved.updatedAt)
     assert.match(data.preview.html, /<h2 id="a-heading">A heading<\/h2>/)
     assert.ok(data.preview.words > 0)
     assert.equal(data.newsletter!.canSend, false)
@@ -336,6 +339,35 @@ describe('the admin over HTTP, from a dev server', () => {
     assert.match(html, /New post/)
     assert.match(html, /href="\/logout"[^>]*>Logout</, "the footer's Logout goes to /logout")
     assert.equal((await get('/admin/new', COOKIE)).status, 200)
+  })
+
+  test('the editor draws its body and bars on the server, and installs as an app', async () => {
+    const saved = await call('savePostFn', fields({ title: 'drawn on the server', content: '## A heading\n\nSome <words> & more.\n' }), COOKIE)
+    try {
+      const html = await (await get(`/admin/edit/${saved.result.value.id}`, COOKIE)).text()
+      // The text alone until CodeMirror takes over in the browser.
+      assert.match(html, /<pre class="editor__loading"[^>]*>## A heading\n\nSome &lt;words&gt; &amp; more.\n<\/pre>/)
+      assert.match(html, /class="editor__appbar"/)
+      assert.match(html, /class="editor__actionbar"/)
+      assert.match(html, /<details class="editor__other"/)
+      assert.match(html, /<link rel="manifest" href="\/admin.webmanifest"/)
+      assert.match(html, /<meta name="apple-mobile-web-app-capable" content="yes"/)
+      assert.match(html, /viewport-fit=cover/)
+      assert.match(html, /<meta name="theme-color" content="#ffffff" media="\(prefers-color-scheme: light\)"/)
+      assert.match(html, /<meta name="theme-color" content="#111e2c" media="\(prefers-color-scheme: dark\)"/)
+    } finally {
+      await call('deleteFn', saved.result.value.id, COOKIE)
+    }
+
+    const manifest = (await (await get('/admin.webmanifest')).json()) as Record<string, unknown>
+    assert.equal(manifest.start_url, '/admin')
+    assert.equal(manifest.display, 'standalone')
+    assert.ok((manifest.icons as unknown[]).length >= 2)
+
+    // The public pages keep the site's manifest and are not an app.
+    const home = await (await get('/')).text()
+    assert.match(home, /<link rel="manifest" href="\/static\/favicon\/site.webmanifest"/)
+    assert.doesNotMatch(home, /apple-mobile-web-app-capable|viewport-fit/)
   })
 
   test('the MCP token no longer signs in, at /admin?token= or as a cookie', async () => {

@@ -1714,40 +1714,237 @@ details {
   color: var(--txt-link);
 }
 
+/* The editor: the title, Other Fields folded, then the body and the
+ * preview side by side, filling the window and each scrolling on its own.
+ * Below 1200 wide the site's nav goes; below 1000 one pane shows at a time,
+ * with an app bar at the top and an action bar at the bottom, and Other
+ * Fields opens as a sheet. */
+
 .editor {
-  padding-top: 2.5rem;
+  --mono: Monaco, ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  --nav-h: 4rem;
+  --appbar-h: 3.25rem;
+  --actionbar-h: 3.5rem;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --active-line: hsla(var(--hue), 62%, 50%, 0.045);
+  --raised: var(--bg);
+  --scrim: hsla(var(--hue), 30%, 15%, 0.32);
+  --shadow: 0 1px 2px hsla(var(--hue), 30%, 20%, 0.08), 0 8px 24px hsla(var(--hue), 30%, 20%, 0.12);
+  --shadow-up: 0 -8px 30px hsla(var(--hue), 30%, 20%, 0.14);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 92rem;
+  height: calc(100dvh - var(--nav-h));
+  margin: 0 auto;
+  padding: 0.75rem 2rem;
 }
 
-.editor__head {
-  margin-bottom: 1.5rem;
+[theme="dark"] .editor,
+[theme="dark-auto"] .editor {
+  --active-line: hsla(var(--hue), 62%, 50%, 0.08);
+  --raised: hsl(var(--hue), 45%, 15%);
+  --scrim: hsla(var(--hue), 60%, 4%, 0.6);
+  --shadow: 0 1px 2px hsla(0, 0%, 0%, 0.3), 0 10px 30px hsla(0, 0%, 0%, 0.45);
+  --shadow-up: 0 -10px 30px hsla(0, 0%, 0%, 0.45);
+}
+
+/* The page around it: no footer, and nothing clipping the bars. */
+main:has(> .editor) {
+  overflow: visible;
+  padding-bottom: 0;
+}
+
+body:has(.editor) .bottom-footer {
+  display: none;
+}
+
+body:has(.editor) .top-nav .container {
+  max-width: 92rem;
+}
+
+.editor .ico {
+  width: 1rem;
+  height: 1rem;
+  flex: none;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.editor .ico path {
+  fill: none;
+}
+
+.editor .btn {
+  gap: 0.375rem;
+  white-space: nowrap;
+}
+
+.editor .btn .ico {
+  width: 1rem;
+  height: 1rem;
+}
+
+.editor__sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.editor__appbar,
+.editor__actionbar {
+  display: none;
+}
+
+/* The title, with the post's state and the way back on its label line. */
+.editor__title {
+  flex: none;
+  margin-bottom: 0.75rem;
+}
+
+.editor__title-top {
+  margin-bottom: 0.25rem;
   display: flex;
   align-items: center;
   gap: 0.75rem;
 }
 
-.editor__head h1 {
-  font-size: 1.5rem;
-  line-height: 2rem;
-  overflow-wrap: anywhere;
+form .editor__title-top label {
+  margin: 0 auto 0 0;
 }
 
 .editor__back {
-  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
   white-space: nowrap;
   font-size: 0.875rem;
   line-height: 1.25rem;
 }
 
+.editor__back .ico {
+  width: 0.875rem;
+  height: 0.875rem;
+}
+
+form input#i-title {
+  padding: 0.4rem 0.75rem;
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+  font-weight: 600;
+  color: var(--gray-900);
+}
+
+/* A copy kept in the browser, offered back. */
+.editor__kept {
+  flex: none;
+  margin-bottom: 0.75rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+  text-align: left;
+}
+
+.editor__kept p {
+  flex: 1 1 16rem;
+  margin: 0;
+}
+
+.editor__kept div {
+  display: flex;
+  gap: 0.5rem;
+}
+
+/* Other Fields: folded, with what is in them said beside the summary. */
 .editor__other {
-  padding-bottom: 0;
+  flex: none;
+  margin-bottom: 1rem;
 }
 
-.editor__other[open] {
-  padding-bottom: 0.5rem;
+.editor__other > summary {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  min-width: 0;
+  list-style: none;
 }
 
-.editor__other > .form-row:first-of-type {
-  margin-top: 0.5rem;
+.editor__other > summary::-webkit-details-marker {
+  display: none;
+}
+
+.editor__other > summary .ico {
+  align-self: center;
+  width: 0.75rem;
+  height: 0.75rem;
+  color: var(--gray-500);
+  transition: transform 120ms;
+}
+
+.editor__other[open] > summary .ico {
+  transform: rotate(90deg);
+}
+
+.editor__other-name {
+  white-space: nowrap;
+  color: var(--gray-800);
+}
+
+.editor__other-said {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.8rem;
+  color: var(--gray-600);
+}
+
+.editor__other[open] .editor__other-said {
+  visibility: hidden;
+}
+
+.editor__scrim,
+.editor__sheet-head,
+.editor__sheet-actions {
+  display: none;
+}
+
+.editor__fields {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 0 1.5rem;
+  padding-top: 0.5rem;
+}
+
+.editor__fields .f-slug { grid-column: span 4; }
+.editor__fields .f-summary { grid-column: span 8; }
+.editor__fields .f-tags { grid-column: span 12; }
+.editor__fields .f-image { grid-column: span 5; }
+.editor__fields .f-date { grid-column: span 3; }
+.editor__fields .f-stage { grid-column: span 2; }
+.editor__fields .f-unlisted { grid-column: span 2; }
+
+.editor__image-field {
+  display: flex;
+  align-items: stretch;
+  gap: 0.5rem;
+}
+
+.editor__image-thumb {
+  flex: none;
+  width: 3.25rem;
+  object-fit: cover;
+  border-radius: 0.25rem;
+  border: 1px solid var(--gray-300);
 }
 
 .editor__hint {
@@ -1759,82 +1956,25 @@ details {
 }
 
 .editor__pair {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: 1rem;
+  display: contents;
 }
 
-form .editor__new-tag {
-  margin-top: 0.25rem;
-  font-size: 0.875rem;
-}
-
-.checkbox-buttons .editor__hint {
-  margin: 0.25rem 0 0 0.25rem;
-}
-
-.editor__bar {
-  margin-bottom: 0.25rem;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-form .editor__bar > label:first-child {
-  margin: 0 auto 0 0;
-}
-
-.editor__count {
-  font-size: 0.75rem;
-  line-height: 1rem;
-  color: var(--gray-600);
-  white-space: nowrap;
-}
-
-form label.editor__upload {
-  margin: 0;
+/* Tags as they are spelled. */
+.editor .checkbox-buttons .checkbox-buttons__button label {
   text-transform: none;
 }
 
-form .editor__upload input {
-  display: none;
-}
-
-form textarea#i-content {
-  display: block;
-  min-height: 20rem;
-  resize: vertical;
-  font-family: Monaco, ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
-  font-size: 0.8rem;
-  line-height: 1.5;
-  tab-size: 4;
-  color: var(--gray-800);
-}
-
-form textarea:focus {
-  border-color: var(--primary-400);
-  background-color: var(--bg);
-  outline: 2px solid transparent;
-  outline-offset: 2px;
-}
-
-.editor__message {
-  margin-top: 1rem;
-  text-align: left;
-  overflow-wrap: anywhere;
-}
-
-.editor__actions {
-  margin-top: 1rem;
-  flex-wrap: wrap;
-  gap: 0.5rem;
+form .editor__new-tag {
+  margin-top: 0.5rem;
+  max-width: 20rem;
+  font-size: 0.875rem;
 }
 
 .editor__newsletter {
-  margin-top: 2rem;
-  border-top-width: 1px;
-  border-color: var(--gray-200);
-  padding-top: 1.5rem;
+  grid-column: 1 / -1;
+  margin-bottom: 0.5rem;
+  border-top: 1px solid var(--gray-200);
+  padding-top: 0.75rem;
 }
 
 .editor__newsletter .editor__hint {
@@ -1860,15 +2000,31 @@ form textarea:focus {
   white-space: nowrap;
 }
 
-.editor__preview {
-  margin-top: 3rem;
-  border-top-width: 1px;
-  border-color: var(--gray-200);
-  padding-top: 1.5rem;
+/* The two panes. */
+.editor__panes {
+  flex: 1 0 0;
+  min-height: 24rem;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 2rem;
 }
 
-.editor__preview-title {
-  margin-bottom: 1rem;
+.editor__pane {
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.editor__bar {
+  flex: none;
+  margin-bottom: 0.375rem;
+  min-height: 1.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.editor__label {
   font-size: 0.75rem;
   line-height: 1rem;
   font-weight: 600;
@@ -1876,61 +2032,784 @@ form textarea:focus {
   color: var(--gray-500);
 }
 
-/* Full screen: the body and the preview side by side over the page, as
- * frontend/editor/editor.css had them. */
-.editor--full .editor__panes {
-  position: fixed;
-  inset: 0;
-  z-index: 100;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  background-color: var(--bg);
-}
-
-.editor--full .editor__edit {
-  margin-left: auto;
+.editor__count {
   margin-right: auto;
-  display: flex;
-  height: 100vh;
-  width: 100%;
-  max-width: 42rem;
-  flex-direction: column;
-  padding: 1rem 2rem;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  color: var(--gray-600);
+  white-space: nowrap;
 }
 
-.editor--full textarea#i-content {
-  min-height: 0;
-  flex: 1 1 auto;
-  resize: none;
+.editor__count--end {
+  margin: 0 0 0 auto;
 }
 
-.editor--full .editor__newsletter {
+form label.editor__upload {
+  margin: 0;
+  display: inline-flex;
+  text-transform: none;
+}
+
+form .editor__upload input {
   display: none;
 }
 
-.editor--full .editor__preview {
-  margin: 0;
-  height: 100vh;
-  overflow-y: auto;
-  border-top-width: 0;
-  border-left-width: 1px;
-  padding: 1rem 2rem 6rem;
+/* The body, a CodeMirror editor (src/components/editor/codemirror.ts). Its
+ * rules start at .editor .editor__cm so they win over CodeMirror's own. */
+.editor__body {
+  position: relative;
+  flex: 1 1 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--gray-400);
+  border-radius: 0.25rem;
+  background-color: var(--bg);
 }
 
-@media only screen and (max-width: 600px) {
-  .editor__pair {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 0;
-  }
+.editor__body:focus-within {
+  border-color: var(--primary-300);
+  box-shadow: 0 0 0 3px var(--primary-050);
+}
 
-  .editor--full .editor__panes {
-    grid-template-columns: minmax(0, 1fr);
-  }
+.editor__cm {
+  flex: 1 1 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
 
-  .editor--full .editor__preview {
+.editor .editor__cm .cm-editor {
+  flex: 1 1 0;
+  min-height: 0;
+}
+
+.editor .editor__cm .cm-editor.cm-focused {
+  outline: none;
+}
+
+.editor .editor__cm .cm-scroller {
+  overflow: auto;
+  font-family: var(--mono);
+  line-height: 1.65;
+  scrollbar-width: thin;
+  scrollbar-color: var(--gray-400) transparent;
+}
+
+.editor .editor__cm .cm-content {
+  padding: 1rem 0 40vh;
+  font-size: 0.8rem;
+  color: var(--gray-800);
+  caret-color: var(--primary-500);
+  tab-size: 4;
+}
+
+.editor .editor__cm .cm-line {
+  padding: 0 1.25rem;
+}
+
+.editor .editor__cm .cm-activeLine {
+  background-color: var(--active-line);
+}
+
+.editor .editor__cm .cm-placeholder {
+  color: var(--gray-500);
+}
+
+.editor__loading {
+  margin: 0;
+  padding: 1rem 1.25rem;
+  overflow: hidden;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  line-height: 1.65;
+  color: var(--gray-800);
+}
+
+/* Markdown, styled: the marks stay, quieter than the words. */
+.editor .md-mark { color: var(--gray-500); }
+.editor .md-h { font-weight: 700; color: var(--gray-900); }
+.editor .md-h .md-mark,
+.editor .md-mark.md-h { color: var(--txt-syntax-1); }
+.editor .md-h1 { font-size: 1.6em; }
+.editor .md-h2 { font-size: 1.4em; }
+.editor .md-h3 { font-size: 1.2em; }
+.editor .md-h4 { font-size: 1.1em; }
+.editor .md-strong { font-weight: 700; color: var(--gray-900); }
+.editor .md-em { font-style: italic; }
+.editor .md-strike { text-decoration: line-through; }
+.editor .md-link { color: var(--txt-link); }
+.editor .md-url { color: var(--gray-500); }
+.editor .md-quote { color: var(--gray-600); }
+
+.editor .md-code {
+  border-radius: 0.2rem;
+  background-color: var(--primary-050);
+  padding: 0.1em 0;
+}
+
+.editor .editor__cm .md-fence {
+  background-color: var(--primary-050);
+}
+
+.editor .md-fence .md-code {
+  background: none;
+  padding: 0;
+}
+
+/* Under an image on a line of its own: its thumbnail, and Replace. */
+.cm-image {
+  width: fit-content;
+  max-width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  padding: 0.375rem 1.25rem 0.625rem;
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+
+.cm-image__thumb {
+  position: relative;
+  display: block;
+  width: fit-content;
+  max-width: 100%;
+  overflow: hidden;
+  border-radius: 0.25rem;
+  border: 1px solid var(--gray-300);
+  background-color: var(--gray-200);
+}
+
+.cm-image__thumb img {
+  display: block;
+  max-width: 100%;
+  max-height: 8.5rem;
+  height: auto;
+}
+
+.cm-image__thumb--broken {
+  min-width: 6rem;
+  min-height: 4rem;
+}
+
+.cm-image__row {
+  margin-top: 0.3rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.7rem;
+  line-height: 1rem;
+  color: var(--gray-600);
+}
+
+.cm-image__name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--mono);
+  font-size: 0.65rem;
+}
+
+.cm-image__size {
+  white-space: nowrap;
+}
+
+.cm-image .cm-image__replace {
+  margin-left: auto;
+}
+
+.cm-image__said {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cm-image__cancel {
+  margin-left: auto;
+  border: 0;
+  border-bottom: 1px dotted var(--gray-500);
+  background: none;
+  padding: 0;
+  cursor: pointer;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  color: var(--gray-600);
+}
+
+.cm-image__cancel:hover {
+  color: var(--gray-800);
+}
+
+/* The image being uploaded: the file, dimmed, with a bar that runs until
+ * it is done. */
+.cm-image--uploading img {
+  opacity: 0.45;
+  filter: grayscale(0.4);
+}
+
+.cm-image__progress {
+  position: absolute;
+  left: 0.5rem;
+  right: 0.5rem;
+  bottom: 0.5rem;
+  height: 0.3rem;
+  overflow: hidden;
+  border-radius: 9999px;
+  background-color: hsla(0, 0%, 100%, 0.55);
+}
+
+.cm-image__progress::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -35%;
+  width: 35%;
+  border-radius: inherit;
+  background-color: var(--primary-500);
+  animation: editor-progress 1.2s ease-in-out infinite;
+}
+
+.cm-image__spinner {
+  flex: none;
+  width: 0.8rem;
+  height: 0.8rem;
+  box-sizing: border-box;
+  border-radius: 50%;
+  border: 2px solid var(--gray-300);
+  border-top-color: var(--primary-500);
+  animation: editor-spin 0.9s linear infinite;
+}
+
+@keyframes editor-progress {
+  to { left: 100%; }
+}
+
+@keyframes editor-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* The message and the buttons, under the body. When the page scrolls (Other
+ * Fields open), they hold at the bottom of the window. */
+.editor__foot {
+  flex: none;
+  position: sticky;
+  z-index: 5;
+  bottom: 0;
+  padding-bottom: 0.25rem;
+  background-color: var(--bg);
+}
+
+.editor__message {
+  margin-top: 0.75rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+
+.editor__message p {
+  flex: 1 1 auto;
+  margin: 0;
+}
+
+.editor__message-close {
+  display: none;
+}
+
+.editor__actions {
+  margin-top: 0.75rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.editor__actions > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+/* Save, with nothing to save: quiet, with a tick. */
+.editor .editor__save--clean,
+.editor .editor__save--clean:hover:not(:disabled) {
+  background-color: var(--gray-200);
+  color: var(--gray-600);
+}
+
+/* The preview: the post as its page draws it. */
+.editor__pane--preview {
+  margin-left: -1rem;
+  border-left: 1px solid var(--gray-200);
+  padding-left: 1rem;
+}
+
+.editor__preview {
+  flex: 1 1 0;
+  min-height: 0;
+  overflow: auto;
+  padding: 0.5rem 1rem 0;
+  scrollbar-width: thin;
+  scrollbar-color: var(--gray-400) transparent;
+}
+
+/* Room after the post, so its last heading can scroll to the top. */
+.editor__preview::after {
+  content: '';
+  display: block;
+  height: 75vh;
+}
+
+.editor__preview > * {
+  max-width: 38rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Full screen: the panes over the whole window. */
+.editor.editor--full {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  max-width: none;
+  height: 100dvh;
+  background-color: var(--bg);
+  padding-top: 1rem;
+}
+
+.editor--full .editor__title,
+.editor--full .editor__kept,
+.editor--full .editor__other {
+  display: none;
+}
+
+/* iPad landscape: two panes, tighter, without the site's nav. */
+@media (max-width: 1199px) {
+  body:has(.editor) .top-nav {
     display: none;
   }
 
+  .editor {
+    --nav-h: 0px;
+    padding: 0.75rem 1.25rem 0.25rem;
+  }
+
+  .editor__panes {
+    gap: 1.5rem;
+  }
+
+  .editor__pane--preview {
+    margin-left: -0.75rem;
+    padding-left: 0.75rem;
+  }
+
+  .editor__preview {
+    padding: 0.5rem 0.5rem 30vh;
+  }
+
+  .editor .editor__cm .cm-line,
+  .editor .cm-image {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .editor__bar .editor__btn-label {
+    display: none;
+  }
+
+  .editor__fields .f-slug { grid-column: span 5; }
+  .editor__fields .f-summary { grid-column: span 7; }
+  .editor__fields .f-image { grid-column: span 6; }
+  .editor__fields .f-date { grid-column: span 3; }
+  .editor__fields .f-stage { grid-column: span 3; }
+  .editor__fields .f-unlisted { grid-column: span 12; }
+}
+
+/* iPad upright and phones: one pane, Write or Preview. */
+@media (max-width: 999px) {
+  .editor {
+    display: block;
+    height: auto;
+    max-width: 42rem;
+    padding: calc(var(--safe-top) + var(--appbar-h) + 1rem) 1.25rem calc(var(--actionbar-h) + max(var(--safe-bottom), var(--kb, 0px)) + 1rem);
+  }
+
+  /* The app bar: the way back and the post's state. */
+  .editor__appbar {
+    position: fixed;
+    z-index: 30;
+    top: 0;
+    left: 0;
+    right: 0;
+    display: block;
+    padding-top: var(--safe-top);
+    border-bottom: 1px solid var(--gray-200);
+    background-color: var(--bg);
+  }
+
+  .editor__appbar-in {
+    box-sizing: border-box;
+    height: var(--appbar-h);
+    max-width: 42rem;
+    margin: 0 auto;
+    padding: 0 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+  }
+
+  .editor__title-top .editor__back,
+  .editor__title-top .admin-state {
+    display: none;
+  }
+
+  /* Other Fields: a row that opens the sheet. */
+  .editor__other > summary .ico {
+    order: 3;
+    margin-left: auto;
+  }
+
+  .editor__other[open] > summary .ico {
+    transform: none;
+  }
+
+  .editor__other-said {
+    flex: 1 1 auto;
+  }
+
+  .editor__other[open] .editor__other-said {
+    visibility: visible;
+  }
+
+  .editor__scrim {
+    position: fixed;
+    z-index: 40;
+    inset: 0;
+    display: block;
+    background-color: var(--scrim);
+  }
+
+  .editor__sheet {
+    position: fixed;
+    z-index: 41;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    max-width: 40rem;
+    max-height: calc(100dvh - var(--safe-top) - 2.5rem);
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    border-radius: 0.875rem 0.875rem 0 0;
+    background-color: var(--raised);
+    box-shadow: var(--shadow-up);
+    padding-bottom: var(--safe-bottom);
+  }
+
+  .editor__sheet-head {
+    flex: none;
+    display: flex;
+    align-items: center;
+    padding: 1.1rem 1.25rem 0.6rem;
+    border-bottom: 1px solid var(--gray-200);
+  }
+
+  .editor__grabber {
+    position: absolute;
+    top: 0.5rem;
+    left: 50%;
+    width: 2.25rem;
+    height: 0.3rem;
+    transform: translateX(-50%);
+    border-radius: 9999px;
+    background-color: var(--gray-400);
+  }
+
+  .editor__sheet-head h2 {
+    margin: 0 auto 0 0;
+    font-size: 1.05rem;
+    line-height: 1.5rem;
+  }
+
+  .editor__sheet-head button {
+    border: 0;
+    background: none;
+    padding: 0.25rem 0;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--txt-link);
+  }
+
+  .editor__fields {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: block;
+    overflow: auto;
+    padding: 1rem 1.25rem 0.5rem;
+  }
+
+  .editor__pair {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 0 1rem;
+  }
+
+  form .editor__new-tag {
+    max-width: none;
+  }
+
+  .editor__sheet-actions {
+    flex: none;
+    display: flex;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem 1rem;
+    border-top: 1px solid var(--gray-200);
+  }
+
+  .editor__sheet-actions .btn--danger {
+    margin-left: auto;
+  }
+
+  /* The body is the page: no box, as long as what is in it. */
+  .editor__panes {
+    display: block;
+    min-height: 0;
+  }
+
+  .editor__bar .btn,
+  .editor__bar .editor__label {
+    display: none;
+  }
+
+  .editor__pane,
+  .editor__body,
+  .editor__cm {
+    display: block;
+  }
+
+  .editor__body {
+    overflow: visible;
+    border: 0;
+    border-radius: 0;
+  }
+
+  .editor .editor__cm .cm-editor {
+    flex: none;
+  }
+
+  .editor__body:focus-within {
+    box-shadow: none;
+  }
+
+  .editor .editor__cm .cm-scroller {
+    overflow: visible;
+  }
+
+  .editor .editor__cm .cm-content {
+    padding: 0.25rem 0 1rem;
+  }
+
+  .editor .editor__cm .cm-line,
+  .editor .cm-image,
+  .editor__loading {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  /* The caret alone marks the cursor: a paragraph is one line here, and its
+   * tint would cover the screen. */
+  .editor .editor__cm .cm-activeLine {
+    background-color: transparent;
+  }
+
+  .editor__pane--preview {
+    display: none;
+    margin: 0;
+    border: 0;
+    padding: 0;
+  }
+
+  .editor__pane--preview .editor__bar {
+    display: none;
+  }
+
+  .editor__preview {
+    overflow: visible;
+    padding: 0.5rem 0 2rem;
+  }
+
+  .editor__preview::after {
+    display: none;
+  }
+
+  .editor__preview > * {
+    max-width: none;
+  }
+
+  .editor[data-view="preview"] .editor__pane--preview {
+    display: block;
+  }
+
+  .editor[data-view="preview"] .editor__title,
+  .editor[data-view="preview"] .editor__kept,
+  .editor[data-view="preview"] .editor__other,
+  .editor[data-view="preview"] .editor__pane--write > :not(.editor__foot) {
+    display: none;
+  }
+
+  .editor__foot {
+    position: static;
+    padding: 0;
+  }
+
+  .editor__actions {
+    display: none;
+  }
+
+  /* A refusal floats over the bottom bar, with a close. */
+  .editor__message {
+    position: fixed;
+    z-index: 31;
+    left: 0.75rem;
+    right: 0.75rem;
+    bottom: calc(var(--actionbar-h) + max(var(--safe-bottom), var(--kb, 0px)) + 0.5rem);
+    max-width: 40rem;
+    margin: 0 auto;
+    background-color: var(--bg);
+    background-image: linear-gradient(var(--info-100), var(--info-100));
+    box-shadow: var(--shadow);
+  }
+
+  .editor__message.notice--danger {
+    background-image: linear-gradient(var(--danger-100), var(--danger-100));
+  }
+
+  .editor__message-close {
+    flex: none;
+    display: block;
+    margin: -0.2rem -0.4rem 0 0;
+    border: 0;
+    background: none;
+    padding: 0.2rem 0.4rem;
+    cursor: pointer;
+    font-size: 1.1rem;
+    line-height: 1rem;
+    color: inherit;
+  }
+
+  /* The bottom bar: Write or Preview and an image on the left, Publish and
+   * Save on the right, above the keyboard when it is up. */
+  .editor__actionbar {
+    position: fixed;
+    z-index: 30;
+    left: 0;
+    right: 0;
+    bottom: var(--kb, 0px);
+    display: block;
+    padding-bottom: max(0px, calc(var(--safe-bottom) - var(--kb, 0px)));
+    border-top: 1px solid var(--gray-200);
+    background-color: var(--bg);
+  }
+
+  .editor__actionbar-in {
+    box-sizing: border-box;
+    height: var(--actionbar-h);
+    max-width: 42rem;
+    margin: 0 auto;
+    padding: 0 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .editor__spacer {
+    flex: 1 1 auto;
+  }
+
+  .editor__icon-btn,
+  form label.editor__icon-btn {
+    margin: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    height: 2.5rem;
+    min-width: 2.5rem;
+    border: 0;
+    border-radius: 0.375rem;
+    background: none;
+    padding: 0 0.6rem;
+    cursor: pointer;
+    font-size: 0.8rem;
+    line-height: 1;
+    font-weight: 600;
+    text-transform: none;
+    color: var(--gray-700);
+  }
+
+  .editor__icon-btn:active {
+    background-color: var(--gray-200);
+    color: var(--gray-900);
+  }
+
+  .editor .editor__icon-btn .ico {
+    width: 1.2rem;
+    height: 1.2rem;
+  }
+
+  .editor__icon-btn input {
+    display: none;
+  }
+
+  .editor__actionbar .btn {
+    height: 2.4rem;
+    padding: 0 1rem;
+  }
+}
+
+/* Phones. */
+@media (max-width: 599px) {
+  .editor {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .editor__title-top {
+    display: none;
+  }
+
+  form input#i-title {
+    font-size: 1.3rem;
+  }
+
+  /* 16px, so iOS does not zoom in when the body takes the cursor. */
+  .editor .editor__cm .cm-content,
+  .editor__loading {
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+
+  .editor__pair {
+    display: block;
+  }
+
+  .cm-image__thumb img {
+    max-height: 9rem;
+  }
+}
+
+@media only screen and (max-width: 600px) {
   .admin-posts__date {
     display: none;
   }

@@ -114,6 +114,9 @@ export type EditorPost = {
   unlisted: boolean
   published: boolean
   views: number
+  /// ISO 8601: when the row last changed, so the editor can tell whether a
+  /// copy kept in the browser is newer.
+  updatedAt: string
 }
 
 export const editorPost = (post: BlogPost): EditorPost => ({
@@ -129,6 +132,7 @@ export const editorPost = (post: BlogPost): EditorPost => ({
   unlisted: post.unlisted,
   published: post.published,
   views: post.views,
+  updatedAt: post.updatedAt.toISOString(),
 })
 
 /// Whether a post can go to the newsletter, as the editor's newsletter

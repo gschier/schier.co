@@ -249,6 +249,51 @@ other/ 5, db-backups/ 951 (6 MB, not needed).
   before the first email so two sends cannot overlap, and is deleted if
   every email failed so the post can be sent again.
 
+## Editor (2026-11-09)
+
+- The body is CodeMirror 6 with markdown and GFM, replacing the textarea.
+  The syntax marks always stay visible, on every line; the text is styled
+  around them: headings larger by level, bold and italic drawn, inline
+  code and fenced blocks on a faint ground, links coloured, list marks and
+  quotes dimmed, in the site's colours and its dark mode. The whole body
+  stays in the mono face, as the textarea and the mockup have it (16px on
+  a phone, so iOS does not zoom). Spelling is checked.
+- The keys stay as they were: Tab inserts a tab, or indents the selected
+  lines two spaces; Shift-Tab takes that back; Enter keeps the indent and
+  continues no list; Cmd-S saves; Escape leaves full screen. Undo is
+  CodeMirror's history, and an inserted or replaced image is one step of
+  it.
+- An image alone on its line shows its thumbnail, alt text, size and
+  Replace under the line. An upload shows the local file dimmed with a
+  running bar, and its markdown goes in only when the upload is done, so a
+  save mid-upload stores no placeholder. An image inside a paragraph gets
+  nothing.
+- The preview stays server-rendered half a second after typing stops, and
+  scrolls to the heading the cursor is under.
+- Layout follows the mockup's breakpoints. 1200 wide and up: the site's
+  nav, the title, Other Fields folded (saying what is in it), then body
+  and preview side by side filling the window, each scrolling on its own,
+  with the buttons under the body held on screen. 1000 to 1199: the same
+  without the nav. Below 1000: one pane, with the way back and the state
+  at the top and a bar at the bottom holding Preview or Write and Image on
+  the left, Publish and Save on the right, riding above the on-screen
+  keyboard. Write and Preview is that one control, not also in the top
+  bar. Unlist, View, Delete and the newsletter move into Other Fields,
+  which opens as a sheet; a refusal floats above the bar.
+- The newsletter's status and buttons live in Other Fields at every size.
+  The editor pages have no footer.
+- The admin installs as an app: its own manifest (start `/admin`,
+  standalone, the site's favicons and colours) and the iOS tags, on the
+  admin's pages only; the public pages keep the site's manifest. No
+  service worker; offline is not a goal.
+- Nothing is lost: every change is kept in the browser's local storage
+  under the post's id (one key for a new post) until a save succeeds. On
+  opening, a kept copy that differs from the server's and is newer than
+  its last change is offered with Restore and Discard, never restored
+  silently. This replaces "there is no autosave" above.
+- Left for the widget round: the widget card, the picker, Insert widget,
+  fence rendering and the slash command.
+
 ## Deploy
 
 Push to `master` deploys, once the Web service points at `web/`. Pre-deploy
