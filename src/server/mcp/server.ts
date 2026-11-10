@@ -18,9 +18,12 @@ import {
   type PostFields,
 } from '#/server/postActions'
 import { uploadImage } from '#/server/uploads'
+import { fenceText, latest } from '#/lib/widgets'
+import { catalog } from '#/server/widgets'
 
 // The admin MCP (BRIEF.md, Admin and auth): drafting, editing and
-// publishing posts, images, and sending a post to the newsletter, for
+// publishing posts, images, the widgets a post can embed (BRIEF.md,
+// Widgets), and sending a post to the newsletter, for
 // agents and later a mobile companion. Served at /mcp (src/routes/mcp.ts)
 // behind the MCP_TOKEN bearer. Every tool answers in JSON text; what it
 // refuses (a duplicate slug, a post that does not exist, a second send)
@@ -116,7 +119,7 @@ export function createAdminServer(): McpServer {
     {
       title: 'Publish a post',
       description:
-        'Publish a draft: it appears on the blog at /blog/{slug}, in lists and the feed (unless unlisted), dated now so it is new and can go to the newsletter with send_newsletter (which only sends posts dated in the last day). A post with no title or no content is refused. A post already published is left as it is, date included. Does not email anyone.',
+        'Publish a draft: it appears on the blog at /blog/{slug}, in lists and the feed (unless unlisted), dated now so it is new and can go to the newsletter with send_newsletter (which only sends posts dated in the last day). A post with no title or no content is refused, and so is one whose widget fences pin a local {name}@dev build or a version list_widgets does not have. A post already published is left as it is, date included. Does not email anyone.',
       inputSchema: { post: POST },
     },
     async ({ post }) => text(await publishPost(post)),
@@ -163,6 +166,33 @@ export function createAdminServer(): McpServer {
       inputSchema: { markdown: z.string().max(2_000_000).describe('The markdown to render') },
     },
     async ({ markdown }) => text(await renderPreview(markdown)),
+  )
+
+  server.registerTool(
+    'list_widgets',
+    {
+      title: 'List widgets',
+      description:
+        'The interactive widgets a post can embed, with what a fence for each needs: name (the id fences use), title, description, versions (every published version, oldest first), latest, props (the latest version\'s settings: key, label, help, type enum/number/boolean/string, default, and options for an enum or min, max, step and unit for a number) and fence, an example with every default. A post embeds one as a fenced block: ```widget {name}@{version} on the first line, then one `key: value` line per setting it changes, then ```. Pin a published version: publish_post refuses one that is not listed here.',
+      inputSchema: {},
+    },
+    async () =>
+      text(
+        catalog()
+          .filter((w) => w.versions.length)
+          .map((w) => {
+            const newest = latest(w)!
+            return {
+              name: w.name,
+              title: w.title,
+              description: w.description,
+              versions: w.versions.map((v) => v.version),
+              latest: newest.version,
+              props: newest.widget.props,
+              fence: fenceText({ name: w.name, version: newest.version }, newest.widget.props),
+            }
+          }),
+      ),
   )
 
   server.registerTool(

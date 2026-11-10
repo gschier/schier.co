@@ -12,7 +12,11 @@
 //   its thumbnail under the line, with Replace;
 // - a live preview of the post as its page draws it, with the word count,
 //   half a second after typing stops, scrolled to the heading the cursor is
-//   under.
+//   under, its widgets running;
+// - a widget fence shows as a card with a form for its settings
+//   (src/components/editor/widgetCard.tsx); Insert widget, or a slash alone
+//   on a line, opens the picker; on the dev server, Prepare for publish
+//   publishes the post's local builds and pins the versions.
 // On a wide window the body and the preview are side by side and fill it;
 // on an iPad held upright or a phone one shows at a time, with a bar at the
 // bottom (riding above the on-screen keyboard) and Other Fields as a sheet.
@@ -22,14 +26,17 @@
 // with unsaved changes asks first. Refusals (a taken slug, a post too old to
 // send) are shown beside the buttons.
 
-import { useEffect, useRef, useState, type ClipboardEvent, type DragEvent, type ReactNode } from 'react'
+import { useEffect, useMemo, useRef, useState, type ClipboardEvent, type DragEvent, type ReactNode } from 'react'
+import { createPortal } from 'react-dom'
 import type { EditorView } from '@codemirror/view'
-import { Site, Tags, adminLinks, pageHead } from '#/components/site'
+import { Site, Tags, adminLinks } from '#/components/site'
 import { clearDraft, draftKey, readDraft, writeDraft, type Draft } from '#/components/editor/draft'
 import { Ico } from '#/components/editor/icons'
+import { WidgetCard, WidgetPicker, type PickerProps } from '#/components/editor/widgetCard'
 import {
   deleteFn,
   newsletterStatusFn,
+  prepareWidgetsFn,
   previewFn,
   publishFn,
   savePostFn,
@@ -39,15 +46,9 @@ import {
 } from '#/lib/adminFns'
 import { articleInner } from '#/lib/html'
 import type { PostView } from '#/lib/views'
+import { Widgets } from '#/lib/widgetMount'
+import { findFences, type Catalog } from '#/lib/widgets'
 import type { EditorData, EditorPost, NewsletterView, Outcome, Preview, SaveInput } from '#/server/editor'
-
-type HeadContext = Parameters<typeof pageHead>[1]
-
-/// The editor's <title> and meta, kept out of search engines.
-export function editorHead(title: string, ctx: HeadContext) {
-  const head = pageHead({ title: title ? `Edit ${title}` : 'Edit' }, ctx)
-  return { ...head, meta: [...head.meta, { name: 'robots', content: 'noindex' }] }
-}
 
 // ---------------------------------------------------------------------------
 // The form's fields
@@ -165,6 +166,21 @@ const ONE_PANE = '(max-width: 999px)'
 /// When a kept copy was made, as a person says it.
 const keptAt = (at: number) => new Date(at).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })
 
+/// A widget fence's card, as CodeMirror last drew it.
+type Card = { id: number; info: string; body: string }
+
+let cardIds = 0
+const cardId = new WeakMap<HTMLElement, number>()
+const idOf = (dom: HTMLElement) => {
+  let id = cardId.get(dom)
+  if (id === undefined) cardId.set(dom, (id = ++cardIds))
+  return id
+}
+
+/// The widget picker, open: where it inserts, and the slash's line when a
+/// slash opened it.
+type Picker = { pos: number; slash?: number; at: PickerProps['at'] }
+
 export function Editor({ data }: { data: EditorData }) {
   const [saved, setSaved] = useState<EditorPost | null>(data.post)
   const [baseline, setBaseline] = useState<Fields>(() => fieldsOf(data.post))
@@ -183,6 +199,9 @@ export function Editor({ data }: { data: EditorData }) {
   const [ready, setReady] = useState(false)
   const [testTo, setTestTo] = useState('')
   const [newTag, setNewTag] = useState('')
+  const [widgets, setWidgets] = useState<Catalog>(data.widgets)
+  const [cards, setCards] = useState<Map<HTMLElement, Card>>(() => new Map())
+  const [picker, setPicker] = useState<Picker | null>(null)
 
   const host = useRef<HTMLDivElement>(null)
   const body = useRef<EditorView | null>(null)
@@ -247,8 +266,56 @@ export function Editor({ data }: { data: EditorData }) {
         },
         cancel: mod.cancelUpload,
       },
+      cards: {
+        show: (dom, fence) =>
+          setCards((all) => {
+            const was = all.get(dom)
+            if (was && was.info === fence.info && was.body === fence.body) return all
+            return new Map(all).set(dom, { id: idOf(dom), ...fence })
+          }),
+        hide: (dom) =>
+          setCards((all) => {
+            if (!all.has(dom)) return all
+            const next = new Map(all)
+            next.delete(dom)
+            return next
+          }),
+      },
+      onSlash: (lineFrom) => openPicker(lineFrom + 1, lineFrom),
     })
     return editor
+  }
+
+  /// Opens the widget picker to insert at [pos] (in place of the slash on
+  /// the line at [slash], when a slash opened it): under the line on two
+  /// panes, as a sheet on one.
+  function openPicker(pos: number, slash?: number) {
+    const editor = body.current
+    const box = host.current?.getBoundingClientRect()
+    if (!editor || !box || window.matchMedia(ONE_PANE).matches) return setPicker({ pos, slash, at: null })
+    const line = editor.coordsAtPos(Math.min(pos, editor.state.doc.length))
+    const below = (line?.bottom ?? box.top + 24) + 6
+    const above = below + 360 > window.innerHeight && (line?.top ?? 0) - box.top > 200
+    setPicker({ pos, slash, at: { top: above ? (line?.top ?? below) - 6 : below, left: box.left + 16, width: Math.min(544, box.width - 32), above } })
+  }
+
+  function pick(fence: string) {
+    const editor = body.current
+    const open = picker
+    setPicker(null)
+    if (!editor || !cm.current || !open) return
+    cm.current.insertFence(editor, open.pos, fence, open.slash)
+    editor.focus()
+  }
+
+  function closePicker() {
+    setPicker(null)
+    body.current?.focus()
+  }
+
+  const insertWidget = () => {
+    const editor = body.current
+    if (editor) openPicker(editor.state.selection.main.head)
   }
 
   // One pane or two, as the window is.
@@ -356,11 +423,28 @@ export function Editor({ data }: { data: EditorData }) {
     notified: null,
   }
   const articleHtml = articleInner(post, false, '')
+  // The preview's HTML is put in here rather than by React, so its widgets
+  // (src/lib/widgetMount.ts) can be kept across a new preview: one whose
+  // module did not change is moved into the new HTML and given its new props.
+  const firstHtml = useRef(articleHtml)
+  const shownHtml = useRef(articleHtml)
+  const running = useRef<Widgets | null>(null)
   useEffect(() => {
-    if (article.current) caption(article.current)
+    const page = article.current
+    if (!page) return
+    if (shownHtml.current !== articleHtml) {
+      page.innerHTML = articleHtml
+      shownHtml.current = articleHtml
+    }
+    caption(page)
+    if (running.current || page.querySelector('div.widget')) (running.current ??= new Widgets({ admin: true })).sync(page)
     // A heading typed before the preview had drawn it is gone to now.
     if (unaligned.current) showHeading(false)
   }, [articleHtml])
+  useEffect(() => () => running.current?.destroy(), [])
+
+  // The post's dev pins, which Prepare for publish publishes and repins.
+  const devPins = useMemo(() => [...new Set(findFences(fields.content).flatMap((f) => (f.pin?.version === 'dev' ? [f.pin.name] : [])))], [fields.content])
 
   /// Scrolls the preview to the heading the cursor is under, or its top.
   /// Until the preview has that heading, it stays where it is and goes there
@@ -562,6 +646,28 @@ export function Editor({ data }: { data: EditorData }) {
       '',
     )
 
+  /// Publishes the post's dev pins (dev server only) and pins the versions
+  /// that made, in one change undo can take back.
+  async function prepare() {
+    if (busy || !devPins.length) return
+    setBusy('prepare')
+    setMessage(null)
+    try {
+      const out = check(await prepareWidgetsFn({ data: { names: devPins } }))
+      if (!out) return
+      setWidgets(out.widgets)
+      const editor = body.current
+      if (editor && cm.current) cm.current.repinDev(editor, out.versions)
+      const done = Object.entries(out.versions).map(([name, version]) => `${name}@${version}`)
+      const said = done.length ? `Published and pinned ${done.join(', ')}.` : ''
+      setMessage(out.failed ? { kind: 'error', text: `${said} ${out.failed}`.trim() } : { kind: 'done', text: said })
+    } catch (error) {
+      setMessage({ kind: 'error', text: reason(error) })
+    } finally {
+      setBusy(null)
+    }
+  }
+
   // Images picked with Upload image go where the cursor is.
   function uploadToBody(files: File[]) {
     const editor = body.current
@@ -712,6 +818,20 @@ export function Editor({ data }: { data: EditorData }) {
           </div>
         )}
 
+        {data.dev && devPins.length > 0 && !kept && (
+          <div className="notice notice--info editor__kept editor__prepare" role="status">
+            <p>
+              This post runs the local {devPins.length === 1 ? 'build' : 'builds'} of {devPins.map((name, i) => [i > 0 && ', ', <code key={name}>{name}@dev</code>])}, which only the dev server has.
+              Prepare for publish publishes {devPins.length === 1 ? 'it' : 'each'} and pins the new version.
+            </p>
+            <div>
+              <button type="button" className="btn btn--sm" disabled={!!busy} onClick={prepare}>
+                {busy === 'prepare' ? 'Publishing…' : 'Prepare for publish'}
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* Nothing can be changed while a kept copy waits for Restore or
             Discard, so no change goes unkept. */}
         <details className="editor__other" open={other} inert={!!kept} onToggle={(e) => setOther(e.currentTarget.open)}>
@@ -845,6 +965,10 @@ export function Editor({ data }: { data: EditorData }) {
               <span className="editor__count">
                 {preview.words} words &middot; {preview.readMinutes} min read
               </span>
+              <button type="button" className="btn btn--sm btn--gray editor__insert" title="Insert widget" disabled={!ready} onMouseDown={(e) => e.preventDefault()} onClick={insertWidget}>
+                <Ico name="widget" />
+                <span className="editor__btn-label">Insert widget</span>
+              </button>
               <label className="btn btn--sm btn--gray editor__upload" title="Upload image">
                 <Ico name="image" />
                 <span className="editor__btn-label">Upload image</span>
@@ -890,7 +1014,7 @@ export function Editor({ data }: { data: EditorData }) {
               <span className="editor__count editor__count--end">Follows the cursor</span>
             </div>
             <div ref={scroller} className="editor__preview">
-              <article ref={article} className="content blog-post" dangerouslySetInnerHTML={{ __html: articleHtml }} />
+              <article ref={article} className="content blog-post" dangerouslySetInnerHTML={{ __html: firstHtml.current }} />
               <Tags tags={fields.tags} />
             </div>
           </section>
@@ -904,6 +1028,10 @@ export function Editor({ data }: { data: EditorData }) {
               <Ico name={view === 'write' ? 'eye' : 'pencil'} />
               {view === 'write' ? 'Preview' : 'Write'}
             </button>
+            <button type="button" className="editor__icon-btn" title="Insert widget" disabled={!ready} onMouseDown={(e) => e.preventDefault()} onClick={insertWidget}>
+              <Ico name="plus" />
+              <span className="editor__sr">Insert widget</span>
+            </button>
             <label className="editor__icon-btn" title="Upload image">
               <Ico name="image" />
               <span className="editor__sr">Upload image</span>
@@ -914,6 +1042,14 @@ export function Editor({ data }: { data: EditorData }) {
             {saveButton}
           </div>
         </div>
+
+        {/* Each widget fence's card, drawn into the place CodeMirror keeps
+            for it. */}
+        {ready &&
+          body.current &&
+          cm.current &&
+          [...cards].map(([dom, card]) => createPortal(<WidgetCard dom={dom} info={card.info} body={card.body} view={body.current!} cm={cm.current!} widgets={widgets} dev={data.dev} />, dom, String(card.id)))}
+        {picker && <WidgetPicker widgets={widgets} dev={data.dev} at={picker.at} onPick={pick} onClose={closePicker} />}
       </form>
     </Site>
   )

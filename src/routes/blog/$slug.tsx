@@ -82,7 +82,8 @@ function PostPage() {
 
 /// The post itself, drawn as one string (src/lib/html.ts), and then what
 /// the Go partial's scripts did to it: an image's alt text as a caption
-/// below it, and a link icon beside each heading with an id.
+/// below it, and a link icon beside each heading with an id. Its widgets are
+/// mounted after.
 function Article() {
   const data = Route.useLoaderData()
   const { admin } = useSite()
@@ -111,6 +112,23 @@ function Article() {
       heading.prepend(a)
     })
   }, [])
+  // The post's widgets (src/lib/widgetMount.ts), loaded only when it has one.
+  useEffect(() => {
+    const article = ref.current
+    if (!article?.querySelector('div.widget')) return
+    let widgets: { destroy(): void } | null = null
+    let gone = false
+    void import('#/lib/widgetMount').then(({ Widgets }) => {
+      if (gone) return
+      const mounted = new Widgets({ admin })
+      mounted.sync(article)
+      widgets = mounted
+    })
+    return () => {
+      gone = true
+      widgets?.destroy()
+    }
+  }, [admin])
   if (!post) return null
   return <article ref={ref} className="content blog-post" dangerouslySetInnerHTML={{ __html: articleInner(post, admin, adminLinks.edit(post.id)) }} />
 }

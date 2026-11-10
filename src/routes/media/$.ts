@@ -4,10 +4,12 @@ import { storage, type Meta, type StoredObject } from '#/server/storage'
 /// The site's images, served by the site because Railway buckets are
 /// private: GET /media/{key} answers with the object as stored, and a Range
 /// request with the part it asks for. Keys are what they were in the
-/// DigitalOcean Space (images/..., avatar/..., other/...), checked by
+/// DigitalOcean Space (images/..., avatar/..., other/...), and published
+/// widgets (widgets/{name}/{version}/...), checked by
 /// src/server/storage.ts, which also picks the bucket or, without one, a
-/// directory on disk. An object never changes once uploaded, so browsers
-/// and CDNs may keep it for a year.
+/// directory on disk. An object never changes once uploaded (a widget's
+/// version is never overwritten), so browsers and CDNs may keep it for a
+/// year.
 ///
 /// Not /assets/, where Vite puts the site's own build files. Under
 /// `vite dev`, vite.config.ts makes sure these requests reach this route.

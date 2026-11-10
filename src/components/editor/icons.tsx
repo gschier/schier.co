@@ -10,6 +10,10 @@ const PATHS = {
   expand: 'M9.5 2.5h4v4M13.5 2.5 9 7M6.5 13.5h-4v-4M2.5 13.5 7 9',
   shrink: 'M13.5 2.5 9.5 6.5M9.5 3v3.5H13M2.5 13.5l4-4M3 9.5h3.5V13',
   alert: 'M8 1.5 15 14H1zM8 6v3.5M8 11.5v.5',
+  widget: 'M2.5 2.5h4.5v4.5H2.5zM9 2.5h4.5v4.5H9zM2.5 9h4.5v4.5H2.5zM11.25 9v4.5M9 11.25h4.5',
+  plus: 'M8 2.5v11M2.5 8h11',
+  search: 'M7 2.5a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9zM10.25 10.25 13.5 13.5',
+  upload: 'M8 11V2.5M4.5 6 8 2.5 11.5 6M2.5 10.5v3h11v-3',
 }
 
 export type IconName = keyof typeof PATHS

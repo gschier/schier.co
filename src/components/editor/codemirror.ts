@@ -11,11 +11,14 @@
 //   drawn under the line. A file being uploaded is drawn there at once,
 //   dimmed; its markdown goes in when the upload is done, in one
 //   transaction, so undo takes it out and a save mid-upload stores nothing
-//   half done.
+//   half done;
+// - a widget fence is drawn as a card the editor fills (widgetCard.tsx),
+//   and a slash alone on a line opens the widget picker.
 
 import { EditorSelection, EditorState, Facet, MapMode, Prec, StateEffect, StateField, type ChangeSet, type ChangeSpec, type Extension } from '@codemirror/state'
 import { Decoration, EditorView, ViewPlugin, WidgetType, highlightActiveLine, keymap, placeholder, type DecorationSet, type ViewUpdate } from '@codemirror/view'
-import { defaultKeymap, history, historyKeymap } from '@codemirror/commands'
+import { defaultKeymap, history, historyKeymap, redo, undo } from '@codemirror/commands'
+import { findFences, type Fence } from '#/lib/widgets'
 import { HighlightStyle, ensureSyntaxTree, syntaxHighlighting, syntaxTree } from '@codemirror/language'
 import { markdown, markdownLanguage } from '@codemirror/lang-markdown'
 import { tags as t } from '@lezer/highlight'
@@ -439,6 +442,222 @@ function imageEvents(onFiles: (files: File[], pos: number) => void) {
 }
 
 // ---------------------------------------------------------------------------
+// Widgets: a card in place of each fence
+//
+// A ```widget fence (src/lib/widgets.ts) is drawn as a card: a block
+// decoration over its lines whose element the editor fills with a React
+// portal (src/components/editor/widgetCard.tsx), handed over through the
+// cardHost facet. The fence's text stays the document: the card reads it,
+// and every edit in its form is a transaction on it, so undo takes it back.
+// "Source" shows a fence's lines as text again, with a way back to the card.
+
+/// Where the editor draws cards: show() each time a card's fence is drawn
+/// or changes, hide() when it goes.
+export type CardHost = {
+  show: (dom: HTMLElement, fence: { info: string; body: string }) => void
+  hide: (dom: HTMLElement) => void
+}
+
+const cardHost = Facet.define<CardHost, CardHost | null>({ combine: (values) => values[0] ?? null })
+const hosts = new WeakMap<HTMLElement, CardHost>()
+
+/// Shows the fence starting at the position as its lines ([on] true) or as
+/// its card again.
+const asSource = StateEffect.define<{ pos: number; on: boolean }>()
+
+const sources = StateField.define<number[]>({
+  create: () => [],
+  update(list, tr) {
+    let next = tr.docChanged ? list.map((pos) => tr.changes.mapPos(pos, -1, MapMode.TrackDel)).filter((p): p is number => p !== null) : list
+    for (const effect of tr.effects) {
+      if (!effect.is(asSource)) continue
+      next = effect.value.on ? [...next.filter((p) => p !== effect.value.pos), effect.value.pos] : next.filter((p) => p !== effect.value.pos)
+    }
+    return next
+  },
+})
+
+class CardWidget extends WidgetType {
+  constructor(
+    readonly info: string,
+    readonly body: string,
+  ) {
+    super()
+  }
+  eq(other: CardWidget) {
+    return other.info === this.info && other.body === this.body
+  }
+  get estimatedHeight() {
+    return 140
+  }
+  toDOM(view: EditorView) {
+    const dom = el('div', 'cm-widget-card')
+    const host = view.state.facet(cardHost)
+    if (host) {
+      hosts.set(dom, host)
+      host.show(dom, { info: this.info, body: this.body })
+    }
+    return dom
+  }
+  updateDOM(dom: HTMLElement) {
+    hosts.get(dom)?.show(dom, { info: this.info, body: this.body })
+    return true
+  }
+  destroy(dom: HTMLElement) {
+    hosts.get(dom)?.hide(dom)
+    hosts.delete(dom)
+  }
+  ignoreEvent() {
+    return true
+  }
+}
+
+/// "show the card", at the end of a fence's first line shown as text.
+class BackToCard extends WidgetType {
+  constructor(readonly pos: number) {
+    super()
+  }
+  eq(other: BackToCard) {
+    return other.pos === this.pos
+  }
+  toDOM(view: EditorView) {
+    const button = el('button', 'cm-widget-back', 'show the card')
+    button.type = 'button'
+    button.onmousedown = (e) => e.preventDefault()
+    button.onclick = () => {
+      const pos = view.state.doc.lineAt(view.posAtDOM(button)).from
+      view.dispatch({ effects: asSource.of({ pos, on: false }) })
+    }
+    return button
+  }
+  ignoreEvent() {
+    return true
+  }
+}
+
+function cardDecorations(state: EditorState): DecorationSet {
+  const shownAsText = state.field(sources)
+  const ranges = []
+  for (const fence of findFences(state.doc.toString())) {
+    if (shownAsText.includes(fence.from)) {
+      ranges.push(Decoration.widget({ widget: new BackToCard(fence.from), side: 1 }).range(state.doc.lineAt(fence.from).to))
+      continue
+    }
+    ranges.push(Decoration.replace({ widget: new CardWidget(fence.info, fence.body), block: true }).range(fence.from, fence.to))
+  }
+  return Decoration.set(ranges, true)
+}
+
+const cards = StateField.define<DecorationSet>({
+  create: cardDecorations,
+  update: (decorations, tr) => (tr.docChanged || tr.effects.some((e) => e.is(asSource)) ? cardDecorations(tr.state) : decorations),
+  provide: (field) => [EditorView.decorations.from(field), EditorView.atomicRanges.of((view) => view.state.field(field))],
+})
+
+/// The fence whose card is [dom], as it is in the document now.
+export function fenceOf(view: EditorView, dom: HTMLElement): Fence | null {
+  let pos: number
+  try {
+    pos = view.posAtDOM(dom)
+  } catch {
+    return null
+  }
+  return findFences(view.state.doc.toString()).find((f) => f.from === pos) ?? null
+}
+
+/// Rewrites [fence]'s body as [body], changing only what differs, as one
+/// step undo can take back.
+export function setFenceBody(view: EditorView, fence: Fence, body: string) {
+  const a = fence.body
+  if (a === body) return
+  const opening = view.state.doc.lineAt(fence.from)
+  const bodyFrom = opening.to + 1
+  if (bodyFrom > view.state.doc.length) {
+    view.dispatch({ changes: { from: opening.to, insert: `\n${body}` }, userEvent: 'input.widget' })
+    return
+  }
+  if (a === '' && bodyFrom === view.state.doc.lineAt(fence.to).from) {
+    // No line between the fence's: the body goes in as lines of its own.
+    view.dispatch({ changes: { from: bodyFrom, insert: `${body}\n` }, userEvent: 'input.widget' })
+    return
+  }
+  let start = 0
+  while (start < a.length && start < body.length && a[start] === body[start]) start++
+  let end = 0
+  while (end < a.length - start && end < body.length - start && a[a.length - 1 - end] === body[body.length - 1 - end]) end++
+  view.dispatch({ changes: { from: bodyFrom + start, to: bodyFrom + a.length - end, insert: body.slice(start, body.length - end) }, userEvent: 'input.widget' })
+}
+
+/// Pins [fence] to [pin] instead, rewriting its first line's info.
+export function setFencePin(view: EditorView, fence: Fence, pin: string) {
+  const opening = view.state.doc.lineAt(fence.from)
+  const m = /^( {0,3}(?:`{3,}|~{3,})[ \t]*widget)(.*)$/.exec(opening.text)
+  if (!m) return
+  view.dispatch({ changes: { from: opening.from + m[1]!.length, to: opening.to, insert: ` ${pin}` }, userEvent: 'input.widget' })
+}
+
+/// Repins every fence pinning `{name}@dev` for a name in [versions] to the
+/// version given, as one step undo can take back.
+export function repinDev(view: EditorView, versions: Record<string, number>) {
+  const changes: ChangeSpec[] = []
+  for (const fence of findFences(view.state.doc.toString())) {
+    const version = fence.pin?.version === 'dev' ? versions[fence.pin.name] : undefined
+    if (version === undefined) continue
+    const opening = view.state.doc.lineAt(fence.from)
+    const m = /^( {0,3}(?:`{3,}|~{3,})[ \t]*widget)(.*)$/.exec(opening.text)
+    if (m) changes.push({ from: opening.from + m[1]!.length, to: opening.to, insert: ` ${fence.pin!.name}@${version}` })
+  }
+  if (changes.length) view.dispatch({ changes, userEvent: 'input.widget' })
+  return changes.length
+}
+
+/// Shows [fence] as its lines of text, with the cursor on its first line.
+export function showSource(view: EditorView, fence: Fence) {
+  const opening = view.state.doc.lineAt(fence.from)
+  view.dispatch({ effects: asSource.of({ pos: fence.from, on: true }), selection: EditorSelection.cursor(opening.to), scrollIntoView: true })
+  view.focus()
+}
+
+/// Puts [text] (a whole fence) on lines of its own at [pos], or in place of
+/// the line at [replaceLine] (the slash that asked for it) while that line is
+/// still just a slash. The cursor goes after it.
+export function insertFence(view: EditorView, pos: number, text: string, replaceLine?: number) {
+  const { doc } = view.state
+  // The slash's line, while it is still just a slash, or an empty line,
+  // takes the fence; else it goes after the cursor's line. Either way a
+  // blank line keeps it from the text around it.
+  const slash = replaceLine !== undefined && replaceLine <= doc.length ? doc.lineAt(replaceLine) : null
+  const line = slash && slash.from === replaceLine && slash.text.trim() === '/' ? slash : doc.lineAt(Math.min(pos, doc.length))
+  const replace = line === slash || !line.text.trim()
+  const prev = line.number > 1 ? doc.line(line.number - 1) : null
+  const next = line.number < doc.lines ? doc.line(line.number + 1) : null
+  const before = !replace ? '\n\n' : prev?.text.trim() ? '\n' : ''
+  const after = !next || next.text.trim() ? '\n' : ''
+  const from = replace ? line.from : line.to
+  view.dispatch({
+    changes: { from, to: line.to, insert: `${before}${text}${after}` },
+    selection: EditorSelection.cursor(from + before.length + text.length),
+    userEvent: 'input.widget',
+    scrollIntoView: true,
+  })
+}
+
+/// Undo and redo in the body's history, for keys pressed inside a card.
+export const undoBody = (view: EditorView) => undo(view)
+export const redoBody = (view: EditorView) => redo(view)
+
+/// A slash typed alone on a line: the picker opens there.
+function slashes(onSlash: (lineFrom: number) => void) {
+  return EditorView.updateListener.of((update) => {
+    if (!update.docChanged || !update.transactions.some((tr) => tr.isUserEvent('input.type'))) return
+    const { main } = update.state.selection
+    if (!main.empty) return
+    const line = update.state.doc.lineAt(main.head)
+    if (line.text === '/' && main.head === line.to) onSlash(line.from)
+  })
+}
+
+// ---------------------------------------------------------------------------
 // The headings, for the preview to follow the cursor
 
 const HEADING = /^(ATX|Setext)Heading\d$/
@@ -473,6 +692,10 @@ export type BodyOptions = {
   /// What covers the window's top and bottom edges (fixed bars, the
   /// keyboard), so the cursor is kept clear of them.
   margins?: () => { top: number; bottom: number } | null
+  /// Where widget fences' cards are drawn.
+  cards?: CardHost
+  /// A slash typed alone on a line, at the line's start.
+  onSlash?: (lineFrom: number) => void
 }
 
 export function createBody(options: BodyOptions): EditorView {
@@ -487,6 +710,10 @@ export function createBody(options: BodyOptions): EditorView {
     images,
     actions.of(options.actions),
     imageEvents(options.onFiles),
+    sources,
+    cards,
+    ...(options.cards ? [cardHost.of(options.cards)] : []),
+    ...(options.onSlash ? [slashes(options.onSlash)] : []),
     highlightActiveLine(),
     EditorView.lineWrapping,
     placeholder('Write in markdown. Paste or drop images to upload them.'),

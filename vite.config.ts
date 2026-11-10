@@ -1,3 +1,6 @@
+import { existsSync, readFileSync, statSync, watch as fsWatch, type FSWatcher } from 'node:fs'
+import type { ServerResponse } from 'node:http'
+import { extname, join, resolve, sep } from 'node:path'
 import { defineConfig, type Plugin } from 'vite'
 import { devtools } from '@tanstack/devtools-vite'
 import { sentryVitePlugin } from '@sentry/vite-plugin'
@@ -26,6 +29,72 @@ const mediaIsTheApps: Plugin = {
   },
 }
 
+// A widget's local build, for a post pinning {name}@dev on the dev server
+// (BRIEF.md, Widgets): /__widgets/{name}/{file} is widgets/{name}/{output}/
+// {file}, never cached. /__widgets/events tells every page showing one when
+// a build changes ({ name, stamp }), so it mounts the new build
+// (src/lib/widgetMount.ts). Only `vite dev` has it: in production there is
+// no such route, and a dev pin renders the plain fallback.
+const widgetsDev: Plugin = {
+  name: 'widgets-dev',
+  apply: 'serve',
+  configureServer(server) {
+    const dir = resolve(process.cwd(), process.env.WIDGETS_DIR || 'widgets')
+    const outputOf = (name: string): string | null => {
+      try {
+        const output = JSON.parse(readFileSync(join(dir, name, 'widget.json'), 'utf8'))?.build?.output
+        return typeof output === 'string' && output && !output.includes('..') ? output : null
+      } catch {
+        return null
+      }
+    }
+    const listeners = new Set<ServerResponse>()
+    const timers = new Map<string, NodeJS.Timeout>()
+    let watcher: FSWatcher | null = null
+    const watch = () => {
+      if (watcher || !existsSync(dir)) return
+      watcher = fsWatch(dir, { recursive: true }, (_event, file) => {
+        const [name, ...rest] = String(file ?? '').split(sep)
+        const output = name && outputOf(name)
+        if (!output || !rest.join('/').startsWith(`${output}/`)) return
+        clearTimeout(timers.get(name))
+        timers.set(
+          name,
+          setTimeout(() => {
+            const entry = join(dir, name, output, 'index.js')
+            if (!existsSync(entry)) return
+            const data = `data: ${JSON.stringify({ name, stamp: Math.floor(statSync(entry).mtimeMs) })}\n\n`
+            for (const res of listeners) res.write(data)
+          }, 150),
+        )
+      })
+    }
+    server.httpServer?.on('close', () => watcher?.close())
+    server.middlewares.use((req, res, next) => {
+      if (!req.url?.startsWith('/__widgets/')) return next()
+      const path = decodeURIComponent(new URL(req.url, 'http://dev').pathname)
+      if (path === '/__widgets/events') {
+        watch()
+        res.writeHead(200, { 'content-type': 'text/event-stream', 'cache-control': 'no-store', connection: 'keep-alive' })
+        res.write(': widgets\n\n')
+        listeners.add(res)
+        req.on('close', () => listeners.delete(res))
+        return
+      }
+      const [name, ...rest] = path.slice('/__widgets/'.length).split('/')
+      const output = name && /^[a-z0-9][a-z0-9-]*$/.test(name) ? outputOf(name) : null
+      const base = output ? resolve(dir, name, output) : null
+      const file = base ? resolve(base, ...rest) : null
+      if (!base || !file || !file.startsWith(base + sep) || !existsSync(file) || !statSync(file).isFile()) {
+        res.writeHead(404, { 'content-type': 'text/plain; charset=utf-8' }).end('No such widget build: run npm run widget:dev <name>')
+        return
+      }
+      const types: Record<string, string> = { '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.json': 'application/json', '.svg': 'image/svg+xml', '.png': 'image/png', '.wasm': 'application/wasm' }
+      res.writeHead(200, { 'content-type': types[extname(file)] ?? 'application/octet-stream', 'cache-control': 'no-store' }).end(readFileSync(file))
+    })
+  },
+}
+
 // Sentry reads the server's errors with the build's source maps, which are
 // made only to be uploaded, when the build has SENTRY_AUTH_TOKEN (Railway
 // sets it on the service), as the deploy's commit, the release the server
@@ -45,6 +114,7 @@ const config = defineConfig({
   environments: { client: { build: { sourcemap: false } } },
   plugins: [
     mediaIsTheApps,
+    widgetsDev,
     devtools(),
     nitro({ rollupConfig: { external: [/^@sentry\//] } }),
     tailwindcss(),

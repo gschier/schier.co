@@ -11,8 +11,10 @@ import { s3Configured, s3Get, s3Head, s3Put } from './s3'
 // needs no bucket. /media/{key} and uploads go through storage().
 //
 // Keys are what they were in the DigitalOcean Space: under images/,
-// avatar/ or other/. Every method checks the key here, so nothing outside
-// those three is ever read or written, in the bucket or on disk.
+// avatar/ or other/; and widgets/{name}/{version}/, where
+// scripts/widget-publish.mjs puts a widget's build (BRIEF.md, Widgets).
+// Every method checks the key here, so nothing outside those four is ever
+// read or written, in the bucket or on disk.
 
 /// What is known about an object without its bytes.
 export type Meta = { contentType: string; size: number; etag?: string; lastModified?: string }
@@ -33,9 +35,9 @@ export interface Storage {
   put(key: string, body: Uint8Array | ReadableStream<Uint8Array>, length: number, contentType: string): Promise<void>
 }
 
-const PREFIXES = ['images/', 'avatar/', 'other/']
+const PREFIXES = ['images/', 'avatar/', 'other/', 'widgets/']
 
-/// Whether [key] names something the site serves: under one of the three
+/// Whether [key] names something the site serves: under one of the four
 /// prefixes, with no empty, `.` or `..` segment, no backslash and no NUL.
 export function validKey(key: string | undefined | null): key is string {
   if (!key || !PREFIXES.some((p) => key.startsWith(p))) return false
@@ -120,8 +122,8 @@ function bucketMeta(res: Response): Meta {
 // A directory on disk.
 
 /// Objects as files under [root] at their keys, with each one's content
-/// type in `.meta/{key}.json` beside the tree (outside images/, avatar/ and
-/// other/, so no key can be mistaken for one), so it survives restarts.
+/// type in `.meta/{key}.json` beside the tree (outside the key prefixes, so
+/// no key can be mistaken for one), so it survives restarts.
 /// Writes go to `.tmp/` first and are renamed into place, so a half-written
 /// object is never served. The directory is made when first written.
 ///

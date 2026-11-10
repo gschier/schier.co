@@ -1,6 +1,6 @@
 import { createServerFn } from '@tanstack/react-start'
 import { notFoundData } from '#/server/pages'
-import { editorData, newsletterStatus, preview, publish, remove, savePost, sendNewsletter, setListed, unpublish, type SaveInput } from '#/server/editor'
+import { editorData, newsletterStatus, prepareWidgets, preview, publish, remove, savePost, sendNewsletter, setListed, unpublish, type SaveInput } from '#/server/editor'
 
 // The admin pages' server functions, each a call into src/server/editor.ts,
 // which checks a signed-in session and the input. In the browser these are
@@ -43,3 +43,7 @@ export const newsletterStatusFn = createServerFn({ method: 'GET' })
 export const sendNewsletterFn = createServerFn({ method: 'POST' })
   .validator((input: { id: string; to?: string; dryRun?: boolean }) => input)
   .handler(({ data }) => sendNewsletter(data))
+
+export const prepareWidgetsFn = createServerFn({ method: 'POST' })
+  .validator((input: { names: string[] }) => input)
+  .handler(({ data }) => prepareWidgets(data))

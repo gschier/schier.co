@@ -14,6 +14,7 @@
 import type { BlogPost, Prisma } from '#/generated/prisma/client'
 import { db, newId } from '#/server/db'
 import { renderMarkdown, summarize } from '#/server/markdown'
+import { publishProblem } from '#/server/widgets'
 
 /// A refusal meant for the person or agent asking: a duplicate slug, a post
 /// that does not exist. Its message is plain and is shown as it is; it is
@@ -280,12 +281,16 @@ export async function updatePost(slugOrId: string, fields: PostFields): Promise<
 
 /// Publishes the post [slugOrId] and dates it now, so it is new on the blog
 /// and can go to the newsletter. A post that is already published is left
-/// as it is, date included.
+/// as it is, date included. A post pinning a widget production does not
+/// have (a local {name}@dev build, or a version not in
+/// widgets/manifest.json) is refused, so readers never get a broken widget.
 export async function publishPost(slugOrId: string): Promise<BlogPost> {
   const post = await getPost(slugOrId)
   if (post.published) return post
   if (!post.title.trim()) throw new PostActionError(`"${post.slug}" has no title; give it one before publishing`)
   if (!post.content.trim()) throw new PostActionError(`"${post.slug}" has no content; write something before publishing`)
+  const widgets = publishProblem(post.content)
+  if (widgets) throw new PostActionError(`"${post.slug}" cannot be published yet. ${widgets}`)
   return db.blogPost.update({ where: { id: post.id }, data: { published: true, date: new Date() } })
 }
 

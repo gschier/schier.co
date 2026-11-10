@@ -16,6 +16,8 @@
 @layer theme, base, components, utilities;
 @import 'tailwindcss/theme.css' layer(theme);
 @import 'tailwindcss/utilities.css' layer(utilities);
+/* Widgets are their own projects with their own styles (widgets/README.md). */
+@source not "../widgets";
 
 /* The Go site's Tailwind theme (frontend/tailwind/theme.js): its colours
  * only, each one of the light and dark variables below. bg-btn and text-btn
@@ -696,6 +698,47 @@
   position: absolute;
   left: -100000px;
   top: -100000px;
+}
+
+/***********/
+/* WIDGETS */
+/***********/
+
+/* A widget's place in a post (src/server/markdown.ts): the space its size
+ * hint asks for, holding the fallback line until the widget mounts
+ * (src/lib/widgetMount.ts), which draws everything else itself. */
+.content .widget {
+  position: relative;
+  margin: 1.5rem 0;
+}
+
+.content .widget:not([data-widget-mounted]) {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border: 1px dashed var(--gray-300);
+  border-radius: 0.375rem;
+  background-color: var(--gray-100);
+}
+
+.content .widget__fallback {
+  margin: 0;
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  color: var(--gray-600);
+}
+
+/* Why a widget is not running, for the admin only. */
+.content .widget__notice {
+  margin: 0;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.25rem;
+  background-color: var(--warning-200);
+  color: var(--gray-800);
+  font-size: 0.8rem;
+  line-height: 1.4;
 }
 
 /***************/
@@ -2020,6 +2063,18 @@ form .editor__new-tag {
   flex-direction: column;
 }
 
+/* The body's bar holds three buttons; on a narrow pane they show their
+ * icons alone. */
+.editor__pane--write {
+  container: write / inline-size;
+}
+
+@container write (max-width: 640px) {
+  .editor__bar .editor__btn-label {
+    display: none;
+  }
+}
+
 .editor__bar {
   flex: none;
   margin-bottom: 0.375rem;
@@ -2298,6 +2353,622 @@ form .editor__upload input {
 
 @keyframes editor-spin {
   to { transform: rotate(360deg); }
+}
+
+/* A widget fence, drawn as a card (src/components/editor/widgetCard.tsx,
+ * after the mockup's design/editor/ on the editor's design branch): closed,
+ * its name, pin and settings in a line, with Edit and source; open, a form
+ * made from the widget's props schema, and the fence's text folded under it. */
+.cm-widget-card {
+  padding: 0.375rem 1.25rem 0.5rem;
+}
+
+.wcard {
+  container-type: inline-size;
+  border: 1px solid var(--gray-300);
+  border-radius: 0.375rem;
+  background-color: var(--gray-100);
+  overflow: hidden;
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  line-height: 1.35;
+  white-space: normal;
+  color: var(--gray-800);
+  cursor: default;
+}
+
+.wcard:hover {
+  border-color: var(--primary-300);
+}
+
+.wcard.is-open {
+  border-color: var(--primary-400);
+  background-color: var(--raised);
+  box-shadow: 0 0 0 3px var(--primary-050);
+}
+
+.wcard__head {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-areas: 'icon text acts' 'icon props props';
+  gap: 0 0.75rem;
+  padding: 0.75rem;
+  align-items: start;
+}
+
+.wcard.is-open .wcard__head {
+  grid-template-areas: 'icon text acts';
+  align-items: center;
+}
+
+.wcard__icon {
+  grid-area: icon;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 0.25rem;
+  border: 1px solid var(--gray-300);
+  background-color: var(--gray-200);
+  color: var(--txt-syntax-1);
+}
+
+.editor .wcard__icon .ico {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.wcard__text {
+  grid-area: text;
+  min-width: 0;
+}
+
+.wcard__kind {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  font-size: 0.65rem;
+  line-height: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--txt-syntax-1);
+}
+
+.wcard .mono {
+  font-family: var(--mono);
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--gray-600);
+}
+
+.wcard__name {
+  margin-top: 0.1rem;
+  font-size: 1rem;
+  line-height: 1.35rem;
+  font-weight: 700;
+  color: var(--gray-900);
+}
+
+.wcard__desc {
+  margin-top: 0.1rem;
+  color: var(--gray-700);
+}
+
+.wcard.is-open .wcard__desc,
+.wcard.is-open .wcard__props {
+  display: none;
+}
+
+.wcard__props {
+  grid-area: props;
+  margin-top: 0.4rem;
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  line-height: 1rem;
+  color: var(--gray-600);
+}
+
+.wcard__acts {
+  grid-area: acts;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.5rem;
+}
+
+.wcard__link {
+  border: 0;
+  border-bottom: 1px dotted var(--gray-500);
+  background: none;
+  padding: 0;
+  cursor: pointer;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  color: var(--gray-600);
+}
+
+.wcard__link:hover {
+  color: var(--gray-800);
+}
+
+.wcard__problems {
+  margin: 0;
+  padding: 0.5rem 0.75rem 0.5rem 2rem;
+  border-top: 1px solid var(--warning-200);
+  background-color: var(--warning-100);
+  font-size: 0.8rem;
+  color: var(--gray-800);
+}
+
+.wcard__form {
+  border-top: 1px solid var(--gray-200);
+  padding: 0.875rem 0.875rem 0.25rem;
+}
+
+/* The fields: two columns when the card is wide enough, one when not. A
+ * number or a line of text takes the whole width. */
+.wprops {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 0 1.5rem;
+}
+
+.wprop--wide {
+  grid-column: 1 / -1;
+}
+
+@container (max-width: 460px) {
+  .wprops {
+    display: block;
+  }
+}
+
+.wprop {
+  margin-bottom: 0.875rem;
+}
+
+.wprop--version {
+  max-width: 16rem;
+}
+
+.wprop__label {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+
+form .wprop__label label {
+  margin: 0;
+}
+
+.wprop__label .mono {
+  font-size: 0.65rem;
+  color: var(--gray-500);
+}
+
+.wprop__help {
+  margin: 0.3rem 0 0;
+  font-size: 0.75rem;
+  line-height: 1.1rem;
+  color: var(--gray-600);
+}
+
+form .wprop input[type='text'],
+form .wprop input[type='number'],
+form .wprop select {
+  font-size: 0.875rem;
+}
+
+/* The segmented control. */
+.wseg {
+  display: flex;
+  width: 100%;
+  padding: 2px;
+  border-radius: 0.375rem;
+  background-color: var(--gray-200);
+}
+
+.wseg button {
+  flex: 1 1 0;
+  border: 0;
+  border-radius: 0.3rem;
+  background: none;
+  padding: 0.35rem 0.45rem;
+  cursor: pointer;
+  font-size: 0.75rem;
+  line-height: 1.1rem;
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--gray-700);
+}
+
+.wseg button.is-on {
+  background-color: var(--bg);
+  color: var(--gray-900);
+  box-shadow: 0 1px 2px hsla(var(--hue), 30%, 20%, 0.16);
+}
+
+[theme="dark"] .wseg button.is-on,
+[theme="dark-auto"] .wseg button.is-on {
+  background-color: var(--gray-300);
+}
+
+/* A number, with its unit, and a slider beside it. */
+.wrange-row {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+}
+
+.wnum {
+  flex: none;
+  display: flex;
+  width: 5.5rem;
+}
+
+form .wnum input {
+  min-width: 0;
+  font-variant-numeric: tabular-nums;
+  -moz-appearance: textfield;
+}
+
+.wnum:has(span) input {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.wnum input::-webkit-outer-spin-button,
+.wnum input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.wnum span {
+  display: flex;
+  align-items: center;
+  padding: 0 0.55rem;
+  border: 1px solid var(--gray-400);
+  border-left: 0;
+  border-radius: 0 0.25rem 0.25rem 0;
+  background-color: var(--gray-200);
+  color: var(--gray-600);
+}
+
+form input.wrange {
+  --pct: 50%;
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 1.5rem;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  -webkit-appearance: none;
+  appearance: none;
+  cursor: pointer;
+}
+
+.wrange::-webkit-slider-runnable-track {
+  height: 0.3rem;
+  border-radius: 9999px;
+  background: linear-gradient(to right, var(--primary-500) var(--pct), var(--gray-300) var(--pct));
+}
+
+.wrange::-moz-range-track {
+  height: 0.3rem;
+  border-radius: 9999px;
+  background: var(--gray-300);
+}
+
+.wrange::-moz-range-progress {
+  height: 0.3rem;
+  border-radius: 9999px;
+  background: var(--primary-500);
+}
+
+.wrange::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  margin-top: -0.4rem;
+  width: 1.1rem;
+  height: 1.1rem;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 2px solid var(--primary-500);
+  box-shadow: 0 1px 3px hsla(var(--hue), 30%, 20%, 0.25);
+}
+
+.wrange::-moz-range-thumb {
+  width: 1rem;
+  height: 1rem;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 2px solid var(--primary-500);
+}
+
+/* A toggle. */
+form label.wtoggle {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 0.25rem 0 0;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 400;
+  text-transform: none;
+  color: var(--gray-800);
+}
+
+form .wtoggle input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.wtoggle__track {
+  position: relative;
+  flex: none;
+  width: 2.2rem;
+  height: 1.25rem;
+  border-radius: 9999px;
+  background-color: var(--gray-400);
+  transition: background-color 120ms;
+}
+
+.wtoggle__track::after {
+  content: '';
+  position: absolute;
+  top: 0.15rem;
+  left: 0.15rem;
+  width: 0.95rem;
+  height: 0.95rem;
+  border-radius: 50%;
+  background-color: #fff;
+  box-shadow: 0 1px 2px hsla(0, 0%, 0%, 0.25);
+  transition: transform 120ms;
+}
+
+.wtoggle input:checked + .wtoggle__track {
+  background-color: var(--primary-500);
+}
+
+.wtoggle input:checked + .wtoggle__track::after {
+  transform: translateX(0.95rem);
+}
+
+.wtoggle input:focus-visible + .wtoggle__track {
+  outline: 2px solid var(--primary-400);
+  outline-offset: 2px;
+}
+
+.wtoggle .mono {
+  font-size: 0.65rem;
+  color: var(--gray-500);
+}
+
+/* The fence, as text, folded under the form. */
+.wcard__source {
+  border-top: 1px dashed var(--gray-300);
+  padding: 0 0.875rem;
+}
+
+.wcard__source summary {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 0;
+  list-style: none;
+  font-size: 0.75rem;
+  color: var(--gray-600);
+}
+
+.wcard__source summary::-webkit-details-marker {
+  display: none;
+}
+
+.editor .wcard__source summary .ico {
+  width: 0.65rem;
+  height: 0.65rem;
+  transition: transform 120ms;
+}
+
+.editor .wcard__source[open] summary .ico {
+  transform: rotate(90deg);
+}
+
+.wcard__hint {
+  margin-left: 0.25rem;
+  color: var(--gray-500);
+}
+
+.wcard__source pre {
+  margin: 0 0 0.5rem;
+  padding: 0.6rem 0.75rem;
+  border-radius: 0.25rem;
+  border: 1px dashed var(--gray-300);
+  background-color: var(--gray-100);
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  line-height: 1.6;
+  color: var(--gray-800);
+  white-space: pre-wrap;
+}
+
+.wcard__source .wcard__link {
+  margin-bottom: 0.75rem;
+}
+
+/* A fence shown as its text, with the way back to its card. */
+.cm-widget-back {
+  margin-left: 1rem;
+  border: 0;
+  border-bottom: 1px dotted var(--gray-500);
+  background: none;
+  padding: 0;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  color: var(--txt-link);
+}
+
+/* Prepare for publish, on the dev server for a post with local builds. */
+.editor__prepare code {
+  font-size: 0.8em;
+}
+
+/* The widget picker: a popover under the line on two panes, a sheet on
+ * one. */
+.wpicker-scrim {
+  position: fixed;
+  z-index: 40;
+  inset: 0;
+}
+
+.wpicker {
+  position: fixed;
+  z-index: 41;
+  display: flex;
+  flex-direction: column;
+  max-height: min(24rem, 70vh);
+  border: 1px solid var(--gray-300);
+  border-radius: 0.5rem;
+  background-color: var(--raised);
+  box-shadow: var(--shadow);
+  font-family: var(--font-sans);
+  overflow: hidden;
+}
+
+.wpicker__head {
+  display: none;
+}
+
+.wpicker__search {
+  position: relative;
+  flex: none;
+  padding: 0.5rem;
+  border-bottom: 1px solid var(--gray-200);
+}
+
+.editor .wpicker__search .ico {
+  position: absolute;
+  left: 1.15rem;
+  top: 50%;
+  width: 0.9rem;
+  height: 0.9rem;
+  transform: translateY(-50%);
+  color: var(--gray-500);
+}
+
+form .wpicker__search input {
+  padding-left: 2rem;
+  font-size: 0.875rem;
+}
+
+.wpicker__list {
+  flex: 1 1 auto;
+  min-height: 0;
+  padding: 0.25rem;
+  overflow: auto;
+}
+
+.wpicker__item {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0 0.75rem;
+  align-items: center;
+  width: 100%;
+  border: 0;
+  border-radius: 0.375rem;
+  background: none;
+  padding: 0.4rem 0.5rem;
+  cursor: pointer;
+  text-align: left;
+  font-size: 0.8rem;
+  line-height: 1.15rem;
+  color: inherit;
+}
+
+.wpicker__item.is-on {
+  background-color: var(--primary-050);
+  box-shadow: inset 0 0 0 1px var(--primary-100);
+}
+
+.wpicker__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 0.25rem;
+  border: 1px solid var(--gray-300);
+  background-color: var(--gray-200);
+  color: var(--txt-syntax-1);
+}
+
+.wpicker__text {
+  display: block;
+  min-width: 0;
+}
+
+.wpicker__name {
+  display: block;
+  font-weight: 700;
+  color: var(--gray-900);
+}
+
+.wpicker__desc {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  color: var(--gray-700);
+}
+
+.wpicker__meta {
+  display: block;
+  margin-top: 0.1rem;
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  line-height: 1rem;
+  color: var(--gray-500);
+}
+
+.wpicker__none {
+  margin: 0;
+  padding: 0.75rem;
+  font-size: 0.8rem;
+  color: var(--gray-600);
+}
+
+.wpicker__foot {
+  flex: none;
+  display: flex;
+  gap: 1rem;
+  padding: 0.45rem 0.75rem;
+  border-top: 1px solid var(--gray-200);
+  font-size: 0.68rem;
+  color: var(--gray-600);
+}
+
+.wpicker kbd {
+  display: inline-block;
+  min-width: 1.2rem;
+  margin-right: 0.15rem;
+  padding: 0 0.3rem;
+  border: 1px solid var(--gray-300);
+  border-bottom-width: 2px;
+  border-radius: 0.2rem;
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  line-height: 0.95rem;
+  text-align: center;
+  color: var(--gray-700);
+  background-color: var(--gray-100);
 }
 
 /* The message and the buttons, under the body. When the page scrolls (Other
@@ -2818,6 +3489,107 @@ form .editor__upload input {
 
   .cm-image__thumb img {
     max-height: 9rem;
+  }
+
+  /* The card: icon and words, then the settings and the buttons below. */
+  .wcard__head {
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-areas: 'icon text' 'props props' 'acts acts';
+    padding: 0.7rem;
+  }
+
+  .wcard.is-open .wcard__head {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-areas: 'icon text acts';
+  }
+
+  .wcard__props {
+    margin-top: 0.6rem;
+    font-size: 0.75rem;
+  }
+
+  .wcard__acts {
+    flex-direction: row-reverse;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 0.6rem;
+  }
+
+  .wcard.is-open .wcard__acts {
+    margin: 0;
+  }
+
+  form .wprop input[type='text'],
+  form .wprop input[type='number'],
+  form .wprop select,
+  form .wpicker__search input {
+    font-size: 1rem;
+  }
+}
+
+/* One pane: the picker is a sheet, as the keyboard and the thumb want it. */
+@media (max-width: 999px) {
+  .wpicker-scrim--sheet {
+    background-color: var(--scrim);
+  }
+
+  .wpicker--sheet {
+    left: 0;
+    right: 0;
+    bottom: calc(var(--kb, 0px));
+    max-width: 40rem;
+    max-height: calc(100dvh - var(--safe-top) - var(--kb, 0px) - 2.5rem);
+    margin: 0 auto;
+    border: 0;
+    border-radius: 0.875rem 0.875rem 0 0;
+    box-shadow: var(--shadow-up);
+    padding-bottom: var(--safe-bottom);
+  }
+
+  .wpicker--sheet .wpicker__head {
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding: 1.1rem 1.25rem 0.5rem;
+  }
+
+  .wpicker--sheet .wpicker__head h2 {
+    margin: 0 auto 0 0;
+    font-size: 1.05rem;
+    line-height: 1.5rem;
+  }
+
+  .wpicker--sheet .wpicker__head button {
+    border: 0;
+    background: none;
+    padding: 0.25rem 0;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--txt-link);
+  }
+
+  .wpicker--sheet .wpicker__search {
+    padding: 0.25rem 1rem 0.75rem;
+  }
+
+  .editor .wpicker--sheet .wpicker__search .ico {
+    left: 1.65rem;
+  }
+
+  .wpicker--sheet .wpicker__list {
+    padding: 0.4rem 0.6rem 0.6rem;
+  }
+
+  .wpicker--sheet .wpicker__item {
+    padding: 0.55rem 0.5rem;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+  }
+
+  .wpicker--sheet .wpicker__foot {
+    display: none;
   }
 }
 

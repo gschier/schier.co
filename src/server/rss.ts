@@ -47,7 +47,7 @@ export async function rssFeed(posts: BlogPost[], baseUrl: string): Promise<strin
     `    </image>`,
   ]
   for (const post of posts) {
-    const html = (await renderMarkdown(post.content)).replace(/(<(?:img|a|source|video)\b[^>]*\s(?:src|href)=")\/media\//g, `$1${baseUrl}/media/`)
+    const html = (await renderMarkdown(post.content, { url: `${baseUrl}/blog/${post.slug}` })).replace(/(<(?:img|a|source|video)\b[^>]*\s(?:src|href)=")\/media\//g, `$1${baseUrl}/media/`)
     lines.push(
       `    <item>`,
       `      <title>${xmlText(post.title.replaceAll('–', '&ndash;'))}</title>`,

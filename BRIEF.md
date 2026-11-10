@@ -292,7 +292,109 @@ other/ 5, db-backups/ 951 (6 MB, not needed).
   its last change is offered with Restore and Discard, never restored
   silently. This replaces "there is no autosave" above.
 - Left for the widget round: the widget card, the picker, Insert widget,
-  fence rendering and the slash command.
+  fence rendering and the slash command. (Built in that round; see
+  Widgets.)
+
+## Widgets (2026-11-09)
+
+Interactive demos inside posts, first round. `widgets/README.md` is the
+contract for whoever writes one.
+
+- A widget is a folder `widgets/<name>/`, a project of its own: its own
+  `package.json`, lockfile and build, making one ES module (`index.js` in
+  its output folder, with any assets it loads relative to
+  `import.meta.url`). The site never installs or builds widgets: their
+  `node_modules` and `dist` are gitignored, the site's `tsconfig.json`
+  excludes the folder and Tailwind does not scan it, so the Railway build
+  is unaffected.
+- `widget.json`: id (the folder's name), name, description, build command,
+  optional watch command, output folder, a size hint (`aspectRatio` or
+  `height`) and the props schema, the site's own: key, label, optional help,
+  default, and a type of `enum` (options with labels), `number` (min, max,
+  step, unit), `boolean` or `string`. Checked by `checkWidgetJson`
+  (`src/lib/widgets.ts`).
+- The module exports `mount(element, { props })` returning
+  `{ update(props), destroy() }`. It draws into a plain element (no iframe,
+  no shadow DOM), keeps its styles under its own class and uses the site's
+  CSS variables, which follow its light and dark themes. The types are
+  `src/lib/widgetContract.ts`; each widget keeps an exact copy at
+  `src/contract.ts`, and a test checks the copies match.
+- Publishing is `npm run widget:publish <name>`
+  (`scripts/widget-publish.mjs`): the widget's own `npm ci` and build, the
+  next version (an integer from 1, one past the highest in the manifest or
+  in storage), the output uploaded under `widgets/<name>/<version>/` through
+  the site's storage (the bucket with the `AWS_*` variables, else
+  `ASSETS_DIR`, in `src/server/storage.ts`'s layout), and the version
+  recorded in the committed `widgets/manifest.json` with its date, files, a
+  sha256 of the files and its whole `widget.json`. A version already in
+  storage is refused: versions are immutable. `widgets/` is a storage key
+  prefix, served at `/media/widgets/...` with the immutable cache header.
+  One bucket serves dev and prod; production knows only the committed
+  manifest.
+- Decided in the build: a version published to the directory rather than
+  the bucket is marked `"storage": "disk"` in the manifest and production
+  ignores it, so a dev publish committed by mistake never points readers at
+  a missing file; the script says so when it happens.
+- A post pins one with a fence, ```` ```widget hello@1 ````, props as
+  `key: value` lines read against that version's schema. An unknown key or
+  a bad value falls back to the default and is listed on the editor's card;
+  nothing throws. `src/server/markdown.ts` renders it as a `div.widget`
+  carrying the pin, the module's address and the props, sized by the size
+  hint, holding "Interactive demo: open on the site" linked to the post,
+  which is what the feed shows (posters come later).
+- The post page and the editor's preview mount widgets with
+  `src/lib/widgetMount.ts`, loaded only when the post has a placeholder: a
+  dynamic import per module address, once however often the post uses it.
+  A preview re-render keeps a widget whose module did not change, moving its
+  element into the new HTML and calling `update`. A fence naming a widget or
+  version there is not shows the reason to the admin and the fallback to
+  readers; a widget that fails to load or throws does the same.
+- Dev versions: `<name>@dev`, on the dev server only, loads the local build
+  from `/__widgets/<name>/` (a Vite middleware in `vite.config.ts`, so no
+  such route exists in a production build, where a dev pin renders the
+  fallback). `npm run widget:dev <name>` installs and runs the widget's
+  watch; `/__widgets/events` tells open pages when a build changes, and they
+  mount the new one with the props they had.
+- Prepare for publish, in the editor on the dev server when the post has
+  dev pins: lists them, publishes each through `publishWidget`, and repins
+  the fences in one undoable change. Publishing a post refuses a dev pin, a
+  version not in the manifest, or a widget fence with no pin
+  (`publishPost`, so the editor and the MCP both refuse).
+- The editor (after the mockup on the branch `stetta/tk_mw9rgdpu86gx556o`,
+  `design/editor/`): a widget fence is a card, a CodeMirror block
+  decoration hosting a React portal (`src/components/editor/widgetCard.tsx`).
+  Closed: the name, the pin, the description and the settings in a line,
+  with Edit and source. Open: a version control (published versions, and
+  dev on the dev server), a form from the pinned version's schema (an enum
+  of up to four short options is a segmented control, else a select; a
+  number is a field with a slider; a boolean a toggle; a string a text
+  field), and the fence's text folded under it with Edit it as text, which
+  shows the fence as lines again with "show the card" to go back. Every
+  form edit is a transaction on the fence's text, changing only the line
+  it touches, and Cmd-Z and Cmd-Shift-Z inside the card are the body's undo
+  and redo. Posters are not in this round, so the card has an icon where
+  the mockup has one.
+- The picker: Insert widget beside Upload image (and + in the phone's bottom
+  bar), or a `/` alone on a line. It lists the manifest's widgets at their
+  latest version and, on the dev server, the local folders as `@dev`, and
+  inserts the fence with every default on lines of its own (in place of the
+  slash). A popover under the line on two panes, a sheet on one. The
+  mockup's "in N posts" count is left out.
+- The MCP has `list_widgets`: each published widget's name, title,
+  description, versions, latest version, its props schema and an example
+  fence.
+- The first widget is `widgets/hello`, Hello shapes: a row of bars, dots or
+  diamonds to click, with count (number), shape (enum), animate (boolean)
+  and caption (string), built with esbuild, its one dependency.
+- Decided in the build: the editor's `<head>` moved to
+  `src/components/editor/head.ts`. The admin routes imported it from the
+  editor's module, which put the whole editor in the chunk every page loads;
+  now the editor, its card and the widget loader load only on the editor's
+  pages, and a post with no widget loads no widget code. The body's bar
+  shows its three buttons as icons alone when the pane is under 640px wide.
+- Not in this round: posters and screenshots, image resizing, variables
+  shared between widgets, self-hosted fonts, the content architecture,
+  widget analytics.
 
 ## Deploy
 

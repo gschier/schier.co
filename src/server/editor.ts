@@ -32,6 +32,10 @@ import {
 } from '#/server/postActions'
 import { readTime, tagCounts, wordCount } from '#/server/posts'
 import { goTime, isoformat } from '#/server/views'
+import { catalog, dev, widgetsDir } from '#/server/widgets'
+import { WIDGET_NAME, type Catalog } from '#/lib/widgets'
+import { join } from 'node:path'
+import { pathToFileURL } from 'node:url'
 
 /// Thrown by an action asked for without a signed-in session. It says no more
 /// than a 404 would.
@@ -166,6 +170,11 @@ export type EditorData = {
   /// the post's own.
   tags: string[]
   newsletter: NewsletterView | null
+  /// The widgets the picker offers and the cards read their schemas from.
+  widgets: Catalog
+  /// Whether this is the dev server, where dev pins run and Prepare for
+  /// publish is offered.
+  dev: boolean
 }
 
 /// What the editor opens with: the post [id], or nothing for a new post.
@@ -178,7 +187,7 @@ export async function editorData(id: string | null): Promise<EditorData | null> 
   const counts = await tagCounts()
   const tags = [...new Set([...counts.slice(0, 16).map((t) => t.name), ...(post?.tags ?? [])])]
   const [shown, newsletter] = await Promise.all([previewOf(post?.content ?? '', post?.date ?? new Date()), post && newsletterView(post)])
-  return { post: post && editorPost(post), preview: shown, tags, newsletter }
+  return { post: post && editorPost(post), preview: shown, tags, newsletter, widgets: catalog(), dev: dev() }
 }
 
 const saveInput = z.object({
@@ -250,6 +259,46 @@ async function previewOf(markdown: string, date: Date): Promise<Preview> {
   const { html } = await renderPreview(markdown)
   const words = wordCount(markdown)
   return { html, words, readMinutes: readTime(words), dateTime: goTime(date), dateLabel: isoformat(date) }
+}
+
+// ---------------------------------------------------------------------------
+// Widgets
+
+export type Prepared = {
+  /// The version each widget was published as.
+  versions: Record<string, number>
+  /// The first one that could not be, and why; those after it were not tried.
+  failed: string | null
+  /// The widgets as they are now, with the new versions.
+  widgets: Catalog
+}
+
+const prepareInput = z.object({ names: z.array(z.string().regex(WIDGET_NAME)).min(1).max(20) })
+
+/// Publishes the local builds [names] (scripts/widget-publish.mjs, to the
+/// storage the dev server uses), for the editor's Prepare for publish, which
+/// then pins the post to the new versions. Dev server only.
+export async function prepareWidgets(input: { names: string[] }): Promise<Outcome<Prepared>> {
+  await requireAdmin()
+  const { names } = parse(prepareInput, input)
+  return attempt(async () => {
+    if (!dev()) throw new PostActionError('Prepare for publish works on the dev server only')
+    // Node's own import, not Vite's: the script is plain ESM run as it is,
+    // and never part of the server's build.
+    const nativeImport = new Function('url', 'return import(url)') as (url: string) => Promise<typeof import('../../scripts/widget-publish.mjs')>
+    const { publishWidget } = await nativeImport(pathToFileURL(join(process.cwd(), 'scripts/widget-publish.mjs')).href)
+    const versions: Record<string, number> = {}
+    let failed: string | null = null
+    for (const name of [...new Set(names)]) {
+      try {
+        versions[name] = (await publishWidget(name, { widgetsDir: widgetsDir(), log: (line: string) => console.log(`widget:publish ${name}: ${line}`) })).version
+      } catch (error) {
+        failed = `${name} was not published: ${error instanceof Error ? error.message : String(error)}`
+        break
+      }
+    }
+    return { versions, failed, widgets: catalog() }
+  })
 }
 
 // ---------------------------------------------------------------------------

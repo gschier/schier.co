@@ -8,4 +8,8 @@ dist
 src/generated/
 .media
 shots
+# Each widget's own install and build (widgets/README.md); what is published
+# is in the bucket, recorded in widgets/manifest.json.
+widgets/*/node_modules
+widgets/*/dist
 .idea

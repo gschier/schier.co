@@ -1,5 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { Editor, editorHead } from '#/components/editor'
+import { Editor } from '#/components/editor'
+import { editorHead } from '#/components/editor/head'
 import { NotFound } from '#/components/site'
 import { getEditor } from '#/lib/adminFns'
 

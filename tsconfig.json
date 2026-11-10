@@ -1,5 +1,6 @@
 {
   "include": ["**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules", "widgets"],
   "compilerOptions": {
     "resolveJsonModule": true,
     "target": "ES2022",

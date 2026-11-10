@@ -1,0 +1,49 @@
+{
+  "id": "hello",
+  "name": "Hello shapes",
+  "description": "A row of shapes to click, for trying widgets out.",
+  "build": {
+    "command": "npm run build",
+    "watch": "npm run watch",
+    "output": "dist"
+  },
+  "size": { "height": 240 },
+  "props": [
+    {
+      "key": "count",
+      "label": "Count",
+      "help": "How many shapes are in the row.",
+      "type": "number",
+      "default": 5,
+      "min": 1,
+      "max": 12,
+      "step": 1
+    },
+    {
+      "key": "shape",
+      "label": "Shape",
+      "help": "What each one is drawn as.",
+      "type": "enum",
+      "default": "bars",
+      "options": [
+        { "value": "bars", "label": "Bars" },
+        { "value": "dots", "label": "Dots" },
+        { "value": "diamonds", "label": "Diamonds" }
+      ]
+    },
+    {
+      "key": "animate",
+      "label": "Animate",
+      "help": "Shapes rise and fall, unless the reader asks for less motion.",
+      "type": "boolean",
+      "default": true
+    },
+    {
+      "key": "caption",
+      "label": "Caption",
+      "help": "A line under the shapes.",
+      "type": "string",
+      "default": "Click a shape to pick it."
+    }
+  ]
+}

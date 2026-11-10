@@ -12,19 +12,38 @@ import remarkParse from 'remark-parse'
 import remarkRehype from 'remark-rehype'
 import rehypeStringify from 'rehype-stringify'
 import { unified } from 'unified'
+// Relative, with the extension: test/markdown.test.ts loads this file with
+// Node alone, not through Vite.
+import { parsePin, readProps, sizeStyle, type Pin } from '../lib/widgets.ts'
+import type { Target } from './widgets.ts'
+
+export type RenderOptions = {
+  /// The post's address, which a widget's fallback line links to (absolute
+  /// in the feed). Without it the line is plain text.
+  url?: string
+}
 
 /// A post's markdown as the HTML the Go site renders for it.
-export async function renderMarkdown(markdown: string): Promise<string> {
+export async function renderMarkdown(markdown: string, options: RenderOptions = {}): Promise<string> {
   // The Go site's markdown filter: blackfriday does not like Windows line
   // endings.
   const source = prepare(markdown.replace(/\r\n/g, '\n'))
   const highlighter = await shiki()
   await loadLanguages(highlighter, source)
+  // Only a post with a widget fence looks the widgets up
+  // (src/server/widgets.ts, the manifest and on the dev server the local
+  // folders).
+  let target: Context['page']['target'] = () => ({ error: 'Widgets are not available here' })
+  if (/^ {0,3}(?:```|~~~)[ \t]*widget\b/m.test(source)) {
+    const widgets = await import('./widgets.ts')
+    const all = widgets.catalog()
+    target = (pin) => widgets.target(pin, all)
+  }
   const file = await unified()
     .use(remarkParse)
     .use(remarkGfm, { singleTilde: false })
     .use(withoutHtmlFlow)
-    .use(() => (tree: Root) => blackfriday(tree, source, highlighter))
+    .use(() => (tree: Root) => blackfriday(tree, source, highlighter, { target, url: options.url }))
     .use(remarkRehype, { allowDangerousHtml: true })
     .use(rehypeStringify, { allowDangerousHtml: true })
     .process(source)
@@ -112,10 +131,10 @@ const LIST_ITEM = /^( *)([-*+]|\d{1,9}\.)( +)\S/
 // ---------------------------------------------------------------------------
 // The tree, reworked as blackfriday renders it
 
-function blackfriday(tree: Root, source: string, highlighter: Highlighter) {
+function blackfriday(tree: Root, source: string, highlighter: Highlighter, page: Context['page']) {
   htmlBlocks(tree, source)
   blockQuirks(tree, source)
-  const ctx: Context = { source, highlighter, sp: new Smartypants(), notes: footnotes(tree), definitions: definitions(tree) }
+  const ctx: Context = { source, highlighter, sp: new Smartypants(), notes: footnotes(tree), definitions: definitions(tree), page }
   walk(tree, ctx)
   if (ctx.notes.order.length) tree.children.push(...footnoteList(ctx))
 }
@@ -126,6 +145,9 @@ type Context = {
   sp: Smartypants
   notes: Notes
   definitions: Map<string, Definition>
+  /// What widget fences need: where a pin's module is, and the post's
+  /// address.
+  page: { target: (pin: Pin) => Target; url?: string }
 }
 
 function walk(parent: Parent, ctx: Context) {
@@ -159,7 +181,7 @@ function walk(parent: Parent, ctx: Context) {
         children[i] = image(node, ctx.sp)
         continue
       case 'code':
-        children[i] = code(node, ctx.highlighter)
+        children[i] = node.lang === 'widget' ? widget(node, ctx.page) : code(node, ctx.highlighter)
         continue
       case 'list':
         // blackfriday always starts a numbered list at 1.
@@ -577,6 +599,36 @@ async function loadLanguages(highlighter: Highlighter, source: string) {
   }
   const missing = [...wanted].filter((l) => !highlighter.getLoadedLanguages().includes(l))
   if (missing.length) await highlighter.loadLanguage(...(missing as (keyof typeof bundledLanguages)[]))
+}
+
+// ---------------------------------------------------------------------------
+// Widgets (BRIEF.md, Widgets)
+
+/// A ```widget fence as the element the page mounts the widget into
+/// (src/lib/widgetMount.ts): its pin, module and props as data attributes,
+/// the space its size hint asks for, and inside it the line a reader without
+/// the widget sees (the feed, the newsletter, no script). A fence that pins
+/// nothing there is says why in data-widget-error, which the page shows the
+/// admin; a reader sees the line alone.
+function widget(node: Code, page: Context['page']): Html {
+  const pin = parsePin(node.meta)
+  const fallback = page.url
+    ? `<p class="widget__fallback"><a href="${escapeHTML(page.url)}">Interactive demo: open on the site</a></p>`
+    : '<p class="widget__fallback">Interactive demo: open on the site</p>'
+  if (!pin) {
+    const error = node.meta
+      ? `"widget ${node.meta}" pins no widget: write it as widget {name}@{version}, as in widget hello@1`
+      : 'A widget fence needs a name and version, as in widget hello@1'
+    return raw(`<div class="widget" data-widget-error="${escapeHTML(error)}">${fallback}</div>`)
+  }
+  const found = page.target(pin)
+  const name = `${pin.name}@${pin.version}`
+  if ('error' in found) return raw(`<div class="widget" data-widget="${name}" data-widget-error="${escapeHTML(found.error)}">${fallback}</div>`)
+  const { props } = readProps(node.value, found.widget.props)
+  const style = sizeStyle(found.widget.size)
+  return raw(
+    `<div class="widget" data-widget="${name}" data-widget-src="${escapeHTML(found.src)}" data-widget-props="${escapeHTML(JSON.stringify(props))}"${style ? ` style="${style}"` : ''}>${fallback}</div>`,
+  )
 }
 
 // ---------------------------------------------------------------------------

@@ -1,0 +1,12 @@
+{
+  "name": "schier-widget-hello",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "esbuild src/index.ts --bundle --format=esm --target=es2020 --minify --loader:.css=text --outfile=dist/index.js",
+    "watch": "esbuild src/index.ts --bundle --format=esm --target=es2020 --loader:.css=text --outfile=dist/index.js --watch=forever"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.2"
+  }
+}

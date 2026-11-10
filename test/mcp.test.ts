@@ -102,6 +102,7 @@ test('every tool is listed with a title, a description and a schema', async () =
     'delete_post',
     'get_post',
     'list_posts',
+    'list_widgets',
     'newsletter_status',
     'publish_post',
     'render_preview',

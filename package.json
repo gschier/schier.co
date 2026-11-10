@@ -15,7 +15,9 @@
     "db:migrate": "prisma migrate dev && prisma generate",
     "db:studio": "prisma studio",
     "typecheck": "tsc --noEmit",
-    "test": "node --test test/db.test.ts test/newsletter.test.ts test/assets.test.ts test/markdown.test.ts test/mcp.test.ts test/pages.test.ts test/admin.test.ts test/auth.test.ts"
+    "test": "node --test test/db.test.ts test/newsletter.test.ts test/assets.test.ts test/markdown.test.ts test/mcp.test.ts test/pages.test.ts test/admin.test.ts test/auth.test.ts test/widgets.test.ts",
+    "widget:publish": "node scripts/widget-publish.mjs",
+    "widget:dev": "node scripts/widget-dev.mjs"
   },
   "dependencies": {
     "@codemirror/commands": "^6.11.1",

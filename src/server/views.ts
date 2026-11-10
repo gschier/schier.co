@@ -102,7 +102,7 @@ export async function postView(post: BlogPost, notified: number | null): Promise
     slug: post.slug,
     title: post.title,
     meta: meta(post),
-    html: await renderMarkdown(post.content),
+    html: await renderMarkdown(post.content, { url: `/blog/${post.slug}` }),
     tags: post.tags,
     published: post.published,
     votesTotal: post.votesTotal,

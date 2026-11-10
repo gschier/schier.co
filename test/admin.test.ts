@@ -130,6 +130,7 @@ describe("the editor's functions", () => {
       ['preview', () => editor.preview({ markdown: '# Hi' })],
       ['newsletterStatus', () => editor.newsletterStatus(post.id)],
       ['sendNewsletter', () => editor.sendNewsletter({ id: post.id, dryRun: true })],
+      ['prepareWidgets', () => editor.prepareWidgets({ names: ['hello'] })],
     ]
     for (const [name, action] of actions) await assert.rejects(stranger(action), { name: 'NotAdmin', message: 'Not found' }, name)
     const rows = await s.rows<{ slug: string; published: boolean; unlisted: boolean }>('SELECT slug, published, unlisted FROM blog_posts')
