@@ -17,11 +17,13 @@
 // - the editor at desktop size: the card closed and open (light and dark),
 //   a segmented choice written to the fence and shown by the preview's
 //   widget without remounting it, undone with Cmd-Z from inside the card,
-//   the slider, the fence as text and back, Insert widget and its picker,
+//   the slider, a typed number undone while its field has the focus, the
+//   fence as text and back, Insert widget and its picker,
 //   the slash picker inserting hello@dev, and Prepare for publish
 //   publishing it as hello@2 and repinning the fence, undone and redone as
 //   one step;
-// - at phone size: the card closed and open, and the picker as a sheet.
+// - at phone size: the card closed and open, and the picker as a sheet;
+// - a widget whose mount throws leaves a reader the fallback line.
 //
 // Screenshots go to SHOTS_DIR (default shots/, gitignored), widget-*.png.
 // The browser is Playwright's headless shell (never Google Chrome.app; see
@@ -105,6 +107,8 @@ let browser
 let database
 let current = null
 const errors = []
+/// Console errors the check causes on purpose.
+const expected = []
 const shot = (page, name, options = {}) => page.screenshot({ path: join(out, `widget-${name}.png`), ...options })
 
 /// The body's text, from CodeMirror's own state.
@@ -122,7 +126,7 @@ async function context(mode, size = DESKTOP, mobile = false) {
   const page = await ctx.newPage()
   current = page
   page.on('pageerror', (e) => errors.push(`${mode}: ${e.message}`))
-  page.on('console', (m) => m.type() === 'error' && errors.push(`${mode} console: ${m.text()}`))
+  page.on('console', (m) => m.type() === 'error' && !expected.some((e) => e.test(m.text())) && errors.push(`${mode} console: ${m.text()}`))
   page.on('dialog', (d) => d.accept())
   return { ctx, page }
 }
@@ -279,6 +283,18 @@ try {
   assert.equal(await page.locator('.editor__preview .widget__host[data-mark="kept"]').count(), 1)
   step('the slider wrote count: 9 (nine shapes in the preview), the caption and the toggle wrote theirs, the widget never remounted')
 
+  // Typing in a field, then undo while it still has the focus.
+  const count = card.getByRole('spinbutton')
+  await count.fill('4')
+  assert.match(await bodyText(page), /count: 4\n/)
+  await page.keyboard.press('ControlOrMeta+z')
+  assert.match(await bodyText(page), /count: 9\n/)
+  assert.equal(await count.inputValue(), '9', 'the field shows what undo put back')
+  await page.keyboard.press('ControlOrMeta+Shift+z')
+  assert.equal(await count.inputValue(), '4')
+  await page.keyboard.press('ControlOrMeta+z')
+  step('typed 4 in the count field and undid it with the field focused: the fence and the field both went back to 9, and redo to 4')
+
   await card.locator('.wcard__source summary').click()
   await card.locator('.wcard__source pre', { hasText: '```widget hello@1' }).waitFor()
   await card.getByRole('button', { name: 'Edit it as text' }).click()
@@ -380,6 +396,30 @@ try {
     await phone.close()
   }
   step('at phone size: the card closed and open, Diamonds written from the form, and the picker as a sheet from the bottom bar, light and dark')
+
+  // A widget whose mount throws leaves a reader the fallback line.
+  mkdirSync(join(widgetsDir, 'boom/dist'), { recursive: true })
+  writeFileSync(
+    join(widgetsDir, 'boom/widget.json'),
+    JSON.stringify({ id: 'boom', name: 'Boom', description: 'Throws when mounted.', build: { command: 'true', output: 'dist' }, size: { height: 120 }, props: [] }),
+  )
+  writeFileSync(join(widgetsDir, 'boom/dist/index.js'), "export function mount(el) { el.textContent = 'half drawn'; throw new Error('boom') }\n")
+  await database.query('UPDATE blog_posts SET content = $2 WHERE id = $1', [POSTS.plain.id, 'Before.\n\n```widget boom@dev\n```\n\nAfter.'])
+  {
+    const { ctx: reader, page: r } = await context('light')
+    expected.push(/boom@dev failed: boom/)
+    const loaded = r.waitForResponse((res) => res.url().includes('/__widgets/boom/index.js'))
+    await r.goto(`${BASE}/blog/${POSTS.plain.slug}`, { waitUntil: 'networkidle' })
+    await loaded
+    await r.waitForTimeout(300)
+    const boom = r.locator('.widget[data-widget="boom@dev"]')
+    assert.equal(await boom.locator('.widget__fallback').isVisible(), true, 'the fallback line is back')
+    assert.equal(await boom.locator('.widget__host').count(), 0, 'what it half drew is gone')
+    assert.equal(await boom.getAttribute('data-widget-mounted'), null)
+    assert.equal(await boom.locator('.widget__notice').count(), 0, 'a reader sees no notice')
+    await reader.close()
+  }
+  step('a widget whose mount throws: the reader keeps the fallback line, with nothing half drawn left')
 
   if (errors.length) {
     process.exitCode = 1

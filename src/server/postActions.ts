@@ -13,7 +13,7 @@
 
 import type { BlogPost, Prisma } from '#/generated/prisma/client'
 import { db, newId } from '#/server/db'
-import { renderMarkdown, summarize } from '#/server/markdown'
+import { renderMarkdown, summarize, widgetInfos } from '#/server/markdown'
 import { publishProblem } from '#/server/widgets'
 
 /// A refusal meant for the person or agent asking: a duplicate slug, a post
@@ -235,7 +235,8 @@ export async function createPost(fields: PostFields): Promise<BlogPost> {
 /// Edits the post [slugOrId] with [fields]. A draft given an empty slug
 /// gets one from its title; a published post's slug cannot change, since
 /// links point at it (unpublish it first). editedAt moves when the content
-/// changes.
+/// changes. A published post's new content is refused when its widgets
+/// would be (see publishPost).
 export async function updatePost(slugOrId: string, fields: PostFields): Promise<BlogPost> {
   const post = await getPost(slugOrId)
   const data: Prisma.BlogPostUpdateInput = {}
@@ -257,6 +258,10 @@ export async function updatePost(slugOrId: string, fields: PostFields): Promise<
   if (fields.content !== undefined) {
     const content = lineEndings(fields.content)
     if (content !== post.content) {
+      // A published post's readers get what is saved, so its widgets are
+      // held to what publishing asks of them; a draft's are not, yet.
+      const widgets = post.published ? publishProblem(widgetInfos(content)) : null
+      if (widgets) throw new PostActionError(`"${post.slug}" is published, so this cannot be saved yet. ${widgets}`)
       data.content = content
       data.editedAt = new Date()
     }
@@ -289,7 +294,7 @@ export async function publishPost(slugOrId: string): Promise<BlogPost> {
   if (post.published) return post
   if (!post.title.trim()) throw new PostActionError(`"${post.slug}" has no title; give it one before publishing`)
   if (!post.content.trim()) throw new PostActionError(`"${post.slug}" has no content; write something before publishing`)
-  const widgets = publishProblem(post.content)
+  const widgets = publishProblem(widgetInfos(post.content))
   if (widgets) throw new PostActionError(`"${post.slug}" cannot be published yet. ${widgets}`)
   return db.blogPost.update({ where: { id: post.id }, data: { published: true, date: new Date() } })
 }

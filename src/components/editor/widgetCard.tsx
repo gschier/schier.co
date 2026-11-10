@@ -185,9 +185,19 @@ export function WidgetCard({ dom, info, body, view, cm, widgets, dev }: CardProp
 }
 
 /// One prop's field, by its type. A field being typed in keeps what is
-/// typed until it loses focus, while the fence takes each good value.
-function Prop({ id, spec, value, onChange }: { id: string; spec: PropSpec; value: PropValue; onChange: (value: PropValue) => void }) {
+/// typed until it loses focus, while the fence takes each good value; a
+/// value the fence gets from elsewhere (undo, redo, the text) replaces it.
+function Prop({ id, spec, value, onChange: write }: { id: string; spec: PropSpec; value: PropValue; onChange: (value: PropValue) => void }) {
   const [draft, setDraft] = useState<string | null>(null)
+  const written = useRef<PropValue | null>(null)
+  const onChange = (next: PropValue) => {
+    written.current = next
+    write(next)
+  }
+  useEffect(() => {
+    if (value !== written.current) setDraft(null)
+    written.current = null
+  }, [value])
   const label = (
     <div className="wprop__label">
       <label htmlFor={spec.type === 'enum' && segmented(spec) ? undefined : id} id={`${id}-label`}>

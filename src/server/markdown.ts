@@ -30,11 +30,12 @@ export async function renderMarkdown(markdown: string, options: RenderOptions = 
   const source = prepare(markdown.replace(/\r\n/g, '\n'))
   const highlighter = await shiki()
   await loadLanguages(highlighter, source)
-  // Only a post with a widget fence looks the widgets up
+  // Only a post that may have a widget fence looks the widgets up
   // (src/server/widgets.ts, the manifest and on the dev server the local
-  // folders).
+  // folders). Loosely: a fence in a list or a quote, or of four backticks,
+  // is one too.
   let target: Context['page']['target'] = () => ({ error: 'Widgets are not available here' })
-  if (/^ {0,3}(?:```|~~~)[ \t]*widget\b/m.test(source)) {
+  if (/(?:`{3,}|~{3,})[ \t]*widget/.test(source)) {
     const widgets = await import('./widgets.ts')
     const all = widgets.catalog()
     target = (pin) => widgets.target(pin, all)
@@ -48,6 +49,24 @@ export async function renderMarkdown(markdown: string, options: RenderOptions = 
     .use(rehypeStringify, { allowDangerousHtml: true })
     .process(source)
   return String(file)
+}
+
+/// What follows `widget` on each widget fence in [markdown] (null for a bare
+/// one), found as renderMarkdown finds them, so a fence in a list or a quote
+/// counts too.
+export function widgetInfos(markdown: string): (string | null)[] {
+  const tree = unified()
+    .use(remarkParse)
+    .use(remarkGfm, { singleTilde: false })
+    .use(withoutHtmlFlow)
+    .parse(prepare(markdown.replace(/\r\n/g, '\n')))
+  const infos: (string | null)[] = []
+  const visit = (node: Nodes) => {
+    if (node.type === 'code' && node.lang === 'widget') infos.push(node.meta ?? null)
+    if ('children' in node) for (const child of node.children) visit(child)
+  }
+  visit(tree)
+  return infos
 }
 
 /// HTML blocks are found the way blackfriday finds them (htmlBlocks), not

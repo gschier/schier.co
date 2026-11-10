@@ -13,6 +13,8 @@ export type WidgetStorage = {
   kind: 'bucket' | 'disk'
   where: string
   keys(prefix: string): Promise<string[]>
+  /// Claims [prefix] for a new version: false when it is taken.
+  reserve(prefix: string): Promise<boolean>
   put(key: string, body: Buffer, type: string): Promise<void>
 }
 

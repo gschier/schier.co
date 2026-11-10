@@ -4,9 +4,9 @@ import bundled from '../../widgets/manifest.json'
 import {
   checkWidgetJson,
   devModuleUrl,
-  findFences,
   latest,
   moduleUrl,
+  parsePin,
   pinText,
   widgetAt,
   type Catalog,
@@ -107,14 +107,15 @@ export function target(pin: Pin, widgets: Catalog = catalog()): Target {
   return { src: moduleUrl(pin.name, pin.version), widget }
 }
 
-/// Why [markdown] cannot be published, in words, or null: a fence that pins
-/// a local build, a version the manifest does not have, or no widget at all.
-/// Read against the manifest alone, since that is what production has.
-export function publishProblem(markdown: string): string | null {
+/// Why a post whose widget fences say [infos] (markdown.ts's widgetInfos)
+/// cannot be published, in words, or null: a fence that pins a local build,
+/// a version the manifest does not have, or no widget at all. Read against
+/// the manifest alone, since that is what production has.
+export function publishProblem(infos: (string | null)[]): string | null {
   const published = manifest()
-  for (const fence of findFences(markdown)) {
-    const pin = fence.pin
-    if (!pin) return `A widget fence says "widget ${fence.info}", which pins no widget; write it as widget {name}@{version}`
+  for (const info of infos) {
+    const pin = parsePin(info)
+    if (!pin) return `A widget fence says "widget${info ? ` ${info}` : ''}", which pins no widget; write it as widget {name}@{version}`
     if (pin.version === 'dev')
       return `It pins ${pinText(pin)}, a local build: use Prepare for publish in the editor (or npm run widget:publish ${pin.name}) and pin the version that makes`
     if (!published[pin.name]?.versions.some((v) => v.version === pin.version)) return `It pins ${pinText(pin)}, which is not in widgets/manifest.json`

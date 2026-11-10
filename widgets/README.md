@@ -65,8 +65,9 @@ at `src/contract.ts` rather than importing from the site; the site's tests
 check that every copy matches. Change them together.
 
 - `element` is a plain element in the page: no iframe, no shadow DOM. The
-  widget has it to itself, and puts nothing outside it but one `<style>`
-  in the head.
+  widget has it to itself, and puts nothing outside it but its `<style>` in
+  the head, added once per build (matched by its text, so a rebuild on the
+  dev server brings its new styles).
 - Its styles live under a class of its own (`.hello-widget`), so nothing
   reaches the page.
 - It follows the site's light and dark colours by using the site's CSS

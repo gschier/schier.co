@@ -72,22 +72,39 @@ export function widgetStorage(env = process.env) {
   const { AWS_ENDPOINT_URL, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_S3_BUCKET_NAME, AWS_DEFAULT_REGION } = env
   if (AWS_ENDPOINT_URL && AWS_ACCESS_KEY_ID && AWS_SECRET_ACCESS_KEY && AWS_S3_BUCKET_NAME) {
     const b = bucket({ endpoint: AWS_ENDPOINT_URL, key: AWS_ACCESS_KEY_ID, secret: AWS_SECRET_ACCESS_KEY, bucket: AWS_S3_BUCKET_NAME, region: AWS_DEFAULT_REGION || 'auto' })
+    const keys = async (prefix) => (await b.list(prefix)).map((o) => o.key)
     return {
       kind: 'bucket',
       where: `the bucket ${AWS_S3_BUCKET_NAME}`,
-      keys: async (prefix) => (await b.list(prefix)).map((o) => o.key),
+      keys,
+      // The bucket has no way here to claim a prefix, so two publishes of
+      // one widget at the same moment could still race; one author, so rare.
+      reserve: async (prefix) => !(await keys(prefix)).length,
       put: (key, body, type) => b.put(key, body, type),
     }
   }
   const dir = resolve(root, env.ASSETS_DIR || '.media')
+  const path = (prefix) => join(dir, ...prefix.split('/').filter(Boolean))
   return {
     kind: 'disk',
     where: dir,
     keys: async (prefix) => {
-      const base = join(dir, ...prefix.split('/').filter(Boolean))
+      const base = path(prefix)
       if (!existsSync(base)) return []
-      const files = await readdir(base, { recursive: true, withFileTypes: true })
-      return files.filter((f) => f.isFile()).map((f) => relative(dir, join(f.parentPath, f.name)).split(sep).join('/'))
+      const entries = await readdir(base, { recursive: true, withFileTypes: true })
+      // A version's folder counts even while empty: it was claimed.
+      return entries.filter((f) => f.isFile() || f.parentPath === base).map((f) => relative(dir, join(f.parentPath, f.name)).split(sep).join('/') + (f.isFile() ? '' : '/'))
+    },
+    // Making the version's folder is the claim: only one maker succeeds.
+    reserve: async (prefix) => {
+      await mkdir(dirname(path(prefix)), { recursive: true })
+      try {
+        await mkdir(path(prefix))
+        return true
+      } catch (error) {
+        if (error.code === 'EEXIST') return false
+        throw error
+      }
     },
     put: async (key, body, type) => {
       const tmpDir = join(dir, '.tmp')
@@ -121,10 +138,11 @@ export async function storedVersions(store, name) {
 }
 
 /// Uploads [files] as version [version] of [name], refusing when [store]
-/// already has anything under that version: a version is never overwritten.
+/// already has that version (claimed by making its folder, on disk): a
+/// version is never overwritten.
 export async function putVersion(store, name, version, files) {
   const prefix = `widgets/${name}/${version}/`
-  if ((await store.keys(prefix)).length) throw new PublishError(`${name}@${version} is already in ${store.where}; a published version is never overwritten`)
+  if (!(await store.reserve(prefix))) throw new PublishError(`${name}@${version} is already in ${store.where}; a published version is never overwritten`)
   for (const file of files) await store.put(prefix + file.path, file.body, file.type)
 }
 

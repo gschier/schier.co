@@ -108,7 +108,7 @@ export function createAdminServer(): McpServer {
     {
       title: 'Edit a post',
       description:
-        'Edit a draft or a published post. Only the fields given change. An empty slug on a draft makes one from the title; a slug another post has is refused, and a published post\'s slug cannot change (unpublish it first). A draft saved without a date is dated now, as the site always did; a published post keeps its date unless one is given. editedAt moves when the content changes. Returns the post as saved.',
+        'Edit a draft or a published post. Only the fields given change. An empty slug on a draft makes one from the title; a slug another post has is refused, and a published post\'s slug cannot change (unpublish it first). A published post\'s content is refused when publish_post would refuse its widget fences. A draft saved without a date is dated now, as the site always did; a published post keeps its date unless one is given. editedAt moves when the content changes. Returns the post as saved.',
       inputSchema: { post: POST, ...FIELDS },
     },
     async ({ post, ...fields }) => text(await updatePost(post, fields as PostFields)),

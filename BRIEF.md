@@ -334,7 +334,10 @@ contract for whoever writes one.
 - Decided in the build: a version published to the directory rather than
   the bucket is marked `"storage": "disk"` in the manifest and production
   ignores it, so a dev publish committed by mistake never points readers at
-  a missing file; the script says so when it happens.
+  a missing file; the script says so when it happens. On disk a version is
+  claimed by making its folder, so two publishes at once cannot both take
+  it; the bucket has no such claim here, so there the check is a listing,
+  which two publishes of one widget in the same moment could both pass.
 - A post pins one with a fence, ```` ```widget hello@1 ````, props as
   `key: value` lines read against that version's schema. An unknown key or
   a bad value falls back to the default and is listed on the editor's card;
@@ -359,7 +362,11 @@ contract for whoever writes one.
   dev pins: lists them, publishes each through `publishWidget`, and repins
   the fences in one undoable change. Publishing a post refuses a dev pin, a
   version not in the manifest, or a widget fence with no pin
-  (`publishPost`, so the editor and the MCP both refuse).
+  (`publishPost`, so the editor and the MCP both refuse), with the fences
+  found as the renderer finds them (in lists and quotes too). Decided in
+  the build: saving new content to a post that is already published is
+  refused the same way (`updatePost`), since its readers get it at once; a
+  draft saves with any pin.
 - The editor (after the mockup on the branch `stetta/tk_mw9rgdpu86gx556o`,
   `design/editor/`): a widget fence is a card, a CodeMirror block
   decoration hosting a React portal (`src/components/editor/widgetCard.tsx`).

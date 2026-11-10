@@ -26,10 +26,14 @@ function settings(props: Props): Settings {
 /// wave, never flat.
 const height = (i: number, count: number) => 0.45 + 0.5 * Math.abs(Math.sin(((i + 1) / (count + 1)) * Math.PI * 1.5))
 
+/// This build's styles, added once. Matched by their text, so a rebuild on
+/// the dev server, or another version on the same page, brings its own.
 function addStyle(doc: Document) {
-  if (doc.getElementById(STYLE_ID)) return
+  for (const style of doc.querySelectorAll<HTMLStyleElement>(`style[data-widget-style="${STYLE_ID}"]`)) {
+    if (style.textContent === css) return
+  }
   const style = doc.createElement('style')
-  style.id = STYLE_ID
+  style.dataset.widgetStyle = STYLE_ID
   style.textContent = css
   doc.head.append(style)
 }

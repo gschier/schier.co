@@ -44,7 +44,12 @@ type Live = {
   host: HTMLElement
   /// The props, as the placeholder had them (JSON).
   props: string
+  /// What the placeholder held before the widget took it (the fallback
+  /// line), put back if the widget fails.
+  fallback: Node[]
   instance: MountedWidget | null
+  /// It failed to load, mount or update, and shows the fallback.
+  failed: boolean
   gone: boolean
 }
 
@@ -88,14 +93,16 @@ export class Widgets {
         continue
       }
       const props = placeholder.dataset.widgetProps ?? '{}'
-      const same = previous.find((l) => !taken.has(l) && l.src === src)
+      // One that failed is mounted afresh, in case the new props suit it.
+      const same = previous.find((l) => !taken.has(l) && !l.failed && l.src === src)
       if (same) {
         taken.add(same)
         same.placeholder = placeholder
+        same.fallback = [...placeholder.childNodes]
         if (same.instance) this.show(same)
         if (same.props !== props) {
           same.props = props
-          this.attempt(same, () => same.instance?.update(parse(props)))
+          if (same.instance) this.attempt(same, () => same.instance?.update(parse(props)))
         }
         next.push(same)
       } else next.push(this.mount(placeholder, src, props))
@@ -116,7 +123,7 @@ export class Widgets {
   private mount(placeholder: HTMLElement, src: string, props: string): Live {
     const host = document.createElement('div')
     host.className = 'widget__host'
-    const live: Live = { src, pin: placeholder.dataset.widget ?? '', placeholder, host, props, instance: null, gone: false }
+    const live: Live = { src, pin: placeholder.dataset.widget ?? '', placeholder, host, props, fallback: [...placeholder.childNodes], instance: null, failed: false, gone: false }
     loadWidget(src).then(
       (module) => {
         if (live.gone) return
@@ -148,9 +155,22 @@ export class Widgets {
     }
   }
 
+  /// Takes a failed widget out and puts the fallback line back, with the
+  /// reason for the admin.
   private fail(live: Live, text: string) {
     console.error(`widget: ${text}`)
-    if (this.options.admin) notice(live.placeholder, text)
+    live.failed = true
+    const instance = live.instance
+    live.instance = null
+    try {
+      instance?.destroy()
+    } catch {}
+    live.host.remove()
+    live.host.replaceChildren()
+    const placeholder = live.placeholder
+    if (!placeholder.contains(live.fallback[0] ?? null)) placeholder.replaceChildren(...live.fallback)
+    delete placeholder.dataset.widgetMounted
+    if (this.options.admin) notice(placeholder, text)
   }
 
   private drop(live: Live) {
