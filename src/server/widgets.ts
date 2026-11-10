@@ -44,6 +44,17 @@ export function manifest(): Manifest {
   }
 }
 
+/// When the build in [output] last changed: its newest file's time, in ms,
+/// so a rebuild that changes only an asset is loaded afresh too. The same as
+/// vite.config.ts's widgetsDev sends when a build changes.
+function buildStamp(output: string): number {
+  let newest = 0
+  for (const entry of readdirSync(output, { recursive: true, withFileTypes: true })) {
+    if (entry.isFile()) newest = Math.max(newest, Math.floor(statSync(join(entry.parentPath, entry.name)).mtimeMs))
+  }
+  return newest
+}
+
 /// The local widget folders (dev only): each with a good widget.json, and
 /// whether its build output is there.
 function devFolders(): Map<string, NonNullable<CatalogEntry['dev']>> {
@@ -66,9 +77,9 @@ function devFolders(): Map<string, NonNullable<CatalogEntry['dev']>> {
       continue
     }
     if (checkWidgetJson(widget, name).length) continue
-    const entry = join(dir, widget.build.output, 'index.js')
-    const built = existsSync(entry)
-    found.set(name, { widget, built, stamp: built ? Math.floor(statSync(entry).mtimeMs) : 0 })
+    const output = join(dir, widget.build.output)
+    const built = existsSync(join(output, 'index.js'))
+    found.set(name, { widget, built, stamp: built ? buildStamp(output) : 0 })
   }
   return found
 }

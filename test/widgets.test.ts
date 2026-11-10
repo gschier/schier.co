@@ -338,7 +338,12 @@ describe('publishing a post with widgets', () => {
       const post = await draft(`Words.\n\n${content}`)
       await assert.rejects(actions.publishPost(post.id), /It pins hello@dev, a local build/)
     }
-    // And a published pin there, or in a fence of four backticks, runs.
+    // One inside an HTML comment is not a widget, so it does not count.
+    const comment = 'Words.\n\n<!--\n```widget hello@dev\n```\n-->\n\nMore.'
+    const commented = await draft(comment)
+    assert.doesNotMatch(await markdown.renderMarkdown(comment), /class="widget"/)
+    assert.equal((await actions.publishPost(commented.id)).published, true)
+    // And a published pin in a quote, or in a fence of four backticks, runs.
     for (const content of ['> ```widget hello@1\n> ```', '````widget hello@1\n````']) {
       assert.equal(attr(await markdown.renderMarkdown(content), 'data-widget-src'), '/media/widgets/hello/1/index.js', content)
     }
@@ -467,18 +472,25 @@ describe('scripts/widget-publish.mjs, to a directory', () => {
     assert.equal(await readFile(join(assets, 'widgets/tiny/2/index.js'), 'utf8'), before)
   })
 
-  test('two publishes at once cannot both take a version', async () => {
-    await fixture('tiny', TINY)
-    const results = await Promise.allSettled([1, 2].map(() => publishWidget('tiny', { widgetsDir, env: env(), log: quiet })))
-    const done = results.filter((r) => r.status === 'fulfilled')
-    const refused = results.filter((r) => r.status === 'rejected')
-    assert.equal(done.length, 1, 'one publishes')
-    assert.equal(done[0]!.value.version, 1)
-    assert.equal(refused.length, 1, 'the other is refused')
-    assert.match(String(refused[0]!.reason.message), /tiny@1 is already in .* never overwritten/)
+  test('two uploads of one version cannot both take it, and two publishes at once keep both in the manifest', async () => {
+    const store = widgetStorage(env())
+    const file = (text: string) => [{ path: 'index.js', body: Buffer.from(text), type: 'text/javascript' }]
+    const results = await Promise.allSettled([putVersion(store, 'tiny', 1, file('first')), putVersion(store, 'tiny', 1, file('second'))])
+    const done = results.findIndex((r) => r.status === 'fulfilled')
+    assert.deepEqual(results.map((r) => r.status).sort(), ['fulfilled', 'rejected'], 'one takes it, the other is refused')
+    assert.match(String((results[1 - done] as PromiseRejectedResult).reason.message), /tiny@1 is already in .* never overwritten/)
+    assert.equal(await readFile(join(assets, 'widgets/tiny/1/index.js'), 'utf8'), done === 0 ? 'first' : 'second')
     // A claimed version's folder counts, even if its upload failed.
+    await fixture('tiny', TINY)
     await mkdir(join(assets, 'widgets/tiny/2'))
     assert.equal((await publishWidget('tiny', { widgetsDir, env: env(), log: quiet })).version, 3)
+
+    // Two widgets published at once: each entry survives the other's write.
+    await fixture('other', { ...TINY, id: 'other' })
+    await fixture('third', { ...TINY, id: 'third' })
+    await Promise.all(['other', 'third'].map((name) => publishWidget(name, { widgetsDir, env: env(), log: quiet })))
+    assert.deepEqual(Object.keys(await readManifest(manifestPath())), ['hello', 'other', 'third', 'tiny'])
+    assert.ok(!existsSync(`${manifestPath()}.lock`), 'the lock is let go')
   })
 
   test('refuses a bad name, a missing folder, a bad widget.json and a failed build, plainly', async () => {

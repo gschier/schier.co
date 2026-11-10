@@ -23,6 +23,7 @@ export function storedVersions(store: WidgetStorage, name: string): Promise<numb
 export function putVersion(store: WidgetStorage, name: string, version: number, files: WidgetFile[]): Promise<void>
 export function readManifest(path: string): Promise<Manifest>
 export function writeManifest(path: string, manifest: Manifest): Promise<void>
+export function updateManifest(path: string, change: (manifest: Manifest) => void): Promise<void>
 export function contentHash(files: WidgetFile[]): string
 export function readWidget(dir: string, name: string): Promise<WidgetJson>
 export function buildWidget(dir: string, widget: WidgetJson, log?: (line: string) => void): Promise<WidgetFile[]>

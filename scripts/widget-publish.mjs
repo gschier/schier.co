@@ -166,9 +166,35 @@ export async function writeManifest(path, manifest) {
       .sort()
       .map((name) => [name, { ...manifest[name], versions: [...manifest[name].versions].sort((a, b) => a.version - b.version) }]),
   )
-  const tmp = `${path}.${process.pid}.tmp`
+  const tmp = `${path}.${process.pid}-${Math.random().toString(36).slice(2)}.tmp`
   await writeFile(tmp, JSON.stringify(sorted, null, 2) + '\n')
   await rename(tmp, path)
+}
+
+/// Runs [change] on the manifest at [path] and writes it back, holding
+/// `{path}.lock` meanwhile so two publishes at once each keep the other's
+/// entry. A lock older than a minute is taken to be left over and broken.
+export async function updateManifest(path, change) {
+  const lock = `${path}.lock`
+  for (let tries = 0; ; tries++) {
+    try {
+      await writeFile(lock, String(process.pid), { flag: 'wx' })
+      break
+    } catch (error) {
+      if (error.code !== 'EEXIST') throw error
+      const age = Date.now() - ((await stat(lock).catch(() => null))?.mtimeMs ?? Date.now())
+      if (age > 60_000) await rm(lock, { force: true })
+      else if (tries > 300) throw new PublishError(`${lock} has been held for a while; remove it if no publish is running`)
+      else await new Promise((r) => setTimeout(r, 100))
+    }
+  }
+  try {
+    const manifest = await readManifest(path)
+    change(manifest)
+    await writeManifest(path, manifest)
+  } finally {
+    await rm(lock, { force: true })
+  }
 }
 
 /// sha256 of [files] (sorted by path): each path, a NUL, its bytes, a NUL.
@@ -278,10 +304,10 @@ export async function publishWidget(name, options = {}) {
     widget,
     ...(store.kind === 'disk' ? { storage: 'disk' } : {}),
   }
-  // Read again, in case another publish wrote it meanwhile.
-  const fresh = await readManifest(manifestPath)
-  fresh[name] = { ...(fresh[name] ?? {}), versions: [...(fresh[name]?.versions ?? []).filter((v) => v.version !== version), entry] }
-  await writeManifest(manifestPath, fresh)
+  // Read again under the lock, keeping what another publish wrote meanwhile.
+  await updateManifest(manifestPath, (fresh) => {
+    fresh[name] = { ...(fresh[name] ?? {}), versions: [...(fresh[name]?.versions ?? []).filter((v) => v.version !== version), entry] }
+  })
   const shown = relative(process.cwd(), manifestPath)
   log(`Published ${name}@${version}; recorded in ${shown && !shown.startsWith('..') ? shown : manifestPath}`)
   if (store.kind === 'disk') log(`It went to the directory ${store.where}, not the bucket, so production will not have it: do not commit this manifest entry.`)

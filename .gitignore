@@ -12,4 +12,5 @@ shots
 # is in the bucket, recorded in widgets/manifest.json.
 widgets/*/node_modules
 widgets/*/dist
+widgets/manifest.json.*
 .idea

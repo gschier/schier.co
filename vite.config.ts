@@ -1,4 +1,4 @@
-import { existsSync, readFileSync, statSync, watch as fsWatch, type FSWatcher } from 'node:fs'
+import { existsSync, readdirSync, readFileSync, statSync, watch as fsWatch, type FSWatcher } from 'node:fs'
 import type { ServerResponse } from 'node:http'
 import { extname, join, resolve, sep } from 'node:path'
 import { defineConfig, type Plugin } from 'vite'
@@ -61,9 +61,14 @@ const widgetsDev: Plugin = {
         timers.set(
           name,
           setTimeout(() => {
-            const entry = join(dir, name, output, 'index.js')
-            if (!existsSync(entry)) return
-            const data = `data: ${JSON.stringify({ name, stamp: Math.floor(statSync(entry).mtimeMs) })}\n\n`
+            const out = join(dir, name, output)
+            if (!existsSync(join(out, 'index.js'))) return
+            // The newest file's time, as src/server/widgets.ts's buildStamp.
+            let stamp = 0
+            for (const entry of readdirSync(out, { recursive: true, withFileTypes: true })) {
+              if (entry.isFile()) stamp = Math.max(stamp, Math.floor(statSync(join(entry.parentPath, entry.name)).mtimeMs))
+            }
+            const data = `data: ${JSON.stringify({ name, stamp })}\n\n`
             for (const res of listeners) res.write(data)
           }, 150),
         )

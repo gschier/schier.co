@@ -53,13 +53,11 @@ export async function renderMarkdown(markdown: string, options: RenderOptions = 
 
 /// What follows `widget` on each widget fence in [markdown] (null for a bare
 /// one), found as renderMarkdown finds them, so a fence in a list or a quote
-/// counts too.
+/// counts too, and one inside an HTML block (a comment) does not.
 export function widgetInfos(markdown: string): (string | null)[] {
-  const tree = unified()
-    .use(remarkParse)
-    .use(remarkGfm, { singleTilde: false })
-    .use(withoutHtmlFlow)
-    .parse(prepare(markdown.replace(/\r\n/g, '\n')))
+  const source = prepare(markdown.replace(/\r\n/g, '\n'))
+  const tree = unified().use(remarkParse).use(remarkGfm, { singleTilde: false }).use(withoutHtmlFlow).parse(source)
+  htmlBlocks(tree, source)
   const infos: (string | null)[] = []
   const visit = (node: Nodes) => {
     if (node.type === 'code' && node.lang === 'widget') infos.push(node.meta ?? null)

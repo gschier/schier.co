@@ -195,6 +195,10 @@ export class Widgets {
       this.live = this.live.map((l) => {
         if (l.pin !== `${name}@dev` || l.src === src) return l
         this.drop(l)
+        // The fallback line holds the place until the new build mounts, and
+        // stays if it fails.
+        l.placeholder.replaceChildren(...l.fallback)
+        delete l.placeholder.dataset.widgetMounted
         l.placeholder.dataset.widgetSrc = src
         return this.mount(l.placeholder, src, l.props)
       })

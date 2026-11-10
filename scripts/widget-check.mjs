@@ -289,10 +289,14 @@ try {
   assert.match(await bodyText(page), /count: 4\n/)
   await page.keyboard.press('ControlOrMeta+z')
   assert.match(await bodyText(page), /count: 9\n/)
-  assert.equal(await count.inputValue(), '9', 'the field shows what undo put back')
+  // The card follows a moment after the body, once React has drawn it.
+  const field = await count.elementHandle()
+  const shows = (value) => page.waitForFunction(([el, v]) => el.value === v, [field, value], { timeout: 5000 })
+  await shows('9')
   await page.keyboard.press('ControlOrMeta+Shift+z')
-  assert.equal(await count.inputValue(), '4')
+  await shows('4')
   await page.keyboard.press('ControlOrMeta+z')
+  await shows('9')
   step('typed 4 in the count field and undid it with the field focused: the fence and the field both went back to 9, and redo to 4')
 
   await card.locator('.wcard__source summary').click()
